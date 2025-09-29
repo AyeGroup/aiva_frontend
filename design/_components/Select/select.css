@@ -1,0 +1,150 @@
+.select-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.select-label {
+  color: var(--grey-900);
+  font-weight: var(--font-weight-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.select-required {
+  color: var(--brand-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.select-base {
+  appearance: none;
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
+  color: var(--grey-900);
+  transition: var(--transition-default);
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+  padding-left: var(--space-10);
+}
+
+.select-base:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(235, 110, 91, 0.1);
+}
+
+.select-base:disabled {
+  background-color: var(--grey-100);
+  color: var(--grey-400);
+  cursor: not-allowed;
+}
+
+.select-base option {
+  padding: var(--space-2);
+}
+
+.select-base option:disabled {
+  color: var(--grey-400);
+}
+
+.select-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--grey-400);
+  transition: var(--transition-default);
+}
+
+.select-base:focus + .select-icon {
+  color: var(--brand-primary);
+}
+
+/* Variants */
+.select-default {
+  /* Base styles already applied */
+}
+
+.select-bordered {
+  border-width: 2px;
+  border-color: var(--border-strong);
+}
+
+/* Sizes */
+.select-small {
+  padding: var(--space-2) var(--space-10) var(--space-2) var(--space-3);
+  font-size: var(--text-body-small);
+  line-height: var(--text-body-small-lh);
+}
+
+.select-medium {
+  padding: var(--space-3) var(--space-10) var(--space-3) var(--space-4);
+  font-size: var(--text-body-large);
+  line-height: var(--text-body-large-lh);
+}
+
+.select-large {
+  padding: var(--space-4) var(--space-12) var(--space-4) var(--space-5);
+  font-size: var(--text-body-large);
+  line-height: var(--text-body-large-lh);
+}
+
+/* Error State */
+.select-error {
+  border-color: var(--danger);
+}
+
+.select-error:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.select-helper {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption-lh);
+  color: var(--grey-500);
+}
+
+.select-helper-error {
+  color: var(--danger);
+}
+
+/* RTL Support */
+html[dir="rtl"] .select-base {
+  text-align: right;
+  padding-right: var(--space-10);
+  padding-left: var(--space-3);
+}
+
+html[dir="rtl"] .select-icon {
+  right: var(--space-3);
+  left: auto;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+html[dir="rtl"] .select-small {
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-10);
+}
+
+html[dir="rtl"] .select-medium {
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-10);
+}
+
+html[dir="rtl"] .select-large {
+  padding: var(--space-4) var(--space-5) var(--space-4) var(--space-12);
+}
+
+/* Focus Ring */
+.select-base:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}

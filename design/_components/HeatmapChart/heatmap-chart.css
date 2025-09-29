@@ -1,0 +1,400 @@
+/* 🎯 Delicate Heatmap Chart - Inspired by Modern Analytics */
+
+.heatmap-chart {
+  width: 100%;
+  padding: var(--space-6);
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-soft);
+}
+
+/* 📋 Header - Minimal */
+.heatmap-chart__header {
+  text-align: right;
+  margin-bottom: var(--space-6);
+}
+
+.heatmap-chart__title {
+  color: var(--grey-900);
+  margin-bottom: var(--space-1);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.heatmap-chart__subtitle {
+  color: var(--grey-600);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* 🗂️ Grid Layout - Clean & Compact */
+.heatmap-chart__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: var(--space-5);
+  font-size: 11px;
+}
+
+/* 📅 Hours Header - Ultra Minimal */
+.heatmap-chart__hours {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 2px;
+  align-items: center;
+}
+
+.heatmap-chart__corner {
+  width: 50px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.heatmap-chart__hour {
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--grey-500);
+  font-weight: 500;
+}
+
+/* 📊 Day Rows - Delicate */
+.heatmap-chart__day-row {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.heatmap-chart__day {
+  width: 50px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--grey-700);
+  flex-shrink: 0;
+  padding-left: var(--space-1);
+}
+
+.heatmap-chart__cells {
+  display: flex;
+  gap: 2px;
+}
+
+/* 🔲 Heat Cells - Refined & Subtle */
+.heatmap-chart__cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.heatmap-chart__cell:hover {
+  transform: scale(1.3);
+  z-index: 10;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-color: white;
+}
+
+/* 🌈 Intensity Colors - Subtle Palette */
+.intensity-very-low {
+  background-color: var(--turquoise-2);
+  border-color: var(--turquoise-3);
+}
+
+.intensity-low {
+  background-color: #c8e6c9;
+  border-color: #a5d6a7;
+}
+
+.intensity-medium {
+  background-color: var(--brand-primary);
+  border-color: #4db6ac;
+}
+
+.intensity-high {
+  background-color: #ffb74d;
+  border-color: #ffa726;
+}
+
+.intensity-very-high {
+  background-color: var(--brand-secondary);
+  border-color: #ff8a65;
+}
+
+/* 🎨 Legend - Compact Design */
+.heatmap-chart__legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  background: rgba(101, 188, 182, 0.04);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(101, 188, 182, 0.08);
+}
+
+.heatmap-chart__legend-text {
+  font-size: 11px;
+  color: var(--grey-600);
+  font-weight: 500;
+}
+
+.heatmap-chart__legend-scale {
+  display: flex;
+  gap: 3px;
+}
+
+.heatmap-chart__legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: transform 0.15s ease;
+}
+
+.heatmap-chart__legend-dot:hover {
+  transform: scale(1.2);
+}
+
+/* 📊 Stats - Simplified */
+.heatmap-chart__stats {
+  display: flex;
+  justify-content: space-around;
+  padding: var(--space-4);
+  background: rgba(255, 161, 142, 0.04);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 161, 142, 0.08);
+}
+
+.heatmap-chart__stat {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.heatmap-chart__stat-label {
+  font-size: 10px;
+  color: var(--grey-600);
+  font-weight: 500;
+}
+
+.heatmap-chart__stat-value {
+  font-size: 14px;
+  color: #0A0A0A;
+  font-weight: 700;
+  direction: ltr;
+}
+
+/* 📱 Responsive - Delicate Scaling */
+@media (max-width: 1024px) {
+  .heatmap-chart {
+    padding: var(--space-5);
+  }
+  
+  .heatmap-chart__cell {
+    width: 11px;
+    height: 11px;
+  }
+  
+  .heatmap-chart__hour {
+    width: 11px;
+  }
+  
+  .heatmap-chart__day {
+    width: 45px;
+    font-size: 9px;
+  }
+  
+  .heatmap-chart__legend-dot {
+    width: 11px;
+    height: 11px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heatmap-chart {
+    padding: var(--space-4);
+  }
+  
+  .heatmap-chart__grid {
+    overflow-x: auto;
+    padding-bottom: var(--space-2);
+  }
+  
+  .heatmap-chart__cell {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .heatmap-chart__hour {
+    width: 10px;
+    font-size: 8px;
+  }
+  
+  .heatmap-chart__day {
+    width: 40px;
+    font-size: 8px;
+  }
+  
+  .heatmap-chart__legend-dot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .heatmap-chart__stats {
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+  }
+  
+  .heatmap-chart__stat {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 120px;
+  }
+  
+  .heatmap-chart__stat-label {
+    font-size: 9px;
+  }
+  
+  .heatmap-chart__stat-value {
+    font-size: 12px;
+    color: #0A0A0A;
+  }
+}
+
+@media (max-width: 480px) {
+  .heatmap-chart {
+    padding: var(--space-3);
+  }
+  
+  .heatmap-chart__cell {
+    width: 9px;
+    height: 9px;
+    border-radius: 1px;
+  }
+  
+  .heatmap-chart__hour {
+    width: 9px;
+    font-size: 7px;
+  }
+  
+  .heatmap-chart__day {
+    width: 35px;
+    font-size: 7px;
+  }
+  
+  .heatmap-chart__legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 1px;
+  }
+  
+  .heatmap-chart__legend-text {
+    font-size: 10px;
+  }
+  
+  .heatmap-chart__title {
+    font-size: 16px;
+  }
+  
+  .heatmap-chart__subtitle {
+    font-size: 12px;
+  }
+}
+
+/* ♿ Accessibility & Performance */
+@media (prefers-reduced-motion: reduce) {
+  .heatmap-chart__cell,
+  .heatmap-chart__legend-dot {
+    transition: none;
+  }
+  
+  .heatmap-chart__cell:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .heatmap-chart {
+    border: 2px solid var(--grey-600);
+  }
+  
+  .heatmap-chart__cell {
+    border: 1px solid var(--grey-600);
+  }
+  
+  .intensity-very-low {
+    background-color: var(--turquoise-2);
+    border-color: var(--turquoise-3);
+  }
+  
+  .intensity-low {
+    background-color: #e0e0e0;
+    border-color: var(--grey-700);
+  }
+  
+  .intensity-medium {
+    background-color: #999999;
+    border-color: var(--grey-800);
+  }
+  
+  .intensity-high {
+    background-color: #555555;
+    border-color: var(--grey-800);
+  }
+  
+  .intensity-very-high {
+    background-color: #000000;
+    border-color: var(--grey-900);
+  }
+}
+
+/* Dark mode - Subtle */
+@media (prefers-color-scheme: dark) {
+  .heatmap-chart {
+    background: var(--bg-surface);
+    border-color: var(--border-soft);
+  }
+  
+  .heatmap-chart__title {
+    color: white;
+  }
+  
+  .heatmap-chart__subtitle {
+    color: var(--grey-400);
+  }
+  
+  .heatmap-chart__day,
+  .heatmap-chart__hour,
+  .heatmap-chart__legend-text {
+    color: var(--grey-400);
+  }
+  
+  .heatmap-chart__stat-value {
+    color: white;
+  }
+  
+  .intensity-very-low {
+    background-color: var(--turquoise-2);
+    border-color: var(--turquoise-3);
+  }
+  
+  .intensity-low {
+    background-color: #4a5568;
+    border-color: #2d3748;
+  }
+}

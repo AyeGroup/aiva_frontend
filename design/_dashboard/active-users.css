@@ -1,0 +1,203 @@
+/* Active Users Component - Instagram Story Style */
+.active-users {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-soft);
+}
+
+.active-users__header h3 {
+  margin: 0;
+}
+
+.active-users__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.active-users__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  transition: var(--transition-default);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+}
+
+.active-users__item:hover {
+  background: var(--grad-ethereal);
+  transform: translateY(-2px);
+}
+
+.active-users__avatar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.active-users__story-ring {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 3px;
+  z-index: 1;
+  animation: gentle-bounce 2s ease-in-out infinite;
+}
+
+.active-users__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  border: 3px solid var(--bg-surface);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-default);
+}
+
+.active-users__item:hover .active-users__avatar {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-hover);
+}
+
+.active-users__avatar-emoji {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.active-users__online-status {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--success);
+  border: 2px solid var(--bg-surface);
+  border-radius: 50%;
+  z-index: 3;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.active-users__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-1);
+}
+
+.active-users__name {
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-medium);
+  color: var(--grey-900);
+  line-height: 1.2;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.active-users__status {
+  font-size: 10px;
+  color: var(--grey-500);
+  font-weight: var(--font-weight-normal);
+}
+
+.active-users__footer {
+  border-top: 1px solid var(--border-soft);
+  padding-top: var(--space-4);
+  text-align: center;
+}
+
+.active-users__see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: transparent;
+  border: none;
+  color: var(--brand-primary);
+  font-size: var(--text-body-small);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-default);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+}
+
+.active-users__see-all:hover {
+  background: var(--peach-1);
+  color: var(--peach-7);
+  transform: translateX(-2px);
+}
+
+.active-users__see-all svg {
+  transition: var(--transition-default);
+}
+
+.active-users__see-all:hover svg {
+  transform: translateX(2px);
+}
+
+/* Story Ring Animation */
+@keyframes story-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+.active-users__story-ring {
+  animation: story-pulse 3s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .active-users__grid {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: var(--space-3);
+  }
+  
+  .active-users__story-ring {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .active-users__avatar {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .active-users__avatar-emoji {
+    font-size: 16px;
+  }
+  
+  .active-users__name {
+    max-width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .active-users {
+    padding: var(--space-4);
+  }
+  
+  .active-users__grid {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: var(--space-2);
+  }
+}

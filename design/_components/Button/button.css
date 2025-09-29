@@ -1,0 +1,83 @@
+/* Aiva Button Component Styles */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Press Effect */
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+  transition: var(--transition-fast);
+}
+
+/* Primary Button Styles */
+.btn:has(.bg-brand-primary) {
+  background: var(--brand-primary);
+  box-shadow: var(--shadow-low);
+}
+
+.btn:hover:has(.bg-brand-primary) {
+  background: #57a8a2;
+  box-shadow: var(--shadow-md);
+}
+
+/* Secondary Button Hover */
+.btn:has(.border-brand-primary):hover {
+  background: rgba(101, 188, 182, 0.08) !important;
+  border-color: #57a8a2;
+}
+
+/* Loading Spinner */
+@keyframes aiva-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.btn .animate-spin {
+  animation: aiva-spin 1s linear infinite;
+}
+
+/* Ripple Effect */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translate(-50%, -50%);
+  transition: width var(--transition-default), height var(--transition-default);
+  pointer-events: none;
+}
+
+.btn:active::after {
+  width: 120px;
+  height: 120px;
+}
+
+/* RTL Support */
+html[dir="rtl"] .btn {
+  direction: ltr;
+}
+
+html[dir="rtl"] .btn span {
+  direction: rtl;
+}
+
+/* Focus States */
+.btn:focus-visible {
+  outline: 2px solid rgba(101, 188, 182, 0.25);
+  outline-offset: 2px;
+}
+
+/* Disabled State */
+.btn:disabled {
+  filter: saturate(0.7);
+  cursor: not-allowed;
+}

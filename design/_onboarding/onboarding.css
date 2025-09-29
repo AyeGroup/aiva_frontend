@@ -1,0 +1,451 @@
+/* Onboarding Wizard Styles */
+
+.onboarding-container {
+  background: var(--bg-app);
+  min-height: 100vh;
+  padding: var(--space-6);
+  font-family: 'Vazirmatn', sans-serif;
+}
+
+.onboarding-container .container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Step Content */
+.step-content {
+  animation: slideInFromRight 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Progress Indicator */
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-default);
+  cursor: pointer;
+}
+
+.progress-step.active {
+  background-color: var(--brand-primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.progress-step.completed {
+  background-color: var(--success);
+  color: white;
+}
+
+.progress-step.completed:hover {
+  transform: scale(1.05);
+}
+
+.progress-step.inactive {
+  background-color: var(--grey-200);
+  color: var(--grey-400);
+}
+
+.progress-connector {
+  width: 64px;
+  height: 4px;
+  border-radius: 2px;
+  transition: var(--transition-default);
+}
+
+.progress-connector.completed {
+  background-color: var(--success);
+}
+
+.progress-connector.inactive {
+  background-color: var(--grey-200);
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: var(--space-6);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--space-3);
+  color: var(--grey-900);
+  font-weight: var(--font-weight-medium);
+  text-align: right;
+}
+
+.form-group .required {
+  color: var(--brand-primary);
+  margin-left: var(--space-1);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-default);
+  background: white;
+  text-align: right;
+  direction: rtl;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(76, 167, 165, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Glass morphism effects */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Card Styles */
+.radio-card {
+  cursor: pointer;
+  transition: all var(--transition-default);
+  transform-origin: center;
+}
+
+.radio-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: var(--shadow-md);
+}
+
+.radio-card.selected {
+  border-color: var(--brand-primary);
+  background: linear-gradient(135deg, rgba(76,167,165,0.08) 0%, rgba(245,166,35,0.08) 100%);
+  box-shadow: var(--shadow-md);
+}
+
+/* Chat Interface Styles */
+.chat-interface {
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-soft);
+  background: linear-gradient(135deg, rgba(235,110,91,0.05) 0%, rgba(76,167,165,0.05) 100%);
+}
+
+.chat-messages {
+  flex: 1;
+  padding: var(--space-4);
+  overflow-y: auto;
+  background-color: var(--grey-50);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.chat-message {
+  display: flex;
+  gap: var(--space-2);
+  max-width: 70%;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.chat-message.bot {
+  align-self: flex-start;
+}
+
+.chat-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.chat-bubble {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.chat-bubble.bot {
+  background-color: var(--brand-primary);
+  color: white;
+}
+
+.chat-bubble.user {
+  background-color: white;
+  color: var(--grey-900);
+  border: 1px solid var(--border-soft);
+}
+
+.chat-input-area {
+  padding: var(--space-4);
+  border-top: 1px solid var(--border-soft);
+  background-color: white;
+}
+
+.chat-input-container {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-end;
+}
+
+/* Typing Indicator */
+.typing-indicator {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.7);
+  animation: typingBounce 1.4s ease-in-out infinite both;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Code Block Styles */
+.code-block {
+  background-color: var(--grey-900);
+  color: white;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  font-family: 'Fira Code', 'Monaco', 'Menlo', monospace;
+  font-size: var(--text-body-small);
+  line-height: 1.6;
+  overflow-x: auto;
+  position: relative;
+  white-space: pre;
+  direction: ltr;
+  text-align: left;
+}
+
+.code-actions {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Color Picker */
+.color-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+.color-option {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: var(--transition-default);
+  border: 2px solid transparent;
+}
+
+.color-option:hover {
+  transform: scale(1.05);
+}
+
+.color-option.selected {
+  border-color: var(--grey-400);
+  transform: scale(1.05);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.color-option-check {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 20px;
+}
+
+/* Bot Preview */
+.bot-preview {
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-soft-mint) 100%);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.bot-preview-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: var(--font-weight-display);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .onboarding-container {
+    padding: var(--space-4);
+  }
+  
+  .progress-step {
+    width: 36px;
+    height: 36px;
+    font-size: var(--text-body-small);
+  }
+  
+  .progress-connector {
+    width: 32px;
+  }
+  
+  .chat-interface {
+    height: 500px;
+  }
+  
+  .chat-message {
+    max-width: 85%;
+  }
+  
+  .color-picker-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-indicator {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  
+  .progress-step {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .progress-connector {
+    width: 24px;
+    height: 2px;
+  }
+}
+
+/* RTL Support */
+html[dir="rtl"] .chat-message.user {
+  flex-direction: row;
+  align-self: flex-start;
+}
+
+html[dir="rtl"] .chat-message.bot {
+  flex-direction: row-reverse;
+  align-self: flex-end;
+}
+
+html[dir="rtl"] .code-block {
+  direction: ltr;
+  text-align: left;
+}
+
+html[dir="rtl"] .code-actions {
+  left: auto;
+  right: var(--space-3);
+}
+
+/* Animation Utilities */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

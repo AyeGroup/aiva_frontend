@@ -1,0 +1,250 @@
+/* Dashboard Card Component */
+.dashboard-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-default);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+.dashboard-card--clickable {
+  cursor: pointer;
+}
+
+.dashboard-card--clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Sizes */
+.dashboard-card--sm {
+  padding: var(--space-4);
+  max-height: 140px;
+}
+
+.dashboard-card--md {
+  padding: var(--space-6);
+  max-height: 160px;
+}
+
+.dashboard-card--lg {
+  padding: var(--space-8);
+  height: 320px;
+}
+
+.dashboard-card--xl {
+  padding: var(--space-8);
+  height: 384px;
+}
+
+/* Color Variants */
+.dashboard-card--primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--sharp-primary);
+}
+
+.dashboard-card--secondary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--brand-secondary);
+}
+
+.dashboard-card--tertiary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--brand-tertiary);
+}
+
+.dashboard-card--success::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--success);
+}
+
+.dashboard-card--warning::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--warning);
+}
+
+.dashboard-card--danger::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--danger);
+}
+
+/* Icon */
+.dashboard-card__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-3);
+  background: var(--bg-soft-mint);
+  color: var(--brand-primary);
+  font-size: 18px;
+}
+
+/* Header */
+.dashboard-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  gap: var(--space-3);
+}
+
+.dashboard-card__title {
+  font-size: var(--text-body-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--grey-600);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Value */
+.dashboard-card__value {
+  font-size: var(--text-kpi);
+  font-weight: var(--font-weight-display);
+  color: var(--grey-900);
+  line-height: 1.1;
+  margin-bottom: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtitle */
+.dashboard-card__subtitle {
+  font-size: var(--text-caption);
+  color: var(--grey-500);
+  line-height: 1.4;
+}
+
+/* Trend */
+.dashboard-card__trend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
+  white-space: nowrap;
+}
+
+.dashboard-card__trend--positive {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+}
+
+.dashboard-card__trend--negative {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.dashboard-card__trend--neutral {
+  background: var(--grey-100);
+  color: var(--grey-600);
+}
+
+.dashboard-card__trend-icon {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Content */
+.dashboard-card__content {
+  margin-top: var(--space-4);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .dashboard-card--lg {
+    padding: var(--space-6);
+  }
+  
+  .dashboard-card--md {
+    padding: var(--space-4);
+  }
+  
+  .dashboard-card__value {
+    font-size: 28px;
+  }
+  
+  .dashboard-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}
+
+/* Special card variants */
+.dashboard-card--transparent {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dashboard-card--gradient {
+  background: var(--sharp-primary);
+  opacity: 0.05;
+}
+
+.dashboard-card--highlight {
+  background: var(--sharp-primary);
+  color: white;
+}
+
+.dashboard-card--highlight .dashboard-card__title,
+.dashboard-card--highlight .dashboard-card__subtitle {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dashboard-card--highlight .dashboard-card__value {
+  color: white;
+}
+
+/* Borderless variant - no background or border */
+.dashboard-card--borderless {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.dashboard-card--borderless:hover {
+  transform: none;
+  box-shadow: none;
+}

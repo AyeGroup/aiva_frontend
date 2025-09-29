@@ -1,0 +1,216 @@
+/* Stat Card Component - Borderless Design */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: relative;
+  transition: var(--transition-default);
+}
+
+/* Borderless variant - no background or border */
+.stat-card--borderless {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.stat-card--borderless:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.stat-card--clickable {
+  cursor: pointer;
+}
+
+.stat-card--clickable:hover {
+  transform: translateY(-2px);
+}
+
+/* Sizes */
+.stat-card--sm {
+  padding: var(--space-3);
+}
+
+.stat-card--md {
+  padding: var(--space-4);
+}
+
+.stat-card--lg {
+  padding: var(--space-5);
+}
+
+/* Header - Label on left, Icon on right */
+.stat-card__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: 0;
+}
+
+.stat-card__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  order: 2;
+}
+
+.stat-card--primary .stat-card__icon {
+  background: rgba(101, 188, 182, 0.15);
+  color: var(--brand-primary);
+}
+
+.stat-card--secondary .stat-card__icon {
+  background: rgba(225, 159, 135, 0.15);
+  color: var(--brand-secondary);
+}
+
+.stat-card--tertiary .stat-card__icon {
+  background: rgba(235, 110, 91, 0.15);
+  color: var(--brand-tertiary);
+}
+
+.stat-card--success .stat-card__icon {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--success);
+}
+
+.stat-card--warning .stat-card__icon {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+}
+
+.stat-card--danger .stat-card__icon {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+.stat-card__label {
+  font-size: var(--text-body-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--grey-600);
+  line-height: 1.4;
+  order: 1;
+  text-align: right;
+}
+
+/* Divider */
+.stat-card__divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--grey-500) 20%, var(--grey-500) 80%, transparent);
+  margin: 0 0 var(--space-2) 0;
+}
+
+/* Body */
+.stat-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.stat-card__value {
+  font-size: var(--text-kpi);
+  font-weight: var(--font-weight-display);
+  color: var(--grey-900);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Change indicator */
+.stat-card__change {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
+  white-space: nowrap;
+}
+
+.stat-card__change--increase {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+}
+
+.stat-card__change--decrease {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.stat-card__change--neutral {
+  background: var(--grey-100);
+  color: var(--grey-600);
+}
+
+.stat-card__change-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stat-card__icon {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+  
+  .stat-card__value {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-card__icon {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+  
+  .stat-card__value {
+    font-size: 24px;
+  }
+  
+  .stat-card__header {
+    gap: var(--space-2);
+  }
+  
+  .stat-card__body {
+    gap: var(--space-2);
+  }
+}
+
+/* Compact variant */
+.stat-card--compact {
+  padding: var(--space-3);
+}
+
+.stat-card--compact .stat-card__header {
+  gap: var(--space-2);
+}
+
+.stat-card--compact .stat-card__icon {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+}
+
+.stat-card--compact .stat-card__value {
+  font-size: 24px;
+}
+
+.stat-card--compact .stat-card__body {
+  gap: var(--space-2);
+}
