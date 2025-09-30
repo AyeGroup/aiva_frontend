@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { DashboardCard } from "@/design/_components/DashboardCard/dashboard-card";
-import { StatCard } from "@/design/_components/StatCard/stat-card";
-import { ChannelCard } from "@/design/_components/ChannelCard/channel-card";
-import { PerformerCard } from "@/design/_components/PerformerCard/performer-card";
-import { ActivityChart } from "@/design/_components/ActivityChart/activity-chart";
-import { ColorShowcase } from "@/design/_components/ColorShowcase/color-showcase";
-import { HeatmapChart } from "@/design/_components/HeatmapChart/heatmap-chart";
+import { DashboardCard } from "@/components/dashboard-card";
+import { StatCard } from "@/components/stat-card";
+import { ChannelCard } from "@/components/channel-card";
+import { PerformerCard } from "@/components/performer-card";
+import { ActivityChart } from "@/components/activity-chart";
+import { ColorShowcase } from "@/components/color-showcase";
+import { HeatmapChart } from "@/components/heatmap-chart";
 import { Sidebar } from "./sidebar";
 import { UpgradeBanner } from "./upgrade-banner";
 import { RecentChats } from "./recent-chats";
 import { QuickActions } from "./quick-actions";
 import { ActiveUsers } from "./active-users";
-import { Select } from "@/design/_components/Select/select";
+import { Select } from "@/components/select";
 import { Toaster } from "@/components/ui/sonner";
 import "./active-users.css";
 
@@ -26,7 +26,7 @@ interface DashboardProps {
   onNavigate: (page: PageType) => void;
 }
 
-export function Dashboard({ onNavigate }: DashboardProps) {
+export default function Dashboard({ onNavigate }: DashboardProps) {
   const [timeRange, setTimeRange] = useState("30d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
 
@@ -76,7 +76,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       <div className="flex h-screen">
         {/* Sidebar */}
         {/* <Sidebar onNavigate={onNavigate} currentPage="dashboard" /> */}
-{/* elham */}
+        {/* elham */}
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto h-screen">
           <div className="max-w-7xl mx-auto pb-8">

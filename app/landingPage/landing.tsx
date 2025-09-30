@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorBoundary } from "@/design/_components/ErrorBoundary/error-boundary";
+import { ErrorBoundary } from "@/components/error-boundary";
 import { Hero } from "./hero";
 import { HowItWorks } from "./how-it-works";
 import { Features } from "./features";
@@ -32,7 +32,7 @@ const LoadingSection = () => (
   </div>
 );
 
-export function LandingPage({ onNavigate }: LandingPageProps) {
+export default function LandingPage({ onNavigate }: LandingPageProps) {
   return (
     <main className="landing-page min-h-screen bg-gradient-to-br from-bg-app via-bg-shell to-bg-soft-mint">
       {/* Hero Section */}

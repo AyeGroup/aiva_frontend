@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { BotConfig } from "../onboarding";
 import { onboardingData } from "../onboarding.data";
-import { Card } from "@/design/_components/Card/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/design/_components/Input/input";
+import { Card } from "@/components/Card";
+import { Button } from "@/components/button";
+import { Input } from "@/components/Input/input";
 import {
   Plus,
   FileText,

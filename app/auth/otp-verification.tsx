@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-// import { Button } from "@/design/_components/Button/button";
-import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+// import { Button } from "@/components/Button/button";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { persianToEnglish, englishToPersian } from "@/utils/number-utils";
 import { ArrowLeft } from "lucide-react";
 import aivaLogo from "@/public/logo.png";
@@ -23,7 +23,7 @@ interface OTPVerificationProps {
   email?: string;
 }
 
-export function OTPVerification({
+export default function OTPVerification({
   onNavigate,
   phoneNumber,
   email,

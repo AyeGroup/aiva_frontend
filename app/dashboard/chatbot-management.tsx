@@ -14,11 +14,11 @@ import {
   X,
   Plus,
 } from "lucide-react";
-import { onboardingData } from "../_onboarding/onboarding.data";
-import { Card } from "@/design/_components/Card/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/design/_components/Input/input";
-import { Select } from "@/design/_components/Select/select";
+import { onboardingData } from "../onboarding/onboarding.data";
+import { Card } from "@/components/Card";
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
+import { Select } from "@/components/select";
 import { Switch } from "@/components/ui/switch";
 
 type PageType =
@@ -69,7 +69,7 @@ interface Chatbot {
   };
 }
 
-export function ChatbotManagement({ onNavigate }: ChatbotManagementProps) {
+export default function ChatbotManagement({ onNavigate }: ChatbotManagementProps) {
   const [chatbots, setChatbots] = useState<Chatbot[]>([
     {
       id: "1",

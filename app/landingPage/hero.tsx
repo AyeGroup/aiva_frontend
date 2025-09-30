@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/button";
 import { heroData } from "./landing.data";
 import { AnimatedChatDemo } from "./animated-chat-demo";
 

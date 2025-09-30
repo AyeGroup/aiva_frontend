@@ -19,7 +19,7 @@ interface Ticket {
   updatedAt: string;
 }
 
-export function Tickets({ onNavigate }: TicketsProps) {
+export default function Tickets({ onNavigate }: TicketsProps) {
   const [tickets] = useState<Ticket[]>([
     {
       id: '1',

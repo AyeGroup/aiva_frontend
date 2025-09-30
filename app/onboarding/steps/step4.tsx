@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BotConfig } from "../onboarding";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/design/_components/Input/input";
+import { Button } from "@/components/button";
+import { Input } from "@/components/Input/input";
 import { HelpCircle, Plus, Trash2, Edit3, Save, X } from "lucide-react";
 
 interface WizardStep4Props {

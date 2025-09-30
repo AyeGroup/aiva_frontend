@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BotConfig } from "../onboarding";
-import { Card } from "@/design/_components/Card/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/Card";
+import { Button } from "@/components/button";
 import {
   Copy,
   Download,

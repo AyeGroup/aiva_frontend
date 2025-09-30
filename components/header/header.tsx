@@ -1,5 +1,5 @@
 import { NavItem } from "../../types/common";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/button";
 import { headerData } from "./header.data";
 import "./header.css";
 

@@ -8,53 +8,21 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { ErrorBoundary } from "../design/_components/ErrorBoundary/error-boundary";
-import { Header } from "../design/_header/header";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { Header } from "@/components/header/header";
 
 // Lazy load components to improve initial bundle size
-const LandingPage = lazy(() =>
-  import("../design/_landingPage/landing").then((module) => ({
-    default: module.LandingPage,
-  }))
+const LandingPage = lazy(() => import("@/app/landingPage/landing"));
+const OnboardingWizard = lazy(() => import("@/app/onboarding/onboarding"));
+const Dashboard = lazy(() => import("@/app/dashboard/dashboard"));
+const ChatbotManagement = lazy(
+  () => import("@/app/dashboard/chatbot-management")
 );
-const OnboardingWizard = lazy(() =>
-  import("../design/_onboarding/onboarding").then((module) => ({
-    default: module.OnboardingWizard,
-  }))
-);
-const Dashboard = lazy(() =>
-  import("../design/_dashboard/dashboard").then((module) => ({
-    default: module.Dashboard,
-  }))
-);
-const ChatbotManagement = lazy(() =>
-  import("../design/_dashboard/chatbot-management").then((module) => ({
-    default: module.ChatbotManagement,
-  }))
-);
-const Tickets = lazy(() =>
-  import("../design/_dashboard/tickets").then((module) => ({
-    default: module.Tickets,
-  }))
-);
-const Login = lazy(() =>
-  import("../design/_auth/login").then((module) => ({ default: module.Login }))
-);
-const OTPVerification = lazy(() =>
-  import("../design/_auth/otp-verification").then((module) => ({
-    default: module.OTPVerification,
-  }))
-);
-const Signup = lazy(() =>
-  import("../design/_auth/signup").then((module) => ({
-    default: module.Signup,
-  }))
-);
-const ChatHistoryDemo = lazy(() =>
-  import("../design/_demo/chat-history-demo").then((module) => ({
-    default: module.ChatHistoryDemo,
-  }))
-);
+const Tickets = lazy(() => import("@/app/dashboard/tickets"));
+const Login = lazy(() => import("@/app/auth/login/page"));
+const OTPVerification = lazy(() => import("@/app/auth/otp-verification"));
+const Signup = lazy(() => import("@/app/auth/signup"));
+const ChatHistoryDemo = lazy(() => import("@/app/demo/chat-history-demo"));
 
 type PageType =
   | "landing"
@@ -71,22 +39,18 @@ type PageType =
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>("landing");
 
-  // Simple router with error handling and memoization
   const navigate = useCallback((page: PageType) => {
     try {
       setCurrentPage(page);
-      // Update URL without full reload
       const url = page === "landing" ? "/" : `/${page}`;
       window.history.pushState({}, "", url);
     } catch (error) {
       console.error("Navigation error:", error);
-      // Fallback navigation
       setCurrentPage("landing");
       window.history.pushState({}, "", "/");
     }
   }, []);
 
-  // Global navigation context (memoized)
   const appContext = useMemo(
     () => ({
       navigate,
@@ -95,7 +59,6 @@ export default function App() {
     [navigate, currentPage]
   );
 
-  // Handle browser back/forward with error handling
   useEffect(() => {
     const handlePopState = () => {
       try {
@@ -112,27 +75,20 @@ export default function App() {
         else if (path === "/otp-verification")
           setCurrentPage("otp-verification");
         else if (path === "/register") setCurrentPage("register");
-        else setCurrentPage("landing"); // fallback
+        else setCurrentPage("landing");
       } catch (error) {
         console.error("Error handling navigation:", error);
-        setCurrentPage("landing"); // fallback
+        setCurrentPage("landing");
       }
     };
 
     window.addEventListener("popstate", handlePopState);
-
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  // Loading component for lazy-loaded pages - NO ANIMATIONS
   const PageLoader = () => (
     <div className="min-h-screen flex items-center justify-center">
-      <div
-        className="space-y-4"
-        style={{ animation: "none", transition: "none" }}
-      >
+      <div className="space-y-4" style={{ animation: "none", transition: "none" }}>
         <div className="h-8 bg-gray-200 rounded w-48 mx-auto"></div>
         <div className="h-4 bg-gray-200 rounded w-32 mx-auto"></div>
         <div

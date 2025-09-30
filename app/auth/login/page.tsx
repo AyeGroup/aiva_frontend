@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { Input } from "@/components/ui/input";
 import {
   Eye,
@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
 // import "@/style/login.css";
-import "@/styles/login.css"
+import "@/styles/login.css";
 import { login } from "@/services/auth.service";
 
 type PageType =
@@ -36,7 +36,7 @@ type PageType =
 //   onNavigate: (page: PageType) => void;
 // }
 
- function Login() {
+function Login() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");

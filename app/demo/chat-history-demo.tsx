@@ -1,5 +1,5 @@
 import React from "react";
-import { ChatHistoryCard } from "@/design/_components/ChatHistoryCard/chat-history-card";
+import { ChatHistoryCard } from "@/components/chat-history-card";
 
 const sampleChats = [
   {
@@ -127,7 +127,7 @@ const sampleChats = [
   },
 ];
 
-export function ChatHistoryDemo() {
+export default function ChatHistoryDemo() {
   return (
     <div
       style={{

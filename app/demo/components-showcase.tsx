@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Modal } from "@/design/_components/Modal/modal";
-import { Dropdown } from "@/design/_components/Dropdown/dropdown";
-import { Slider } from "@/design/_components/Slider/slider";
-import { Tooltip } from "@/design/_components/Tooltip/tooltip";
-import { Toggle } from "@/design/_components/Toggle/toggle";
-import { Tabs } from "@/design/_components/Tabs/tabs";
-import { Accordion } from "@/design/_components/Accordion/accordion";
+import { Modal } from "@/components/Modal/modal";
+import { Dropdown } from "@/components/Dropdown/dropdown";
+import { Slider } from "@/components/Slider/slider";
+import { Tooltip } from "@/components/Tooltip/tooltip";
+import { Toggle } from "@/components/Toggle/toggle";
+import { Tabs } from "@/components/Tabs/tabs";
+import { Accordion } from "@/components/Accordion/accordion";
 
 export function ComponentsShowcase() {
   const [isModalOpen, setIsModalOpen] = useState(false);

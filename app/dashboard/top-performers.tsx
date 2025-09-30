@@ -1,4 +1,4 @@
-import { Card } from "@/design/_components/Card/card";
+import { Card } from "@/components/Card";
 import { Crown, TrendingUp, MessageSquare } from "lucide-react";
 
 interface PerformerData {

@@ -1,5 +1,5 @@
 import { howItWorksData } from "./landing.data";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/button";
 
 const iconMap: Record<string, string> = {
   settings: "⚙️",

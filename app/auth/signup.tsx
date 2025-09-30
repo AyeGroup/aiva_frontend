@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
-import { Input } from "@/design/_components/Input/input";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { Input } from "@/components/Input/input";
 import { Eye, EyeOff, ArrowLeft, Check, Mail, Phone, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";

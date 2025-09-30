@@ -1,6 +1,6 @@
-import { Card } from "@/design/_components/Card/card";
-import { Button } from "@/components/ui/button";
-import { ChatHistoryCard } from "@/design/_components/ChatHistoryCard/chat-history-card";
+import { Card } from "@/components/Card";
+import { Button } from "@/components/button";
+import { ChatHistoryCard } from "@/components/ChatHistoryCard/chat-history-card";
 import { MessageSquare, ArrowLeft } from "lucide-react";
 
 interface Message {
