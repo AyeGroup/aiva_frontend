@@ -1,12 +1,21 @@
-import { useState, useRef, useEffect } from 'react';
-import { Button } from '../_components/Button/button';
-import { ImageWithFallback } from '../../components/figma/ImageWithFallback';
-import { persianToEnglish, englishToPersian } from '../../utils/number-utils';
-import { ArrowLeft } from 'lucide-react';
-// import aivaLogo from "/logo.png";
-import './login.css';
+import { useState, useRef, useEffect } from "react";
+// import { Button } from "@/design/_components/Button/button";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { persianToEnglish, englishToPersian } from "@/utils/number-utils";
+import { ArrowLeft } from "lucide-react";
+// import aivaLogo from "@/public/logo.png";
+import "./login.css";
 
-type PageType = 'landing' | 'signup' | 'dashboard' | 'consultation' | 'demo' | 'chatbot-management' | 'tickets' | 'login' | 'otp-verification';
+type PageType =
+  | "landing"
+  | "signup"
+  | "dashboard"
+  | "consultation"
+  | "demo"
+  | "chatbot-management"
+  | "tickets"
+  | "login"
+  | "otp-verification";
 
 interface OTPVerificationProps {
   onNavigate: (page: PageType) => void;
@@ -14,12 +23,16 @@ interface OTPVerificationProps {
   email?: string;
 }
 
-export function OTPVerification({ onNavigate, phoneNumber, email }: OTPVerificationProps) {
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+export function OTPVerification({
+  onNavigate,
+  phoneNumber,
+  email,
+}: OTPVerificationProps) {
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [countdown, setCountdown] = useState(120); // 2 minutes
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Countdown timer
@@ -32,17 +45,17 @@ export function OTPVerification({ onNavigate, phoneNumber, email }: OTPVerificat
 
   const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) return; // Only allow single digit
-    
+
     // Convert Persian digits to English
     const englishValue = persianToEnglish(value);
-    
+
     // Only allow digits
     if (englishValue && !/^\d$/.test(englishValue)) return;
-    
+
     const newOtp = [...otp];
     newOtp[index] = englishValue;
     setOtp(newOtp);
-    setError('');
+    setError("");
 
     // Auto-focus next input
     if (englishValue && index < 5) {
@@ -50,60 +63,60 @@ export function OTPVerification({ onNavigate, phoneNumber, email }: OTPVerificat
     }
 
     // Auto-submit when all fields are filled
-    if (newOtp.every(digit => digit !== '') && index === 5) {
-      handleVerify(newOtp.join(''));
+    if (newOtp.every((digit) => digit !== "") && index === 5) {
+      handleVerify(newOtp.join(""));
     }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pastedText = e.clipboardData.getData('text');
+    const pastedText = e.clipboardData.getData("text");
     // Convert Persian to English first, then filter digits
     const englishText = persianToEnglish(pastedText);
-    const pastedData = englishText.replace(/\D/g, '').slice(0, 6);
-    const newOtp = pastedData.split('').concat(Array(6).fill('')).slice(0, 6);
+    const pastedData = englishText.replace(/\D/g, "").slice(0, 6);
+    const newOtp = pastedData.split("").concat(Array(6).fill("")).slice(0, 6);
     setOtp(newOtp);
-    
+
     if (pastedData.length === 6) {
       handleVerify(pastedData);
     }
   };
 
   const handleVerify = async (otpCode?: string) => {
-    const codeToVerify = otpCode || otp.join('');
-    
+    const codeToVerify = otpCode || otp.join("");
+
     if (codeToVerify.length !== 6) {
-      setError('لطفاً کد ۶ رقمی را کامل وارد کنید');
+      setError("لطفاً کد ۶ رقمی را کامل وارد کنید");
       return;
     }
 
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // Mock verification - در واقعیت باید با سرور چک شود
-      if (codeToVerify === '123456') {
+      if (codeToVerify === "123456") {
         // If user exists, go to dashboard
-        onNavigate('dashboard');
-      } else if (codeToVerify === '111111') {
+        onNavigate("dashboard");
+      } else if (codeToVerify === "111111") {
         // If new user, go to onboarding
-        onNavigate('signup');
+        onNavigate("signup");
       } else {
-        setError('کد وارد شده صحیح نیست. لطفاً مجدداً تلاش کنید.');
-        setOtp(['', '', '', '', '', '']);
+        setError("کد وارد شده صحیح نیست. لطفاً مجدداً تلاش کنید.");
+        setOtp(["", "", "", "", "", ""]);
         inputRefs.current[0]?.focus();
       }
     } catch (error) {
-      setError('خطایی رخ داده است. لطفاً مجدداً تلاش کنید.');
+      setError("خطایی رخ داده است. لطفاً مجدداً تلاش کنید.");
     } finally {
       setIsLoading(false);
     }
@@ -111,22 +124,22 @@ export function OTPVerification({ onNavigate, phoneNumber, email }: OTPVerificat
 
   const handleResendCode = async () => {
     if (countdown > 0) return;
-    
+
     setIsResending(true);
-    setError('');
-    
+    setError("");
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       setCountdown(120);
-      setOtp(['', '', '', '', '', '']);
+      setOtp(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
-      
+
       // Show success message
-      setError('');
+      setError("");
     } catch (error) {
-      setError('خطا در ارسال مجدد کد. لطفاً چند لحظه دیگر تلاش کنید.');
+      setError("خطا در ارسال مجدد کد. لطفاً چند لحظه دیگر تلاش کنید.");
     } finally {
       setIsResending(false);
     }
@@ -135,11 +148,11 @@ export function OTPVerification({ onNavigate, phoneNumber, email }: OTPVerificat
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const contactInfo = phoneNumber || email;
-  const contactType = phoneNumber ? 'شماره موبایل' : 'ایمیل';
+  const contactType = phoneNumber ? "شماره موبایل" : "ایمیل";
 
   return (
     <main className="min-h-screen bg-bg-app" dir="rtl">
@@ -156,7 +169,8 @@ export function OTPVerification({ onNavigate, phoneNumber, email }: OTPVerificat
               {/* Logo - Right Side */}
               <div className="flex items-center gap-3">
                 <ImageWithFallback
-                  src="/logo.png"
+                  src=""
+                  // src=""
                   alt="آیوا"
                   className="w-20 h-20 object-cover"
                 />
@@ -416,7 +430,8 @@ export function OTPVerification({ onNavigate, phoneNumber, email }: OTPVerificat
                   {otp.map((digit, index) => (
                     <input
                       key={index}
-                      ref={(el) => (inputRefs.current[index] = el)}
+                      // ref={(el) => (inputRefs.current[index] = el)}
+                      //elham
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
@@ -449,15 +464,15 @@ export function OTPVerification({ onNavigate, phoneNumber, email }: OTPVerificat
               </div>
 
               {/* Verify Button */}
-              <Button
-                variant="primary"
-                size="lg"
+              <button
+                // variant="primary"
+                // size="lg"
                 onClick={() => handleVerify()}
                 disabled={isLoading || otp.some((digit) => digit === "")}
                 className="w-full mb-6"
               >
                 {isLoading ? "در حال تأیید..." : "تأیید کد"}
-              </Button>
+              </button>
 
               {/* Resend Code */}
               <div className="text-center">

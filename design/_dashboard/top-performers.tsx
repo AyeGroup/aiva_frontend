@@ -1,5 +1,5 @@
-import { Card } from '../_components/Card/card';
-import { Crown, TrendingUp, MessageSquare } from 'lucide-react';
+import { Card } from "@/design/_components/Card/card";
+import { Crown, TrendingUp, MessageSquare } from "lucide-react";
 
 interface PerformerData {
   id: string;
@@ -7,43 +7,45 @@ interface PerformerData {
   metric: string;
   value: string;
   rank: number;
-  trend: 'up' | 'down' | 'stable';
+  trend: "up" | "down" | "stable";
 }
 
 export function TopPerformers() {
   const performers: PerformerData[] = [
     {
-      id: '1',
-      category: 'محبوب‌ترین سؤال',
-      metric: 'قیمت محصولات',
-      value: '234 پرسش',
+      id: "1",
+      category: "محبوب‌ترین سؤال",
+      metric: "قیمت محصولات",
+      value: "234 پرسش",
       rank: 1,
-      trend: 'up'
+      trend: "up",
     },
     {
-      id: '2',
-      category: 'بهترین پاسخ',
-      metric: 'راهنمای خرید',
-      value: '4.9/5 امتیاز',
+      id: "2",
+      category: "بهترین پاسخ",
+      metric: "راهنمای خرید",
+      value: "4.9/5 امتیاز",
       rank: 2,
-      trend: 'up'
+      trend: "up",
     },
     {
-      id: '3',
-      category: 'بیشترین مکالمه',
-      metric: 'پشتیبانی فنی',
-      value: '156 مکالمه',
+      id: "3",
+      category: "بیشترین مکالمه",
+      metric: "پشتیبانی فنی",
+      value: "156 مکالمه",
       rank: 3,
-      trend: 'stable'
-    }
+      trend: "stable",
+    },
   ];
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up':
+      case "up":
         return <TrendingUp className="w-3 h-3 text-success" />;
-      case 'down':
-        return <TrendingUp className="w-3 h-3 text-danger transform rotate-180" />;
+      case "down":
+        return (
+          <TrendingUp className="w-3 h-3 text-danger transform rotate-180" />
+        );
       default:
         return <div className="w-3 h-3 bg-grey-400 rounded-full" />;
     }
@@ -52,13 +54,13 @@ export function TopPerformers() {
   const getRankColor = (rank: number) => {
     switch (rank) {
       case 1:
-        return 'bg-brand-tertiary text-white';
+        return "bg-brand-tertiary text-white";
       case 2:
-        return 'bg-grey-300 text-grey-700';
+        return "bg-grey-300 text-grey-700";
       case 3:
-        return 'bg-brand-primary/20 text-brand-primary';
+        return "bg-brand-primary/20 text-brand-primary";
       default:
-        return 'bg-grey-100 text-grey-600';
+        return "bg-grey-100 text-grey-600";
     }
   };
 
@@ -70,9 +72,7 @@ export function TopPerformers() {
         </div>
         <div>
           <h3 className="text-grey-900">برترین‌ها</h3>
-          <p className="text-grey-600 text-body-small">
-            محبوب‌ترین موضوعات
-          </p>
+          <p className="text-grey-600 text-body-small">محبوب‌ترین موضوعات</p>
         </div>
       </div>
 
@@ -82,10 +82,14 @@ export function TopPerformers() {
             key={performer.id}
             className="flex items-center gap-3 p-3 rounded-lg border border-border-soft hover:bg-bg-soft-mint/30 transition-colors"
           >
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-medium text-sm ${getRankColor(performer.rank)}`}>
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center font-medium text-sm ${getRankColor(
+                performer.rank
+              )}`}
+            >
               {performer.rank}
             </div>
-            
+
             <div className="flex-1 min-w-0">
               <p className="text-grey-900 font-medium truncate">
                 {performer.metric}

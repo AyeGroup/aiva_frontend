@@ -2,7 +2,9 @@ import { ReactNode } from 'react';
 import './card.css';
 
 interface CardProps {
-  children: ReactNode;
+  children?: ReactNode;
+  title?: string;
+  subtitle?: string;
   variant?: 'default' | 'soft-mint' | 'soft-rose';
   elevation?: 'low' | 'md' | 'high';
   padding?: 'sm' | 'md' | 'lg';
@@ -13,7 +15,9 @@ interface CardProps {
 }
 
 export function Card({ 
-  children, 
+  children,
+  title,
+  subtitle, 
   variant = 'default',
   elevation = 'low',
   padding = 'md',
@@ -66,24 +70,25 @@ export function Card({
     boxShadow: `var(--shadow-${elevation})`
   };
 
-  if (onClick) {
-    return (
-      <button
-        className={combinedClasses}
-        onClick={onClick}
-        style={style}
-        type="button"
-      >
-        {children}
-      </button>
-    );
-  }
+
 
   return (
     <div
-      className={`${combinedClasses} mb-6`}
+      className={`${combinedClasses} !border-2 !border-solid !border-grey-200`}
       style={style}
     >
+      {title && (
+        <div className="text-center mb-4">
+          <h3 className="text-grey-900 mb-2" style={{ fontSize: 'var(--text-h4)', lineHeight: 'var(--text-h4-lh)' }}>
+            {title}
+          </h3>
+          {subtitle && (
+            <p className="text-grey-600" style={{ fontSize: 'var(--text-body-small)', lineHeight: 'var(--text-body-small-lh)' }}>
+              {subtitle}
+            </p>
+          )}
+        </div>
+      )}
       {children}
     </div>
   );

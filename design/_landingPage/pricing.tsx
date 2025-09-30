@@ -1,9 +1,9 @@
-import { Button } from '../_components/Button/button';
-import { Card } from '../_components/Card/card';
-import { pricingData } from './landing.data';
-import { Star } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/design/_components/Card/card";
+import { pricingData } from "./landing.data";
+import { Star } from "lucide-react";
 
-type PageType = 'landing' | 'signup' | 'dashboard' | 'consultation';
+type PageType = "landing" | "signup" | "dashboard" | "consultation";
 
 interface PricingProps {
   onNavigate: (page: PageType) => void;
@@ -13,33 +13,33 @@ export function Pricing({ onNavigate }: PricingProps) {
   const { title, subtitle, plans, faq } = pricingData;
 
   return (
-    <section 
-      className="relative" 
-      id="pricing" 
+    <section
+      className="relative"
+      id="pricing"
       aria-labelledby="pricing-title"
-      style={{ 
-        padding: 'var(--space-20) 0',
-        background: 'var(--bg-soft-mint)'
+      style={{
+        padding: "var(--space-20) 0",
+        background: "var(--bg-soft-mint)",
       }}
     >
       <div className="container mx-auto px-6 mx-[74px] my-[0px] pt-[24px] pr-[24px] pb-[32px] pl-[24px]">
         <header className="text-center mt-16 mb-12 px-[0px] py-[24px] p-[0px]">
-          <h2 
-            id="pricing-title" 
+          <h2
+            id="pricing-title"
             className="text-grey-900 mb-6"
-            style={{ 
-              fontSize: 'var(--text-h2)',
-              lineHeight: 'var(--text-h2-lh)',
-              fontWeight: 'var(--font-weight-display)'
+            style={{
+              fontSize: "var(--text-h2)",
+              lineHeight: "var(--text-h2-lh)",
+              fontWeight: "var(--font-weight-display)",
             }}
           >
             {title}
           </h2>
-          <p 
+          <p
             className="text-grey-600 max-w-2xl mx-auto"
-            style={{ 
-              fontSize: 'var(--text-body-large)',
-              lineHeight: 'var(--text-body-large-lh)'
+            style={{
+              fontSize: "var(--text-body-large)",
+              lineHeight: "var(--text-body-large-lh)",
             }}
           >
             {subtitle}
@@ -57,27 +57,27 @@ export function Pricing({ onNavigate }: PricingProps) {
               radius="lg"
               hover={true}
               className={`relative text-center transition-all duration-300 ${
-                plan.popular 
-                  ? 'transform lg:scale-105 ring-2 ring-brand-primary/30 bg-bg-soft-mint' 
-                  : 'hover:scale-105'
+                plan.popular
+                  ? "transform lg:scale-105 ring-2 ring-brand-primary/30 bg-bg-soft-mint"
+                  : "hover:scale-105"
               }`}
               aria-labelledby={`plan-${plan.id}-title`}
               style={{
                 animationDelay: `${index * 0.1}s`,
-                ...(plan.id === 'growth' && { backgroundColor: '#FAEAE4' })
+                ...(plan.id === "growth" && { backgroundColor: "#FAEAE4" }),
               }}
             >
               {/* برچسب محبوب‌ترین برای پلان رشد */}
-              {plan.id === 'growth' && (
+              {plan.id === "growth" && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                   <div className="bg-white rounded-full shadow-md border border-gray-200 flex items-center gap-1 px-[12px] py-[8px]">
                     <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                    <span 
+                    <span
                       className="text-gray-700"
-                      style={{ 
-                        fontSize: '10px',
-                        lineHeight: '12px',
-                        fontWeight: 'var(--font-weight-medium)'
+                      style={{
+                        fontSize: "10px",
+                        lineHeight: "12px",
+                        fontWeight: "var(--font-weight-medium)",
                       }}
                     >
                       محبوب‌ترین
@@ -88,39 +88,35 @@ export function Pricing({ onNavigate }: PricingProps) {
 
               {/* هدر پلن */}
               <header className="mb-8">
-                <h3 
-                  id={`plan-${plan.id}-title`} 
+                <h3
+                  id={`plan-${plan.id}-title`}
                   className="text-grey-900 mb-3"
-                  style={{ 
-                    fontSize: 'var(--text-h3)',
-                    lineHeight: 'var(--text-h3-lh)',
-                    fontWeight: 'var(--font-weight-medium)'
+                  style={{
+                    fontSize: "var(--text-h3)",
+                    lineHeight: "var(--text-h3-lh)",
+                    fontWeight: "var(--font-weight-medium)",
                   }}
                 >
                   {plan.name}
                 </h3>
-                <p 
+                <p
                   className="text-grey-600 mb-6"
-                  style={{ 
-                    fontSize: 'var(--text-body-small)',
-                    lineHeight: 'var(--text-body-small-lh)'
+                  style={{
+                    fontSize: "var(--text-body-small)",
+                    lineHeight: "var(--text-body-small-lh)",
                   }}
                 >
                   {plan.description}
                 </p>
-                
+
                 <div className="flex items-baseline justify-center gap-2">
-                  {plan.price === 'سفارشی' ? (
-                    <span 
-                      className="text-grey-900 text-kpi"
-                    >
-                      سفارشی
-                    </span>
+                  {plan.price === "سفارشی" ? (
+                    <span className="text-grey-900 text-kpi">سفارشی</span>
                   ) : (
                     <>
-                      <span 
+                      <span
                         className="text-grey-900 text-kpi"
-                        style={{ fontVariantNumeric: 'tabular-nums' }}
+                        style={{ fontVariantNumeric: "tabular-nums" }}
                       >
                         {plan.price}
                       </span>
@@ -137,16 +133,16 @@ export function Pricing({ onNavigate }: PricingProps) {
               <ul className="space-y-4 mb-8 text-right" role="list">
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <div 
-                      className="flex-shrink-0 w-5 h-5 rounded-full bg-success/10 flex items-center justify-center mt-1"
-                    >
-                      <span className="text-success text-sm" aria-hidden="true">✓</span>
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success/10 flex items-center justify-center mt-1">
+                      <span className="text-success text-sm" aria-hidden="true">
+                        ✓
+                      </span>
                     </div>
-                    <span 
+                    <span
                       className="text-grey-600"
-                      style={{ 
-                        fontSize: 'var(--text-body-small)',
-                        lineHeight: 'var(--text-body-small-lh)'
+                      style={{
+                        fontSize: "var(--text-body-small)",
+                        lineHeight: "var(--text-body-small-lh)",
                       }}
                     >
                       {feature}
@@ -157,17 +153,17 @@ export function Pricing({ onNavigate }: PricingProps) {
 
               {/* دکمه اقدام */}
               <Button
-                variant={plan.popular ? 'primary' : 'secondary'}
+                variant={plan.popular ? "primary" : "secondary"}
                 size="lg"
                 title={`انتخاب پلن ${plan.name}`}
                 onClick={() => {
-                  if (plan.id === 'pro') {
-                    onNavigate('consultation');
+                  if (plan.id === "pro") {
+                    onNavigate("consultation");
                   } else {
-                    onNavigate('signup');
+                    onNavigate("signup");
                   }
                 }}
-                icon={plan.id === 'pro' ? 'external' : 'arrow-right'}
+                icon={plan.id === "pro" ? "external" : "arrow-right"}
                 iconPosition="right"
                 className="w-full"
               >
@@ -179,12 +175,12 @@ export function Pricing({ onNavigate }: PricingProps) {
 
         {/* سؤالات قیمت‌گذاری */}
         <div className="max-w-2xl mx-auto">
-          <h3 
+          <h3
             className="text-grey-900 text-center mb-12"
-            style={{ 
-              fontSize: 'var(--text-h3)',
-              lineHeight: 'var(--text-h3-lh)',
-              fontWeight: 'var(--font-weight-medium)'
+            style={{
+              fontSize: "var(--text-h3)",
+              lineHeight: "var(--text-h3-lh)",
+              fontWeight: "var(--font-weight-medium)",
             }}
           >
             سؤالات رایج قیمت‌گذاری
@@ -201,24 +197,27 @@ export function Pricing({ onNavigate }: PricingProps) {
               >
                 <details className="group">
                   <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-bg-soft-mint/50 animate-soft list-none">
-                    <span 
+                    <span
                       className="font-medium text-grey-900"
-                      style={{ 
-                        fontSize: 'var(--text-body-large)',
-                        lineHeight: 'var(--text-body-large-lh)'
+                      style={{
+                        fontSize: "var(--text-body-large)",
+                        lineHeight: "var(--text-body-large-lh)",
                       }}
                     >
                       {item.question}
                     </span>
-                    <span className="text-grey-500 group-open:rotate-180 animate-slow" aria-hidden="true">
+                    <span
+                      className="text-grey-500 group-open:rotate-180 animate-slow"
+                      aria-hidden="true"
+                    >
                       ↓
                     </span>
                   </summary>
-                  <div 
+                  <div
                     className="px-4 pb-4 text-grey-600"
-                    style={{ 
-                      fontSize: 'var(--text-body-small)',
-                      lineHeight: 'var(--text-body-small-lh)'
+                    style={{
+                      fontSize: "var(--text-body-small)",
+                      lineHeight: "var(--text-body-small-lh)",
                     }}
                   >
                     {item.answer}
@@ -231,11 +230,11 @@ export function Pricing({ onNavigate }: PricingProps) {
 
         {/* متن توضیحی اضافه */}
         <div className="text-center mt-16 max-w-2xl mx-auto">
-          <p 
+          <p
             className="text-grey-500"
-            style={{ 
-              fontSize: 'var(--text-body-small)',
-              lineHeight: 'var(--text-body-small-lh)'
+            style={{
+              fontSize: "var(--text-body-small)",
+              lineHeight: "var(--text-body-small-lh)",
             }}
           >
             تمام پلن‌ها شامل ۱۴ روز تست رایگان هستند. بدون نیاز به کارت اعتباری.

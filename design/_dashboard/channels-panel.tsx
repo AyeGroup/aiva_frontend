@@ -1,12 +1,19 @@
-import { Card } from '../_components/Card/card';
-import { Button } from '../_components/Button/button';
-import { Globe, Smartphone, MessageCircle, Mail, Plus, ExternalLink } from 'lucide-react';
+import { Card } from "@/design/_components/Card/card";
+import { Button } from "@/components/ui/button";
+import {
+  Globe,
+  Smartphone,
+  MessageCircle,
+  Mail,
+  Plus,
+  ExternalLink,
+} from "lucide-react";
 
 interface Channel {
   id: string;
   name: string;
-  type: 'website' | 'mobile' | 'social' | 'email';
-  status: 'active' | 'inactive' | 'setup';
+  type: "website" | "mobile" | "social" | "email";
+  status: "active" | "inactive" | "setup";
   url?: string;
   stats: {
     conversations: number;
@@ -17,58 +24,58 @@ interface Channel {
 export function ChannelsPanel() {
   const channels: Channel[] = [
     {
-      id: '1',
-      name: 'وب‌سایت اصلی',
-      type: 'website',
-      status: 'active',
-      url: 'example.com',
+      id: "1",
+      name: "وب‌سایت اصلی",
+      type: "website",
+      status: "active",
+      url: "example.com",
       stats: {
         conversations: 892,
-        users: 654
-      }
+        users: 654,
+      },
     },
     {
-      id: '2',
-      name: 'اپلیکیشن موبایل',
-      type: 'mobile',
-      status: 'setup',
+      id: "2",
+      name: "اپلیکیشن موبایل",
+      type: "mobile",
+      status: "setup",
       stats: {
         conversations: 0,
-        users: 0
-      }
+        users: 0,
+      },
     },
     {
-      id: '3',
-      name: 'تلگرام',
-      type: 'social',
-      status: 'inactive',
+      id: "3",
+      name: "تلگرام",
+      type: "social",
+      status: "inactive",
       stats: {
         conversations: 156,
-        users: 89
-      }
+        users: 89,
+      },
     },
     {
-      id: '4',
-      name: 'پشتیبانی ایمیل',
-      type: 'email',
-      status: 'active',
-      url: 'support@example.com',
+      id: "4",
+      name: "پشتیبانی ایمیل",
+      type: "email",
+      status: "active",
+      url: "support@example.com",
       stats: {
         conversations: 234,
-        users: 187
-      }
-    }
+        users: 187,
+      },
+    },
   ];
 
   const getChannelIcon = (type: string) => {
     switch (type) {
-      case 'website':
+      case "website":
         return Globe;
-      case 'mobile':
+      case "mobile":
         return Smartphone;
-      case 'social':
+      case "social":
         return MessageCircle;
-      case 'email':
+      case "email":
         return Mail;
       default:
         return Globe;
@@ -77,27 +84,27 @@ export function ChannelsPanel() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'bg-success/10 text-success border-success/20';
-      case 'inactive':
-        return 'bg-grey-100 text-grey-500 border-grey-200';
-      case 'setup':
-        return 'bg-warning/10 text-warning border-warning/20';
+      case "active":
+        return "bg-success/10 text-success border-success/20";
+      case "inactive":
+        return "bg-grey-100 text-grey-500 border-grey-200";
+      case "setup":
+        return "bg-warning/10 text-warning border-warning/20";
       default:
-        return 'bg-grey-100 text-grey-500 border-grey-200';
+        return "bg-grey-100 text-grey-500 border-grey-200";
     }
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'فعال';
-      case 'inactive':
-        return 'غیرفعال';
-      case 'setup':
-        return 'در حال راه‌اندازی';
+      case "active":
+        return "فعال";
+      case "inactive":
+        return "غیرفعال";
+      case "setup":
+        return "در حال راه‌اندازی";
       default:
-        return 'نامشخص';
+        return "نامشخص";
     }
   };
 
@@ -115,8 +122,8 @@ export function ChannelsPanel() {
             </p>
           </div>
         </div>
-        
-        <Button variant="tertiary" size="small">
+
+        <Button>
           <Plus className="w-4 h-4 ml-2" />
           کانال جدید
         </Button>
@@ -125,7 +132,7 @@ export function ChannelsPanel() {
       <div className="grid md:grid-cols-2 gap-4">
         {channels.map((channel) => {
           const IconComponent = getChannelIcon(channel.type);
-          
+
           return (
             <div
               key={channel.id}
@@ -148,8 +155,12 @@ export function ChannelsPanel() {
                     )}
                   </div>
                 </div>
-                
-                <span className={`px-2 py-1 rounded-full text-xs border ${getStatusColor(channel.status)}`}>
+
+                <span
+                  className={`px-2 py-1 rounded-full text-xs border ${getStatusColor(
+                    channel.status
+                  )}`}
+                >
                   {getStatusLabel(channel.status)}
                 </span>
               </div>
@@ -157,21 +168,21 @@ export function ChannelsPanel() {
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
                   <p className="text-kpi text-grey-900">
-                    {channel.stats.conversations.toLocaleString('fa-IR')}
+                    {channel.stats.conversations.toLocaleString("fa-IR")}
                   </p>
                   <p className="text-grey-600 text-body-small">مکالمات</p>
                 </div>
                 <div>
                   <p className="text-kpi text-grey-900">
-                    {channel.stats.users.toLocaleString('fa-IR')}
+                    {channel.stats.users.toLocaleString("fa-IR")}
                   </p>
                   <p className="text-grey-600 text-body-small">کاربران</p>
                 </div>
               </div>
 
-              {channel.status === 'setup' && (
+              {channel.status === "setup" && (
                 <div className="mt-3 pt-3 border-t border-border-soft">
-                  <Button variant="secondary" size="small" className="w-full">
+                  <Button variant="secondary" className="w-full">
                     تکمیل راه‌اندازی
                   </Button>
                 </div>
@@ -186,19 +197,19 @@ export function ChannelsPanel() {
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
             <p className="text-kpi text-success">
-              {channels.filter(c => c.status === 'active').length}
+              {channels.filter((c) => c.status === "active").length}
             </p>
             <p className="text-grey-600 text-body-small">فعال</p>
           </div>
           <div>
             <p className="text-kpi text-warning">
-              {channels.filter(c => c.status === 'setup').length}
+              {channels.filter((c) => c.status === "setup").length}
             </p>
             <p className="text-grey-600 text-body-small">راه‌اندازی</p>
           </div>
           <div>
             <p className="text-kpi text-grey-500">
-              {channels.filter(c => c.status === 'inactive').length}
+              {channels.filter((c) => c.status === "inactive").length}
             </p>
             <p className="text-grey-600 text-body-small">غیرفعال</p>
           </div>

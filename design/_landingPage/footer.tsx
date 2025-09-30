@@ -1,46 +1,46 @@
-import React, { memo } from 'react';
-// import aivaLogo from "/logo.png"
+import React, { memo } from "react";
+import aivaLogo from "@/public/logo.png";
 
 export const Footer = memo(function Footer() {
   const currentYear = new Date().getFullYear();
 
   const footerSections = {
     product: {
-      title: 'محصول',
+      title: "محصول",
       links: [
-        { title: 'ویژگی‌ها', href: '#features' },
-        { title: 'قیمت‌گذاری', href: '#pricing' },
-        { title: 'امنیت', href: '#security' },
-        { title: 'آپدیت‌ها', href: '/changelog' }
-      ]
+        { title: "ویژگی‌ها", href: "#features" },
+        { title: "قیمت‌گذاری", href: "#pricing" },
+        { title: "امنیت", href: "#security" },
+        { title: "آپدیت‌ها", href: "/changelog" },
+      ],
     },
     resources: {
-      title: 'منابع',
+      title: "منابع",
       links: [
-        { title: 'مستندات', href: '/docs' },
-        { title: 'راهنمای API', href: '/api-docs' },
-        { title: 'وضعیت سرویس', href: '/status' },
-        { title: 'وبلاگ', href: '/blog' }
-      ]
+        { title: "مستندات", href: "/docs" },
+        { title: "راهنمای API", href: "/api-docs" },
+        { title: "وضعیت سرویس", href: "/status" },
+        { title: "وبلاگ", href: "/blog" },
+      ],
     },
     support: {
-      title: 'پشتیبانی',
+      title: "پشتیبانی",
       links: [
-        { title: 'مرکز راهنمایی', href: '/help' },
-        { title: 'تماس با ما', href: '/contact' },
-        { title: 'گزارش مشکل', href: '/report' },
-        { title: 'درخواست ویژگی', href: '/feature-request' }
-      ]
+        { title: "مرکز راهنمایی", href: "/help" },
+        { title: "تماس با ما", href: "/contact" },
+        { title: "گزارش مشکل", href: "/report" },
+        { title: "درخواست ویژگی", href: "/feature-request" },
+      ],
     },
     legal: {
-      title: 'حقوقی',
+      title: "حقوقی",
       links: [
-        { title: 'شرایط استفاده', href: '/terms' },
-        { title: 'حریم خصوصی', href: '/privacy' },
-        { title: 'قرارداد پردازش داده', href: '/dpa' },
-        { title: 'کوکی‌ها', href: '/cookies' }
-      ]
-    }
+        { title: "شرایط استفاده", href: "/terms" },
+        { title: "حریم خصوصی", href: "/privacy" },
+        { title: "قرارداد پردازش داده", href: "/dpa" },
+        { title: "کوکی‌ها", href: "/cookies" },
+      ],
+    },
   };
 
   return (
@@ -50,12 +50,7 @@ export const Footer = memo(function Footer() {
           {/* برند و توضیح */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <img
-                src="/logo.png"
-                // src={aivaLogo}
-                alt="لوگوی آیوا"
-                className="w-8 h-8 object-cover"
-              />
+              <img src="" alt="لوگوی آیوا" className="w-8 h-8 object-cover" />
               <span className="font-medium text-lg">آیوا</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed mb-6 text-right">

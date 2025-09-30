@@ -8,7 +8,7 @@ export const onboardingData = {
     {
       id: 'setup',
       title: 'تنظیمات اولیه',
-      description: 'نام، زبان و شخصیت دستیار را تعیین کنید'
+      description: 'نام، زبان، شخصیت و ظاهر دستیار را تعیین کنید'
     },
     {
       id: 'knowledge',
@@ -16,14 +16,14 @@ export const onboardingData = {
       description: 'اطلاعات و محتوای مربوط به کسب‌وکارتان را اضافه کنید'
     },
     {
-      id: 'customization',
-      title: 'شخصی‌سازی',
-      description: 'ظاهر و پیام‌های دستیار را مطابق برند خود تنظیم کنید'
+      id: 'faq',
+      title: 'سوالات متداول',
+      description: 'سوالات و پاسخ‌های رایج کسب‌وکارتان را اضافه کنید'
     },
     {
-      id: 'test',
-      title: 'تست و آزمایش',
-      description: 'دستیار را آزمایش کنید و پاسخ‌ها را بررسی کنید'
+      id: 'behavior',
+      title: 'تنظیمات پاسخ',
+      description: 'رفتار و قوانین پاسخ‌گویی چت‌بات را تنظیم کنید'
     },
     {
       id: 'deploy',
@@ -33,12 +33,10 @@ export const onboardingData = {
   ],
 
   languages: [
-    { code: 'fa', name: 'فارسی', native: 'فارسی' },
-    { code: 'en', name: 'انگلیسی', native: 'English' },
-    { code: 'ar', name: 'عربی', native: 'العربية' },
-    { code: 'tr', name: 'ترکی', native: 'Türkçe' },
-    { code: 'de', name: 'آلمانی', native: 'Deutsch' },
-    { code: 'fr', name: 'فرانسوی', native: 'Français' }
+    { code: 'fa', name: 'فارسی', native: 'فارسی', disabled: false },
+    { code: 'en', name: 'انگلیسی (به زودی)', native: 'English', disabled: true },
+    { code: 'ar', name: 'عربی (به زودی)', native: 'العربية', disabled: true },
+    { code: 'tr', name: 'ترکی (به زودی)', native: 'Türkçe', disabled: true }
   ],
 
   tones: [
@@ -81,30 +79,23 @@ export const onboardingData = {
 
   knowledgeTypes: [
     {
-      id: 'faq',
-      title: 'سؤالات متداول',
-      description: 'سؤالات و پاسخ‌های رایج کسب‌وکارتان',
-      icon: 'help-circle',
-      placeholder: 'سؤال: محصول شما چیست؟\nپاسخ: ما یک...'
-    },
-    {
       id: 'document',
       title: 'آپلود فایل',
-      description: 'PDF، Word، یا فایل‌های متنی',
+      description: 'ورد، پی دی اف یا فایل متنی',
       icon: 'file-text',
       placeholder: 'فایل‌های خود را اینجا بکشید یا کلیک کنید'
     },
     {
       id: 'url',
-      title: 'آدرس وب',
+      title: 'آدرس وب سایت',
       description: 'صفحات سایت یا منابع آنلاین',
       icon: 'link',
       placeholder: 'https://example.com/about'
     },
     {
       id: 'text',
-      title: 'متن آزاد',
-      description: 'اطلاعات مستقیم درباره کسب‌وکار',
+      title: 'اطلاعات آزاد',
+      description: 'اطلاعات مستقیم درباره کسب و کار',
       icon: 'type',
       placeholder: 'درباره شرکت، محصولات، خدمات...'
     }

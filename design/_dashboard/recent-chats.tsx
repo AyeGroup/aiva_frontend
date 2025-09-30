@@ -1,11 +1,11 @@
-import { Card } from '../_components/Card/card';
-import { Button } from '../_components/Button/button';
-import { ChatHistoryCard } from '../_components/ChatHistoryCard/chat-history-card';
-import { MessageSquare, ArrowLeft } from 'lucide-react';
+import { Card } from "@/design/_components/Card/card";
+import { Button } from "@/components/ui/button";
+import { ChatHistoryCard } from "@/design/_components/ChatHistoryCard/chat-history-card";
+import { MessageSquare, ArrowLeft } from "lucide-react";
 
 interface Message {
   id: string;
-  type: 'user' | 'bot';
+  type: "user" | "bot";
   content: string;
   timestamp: string;
 }
@@ -15,7 +15,7 @@ interface ChatData {
   userName: string;
   userAvatar?: string;
   messages: Message[];
-  status: 'active' | 'completed';
+  status: "active" | "completed";
   unreadCount: number;
   lastActivity: string;
 }
@@ -23,104 +23,106 @@ interface ChatData {
 export function RecentChats() {
   const recentChats: ChatData[] = [
     {
-      userId: '1',
-      userName: 'آریا محمدی',
-      status: 'completed',
+      userId: "1",
+      userName: "آریا محمدی",
+      status: "completed",
       unreadCount: 0,
-      lastActivity: '2024-01-20T10:25:00Z',
+      lastActivity: "2024-01-20T10:25:00Z",
       messages: [
         {
-          id: '1',
-          type: 'user',
-          content: 'سلام، مشکلی در سایت دارم',
-          timestamp: '2024-01-20T10:20:00Z'
+          id: "1",
+          type: "user",
+          content: "سلام، مشکلی در سایت دارم",
+          timestamp: "2024-01-20T10:20:00Z",
         },
         {
-          id: '2',
-          type: 'bot',
-          content: 'سلام! چه مشکلی دارید؟ لطفاً بیشتر توضیح دهید.',
-          timestamp: '2024-01-20T10:21:00Z'
+          id: "2",
+          type: "bot",
+          content: "سلام! چه مشکلی دارید؟ لطفاً بیشتر توضیح دهید.",
+          timestamp: "2024-01-20T10:21:00Z",
         },
         {
-          id: '3',
-          type: 'user',
-          content: 'نمی‌تونم وارد حسابم بشم',
-          timestamp: '2024-01-20T10:22:00Z'
+          id: "3",
+          type: "user",
+          content: "نمی‌تونم وارد حسابم بشم",
+          timestamp: "2024-01-20T10:22:00Z",
         },
         {
-          id: '4',
-          type: 'bot',
-          content: 'لطفاً ایمیل خود را چک کنید. لینک بازیابی رمز عبور ارسال کردم.',
-          timestamp: '2024-01-20T10:23:00Z'
+          id: "4",
+          type: "bot",
+          content:
+            "لطفاً ایمیل خود را چک کنید. لینک بازیابی رمز عبور ارسال کردم.",
+          timestamp: "2024-01-20T10:23:00Z",
         },
         {
-          id: '5',
-          type: 'user',
-          content: 'ممنون از راهنماییتون، مشکلم حل شد!',
-          timestamp: '2024-01-20T10:25:00Z'
-        }
-      ]
+          id: "5",
+          type: "user",
+          content: "ممنون از راهنماییتون، مشکلم حل شد!",
+          timestamp: "2024-01-20T10:25:00Z",
+        },
+      ],
     },
     {
-      userId: '2',
-      userName: 'سارا احمدی',
-      status: 'active',
+      userId: "2",
+      userName: "سارا احمدی",
+      status: "active",
       unreadCount: 2,
-      lastActivity: '2024-01-20T10:30:00Z',
+      lastActivity: "2024-01-20T10:30:00Z",
       messages: [
         {
-          id: '6',
-          type: 'user',
-          content: 'آیا امکان ارسال به شهرستان دارید؟',
-          timestamp: '2024-01-20T10:25:00Z'
+          id: "6",
+          type: "user",
+          content: "آیا امکان ارسال به شهرستان دارید؟",
+          timestamp: "2024-01-20T10:25:00Z",
         },
         {
-          id: '7',
-          type: 'bot',
-          content: 'بله، به تمام شهرهای ایران ارسال داریم.',
-          timestamp: '2024-01-20T10:26:00Z'
+          id: "7",
+          type: "bot",
+          content: "بله، به تمام شهرهای ایران ارسال داریم.",
+          timestamp: "2024-01-20T10:26:00Z",
         },
         {
-          id: '8',
-          type: 'user',
-          content: 'من از تهران هستم و می‌خوام محصولتون رو برای خواهرم که اصفهان زندگی می‌کنه سفارش بدم.',
-          timestamp: '2024-01-20T10:28:00Z'
+          id: "8",
+          type: "user",
+          content:
+            "من از تهران هستم و می‌خوام محصولتون رو برای خواهرم که اصفهان زندگی می‌کنه سفارش بدم.",
+          timestamp: "2024-01-20T10:28:00Z",
         },
         {
-          id: '9',
-          type: 'user',
-          content: 'ممنون می‌شم راهنمایی کنید.',
-          timestamp: '2024-01-20T10:30:00Z'
-        }
-      ]
+          id: "9",
+          type: "user",
+          content: "ممنون می‌شم راهنمایی کنید.",
+          timestamp: "2024-01-20T10:30:00Z",
+        },
+      ],
     },
     {
-      userId: '3',
-      userName: 'علی رضایی',
-      status: 'active',
+      userId: "3",
+      userName: "علی رضایی",
+      status: "active",
       unreadCount: 1,
-      lastActivity: '2024-01-20T10:15:00Z',
+      lastActivity: "2024-01-20T10:15:00Z",
       messages: [
         {
-          id: '10',
-          type: 'user',
-          content: 'راهنمایی برای تنظیمات حساب می‌خواهم',
-          timestamp: '2024-01-20T10:10:00Z'
+          id: "10",
+          type: "user",
+          content: "راهنمایی برای تنظیمات حساب می‌خواهم",
+          timestamp: "2024-01-20T10:10:00Z",
         },
         {
-          id: '11',
-          type: 'bot',
-          content: 'حتماً کمکتان می‌کنم. کدام بخش تنظیمات؟',
-          timestamp: '2024-01-20T10:11:00Z'
+          id: "11",
+          type: "bot",
+          content: "حتماً کمکتان می‌کنم. کدام بخش تنظیمات؟",
+          timestamp: "2024-01-20T10:11:00Z",
         },
         {
-          id: '12',
-          type: 'user',
-          content: 'لطفاً با پشتیبانی تماس بگیرم؟',
-          timestamp: '2024-01-20T10:15:00Z'
-        }
-      ]
-    }
+          id: "12",
+          type: "user",
+          content: "لطفاً با پشتیبانی تماس بگیرم؟",
+          timestamp: "2024-01-20T10:15:00Z",
+        },
+      ],
+    },
   ];
 
   const handleChatClick = (chatId: string) => {
@@ -142,7 +144,7 @@ export function RecentChats() {
             </p>
           </div>
         </div>
-        
+
         <Button variant="tertiary" size="small">
           مشاهده همه
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -164,9 +166,6 @@ export function RecentChats() {
           />
         ))}
       </div>
-
-
-
     </Card>
   );
 }

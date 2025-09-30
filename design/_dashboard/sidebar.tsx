@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
-import { ImageWithFallback } from '../../components/figma/ImageWithFallback';
-import { ChevronDown, User, LogOut, ArrowLeft } from 'lucide-react';
-import { AddChatbotModal } from './add-chatbot-modal';
-import { AddAccountModal } from './add-account-modal';
-// import aivaLogo from "/logo.png";
-import sidebarImage from "../../asset/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
+import React, { useState } from "react";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { ChevronDown, User, LogOut, ArrowLeft } from "lucide-react";
+import { AddChatbotModal } from "./add-chatbot-modal";
+import { AddAccountModal } from "./add-account-modal";
+import aivaLogo from "@/public/logo.png";
+import sidebarImage from "figma:asset/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
 
-type PageType = 'landing' | 'signup' | 'dashboard' | 'consultation' | 'chatbot-management' | 'tickets';
+type PageType =
+  | "landing"
+  | "signup"
+  | "dashboard"
+  | "consultation"
+  | "chatbot-management"
+  | "tickets";
 
 interface QAPair {
   id: string;
@@ -40,16 +46,12 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
   return (
     <button
       onClick={onClick}
-      className={`w-full text-center px-6 py-4 text-grey-900 hover:bg-white/30 transition-colors duration-200 relative ${
-        active ? 'font-medium' : ''
-      }`}
+      className="w-full text-center px-6 py-4 text-grey-900 hover:bg-white/30 transition-colors duration-200 relative"
     >
       {active && (
-        <div 
-          className="absolute right-6 top-1/2 transform -translate-y-1/2 w-3 h-3 rounded-full bg-brand-secondary"
-        ></div>
+        <div className="absolute left-6 top-1/2 transform -translate-y-1/2 w-3 h-3 rounded-full bg-brand-secondary"></div>
       )}
-      <span className={`${active ? 'font-medium mr-6' : 'font-normal'}`}>
+      <span className={`text-lg mr-6 ${active ? "font-bold" : "font-normal"}`}>
         {label}
       </span>
     </button>
@@ -61,25 +63,28 @@ interface SidebarProps {
   currentPage?: string;
 }
 
-export function Sidebar({ onNavigate, currentPage = 'dashboard' }: SidebarProps) {
+export function Sidebar({
+  onNavigate,
+  currentPage = "dashboard",
+}: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const [websites, setWebsites] = useState<Website[]>([]);
 
-  const handleAddWebsite = (newWebsite: Omit<Website, 'id'>) => {
+  const handleAddWebsite = (newWebsite: Omit<Website, "id">) => {
     const website: Website = {
       ...newWebsite,
-      id: Date.now().toString()
+      id: Date.now().toString(),
     };
-    setWebsites(prev => [...prev, website]);
+    setWebsites((prev) => [...prev, website]);
   };
 
-  const handleAddAccount = (newAccount: Omit<Account, 'id'>) => {
+  const handleAddAccount = (newAccount: Omit<Account, "id">) => {
     const account: Account = {
       ...newAccount,
-      id: Date.now().toString()
+      id: Date.now().toString(),
     };
-    console.log('New account added:', account);
+    console.log("New account added:", account);
   };
 
   return (
@@ -100,11 +105,8 @@ export function Sidebar({ onNavigate, currentPage = 'dashboard' }: SidebarProps)
             ع
           </div>
           <div className="text-center">
-            <p className="text-grey-900 font-medium text-sm">پروفایل</p>
-            <p className="text-grey-900 font-medium text-sm">علی احمدی</p>
-            <p className="text-grey-500 text-xs">example.com</p>
+            <p className="text-grey-900 font-semibold">علی احمدی</p>
           </div>
-          <ChevronDown className="w-4 h-4 text-grey-600 group-hover:text-grey-900 transition-colors" />
         </button>
       </div>
 
@@ -150,7 +152,8 @@ export function Sidebar({ onNavigate, currentPage = 'dashboard' }: SidebarProps)
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
             <ImageWithFallback
-              src="/logo.png"
+              src=""
+              // src=""
               alt="آیوا - دستیار هوشمند"
               className="w-8 h-8 object-cover"
             />

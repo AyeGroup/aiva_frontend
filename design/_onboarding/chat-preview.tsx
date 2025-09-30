@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { BotConfig } from './onboarding';
-import { onboardingData } from './onboarding.data';
-// import aivaLogo from "/logo.png";
+import { useState, useEffect } from "react";
+import { BotConfig } from "./onboarding";
+import { onboardingData } from "./onboarding.data";
+import aivaLogo from "@/public/logo.png";
 
 interface ChatPreviewProps {
   botConfig: BotConfig;
@@ -16,59 +16,128 @@ interface Message {
 }
 
 export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [selectedKnowledgeItem, setSelectedKnowledgeItem] = useState<
+    string | null
+  >(null);
 
-  // Sample conversations based on current step
+  // Get tone-based responses
+  const getToneBasedResponses = (tone: string) => {
+    const responses = {
+      friendly: {
+        productInfo:
+          "البته! ما خدمات مختلفی داریم 😊 برای اطلاعات دقیق‌تر خوشحال می‌شم راهنماییتون کنم!",
+        orderHelp:
+          "آره حتماً! می‌تونید از سایت ما سفارش بدید یا اگر سؤالی داشتید باهام چت کنید 🛒",
+        noKnowledge: "هنوز داده‌ای بهم ندادید، ولی خوشحال می‌شم کمکتون کنم! 😊",
+        fallback: "ببخشید، این رو نمی‌دونم. کمی صبر کنین تا یاد بگیرم!",
+      },
+      professional: {
+        productInfo:
+          "ما طیف کاملی از خدمات را ارائه می‌دهیم. لطفاً زمینه مورد نظر خود را مشخص کنید.",
+        orderHelp:
+          "برای ثبت سفارش، می‌توانید از وب‌سایت ما اقدام کنید یا با واحد فروش تماس بگیرید.",
+        noKnowledge:
+          "پس از تکمیل پایگاه دانش، قادر به ارائه پاسخ‌های دقیق‌تر خواهم بود.",
+        fallback:
+          "متأسفانه اطلاعات کافی در این زمینه ندارم. لطفاً با متخصصان ما تماس بگیرید.",
+      },
+      casual: {
+        productInfo:
+          "اوه خب! چیزای خوبی داریم 😄 بگو دنبال چی هستی تا بهتر کمکت کنم!",
+        orderHelp: "راحته! برو سایت و سفارش بده، یا اگر گیر کردی بهم بگو!",
+        noKnowledge: "هنوز چیزی یاد نداده‌ن بهم! ولی بزودی حرف‌حسابی می‌شم 😎",
+        fallback: "آخ! این رو نمی‌دونم 🤔 بزودی یاد می‌گیرم ولی!",
+      },
+      expert: {
+        productInfo:
+          "بر اساس تحلیل نیازهای شما، می‌توانم راهکارهای مناسب را ارائه دهم. دقیقاً به دنبال چه نوع محصولی هستید؟",
+        orderHelp:
+          "فرآیند سفارش‌گیری ما شامل مراحل ثبت، بررسی، تأیید و ارسال است. کدام مرحله نیاز به توضیح دارد؟",
+        noKnowledge:
+          "سیستم نیاز به ورود داده‌های تخصصی دارد تا بتواند پاسخ‌های مبتنی بر دانش ارائه دهد.",
+        fallback:
+          "این موضوع خارج از حوزه تخصصی فعلی من است. لطفاً با کارشناس مربوطه مشورت کنید.",
+      },
+    };
+
+    return responses[tone as keyof typeof responses] || responses.friendly;
+  };
+
+  // Handle knowledge item click
+  const handleKnowledgeClick = (item: any) => {
+    setSelectedKnowledgeItem(item.id);
+
+    // Add user question
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      text: item.title,
+      isBot: false,
+      timestamp: new Date(),
+    };
+
+    // Add bot response
+    const botResponse: Message = {
+      id: `bot-${Date.now()}`,
+      text:
+        item.content || item.url || "این موضوع در پایگاه دانش ما ثبت شده است.",
+      isBot: true,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage, botResponse]);
+
+    // Simulate typing
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+    }, 1000);
+  };
+
+  // Sample conversations based on current step and tone
   const getSampleMessages = (step: number): Message[] => {
+    const toneResponses = getToneBasedResponses(botConfig.tone);
+
     const base: Message[] = [
       {
-        id: '1',
-        text: botConfig.welcomeMessage,
+        id: "1",
+        text:
+          botConfig.welcomeMessage ||
+          currentTone?.example ||
+          "سلام! چطور می‌تونم کمکتون کنم؟",
         isBot: true,
-        timestamp: new Date()
-      }
+        timestamp: new Date(),
+      },
     ];
 
-    if (step >= 2) {
+    if (step >= 2 && botConfig.knowledge.length > 0) {
       base.push({
-        id: '2',
-        text: 'محصولات شما چه هستند؟',
+        id: "2",
+        text: "سوال‌های متداول را می‌بینم!",
         isBot: false,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
-      
-      if (botConfig.knowledge.length > 0) {
-        base.push({
-          id: '3',
-          text: 'ما خدمات مختلفی ارائه می‌دهیم. می‌توانم اطلاعات دقیق‌تری درباره هر کدام بدهم.',
-          isBot: true,
-          timestamp: new Date()
-        });
-      } else {
-        base.push({
-          id: '3',
-          text: 'پس از اضافه کردن پایگاه دانش، می‌توانم پاسخ‌های دقیق‌تری بدهم.',
-          isBot: true,
-          timestamp: new Date()
-        });
-      }
-    }
 
-    if (step >= 4) {
       base.push({
-        id: '4',
-        text: 'چطور می‌تونم سفارش بدم؟',
-        isBot: false,
-        timestamp: new Date()
-      });
-      
-      base.push({
-        id: '5',
-        text: 'می‌توانید از طریق سایت ما سفارش دهید یا با شماره پشتیبانی تماس بگیرید.',
+        id: "3",
+        text: "بله! از دکمه‌های زیر می‌توانید سوال‌های رایج را انتخاب کنید.",
         isBot: true,
-        timestamp: new Date()
+        timestamp: new Date(),
+      });
+    } else if (step >= 2) {
+      base.push({
+        id: "2",
+        text: "محصولات شما چه هستند؟",
+        isBot: false,
+        timestamp: new Date(),
+      });
+
+      base.push({
+        id: "3",
+        text: toneResponses.noKnowledge,
+        isBot: true,
+        timestamp: new Date(),
       });
     }
 
@@ -78,10 +147,11 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
   useEffect(() => {
     const newMessages = getSampleMessages(currentStep);
     setMessages(newMessages);
+    setSelectedKnowledgeItem(null); // Reset selection when step changes
   }, [currentStep, botConfig.welcomeMessage, botConfig.knowledge.length]);
 
   // Get current tone example
-  const currentTone = onboardingData.tones.find(t => t.id === botConfig.tone);
+  const currentTone = onboardingData.tones.find((t) => t.id === botConfig.tone);
 
   // Simulate typing when bot sends message
   const simulateTyping = () => {
@@ -92,372 +162,403 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
   };
 
   useEffect(() => {
-    if (isOpen && messages.length > 0) {
+    if (messages.length > 0) {
       simulateTyping();
     }
-  }, [isOpen]);
+  }, [messages]);
+
+  const chatButtonSize =
+    botConfig.branding.size === "small"
+      ? "50px"
+      : botConfig.branding.size === "large"
+      ? "70px"
+      : "60px";
+  const chatButtonFontSize =
+    botConfig.branding.size === "small"
+      ? "16px"
+      : botConfig.branding.size === "large"
+      ? "24px"
+      : "20px";
+
+  // Get tone-based styling
+  const getToneStyles = (tone: string) => {
+    const styles = {
+      friendly: {
+        messageClass: "rounded-2xl",
+        headerStyle: "rounded-2xl",
+        emoji: "😊",
+      },
+      professional: {
+        messageClass: "rounded-lg",
+        headerStyle: "rounded-lg",
+        emoji: "💼",
+      },
+      casual: {
+        messageClass: "rounded-3xl",
+        headerStyle: "rounded-3xl",
+        emoji: "😎",
+      },
+      expert: {
+        messageClass: "rounded-lg",
+        headerStyle: "rounded-lg",
+        emoji: "🎓",
+      },
+    };
+
+    return styles[tone as keyof typeof styles] || styles.friendly;
+  };
+
+  const toneStyles = getToneStyles(botConfig.tone);
 
   return (
     <div className="chat-preview-container">
-      {/* Preview Header */}
+      {/* Enhanced Preview Header with Live Indicator */}
       <div className="mb-4">
-        <h3 className="text-grey-900 mb-2">پیش‌نمایش زنده</h3>
-        <p className="text-grey-600 text-sm">
-          تغییرات شما فوراً در چت‌بات اعمال می‌شود
+        <div className="flex items-center gap-3 mb-2">
+          <h3 className="text-grey-900">پیش‌نمایش زنده</h3>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-sharp-emerald rounded-full animate-pulse"></div>
+            <span className="text-sharp-emerald text-sm font-medium">فعال</span>
+          </div>
+        </div>
+
+        {/* Current Settings Display */}
+        <div className="flex items-center gap-4 mb-2">
+          {currentTone && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-grey-500">لحن:</span>
+              <span className="text-xs px-2 py-1 bg-brand-primary/10 text-brand-primary rounded-full">
+                {currentTone.name}
+              </span>
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-grey-500">رنگ:</span>
+            <div
+              className="w-3 h-3 rounded-full border border-grey-200"
+              style={{ backgroundColor: botConfig.color }}
+            ></div>
+          </div>
+        </div>
+
+        <p className="text-grey-600 text-sm text-right">
+          تغییرات شما بلافاصله در چت‌بات نمایش داده می‌شود
         </p>
       </div>
 
-      {/* Mobile Mockup */}
-      <div className="relative flex items-center justify-center">
-        {/* Enhanced Phone Frame - Larger Size */}
-        {/* Real-size Website Preview */}
+      {/* Single Column Layout: Live Chat Only */}
+      <div className="max-w-md mx-auto relative">
+        {/* Update Flash Effect Overlay */}
         <div
-          className="w-full max-w-6xl mx-auto relative overflow-hidden rounded-2xl shadow-xl border border-grey-200"
-          style={{
-            height: "700px",
-            background: "var(--sharp-emerald)",
-            opacity: 0.1,
-          }}
-        >
-          {/* Enhanced fake website content */}
-          <div className="p-8 space-y-6">
-            {/* Header simulation */}
-            <div className="flex items-center justify-between">
-              <div className="h-6 bg-grey-200 rounded w-32"></div>
-              <div className="flex gap-4">
-                <div className="h-4 bg-grey-100 rounded w-16"></div>
-                <div className="h-4 bg-grey-100 rounded w-20"></div>
-                <div className="h-4 bg-grey-100 rounded w-18"></div>
-              </div>
-            </div>
+          key={`${botConfig.color}-${botConfig.name}-${botConfig.branding.position}-${botConfig.branding.size}`}
+          className="absolute inset-0 bg-brand-primary/10 rounded-2xl opacity-0 pointer-events-none z-50"
+        ></div>
 
-            {/* Main content simulation */}
-            <div className="space-y-4">
-              <div className="h-8 bg-grey-200 rounded w-3/4"></div>
-              <div className="h-5 bg-grey-100 rounded w-1/2"></div>
-              <div className="h-32 bg-grey-100 rounded-lg"></div>
-
-              <div className="grid grid-cols-3 gap-6">
-                <div className="h-24 bg-grey-100 rounded-lg"></div>
-                <div className="h-24 bg-grey-100 rounded-lg"></div>
-                <div className="h-24 bg-grey-100 rounded-lg"></div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="h-4 bg-grey-100 rounded w-full"></div>
-                <div className="h-4 bg-grey-100 rounded w-4/5"></div>
-                <div className="h-4 bg-grey-100 rounded w-3/5"></div>
-                <div className="h-4 bg-grey-100 rounded w-2/3"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Modern Chat Widget */}
-          <div
-            className={`absolute transition-all duration-300 ${
-              botConfig.branding.position === "bottom-left"
-                ? "bottom-8 left-8"
-                : "bottom-8 right-8"
-            }`}
-          >
-            {/* Modern Chat Button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={`
-                relative flex items-center justify-center transition-all duration-300 shadow-xl hover:shadow-2xl
-                ${
-                  botConfig.branding.size === "small"
-                    ? "w-14 h-14"
-                    : botConfig.branding.size === "large"
-                    ? "w-20 h-20"
-                    : "w-16 h-16"
-                }
-                rounded-2xl hover:scale-105 group
-              `}
-              style={{ backgroundColor: botConfig.color }}
+        {/* Live Chat Widget - Centered */}
+        <div>
+          <div className="sticky top-0">
+            {/* Chat Widget Container */}
+            <div
+              className="w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-grey-200 flex flex-col overflow-hidden"
+              style={{ height: "700px" }}
             >
-              {!isOpen ? (
-                <svg
-                  className="w-7 h-7 text-white transition-transform group-hover:scale-110"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              )}
-
-              {/* Modern Notification Badge */}
+              {/* Chat Header */}
               <div
-                className="absolute -top-2 -right-2 w-6 h-6 rounded-full border-2 border-white flex items-center justify-center shadow-lg animate-pulse"
-                style={{ background: "var(--sharp-coral)" }}
+                className={`relative p-4 text-white flex items-center gap-4 backdrop-blur-sm ${toneStyles.headerStyle}`}
+                style={{
+                  background: `linear-gradient(135deg, ${botConfig.color} 0%, ${botConfig.color}ee 100%)`,
+                  height: "80px",
+                }}
               >
-                <span className="text-white text-xs font-bold">1</span>
-              </div>
-            </button>
-
-            {/* Modern Chat Window */}
-            {isOpen && (
-              <div className="absolute bottom-24 right-0 w-96 h-[500px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 flex flex-col overflow-hidden animate-soft">
-                {/* Modern Chat Header */}
-                <div
-                  className="relative p-4 text-white flex items-center gap-4 backdrop-blur-sm"
-                  style={{
-                    background: `linear-gradient(135deg, ${botConfig.color} 0%, ${botConfig.color}ee 100%)`,
-                    height: "80px",
-                    width: "300px",
-                  }}
-                >
-                  {/* Bot Avatar */}
-                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
-                    <img
-                      src="/logo.png"
-                      alt="آیوا"
-                      className="w-10 h-10 object-cover"
-                    />
-                  </div>
-
-                  {/* Bot Info */}
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold truncate text-lg text-right">
-                      {botConfig.name}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                      <p className="text-sm opacity-90 text-right">
-                        آنلاین و آماده پاسخ
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setIsOpen(false)}
-                      className="w-10 h-10 hover:bg-white/20 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105"
-                      title="بستن"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  </div>
+                {/* Bot Avatar */}
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-white/30">
+                  <img
+                    src=""
+                    alt="آیوا"
+                    className="w-8 h-8 object-cover rounded-full"
+                  />
                 </div>
 
-                {/* Modern Messages Area */}
-                <div
-                  className="flex-1 p-6 space-y-4 overflow-y-auto"
-                  style={{ background: "var(--sharp-cyan)", opacity: 0.05 }}
-                >
-                  {messages.map((message, index) => (
-                    <div
-                      key={message.id}
-                      className={`flex items-end gap-3 ${
-                        message.isBot ? "justify-start" : "justify-end"
-                      }`}
-                      style={{
-                        animationDelay: `${index * 0.1}s`,
-                      }}
-                    >
-                      {/* Bot Avatar for Bot Messages */}
-                      {message.isBot && (
-                        <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm mb-1 overflow-hidden"
-                          style={{ backgroundColor: `${botConfig.color}20` }}
-                        >
-                          <img
-                            src="/logo.png"
-                            alt="آیوا"
-                            className="w-6 h-6 object-cover"
-                          />
-                        </div>
-                      )}
+                {/* Bot Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 justify-start">
+                    <h4 className="font-semibold truncate text-lg">
+                      {botConfig.name}
+                    </h4>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1 justify-start">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <p className="text-sm opacity-90">آنلاین و آماده پاسخ</p>
+                  </div>
+                </div>
+              </div>
 
-                      {/* Message Bubble */}
-                      <div
-                        className={`
-                          max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm
-                          ${
-                            message.isBot
-                              ? "bg-white border border-grey-100 text-grey-800 rounded-2xl rounded-bl-md"
-                              : "text-white rounded-2xl rounded-br-md"
-                          }
-                        `}
-                        style={
-                          !message.isBot
-                            ? {
-                                background: `linear-gradient(135deg, ${botConfig.color} 0%, ${botConfig.color}dd 100%)`,
-                              }
-                            : {}
-                        }
-                      >
-                        {message.text}
-
-                        {/* Message Time */}
-                        <div
-                          className={`text-xs mt-1 opacity-70 ${
-                            message.isBot ? "text-grey-500" : "text-white/70"
-                          }`}
-                        >
-                          {new Date().toLocaleTimeString("fa-IR", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Modern Typing Indicator */}
-                  {isTyping && (
-                    <div className="flex items-end gap-3 justify-start">
+              {/* Messages Area */}
+              <div className="flex-1 p-6 space-y-4 overflow-y-auto bg-grey-50">
+                {messages.map((message, index) => (
+                  <div
+                    key={message.id}
+                    className={`flex items-end gap-3 ${
+                      message.isBot ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    {/* Bot Avatar for Bot Messages */}
+                    {message.isBot && (
                       <div
                         className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm mb-1 overflow-hidden"
                         style={{ backgroundColor: `${botConfig.color}20` }}
                       >
                         <img
-                          src="/logo.png"
+                          src=""
                           alt="آیوا"
                           className="w-6 h-6 object-cover"
                         />
                       </div>
-                      <div className="bg-white border border-grey-100 px-5 py-3 rounded-2xl rounded-bl-md shadow-sm">
-                        <div className="flex gap-1">
-                          <div
-                            className="w-2 h-2 rounded-full animate-bounce"
-                            style={{ backgroundColor: `${botConfig.color}60` }}
-                          ></div>
-                          <div
-                            className="w-2 h-2 rounded-full animate-bounce"
-                            style={{
-                              backgroundColor: `${botConfig.color}60`,
-                              animationDelay: "0.1s",
-                            }}
-                          ></div>
-                          <div
-                            className="w-2 h-2 rounded-full animate-bounce"
-                            style={{
-                              backgroundColor: `${botConfig.color}60`,
-                              animationDelay: "0.2s",
-                            }}
-                          ></div>
-                        </div>
+                    )}
+
+                    {/* Message Bubble */}
+                    <div
+                      className={`
+                        max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm text-right
+                        ${
+                          message.isBot
+                            ? `bg-white border border-grey-100 text-grey-800 ${
+                                toneStyles.messageClass
+                              } ${
+                                toneStyles.messageClass === "rounded-2xl"
+                                  ? "rounded-bl-md"
+                                  : toneStyles.messageClass === "rounded-3xl"
+                                  ? "rounded-bl-xl"
+                                  : "rounded-bl-sm"
+                              }`
+                            : `text-white ${toneStyles.messageClass} ${
+                                toneStyles.messageClass === "rounded-2xl"
+                                  ? "rounded-br-md"
+                                  : toneStyles.messageClass === "rounded-3xl"
+                                  ? "rounded-br-xl"
+                                  : "rounded-br-sm"
+                              }`
+                        }
+                      `}
+                      style={
+                        !message.isBot
+                          ? {
+                              background: `linear-gradient(135deg, ${botConfig.color} 0%, ${botConfig.color}dd 100%)`,
+                            }
+                          : {}
+                      }
+                      dir="rtl"
+                    >
+                      {message.isBot
+                        ? currentTone?.example || message.text
+                        : message.text}
+
+                      {/* Message Time */}
+                      <div
+                        className={`text-xs mt-1 opacity-70 text-right ${
+                          message.isBot ? "text-grey-500" : "text-white/70"
+                        }`}
+                      >
+                        {new Date().toLocaleTimeString("fa-IR", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                ))}
 
-                {/* Modern Input Area */}
-                <div className="p-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
-                  <div className="flex items-center gap-3">
-                    <button className="w-10 h-10 text-grey-400 hover:text-grey-600 rounded-xl hover:bg-grey-100 flex items-center justify-center transition-all duration-200">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                        />
-                      </svg>
-                    </button>
-
-                    <input
-                      type="text"
-                      placeholder="پیام خود را بنویسید..."
-                      className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
-                      style={
-                        {
-                          "--tw-ring-color": `${botConfig.color}40`,
-                        } as React.CSSProperties
-                      }
-                      disabled
-                    />
-
-                    <button
-                      className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50"
-                      style={{ backgroundColor: botConfig.color }}
-                      disabled
+                {/* Typing Indicator */}
+                {isTyping && (
+                  <div className="flex items-end gap-3 justify-start">
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm mb-1 overflow-hidden"
+                      style={{ backgroundColor: `${botConfig.color}20` }}
                     >
-                      <svg
-                        className="w-5 h-5 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                        />
-                      </svg>
-                    </button>
+                      <img src="" alt="آیوا" className="w-6 h-6 object-cover" />
+                    </div>
+                    <div
+                      className={`bg-white border border-grey-100 px-5 py-3 shadow-sm ${
+                        toneStyles.messageClass
+                      } ${
+                        toneStyles.messageClass === "rounded-2xl"
+                          ? "rounded-bl-md"
+                          : toneStyles.messageClass === "rounded-3xl"
+                          ? "rounded-bl-xl"
+                          : "rounded-bl-sm"
+                      }`}
+                    >
+                      <div className="flex gap-1 items-center">
+                        <span className="text-xs text-grey-500 ml-2">
+                          {toneStyles.emoji}
+                        </span>
+                        <div
+                          className="w-2 h-2 rounded-full animate-bounce"
+                          style={{ backgroundColor: `${botConfig.color}60` }}
+                        ></div>
+                        <div
+                          className="w-2 h-2 rounded-full animate-bounce"
+                          style={{
+                            backgroundColor: `${botConfig.color}60`,
+                            animationDelay: "0.1s",
+                          }}
+                        ></div>
+                        <div
+                          className="w-2 h-2 rounded-full animate-bounce"
+                          style={{
+                            backgroundColor: `${botConfig.color}60`,
+                            animationDelay: "0.2s",
+                          }}
+                        ></div>
+                      </div>
+                    </div>
                   </div>
+                )}
+              </div>
 
-                  {/* Quick Actions */}
-                  <div className="flex items-center gap-2 mt-3">
-                    <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600 transition-colors">
-                      👋 سلام
-                    </button>
-                    <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600 transition-colors">
-                      💡 راهنمایی
-                    </button>
-                    <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600 transition-colors">
-                      📞 تماس
-                    </button>
+              {/* Input Area */}
+              <div className="p-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
+                {/* Knowledge Base Quick Actions */}
+                {botConfig.knowledge.length > 0 && currentStep >= 2 && (
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-2">
+                      {botConfig.knowledge.slice(0, 3).map((item) => {
+                        const icon =
+                          item.type === "faq"
+                            ? "❓"
+                            : item.type === "document"
+                            ? "📄"
+                            : item.type === "url"
+                            ? "🔗"
+                            : "📝";
+
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => handleKnowledgeClick(item)}
+                            className={`text-xs px-3 py-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary rounded-full max-w-[200px] truncate ${toneStyles.messageClass}`}
+                            title={item.title}
+                          >
+                            {icon} {item.title}
+                          </button>
+                        );
+                      })}
+
+                      {botConfig.knowledge.length > 3 && (
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
+                          +{botConfig.knowledge.length - 3} بیشتر
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* Powered by */}
-                <div className="px-4 py-2 text-center">
-                  <p className="text-xs text-grey-400">
-                    راه‌اندازی شده با{" "}
-                    <span className="font-medium text-brand-primary">آیوا</span>
-                  </p>
+                {/* Default Quick Actions - Only show if no knowledge base */}
+                {(botConfig.knowledge.length === 0 || currentStep < 2) && (
+                  <div className="flex items-center gap-2 mb-3">
+                    {botConfig.tone === "friendly" && (
+                      <>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
+                          👋 سلام
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
+                          😊 کمک
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
+                          💬 چت
+                        </button>
+                      </>
+                    )}
+                    {botConfig.tone === "professional" && (
+                      <>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
+                          📋 خدمات
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
+                          📞 تماس
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
+                          💼 مشاوره
+                        </button>
+                      </>
+                    )}
+                    {botConfig.tone === "casual" && (
+                      <>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-2xl text-grey-600">
+                          🤙 هـــی
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-2xl text-grey-600">
+                          🤔 چیکار کنم؟
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-2xl text-grey-600">
+                          🔥 باحاله!
+                        </button>
+                      </>
+                    )}
+                    {botConfig.tone === "expert" && (
+                      <>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
+                          🎓 تحلیل
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
+                          📊 داده‌ها
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
+                          🔬 بررسی
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3">
+                  <button className="w-10 h-10 text-grey-400 hover:text-grey-600 rounded-xl hover:bg-grey-100 flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                      />
+                    </svg>
+                  </button>
+
+                  <input
+                    type="text"
+                    placeholder="پیام خود را بنویسید..."
+                    className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+                    disabled
+                  />
+
+                  <button
+                    className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md disabled:opacity-50"
+                    style={{ backgroundColor: botConfig.color }}
+                    disabled
+                  >
+                    <svg
+                      className="w-5 h-5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Preview Instruction - Clean & Minimal */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-          <div className="bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-            💬 کلیک کنید تا چت‌بات را ببینید
+              {/* Powered by */}
+            </div>
           </div>
         </div>
       </div>

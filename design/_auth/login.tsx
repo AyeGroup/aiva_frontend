@@ -1,94 +1,114 @@
-import React, { useState } from 'react';
-import { ImageWithFallback } from '../../components/figma/ImageWithFallback';
-import { Input } from '../_components/Input/input';
-import { Eye, EyeOff, Phone, Lock, ArrowLeft, MessageSquare, Mail, User } from 'lucide-react';
-import { toast } from 'sonner';
-import { Toaster } from '../../components/ui/sonner';
-import { englishToPersian, cleanPhoneNumber } from '../../utils/number-utils';
-import './login.css';
+import React, { useState } from "react";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { Input } from "@/design/_components/Input/input";
+import {
+  Eye,
+  EyeOff,
+  Phone,
+  Lock,
+  ArrowLeft,
+  MessageSquare,
+  Mail,
+  User,
+} from "lucide-react";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
+import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
+import aivaLogo from "@/public/logo.png";
+import "./login.css";
 
-type PageType = 'landing' | 'signup' | 'dashboard' | 'consultation' | 'demo' | 'chatbot-management' | 'tickets' | 'login' | 'otp-verification' | 'register';
+type PageType =
+  | "landing"
+  | "signup"
+  | "dashboard"
+  | "consultation"
+  | "demo"
+  | "chatbot-management"
+  | "tickets"
+  | "login"
+  | "otp-verification"
+  | "register";
 
 interface LoginProps {
   onNavigate: (page: PageType) => void;
 }
 
 export function Login({ onNavigate }: LoginProps) {
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [otp, setOtp] = useState('');
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otpTimer, setOtpTimer] = useState(0);
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [mode, setMode] = useState<"login" | "signup">("login");
 
   const handleSendOtp = async () => {
     const cleanedPhone = cleanPhoneNumber(phone);
-    
+
     if (!cleanedPhone) {
-      toast.error('لطفاً شماره تلفن خود را وارد کنید');
+      toast.error("لطفاً شماره تلفن خود را وارد کنید");
       return;
     }
 
     // Simple validation - just check if we have some digits
     if (cleanedPhone.length < 10) {
-      toast.error('لطفاً شماره تلفن معتبر وارد کنید');
+      toast.error("لطفاً شماره تلفن معتبر وارد کنید");
       return;
     }
 
     setIsLoading(true);
-    
+
     // Simulate OTP sending
     setTimeout(() => {
       setIsLoading(false);
-      toast.success('کد تایید به شماره شما ارسال شد');
-      
+      toast.success("کد تایید به شماره شما ارسال شد");
+
       // Navigate to OTP verification page
-      onNavigate('otp-verification');
+      onNavigate("otp-verification");
     }, 2000);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const cleanedPhone = cleanPhoneNumber(phone);
-    
+
     if (!cleanedPhone) {
-      toast.error('لطفاً شماره تلفن خود را وارد کنید');
+      toast.error("لطفاً شماره تلفن خود را وارد کنید");
       return;
     }
 
-    if (mode === 'login') {
+    if (mode === "login") {
       handleSendOtp();
       return;
     }
 
-    if (mode === 'signup') {
+    if (mode === "signup") {
       if (!password) {
-        toast.error('لطفاً رمز عبور را وارد کنید');
+        toast.error("لطفاً رمز عبور را وارد کنید");
         return;
       }
-      
+
       setIsLoading(true);
-      
+
       // Simulate API call for signup
       setTimeout(() => {
         setIsLoading(false);
-        toast.success('در حال ارسال کد تایید...');
-        
+        toast.success("در حال ارسال کد تایید...");
+
         // Navigate to OTP verification for signup
-        onNavigate('otp-verification');
+        onNavigate("otp-verification");
       }, 2000);
     }
   };
 
   const toggleMode = () => {
-    setMode(mode === 'login' ? 'signup' : 'login');
-    setPhone('');
-    setPassword('');
-    setOtp('');
+    setMode(mode === "login" ? "signup" : "login");
+    setPhone("");
+    setPassword("");
+    setOtp("");
     setIsOtpSent(false);
     setOtpTimer(0);
   };
@@ -108,7 +128,8 @@ export function Login({ onNavigate }: LoginProps) {
             {/* Logo - Right Side */}
             <div className="flex items-center gap-3">
               <ImageWithFallback
-                src="/logo.png"
+                src=""
+                // src=""
                 alt="آیوا"
                 className="w-20 h-20 object-cover"
               />

@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
-import { Dialog } from '../../components/ui/dialog';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { X, Plus, Globe, Palette, CheckCircle, MessageCircle, Trash2, HelpCircle } from 'lucide-react';
-import { toast } from 'sonner';
-import './add-chatbot-modal.css';
+import React, { useState } from "react";
+import { Dialog } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  X,
+  Plus,
+  Globe,
+  Palette,
+  CheckCircle,
+  MessageCircle,
+  Trash2,
+  HelpCircle,
+} from "lucide-react";
+import { toast } from "sonner";
+import "./add-chatbot-modal.css";
 
 interface QAPair {
   id: string;
@@ -24,114 +33,132 @@ interface Website {
 interface AddChatbotModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (website: Omit<Website, 'id'>) => void;
+  onAdd: (website: Omit<Website, "id">) => void;
 }
 
-export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps) {
-  const [name, setName] = useState('');
-  const [url, setUrl] = useState('');
-  const [selectedColor, setSelectedColor] = useState('#65bcb6');
+export function AddChatbotModal({
+  isOpen,
+  onClose,
+  onAdd,
+}: AddChatbotModalProps) {
+  const [name, setName] = useState("");
+  const [url, setUrl] = useState("");
+  const [selectedColor, setSelectedColor] = useState("#65bcb6");
   const [qaData, setQAData] = useState<QAPair[]>([
-    { 
-      id: '1', 
-      question: 'ساعات کاری شما چیست?', 
-      answer: 'ما هر روز از ساعت ۸ صبح تا ۱۰ شب آماده خدمات‌رسانی هستیم.' 
-    }
+    {
+      id: "1",
+      question: "ساعات کاری شما چیست?",
+      answer: "ما هر روز از ساعت ۸ صبح تا ۱۰ شب آماده خدمات‌رسانی هستیم.",
+    },
   ]);
-  const [errors, setErrors] = useState<{name?: string; url?: string; qa?: string}>({});
+  const [errors, setErrors] = useState<{
+    name?: string;
+    url?: string;
+    qa?: string;
+  }>({});
 
   // Prevent body scroll when modal is open - Hook must be called before any early returns
   React.useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
       return () => {
-        document.body.style.overflow = 'unset';
+        document.body.style.overflow = "unset";
       };
     }
   }, [isOpen]);
 
   const colorOptions = [
-    '#65bcb6', // brand primary
-    '#FFA18E', // brand secondary
-    '#b07cc6', // purple
-    '#52d4a0', // emerald
-    '#e67e7e', // coral
-    '#f59e0b', // amber
-    '#6366f1', // indigo
-    '#dc2626', // crimson
-    '#ea580c', // orange
-    '#65a30d', // lime
-    '#0891b2', // cyan
-    '#db2777', // pink
-    '#7c3aed', // violet
-    '#0d9488', // teal
-    '#e11d48', // rose
+    "#65bcb6", // brand primary
+    "#FFA18E", // brand secondary
+    "#b07cc6", // purple
+    "#52d4a0", // emerald
+    "#e67e7e", // coral
+    "#f59e0b", // amber
+    "#6366f1", // indigo
+    "#dc2626", // crimson
+    "#ea580c", // orange
+    "#65a30d", // lime
+    "#0891b2", // cyan
+    "#db2777", // pink
+    "#7c3aed", // violet
+    "#0d9488", // teal
+    "#e11d48", // rose
   ];
 
   const validateForm = () => {
-    const newErrors: {name?: string; url?: string; qa?: string} = {};
-    
+    const newErrors: { name?: string; url?: string; qa?: string } = {};
+
     if (!name.trim()) {
-      newErrors.name = 'نام چت بات اجباری است';
+      newErrors.name = "نام چت بات اجباری است";
     }
-    
+
     if (!url.trim()) {
-      newErrors.url = 'آدرس وب‌سایت اجباری است';
-    } else if (!/^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.([a-zA-Z]{2,}|[a-zA-Z]{2,}\.[a-zA-Z]{2,})$/.test(url.trim())) {
-      newErrors.url = 'فرمت آدرس صحیح نیست (مثال: example.com)';
+      newErrors.url = "آدرس وب‌سایت اجباری است";
+    } else if (
+      !/^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.([a-zA-Z]{2,}|[a-zA-Z]{2,}\.[a-zA-Z]{2,})$/.test(
+        url.trim()
+      )
+    ) {
+      newErrors.url = "فرمت آدرس صحیح نیست (مثال: example.com)";
     }
-    
+
     // Validate QA data - at least one complete pair is required
-    const validQAs = qaData.filter(qa => qa.question.trim() && qa.answer.trim());
+    const validQAs = qaData.filter(
+      (qa) => qa.question.trim() && qa.answer.trim()
+    );
     if (validQAs.length === 0) {
-      newErrors.qa = 'حداقل یک جفت سوال و جواب کامل اجباری است';
+      newErrors.qa = "حداقل یک جفت سوال و جواب کامل اجباری است";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onAdd({
         name: name.trim(),
         url: url.trim(),
         color: selectedColor,
-        qaData: qaData.filter(qa => qa.question.trim() && qa.answer.trim())
+        qaData: qaData.filter((qa) => qa.question.trim() && qa.answer.trim()),
       });
-      
+
       // Show success toast
-      toast.success('چت بات جدید با موفقیت ایجاد شد!', {
+      toast.success("چت بات جدید با موفقیت ایجاد شد!", {
         description: `چت بات ${name.trim()} برای ${url.trim()} آماده است`,
         icon: <CheckCircle className="w-4 h-4" />,
         duration: 3000,
       });
-      
+
       // Reset form
-      setName('');
-      setUrl('');
-      setSelectedColor('#65bcb6');
-      setQAData([{ 
-        id: '1', 
-        question: 'ساعات کاری شما چیست?', 
-        answer: 'ما هر روز از ساعت ۸ صبح تا ۱۰ شب آماده خدمات‌رسانی هستیم.' 
-      }]);
+      setName("");
+      setUrl("");
+      setSelectedColor("#65bcb6");
+      setQAData([
+        {
+          id: "1",
+          question: "ساعات کاری شما چیست?",
+          answer: "ما هر روز از ساعت ۸ صبح تا ۱۰ شب آماده خدمات‌رسانی هستیم.",
+        },
+      ]);
       setErrors({});
       onClose();
     }
   };
 
   const handleClose = () => {
-    setName('');
-    setUrl('');
-    setSelectedColor('#65bcb6');
-    setQAData([{ 
-      id: '1', 
-      question: 'ساعات کاری شما چیست?', 
-      answer: 'ما هر روز از ساعت ۸ صبح تا ۱۰ شب آماده خدمات‌رسانی هستیم.' 
-    }]);
+    setName("");
+    setUrl("");
+    setSelectedColor("#65bcb6");
+    setQAData([
+      {
+        id: "1",
+        question: "ساعات کاری شما چیست?",
+        answer: "ما هر روز از ساعت ۸ صبح تا ۱۰ شب آماده خدمات‌رسانی هستیم.",
+      },
+    ]);
     setErrors({});
     onClose();
   };
@@ -139,36 +166,41 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
   const addQAPair = () => {
     const newQA: QAPair = {
       id: Date.now().toString(),
-      question: '',
-      answer: ''
+      question: "",
+      answer: "",
     };
-    setQAData(prev => [...prev, newQA]);
+    setQAData((prev) => [...prev, newQA]);
   };
 
   const removeQAPair = (id: string) => {
     if (qaData.length > 1) {
-      setQAData(prev => prev.filter(qa => qa.id !== id));
+      setQAData((prev) => prev.filter((qa) => qa.id !== id));
     }
   };
 
-  const updateQAPair = (id: string, field: 'question' | 'answer', value: string) => {
-    setQAData(prev => 
-      prev.map(qa => 
-        qa.id === id ? { ...qa, [field]: value } : qa
-      )
+  const updateQAPair = (
+    id: string,
+    field: "question" | "answer",
+    value: string
+  ) => {
+    setQAData((prev) =>
+      prev.map((qa) => (qa.id === id ? { ...qa, [field]: value } : qa))
     );
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center add-chatbot-modal" style={{ isolation: 'isolate' }}>
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center add-chatbot-modal"
+      style={{ isolation: "isolate" }}
+    >
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/20 backdrop-blur-sm z-[9998]"
         onClick={handleClose}
       />
-      
+
       {/* Modal */}
       <div className="relative add-chatbot-modal-content bg-white rounded-3xl p-8 max-w-lg w-full mx-4 shadow-2xl border border-grey-200 z-[9999]">
         {/* Header */}
@@ -178,8 +210,12 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
               <Plus className="w-6 h-6 text-brand-primary" />
             </div>
             <div>
-              <h2 className="text-grey-900 font-semibold text-xl">افزودن چت بات هوشمند</h2>
-              <p className="text-grey-500 text-sm">چت بات جدید با سوالات و پاسخ‌های اختصاصی ایجاد کنید</p>
+              <h2 className="text-grey-900 font-semibold text-xl">
+                افزودن چت بات هوشمند
+              </h2>
+              <p className="text-grey-500 text-sm">
+                چت بات جدید با سوالات و پاسخ‌های اختصاصی ایجاد کنید
+              </p>
             </div>
           </div>
           <button
@@ -193,8 +229,11 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name Field */}
-          <div className={`space-y-2 form-field ${errors.name ? 'error' : ''}`}>
-            <Label htmlFor="chatbot-name" className="text-grey-700 font-medium flex items-center gap-2">
+          <div className={`space-y-2 form-field ${errors.name ? "error" : ""}`}>
+            <Label
+              htmlFor="chatbot-name"
+              className="text-grey-700 font-medium flex items-center gap-2"
+            >
               <Globe className="w-4 h-4" />
               نام چت بات
             </Label>
@@ -204,9 +243,9 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
               onChange={(e) => setName(e.target.value)}
               placeholder="مثال: فروشگاه آنلاین"
               className={`w-full p-3 rounded-xl border transition-colors text-right ${
-                errors.name 
-                  ? 'border-danger focus:border-danger' 
-                  : 'border-grey-200 focus:border-brand-primary'
+                errors.name
+                  ? "border-danger focus:border-danger"
+                  : "border-grey-200 focus:border-brand-primary"
               }`}
             />
             {errors.name && (
@@ -215,8 +254,11 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
           </div>
 
           {/* URL Field */}
-          <div className={`space-y-2 form-field ${errors.url ? 'error' : ''}`}>
-            <Label htmlFor="chatbot-url" className="text-grey-700 font-medium flex items-center gap-2">
+          <div className={`space-y-2 form-field ${errors.url ? "error" : ""}`}>
+            <Label
+              htmlFor="chatbot-url"
+              className="text-grey-700 font-medium flex items-center gap-2"
+            >
               <Globe className="w-4 h-4" />
               آدرس وب‌سایت
             </Label>
@@ -226,9 +268,9 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
               onChange={(e) => setUrl(e.target.value)}
               placeholder="example.com"
               className={`url-field w-full p-3 rounded-xl border transition-colors text-left ltr ${
-                errors.url 
-                  ? 'border-danger focus:border-danger' 
-                  : 'border-grey-200 focus:border-brand-primary'
+                errors.url
+                  ? "border-danger focus:border-danger"
+                  : "border-grey-200 focus:border-brand-primary"
               }`}
               dir="ltr"
             />
@@ -250,9 +292,9 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
                   type="button"
                   onClick={() => setSelectedColor(color)}
                   className={`w-12 h-12 rounded-xl transition-all duration-200 border-2 ${
-                    selectedColor === color 
-                      ? 'border-grey-900 scale-110 shadow-lg' 
-                      : 'border-grey-200 hover:border-grey-300 hover:scale-105'
+                    selectedColor === color
+                      ? "border-grey-900 scale-110 shadow-lg"
+                      : "border-grey-200 hover:border-grey-300 hover:scale-105"
                   }`}
                   style={{ backgroundColor: color }}
                 >
@@ -290,9 +332,14 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
 
             <div className="space-y-4 max-h-60 overflow-y-auto">
               {qaData.map((qa, index) => (
-                <div key={qa.id} className="bg-grey-50 rounded-xl p-4 space-y-3 border border-grey-100">
+                <div
+                  key={qa.id}
+                  className="bg-grey-50 rounded-xl p-4 space-y-3 border border-grey-100"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="text-grey-600 text-sm font-medium">سوال {index + 1}</span>
+                    <span className="text-grey-600 text-sm font-medium">
+                      سوال {index + 1}
+                    </span>
                     {qaData.length > 1 && (
                       <button
                         type="button"
@@ -303,18 +350,22 @@ export function AddChatbotModal({ isOpen, onClose, onAdd }: AddChatbotModalProps
                       </button>
                     )}
                   </div>
-                  
+
                   <div className="space-y-3">
                     <Input
                       value={qa.question}
-                      onChange={(e) => updateQAPair(qa.id, 'question', e.target.value)}
+                      onChange={(e) =>
+                        updateQAPair(qa.id, "question", e.target.value)
+                      }
                       placeholder="سوال مورد نظر را وارد کنید..."
                       className="w-full p-3 rounded-lg border border-grey-200 focus:border-brand-primary transition-colors text-right"
                     />
-                    
+
                     <textarea
                       value={qa.answer}
-                      onChange={(e) => updateQAPair(qa.id, 'answer', e.target.value)}
+                      onChange={(e) =>
+                        updateQAPair(qa.id, "answer", e.target.value)
+                      }
                       placeholder="پاسخ مربوط به این سوال را وارد کنید..."
                       className="w-full p-3 rounded-lg border border-grey-200 focus:border-brand-primary transition-colors text-right resize-none h-20"
                       dir="rtl"

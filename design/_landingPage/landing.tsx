@@ -1,15 +1,15 @@
-import React from 'react';
-import { ErrorBoundary } from '../_components/ErrorBoundary/error-boundary';
-import { Hero } from './hero';
-import { HowItWorks } from './how-it-works';
-import { Features } from './features';
-import { Pricing } from './pricing';
-import { Trust } from './trust';
-import { FAQ } from './faq';
-import { FinalCTA } from './final-cta';
-import { Footer } from './footer';
+import React from "react";
+import { ErrorBoundary } from "@/design/_components/ErrorBoundary/error-boundary";
+import { Hero } from "./hero";
+import { HowItWorks } from "./how-it-works";
+import { Features } from "./features";
+import { Pricing } from "./pricing";
+import { Trust } from "./trust";
+import { FAQ } from "./faq";
+import { FinalCTA } from "./final-cta";
+import { Footer } from "./footer";
 
-type PageType = 'landing' | 'signup' | 'dashboard' | 'consultation';
+type PageType = "landing" | "signup" | "dashboard" | "consultation";
 
 interface LandingPageProps {
   onNavigate: (page: PageType) => void;
@@ -39,37 +39,37 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
       <ErrorBoundary>
         <Hero onNavigate={onNavigate} />
       </ErrorBoundary>
-      
+
       {/* چطور کار می‌کند */}
       <ErrorBoundary>
         <HowItWorks />
       </ErrorBoundary>
-      
+
       {/* ویژگی‌ها */}
       <ErrorBoundary>
         <Features />
       </ErrorBoundary>
-      
+
       {/* قیمت‌گذاری */}
       <ErrorBoundary>
         <Pricing onNavigate={onNavigate} />
       </ErrorBoundary>
-      
+
       {/* امنیت و اعتماد */}
       <ErrorBoundary>
         <Trust />
       </ErrorBoundary>
-      
+
       {/* سؤالات متداول */}
       <ErrorBoundary>
         <FAQ />
       </ErrorBoundary>
-      
+
       {/* دعوت نهایی به اقدام */}
       <ErrorBoundary>
         <FinalCTA onNavigate={onNavigate} />
       </ErrorBoundary>
-      
+
       {/* فوتر */}
       <ErrorBoundary>
         <Footer />

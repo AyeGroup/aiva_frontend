@@ -1,20 +1,30 @@
-import { Card } from '../_components/Card/card';
-import { Button } from '../_components/Button/button';
-import { Zap, Crown, ArrowUp } from 'lucide-react';
+import { Card } from "@/design/_components/Card/card";
+import { Button } from "@/components/ui/button";
+import { Zap, Crown, ArrowUp } from "lucide-react";
 
 export function UpgradeBanner() {
   return (
-    <Card className="p-6 border-2" style={{ backgroundColor: 'var(--sharp-primary)', opacity: 0.05, borderColor: 'var(--sharp-primary)' }}>
+    <Card
+      className="p-6 border-2"
+      // style={{
+      //   backgroundColor: "var(--sharp-primary)",
+      //   opacity: 0.05,
+      //   borderColor: "var(--sharp-primary)",
+      // }}
+    >
       <div className="text-center">
-        <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: 'var(--sharp-primary)' }}>
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
+          style={{ background: "var(--sharp-primary)" }}
+        >
           <Crown className="w-6 h-6 text-white" />
         </div>
-        
+
         <h3 className="text-grey-900 mb-2 flex items-center justify-center gap-2">
           <Zap className="w-5 h-5 text-brand-tertiary" />
           پلن سفارشی
         </h3>
-        
+
         <p className="text-grey-600 text-body-small mb-4">
           امکانات پیشرفته‌تر برای کسب‌وکار شما
         </p>
@@ -30,11 +40,11 @@ export function UpgradeBanner() {
           </div>
         </div>
 
-        <Button 
-          variant="primary" 
-          size="small"
+        <Button
+          // variant="primary"
+          // size="small"
           className="w-full hover:shadow-md transition-all"
-          style={{ background: 'var(--sharp-accent)' }}
+          style={{ background: "var(--sharp-accent)" }}
         >
           <ArrowUp className="w-4 h-4 ml-2" />
           تماس با ما

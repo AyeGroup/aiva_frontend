@@ -1,379 +1,361 @@
-import { useState } from 'react';
-import { BotConfig } from '../onboarding';
-import { onboardingData } from '../onboarding.data';
-import { Card } from '../../_components/Card/card';
-import { Button } from '../../_components/Button/button';
-import { Input } from '../../_components/Input/input';
-import { MessageSquare, Send, Bot, User, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { useState } from "react";
+import { BotConfig } from "../onboarding";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/design/_components/Input/input";
+import { HelpCircle, Plus, Trash2, Edit3, Save, X } from "lucide-react";
 
 interface WizardStep4Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
 }
 
-interface ChatMessage {
+interface FAQ {
   id: string;
-  type: 'bot' | 'user';
-  content: string;
-  timestamp: Date;
+  question: string;
+  answer: string;
+  isEditing?: boolean;
 }
 
 export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
-  const [messages, setMessages] = useState<ChatMessage[]>([
+  const [faqs, setFaqs] = useState<FAQ[]>([
     {
-      id: '1',
-      type: 'bot',
-      content: botConfig.welcomeMessage,
-      timestamp: new Date()
-    }
+      id: "1",
+      question: "ساعات کاری شما چیست؟",
+      answer: "ما از ساعت ۹ صبح تا ۶ بعدازظهر همه روزه در خدمت شما هستیم.",
+    },
+    {
+      id: "2",
+      question: "چگونه می‌توانم سفارش دهم؟",
+      answer:
+        "می‌توانید از طریق سایت، تلفن یا حضور در فروشگاه سفارش خود را ثبت کنید.",
+    },
   ]);
-  const [currentMessage, setCurrentMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [selectedSample, setSelectedSample] = useState('');
 
-  const sendMessage = async (message: string) => {
-    if (!message.trim()) return;
+  const [newFaq, setNewFaq] = useState({ question: "", answer: "" });
 
-    // Add user message
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: message,
-      timestamp: new Date()
-    };
+  const suggestedQuestions = [
+    "محصولات شما چه هستند؟",
+    "هزینه ارسال چقدر است؟",
+    "آیا تخفیف ویژه دارید؟",
+    "چگونه با شما تماس بگیرم؟",
+    "آیا گارانتی دارید؟",
+    "مدت زمان ارسال چقدر است؟",
+    "آیا پرداخت اقساطی دارید؟",
+    "چگونه مرجوع کنم؟",
+  ];
 
-    setMessages(prev => [...prev, userMessage]);
-    setCurrentMessage('');
-    setIsTyping(true);
-
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponse = generateBotResponse(message);
-      const botMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'bot',
-        content: botResponse,
-        timestamp: new Date()
+  const addFaq = () => {
+    if (newFaq.question.trim() && newFaq.answer.trim()) {
+      const faq: FAQ = {
+        id: Date.now().toString(),
+        question: newFaq.question.trim(),
+        answer: newFaq.answer.trim(),
       };
 
-      setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
-    }, 1000 + Math.random() * 2000); // Random delay between 1-3 seconds
+      const updatedFaqs = [...faqs, faq];
+      setFaqs(updatedFaqs);
+      setNewFaq({ question: "", answer: "" });
+
+      // Update bot config
+      updateConfig({
+        knowledge: [
+          ...botConfig.knowledge.filter((item) => item.type !== "faq"),
+          ...updatedFaqs.map((faq) => ({
+            id: faq.id,
+            type: "faq" as const,
+            title: faq.question,
+            content: faq.answer,
+          })),
+        ],
+      });
+    }
   };
 
-  const generateBotResponse = (userMessage: string): string => {
-    const message = userMessage.toLowerCase();
+  const deleteFaq = (id: string) => {
+    const updatedFaqs = faqs.filter((faq) => faq.id !== id);
+    setFaqs(updatedFaqs);
 
-    // Check if we have relevant knowledge
-    for (const knowledge of botConfig.knowledge) {
-      if (knowledge.type === 'faq' && knowledge.content) {
-        // Simple keyword matching
-        const content = knowledge.content.toLowerCase();
-        if (content.includes(message) || message.includes(knowledge.title.toLowerCase())) {
-          return knowledge.content.split('\n').find(line => line.startsWith('پاسخ:'))?.substring(5) || 
-                 knowledge.content;
-        }
-      }
-      
-      if (knowledge.type === 'text' && knowledge.content) {
-        const content = knowledge.content.toLowerCase();
-        if (content.includes(message) || message.includes(knowledge.title.toLowerCase())) {
-          return `بر اساس اطلاعات موجود: ${knowledge.content.substring(0, 200)}${knowledge.content.length > 200 ? '...' : ''}`;
-        }
-      }
-    }
-
-    // Common responses
-    if (message.includes('سلام') || message.includes('خداحافظ')) {
-      return 'سلام! خوشحالم که صحبت می‌کنیم. چطور می‌تونم کمکتون کنم؟';
-    }
-
-    if (message.includes('محصول') || message.includes('خدمات')) {
-      return 'متأسفانه اطلاعات کاملی درباره محصولات در دسترس نیست. لطفاً این اطلاعات را در بخش پایگاه دانش اضافه کنید.';
-    }
-
-    if (message.includes('قیمت') || message.includes('هزینه')) {
-      return 'برای اطلاع از قیمت‌ها و هزینه‌ها، لطفاً با تیم فروش تماس بگیرید یا این اطلاعات را در پایگاه دانش اضافه کنید.';
-    }
-
-    if (message.includes('تماس') || message.includes('پشتیبانی')) {
-      return 'برای تماس با پشتیبانی، اطلاعات تماس را در پایگاه دانش اضافه کنید تا بتوانم آن را ارائه دهم.';
-    }
-
-    // Fallback response
-    return botConfig.fallbackMessage;
-  };
-
-  const resetChat = () => {
-    setMessages([
-      {
-        id: '1',
-        type: 'bot',
-        content: botConfig.welcomeMessage,
-        timestamp: new Date()
-      }
-    ]);
-  };
-
-  const sendSampleQuestion = (question: string) => {
-    setSelectedSample(question);
-    sendMessage(question);
-  };
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('fa-IR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    // Update bot config
+    updateConfig({
+      knowledge: [
+        ...botConfig.knowledge.filter((item) => item.type !== "faq"),
+        ...updatedFaqs.map((faq) => ({
+          id: faq.id,
+          type: "faq" as const,
+          title: faq.question,
+          content: faq.answer,
+        })),
+      ],
     });
   };
 
+  const startEdit = (id: string) => {
+    setFaqs(
+      faqs.map((faq) => (faq.id === id ? { ...faq, isEditing: true } : faq))
+    );
+  };
+
+  const saveEdit = (id: string, question: string, answer: string) => {
+    const updatedFaqs = faqs.map((faq) =>
+      faq.id === id
+        ? {
+            ...faq,
+            question: question.trim(),
+            answer: answer.trim(),
+            isEditing: false,
+          }
+        : faq
+    );
+    setFaqs(updatedFaqs);
+
+    // Update bot config
+    updateConfig({
+      knowledge: [
+        ...botConfig.knowledge.filter((item) => item.type !== "faq"),
+        ...updatedFaqs.map((faq) => ({
+          id: faq.id,
+          type: "faq" as const,
+          title: faq.question,
+          content: faq.answer,
+        })),
+      ],
+    });
+  };
+
+  const cancelEdit = (id: string) => {
+    setFaqs(
+      faqs.map((faq) => (faq.id === id ? { ...faq, isEditing: false } : faq))
+    );
+  };
+
+  const addSuggestedQuestion = (question: string) => {
+    setNewFaq({ ...newFaq, question });
+  };
+
   return (
-    <div className="step-content space-y-8" dir="rtl">
-      {/* Modern Header with Icon */}
-      <div className="text-right mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 bg-gradient-to-tr from-success to-brand-secondary rounded-2xl flex items-center justify-center shadow-lg">
-            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-            </svg>
-          </div>
-          <div>
-            <h2 className="text-grey-900 mb-2">
-              تست و آزمایش دستیار
-            </h2>
-            <p className="text-grey-600">
-              چت‌بات خود را امتحان کنید و کیفیت پاسخ‌ها را ارزیابی کنید
-            </p>
-          </div>
+    <div className="space-y-8 bg-bg-surface px-[20px] py-[16px] border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]">
+      {/* Header */}
+      <div className="flex items-start gap-4 px-[0px] py-[12px]">
+        <div className="w-16 h-16 bg-brand-secondary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+          <HelpCircle className="w-8 h-8 text-brand-secondary" />
+        </div>
+        <div className="flex-1">
+          <h2 className="text-grey-900 mb-2 text-right text-[24px] font-bold">
+            سوالات متداول
+          </h2>
+          <p className="text-grey-600 text-right">
+            سوالات و پاسخ‌های رایج کسب‌وکارتان را اضافه کنید
+          </p>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Left Column - Sample Questions */}
-        <div className="space-y-6">
-          <Card className="p-6">
-            <h3 className="text-grey-900 mb-4 flex items-center gap-2">
-              <MessageSquare className="w-5 h-5 text-brand-primary" />
-              سؤالات نمونه
-            </h3>
-            <p className="text-grey-600 text-body-small mb-4">
-              یکی از سؤالات زیر را امتحان کنید:
-            </p>
-            
-            <div className="space-y-2">
-              {onboardingData.sampleQuestions.map((question, index) => (
-                <Button
-                  key={index}
-                  variant="tertiary"
-                  size="small"
-                  className="w-full justify-start text-right"
-                  onClick={() => sendSampleQuestion(question)}
-                  disabled={isTyping}
-                >
-                  {question}
-                </Button>
-              ))}
+      <div className="space-y-6 px-[0px] p-[0px]">
+        {/* Add New FAQ Form */}
+        <div className="bg-bg-soft-mint rounded-xl border-2 border-dashed border-brand-primary/30 pt-[16px] pr-[24px] pb-[24px] pl-[24px]">
+          <div className="space-y-4 px-[12px] py-[0px]">
+            {/* Question Input */}
+            <div>
+              <textarea
+                placeholder="سؤال خود را بنویسید..."
+                value={newFaq.question}
+                onChange={(e) =>
+                  setNewFaq({ ...newFaq, question: e.target.value })
+                }
+                rows={3}
+                className="w-full p-3 border border-border-soft rounded-lg bg-bg-surface resize-none"
+              />
             </div>
-          </Card>
 
-          <Card className="p-6 bg-bg-soft-mint">
-            <h4 className="text-grey-900 mb-3 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-success" />
-              نکات آزمایش
-            </h4>
-            <ul className="space-y-2 text-grey-700 text-body-small">
-              <li className="flex items-start gap-2">
-                <span className="text-success font-medium">•</span>
-                سؤالات مختلف مربوط به کسب‌وکارتان بپرسید
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-success font-medium">•</span>
-                بررسی کنید دستیار چه موقع نمی‌تواند پاسخ دهد
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-success font-medium">•</span>
-                در صورت نیاز، اطلاعات بیشتری اضافه کنید
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-success font-medium">•</span>
-                لحن و سبک پاسخ‌ها را بررسی کنید
-              </li>
-            </ul>
-          </Card>
-        </div>
+            {/* Answer Input */}
+            <div>
+              <textarea
+                placeholder="پاسخ کاملی برای این سؤال بنویسید..."
+                value={newFaq.answer}
+                onChange={(e) =>
+                  setNewFaq({ ...newFaq, answer: e.target.value })
+                }
+                rows={4}
+                className="w-full p-3 border border-border-soft rounded-lg bg-bg-surface resize-none"
+              />
+            </div>
 
-        {/* Center Column - Chat Interface */}
-        <div className="lg:col-span-2">
-          <Card className="p-0 overflow-hidden h-[600px] flex flex-col">
-            {/* Chat Header */}
-            <div 
-              className="p-4 border-b border-border-soft flex items-center justify-between"
-              style={{ backgroundColor: `${botConfig.color}15` }}
-            >
-              <div className="flex items-center gap-3">
-                <div 
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white font-medium"
-                  style={{ backgroundColor: botConfig.color }}
-                >
-                  {botConfig.name.charAt(0)}
-                </div>
-                <div>
-                  <h3 className="text-grey-900">{botConfig.name}</h3>
-                  <span className="text-success text-body-small flex items-center gap-1">
-                    <div className="w-2 h-2 bg-success rounded-full"></div>
-                    آنلاین
-                  </span>
-                </div>
-              </div>
-              
+            {/* Add Button */}
+            <div className="flex justify-center mt-6">
               <Button
-                variant="tertiary"
-                size="small"
-                onClick={resetChat}
-                className="flex items-center gap-2"
+                // variant="primary"
+                // size="md"
+                // icon="plus"
+                // iconPosition="right"
+                onClick={addFaq}
+                disabled={!newFaq.question.trim() || !newFaq.answer.trim()}
+                title="افزودن سؤال جدید"
+                className="px-8 py-3"
               >
-                <RefreshCw className="w-4 h-4" />
-                شروع مجدد
+                افزودن سؤال
               </Button>
             </div>
+          </div>
+        </div>
 
-            {/* Messages Container */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-grey-50">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div className={`flex gap-2 max-w-md ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      message.type === 'bot' ? 'text-white' : 'bg-grey-300'
-                    }`}
-                    style={{ 
-                      backgroundColor: message.type === 'bot' ? botConfig.color : undefined 
-                    }}>
-                      {message.type === 'bot' ? (
-                        <Bot className="w-4 h-4" />
-                      ) : (
-                        <User className="w-4 h-4" />
-                      )}
+        {/* Suggested Questions */}
+        <div>
+          <h3 className="text-grey-900 mb-3 text-right">سوالات پیشنهادی</h3>
+          <div className="flex flex-wrap gap-2">
+            {suggestedQuestions.map((question, index) => (
+              <button
+                key={index}
+                onClick={() => addSuggestedQuestion(question)}
+                className="px-3 py-2 bg-bg-surface border border-border-soft rounded-lg text-body-small text-grey-700 hover:border-brand-primary hover:text-brand-primary transition-colors text-[14px]"
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ List by Category */}
+        {faqs.length > 0 && (
+          <div className="space-y-6">
+            {/* Section Title */}
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center">
+                <HelpCircle className="w-4 h-4 text-brand-primary" />
+              </div>
+              <h3 className="text-grey-900">سوالات ساخته شده</h3>
+              <div className="h-px bg-border-soft flex-1" />
+              <span className="text-grey-500 text-body-small">
+                {faqs.length} سوال
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {faqs.map((faq) => (
+                <div key={faq.id}>
+                  {faq.isEditing ? (
+                    <div className="bg-bg-surface border border-border-soft rounded-lg p-4">
+                      <EditFaqForm
+                        faq={faq}
+                        onSave={saveEdit}
+                        onCancel={cancelEdit}
+                      />
                     </div>
-                    
-                    <div className={`flex flex-col ${message.type === 'user' ? 'items-end' : 'items-start'}`}>
-                      <div className={`p-3 rounded-lg max-w-xs break-words ${
-                        message.type === 'bot' 
-                          ? 'text-white' 
-                          : 'bg-white text-grey-900 border border-border-soft'
-                      }`}
-                      style={{ 
-                        backgroundColor: message.type === 'bot' ? botConfig.color : undefined 
-                      }}>
-                        <p className="text-body-small leading-relaxed">
-                          {message.content}
-                        </p>
+                  ) : (
+                    <div className="space-y-2 bg-bg-surface border border-border-soft rounded-xl p-3 relative">
+                      {/* Chat History Style */}
+                      <div className="space-y-2 p-[0px] m-[0px]">
+                        {/* User Question - Right Side */}
+                        <div className="flex justify-end">
+                          <div className="max-w-[40%] bg-brand-primary text-white px-2.5 py-1.5 rounded-xl rounded-br-md">
+                            <p className="text-body-small leading-relaxed">
+                              {faq.question}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Bot Answer - Left Side */}
+                        <div className="flex justify-start">
+                          <div className="max-w-[40%] bg-grey-100 text-grey-900 px-2.5 py-1.5 rounded-xl rounded-bl-md">
+                            <p className="text-body-small leading-relaxed">
+                              {faq.answer}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <span className="text-grey-500 text-xs mt-1">
-                        {formatTime(message.timestamp)}
-                      </span>
+
+                      {/* Action Buttons - Top Right */}
+                      <div className="absolute top-2 right-2 flex items-center gap-1 opacity-50 hover:opacity-100">
+                        <button
+                          onClick={() => startEdit(faq.id)}
+                          className="p-1 text-grey-400 hover:text-brand-primary hover:bg-brand-primary/10 rounded"
+                          title="ویرایش"
+                        >
+                          <Edit3 className="w-3 h-3" />
+                        </button>
+                        <button
+                          onClick={() => deleteFaq(faq.id)}
+                          className="p-1 text-grey-400 hover:text-danger hover:bg-danger/10 rounded"
+                          title="حذف"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               ))}
-
-              {/* Typing Indicator */}
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="flex gap-2 max-w-md">
-                    <div 
-                      className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-white"
-                      style={{ backgroundColor: botConfig.color }}
-                    >
-                      <Bot className="w-4 h-4" />
-                    </div>
-                    <div 
-                      className="p-3 rounded-lg text-white"
-                      style={{ backgroundColor: botConfig.color }}
-                    >
-                      <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
-
-            {/* Message Input */}
-            <div className="p-4 border-t border-border-soft bg-white">
-              <div className="flex gap-3">
-                <Input
-                  type="text"
-                  value={currentMessage}
-                  onChange={(e) => setCurrentMessage(e.target.value)}
-                  placeholder="پیام خود را بنویسید..."
-                  className="flex-1"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && !isTyping) {
-                      sendMessage(currentMessage);
-                    }
-                  }}
-                  disabled={isTyping}
-                />
-                <Button
-                  variant="primary"
-                  onClick={() => sendMessage(currentMessage)}
-                  disabled={!currentMessage.trim() || isTyping}
-                  className="px-6"
-                  style={{ backgroundColor: botConfig.color }}
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
-
-      {/* Results Summary */}
-      <Card className="p-6 bg-bg-soft-rose border-brand-primary/20 border">
-        <h3 className="text-grey-900 mb-4">خلاصه نتایج آزمایش</h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-              <MessageSquare className="w-6 h-6 text-brand-primary" />
-            </div>
-            <h4 className="text-grey-900 mb-2">تعداد مکالمات</h4>
-            <p className="text-kpi text-brand-primary">{messages.length}</p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-3">
-              <CheckCircle2 className="w-6 h-6 text-success" />
-            </div>
-            <h4 className="text-grey-900 mb-2">پایگاه دانش</h4>
-            <p className="text-kpi text-success">{botConfig.knowledge.length} مورد</p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-12 h-12 bg-brand-secondary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Bot className="w-6 h-6 text-brand-secondary" />
-            </div>
-            <h4 className="text-grey-900 mb-2">آمادگی نصب</h4>
-            <p className="text-kpi text-brand-secondary">
-              {botConfig.knowledge.length > 0 ? '✓' : '!'}
-            </p>
-          </div>
-        </div>
-
-        {botConfig.knowledge.length === 0 && (
-          <div className="mt-6 p-4 bg-warning/10 border border-warning/20 rounded-lg">
-            <p className="text-warning text-body-small text-center">
-              ⚠️ توصیه می‌شود حداقل چند مورد اطلاعات در پایگاه دانش اضافه کنید تا دستیار بتواند پاسخ‌های بهتری ارائه دهد
-            </p>
           </div>
         )}
-      </Card>
+
+        {/* Empty State */}
+        {faqs.length === 0 && (
+          <div className="text-center py-12">
+            <HelpCircle className="w-12 h-12 text-grey-400 mx-auto mb-4" />
+            <h3 className="text-grey-900 mb-2">هنوز سوالی اضافه نکرده‌اید</h3>
+            <p className="text-grey-600">اولین سوال متداول خود را اضافه کنید</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface EditFaqFormProps {
+  faq: FAQ;
+  onSave: (id: string, question: string, answer: string) => void;
+  onCancel: (id: string) => void;
+}
+
+function EditFaqForm({ faq, onSave, onCancel }: EditFaqFormProps) {
+  const [question, setQuestion] = useState(faq.question);
+  const [answer, setAnswer] = useState(faq.answer);
+
+  const handleSave = () => {
+    if (question.trim() && answer.trim()) {
+      onSave(faq.id, question, answer);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-grey-700 mb-2">سؤال</label>
+        <Input
+          type="text"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="block text-grey-700 mb-2">پاسخ</label>
+        <textarea
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+          rows={4}
+          className="w-full p-3 border border-border-soft rounded-lg bg-bg-surface resize-none"
+        />
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <Button
+          // variant="tertiary"
+          onClick={() => onCancel(faq.id)}
+          className="flex items-center gap-2"
+        >
+          <X className="w-4 h-4" />
+          انصراف
+        </Button>
+        <Button
+          // variant="primary"
+          onClick={handleSave}
+          disabled={!question.trim() || !answer.trim()}
+          className="flex items-center gap-2"
+        >
+          <Save className="w-4 h-4" />
+          ذخیره
+        </Button>
+      </div>
     </div>
   );
 }

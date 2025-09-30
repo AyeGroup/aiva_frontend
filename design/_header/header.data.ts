@@ -1,10 +1,10 @@
 import { NavItem } from "../../types/common";
-// import aivaLogo from "/logo.png";
+import aivaLogo from "@/public/logo.png";
 
 // اطلاعات هدر آیوا
 export const headerData = {
   logo: {
-    image: "/logo.png", // باید داخل public باشد
+    image: aivaLogo,
     text: "آیوا",
     title: "برگشت به صفحه اصلی",
     alt: "لوگوی آیوا - دستیار هوشمند وب‌سایت",
@@ -34,6 +34,12 @@ export const headerData = {
       title: "امنیت",
       href: "#security",
       icon: "shield",
+    },
+    {
+      id: "components",
+      title: "کامپوننت‌ها",
+      href: "/components",
+      icon: "layers",
     },
   ] as NavItem[],
 

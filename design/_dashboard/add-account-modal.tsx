@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { X, User } from 'lucide-react';
-import { Button } from '../_components/Button/button';
-import { Input } from '../_components/Input/input';
+import React, { useState } from "react";
+import { X, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/design/_components/Input/input";
 
 interface Account {
   id: string;
@@ -9,22 +9,26 @@ interface Account {
   email: string;
   avatar?: string;
   role: string;
-  type: 'personal' | 'team';
+  type: "personal" | "team";
   members?: number;
 }
 
 interface AddAccountModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (account: Omit<Account, 'id'>) => void;
+  onAdd: (account: Omit<Account, "id">) => void;
 }
 
-export function AddAccountModal({ isOpen, onClose, onAdd }: AddAccountModalProps) {
+export function AddAccountModal({
+  isOpen,
+  onClose,
+  onAdd,
+}: AddAccountModalProps) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    role: 'member',
-    type: 'personal' as 'personal' | 'team'
+    name: "",
+    email: "",
+    role: "member",
+    type: "personal" as "personal" | "team",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,43 +37,47 @@ export function AddAccountModal({ isOpen, onClose, onAdd }: AddAccountModalProps
     if (!formData.name.trim() || !formData.email.trim()) return;
 
     setIsSubmitting(true);
-    
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
-      onAdd({
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        role: formData.role
-      });
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+
+      //elham
+      // onAdd({
+      //   name: formData.name.trim(),
+      //   email: formData.email.trim(),
+      //   role: formData.role
+      // });
+
       // Reset form
       setFormData({
-        name: '',
-        email: '',
-        role: 'member',
-        type: 'personal'
+        name: "",
+        email: "",
+        role: "member",
+        type: "personal",
       });
-      
+
       onClose();
     } catch (error) {
-      console.error('Error adding account:', error);
+      console.error("Error adding account:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" dir="rtl">
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      dir="rtl"
+    >
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-grey-200">
@@ -78,8 +86,12 @@ export function AddAccountModal({ isOpen, onClose, onAdd }: AddAccountModalProps
               <User className="w-5 h-5 text-brand-primary" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-grey-900">افزودن اکانت جدید</h2>
-              <p className="text-sm text-grey-500">اکانت کاربری جدید به سیستم اضافه کنید</p>
+              <h2 className="text-lg font-semibold text-grey-900">
+                افزودن اکانت جدید
+              </h2>
+              <p className="text-sm text-grey-500">
+                اکانت کاربری جدید به سیستم اضافه کنید
+              </p>
             </div>
           </div>
           <button
@@ -98,7 +110,7 @@ export function AddAccountModal({ isOpen, onClose, onAdd }: AddAccountModalProps
             </label>
             <Input
               value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
+              onChange={(e) => handleChange("name", e.target.value)}
               placeholder="نام و نام خانوادگی را وارد کنید"
               required
               disabled={isSubmitting}
@@ -112,7 +124,7 @@ export function AddAccountModal({ isOpen, onClose, onAdd }: AddAccountModalProps
             <Input
               type="email"
               value={formData.email}
-              onChange={(e) => handleChange('email', e.target.value)}
+              onChange={(e) => handleChange("email", e.target.value)}
               placeholder="آدرس ایمیل را وارد کنید"
               required
               disabled={isSubmitting}
@@ -125,7 +137,7 @@ export function AddAccountModal({ isOpen, onClose, onAdd }: AddAccountModalProps
             </label>
             <select
               value={formData.type}
-              onChange={(e) => handleChange('type', e.target.value)}
+              onChange={(e) => handleChange("type", e.target.value)}
               className="w-full px-4 py-3 border-2 border-grey-200 rounded-xl bg-white text-grey-700 transition-all duration-200 focus:border-brand-primary focus:bg-brand-primary/5 focus:outline-none"
               disabled={isSubmitting}
             >
@@ -140,11 +152,11 @@ export function AddAccountModal({ isOpen, onClose, onAdd }: AddAccountModalProps
             </label>
             <select
               value={formData.role}
-              onChange={(e) => handleChange('role', e.target.value)}
+              onChange={(e) => handleChange("role", e.target.value)}
               className="w-full px-4 py-3 border-2 border-grey-200 rounded-xl bg-white text-grey-700 transition-all duration-200 focus:border-brand-primary focus:bg-brand-primary/5 focus:outline-none"
               disabled={isSubmitting}
             >
-              {formData.type === 'team' ? (
+              {formData.type === "team" ? (
                 <>
                   <option value="owner">مالک</option>
                   <option value="admin">مدیر</option>
@@ -173,11 +185,13 @@ export function AddAccountModal({ isOpen, onClose, onAdd }: AddAccountModalProps
             </Button>
             <Button
               type="submit"
-              variant="primary"
-              disabled={isSubmitting || !formData.name.trim() || !formData.email.trim()}
+              // variant="primary"
+              disabled={
+                isSubmitting || !formData.name.trim() || !formData.email.trim()
+              }
               className="flex-1"
             >
-              {isSubmitting ? 'در حال افزودن...' : 'افزودن اکانت'}
+              {isSubmitting ? "در حال افزودن..." : "افزودن اکانت"}
             </Button>
           </div>
         </form>
