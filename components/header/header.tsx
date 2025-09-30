@@ -1,9 +1,14 @@
+"use client";
 import { NavItem } from "../../types/common";
 import { Button } from "@/components/button";
 import { headerData } from "./header.data";
 import "@/styles/header.css";
 
 import { PageType } from "@/types/common";
+import Image from "next/image";
+// import { useContext } from "react";
+import { useRouter } from "next/navigation";
+// import { AppContext } from "@/context/AppContext";
 
 
 interface HeaderProps {
@@ -13,6 +18,8 @@ interface HeaderProps {
 
 export function Header({ currentPage, onNavigate }: HeaderProps) {
   const { logo, navigation, authButtons } = headerData;
+  // const { navigate } = useContext(AppContext);
+  const router = useRouter();  
 
   return (
     <header
@@ -34,16 +41,17 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
           {/* لوگو */}
           <div className="flex items-center">
             <button
-              onClick={() => onNavigate("landing")}
+              onClick={() => router.push("landing")}
               title={logo.title}
               className="flex items-center gap-3 hover:opacity-80 animate-soft group"
               aria-label="برگشت به صفحه اصلی"
             >
               {logo.image ? (
-                <img
-                  src=""
-                  // src={logo.image}
-                  alt={logo.alt}
+                <Image
+                  src={logo.image} // dynamic or static path
+                  alt={logo.alt} // accessibility
+                  height={48} // e.g., h-12
+                  // width={autoWidth} // Next.js requires width, can calculate or set manually
                   className="h-10 lg:h-12 w-auto"
                 />
               ) : (
@@ -94,9 +102,9 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
                       type="button"
                       onClick={() => {
                         if (item.href === "/components") {
-                          onNavigate("components");
+                          router.push("components");
                         } else if (item.href === "/docs") {
-                          onNavigate("landing"); // یا هر صفحه دیگری که دارید
+                          router.push("landing"); // یا هر صفحه دیگری که دارید
                         }
                       }}
                       title={item.title}
@@ -131,7 +139,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
               }
               size="md"
               title={authButtons.login.title}
-              onClick={() => onNavigate("login")}
+              onClick={() => router.push("login")}
               className="hidden sm:inline-flex text-sm lg:text-base px-3 lg:px-4 py-2"
             >
               {authButtons.login.text}
@@ -146,7 +154,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
               }
               size="md"
               title={authButtons.signup.title}
-              onClick={() => onNavigate("signup")}
+              onClick={() => router.push("signup")}
               icon="arrow-right"
               iconPosition="right"
               className="hidden sm:inline-flex text-sm lg:text-base px-4 lg:px-6 py-2 "
@@ -159,7 +167,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
               variant="primary"
               size="sm"
               title={authButtons.signup.title}
-              onClick={() => onNavigate("signup")}
+              onClick={() => router.push("signup")}
               icon="arrow-right"
               iconPosition="right"
               className="sm:hidden text-xs px-3 py-2 "
@@ -214,9 +222,9 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
                     type="button"
                     onClick={() => {
                       if (item.href === "/components") {
-                        onNavigate("components");
+                        router.push("components");
                       } else if (item.href === "/docs") {
-                        onNavigate("landing");
+                        router.push("landing");
                       }
                     }}
                     title={item.title}
@@ -236,14 +244,15 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
             ))}
             <li className="pt-2 space-y-2">
               <button
-                onClick={() => onNavigate("login")}
+                // onClick={() => onNavigate("login")}
+                onClick={() => router.push("login")}
                 title={authButtons.login.title}
                 className="block w-full text-center py-2 px-4 border border-border rounded-md hover:bg-accent transition-colors"
               >
                 {authButtons.login.text}
               </button>
               <button
-                onClick={() => onNavigate("signup")}
+                onClick={() => router.push("signup")}
                 title={authButtons.signup.title}
                 className="block w-full text-center py-2 px-4 rounded-md hover:opacity-90 transition-colors text-white"
                 style={{ backgroundColor: "var(--brand-primary)" }}

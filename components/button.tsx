@@ -1,30 +1,25 @@
-import { ButtonProps } from '@/types/common';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
+import { ButtonProps } from "@/types/common";
+import {
   ArrowLeft,
   ArrowRight,
-  ExternalLink, 
-  Download, 
-  Plus, 
-  Check, 
-  X, 
+  ExternalLink,
+  Download,
+  Plus,
+  Check,
+  X,
   Play,
-  Loader2 
-} from 'lucide-react';
+  Loader2,
+} from "lucide-react";
 import "@/styles/components.css";
-// import { Layer } from 'recharts';
-
-
 
 export function Button({
-  variant="primary",
-  size = "md",  
+  variant = "primary",
+  size = "md",
   loading = false,
   disabled = false,
-  title="",
+  title = "",
   type = "button",
-  icon="check",
+  icon = "null",
   iconPosition = "right",
   className = "",
   children,
@@ -56,7 +51,7 @@ export function Button({
     check: Check,
     x: X,
     play: Play,
-    // Layer: Layers,
+    null: "",
   };
 
   // Icon color based on variant

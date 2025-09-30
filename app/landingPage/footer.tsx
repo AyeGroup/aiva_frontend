@@ -1,8 +1,11 @@
 import React, { memo } from "react";
 import aivaLogo from "@/public/logo.png";
+import Image from "next/image";
+import { headerData } from "@/components/header/header.data";
 
 export const Footer = memo(function Footer() {
   const currentYear = new Date().getFullYear();
+  const { logo, navigation, authButtons } = headerData;
 
   const footerSections = {
     product: {
@@ -50,7 +53,12 @@ export const Footer = memo(function Footer() {
           {/* برند و توضیح */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <img src="" alt="لوگوی آیوا" className="w-8 h-8 object-cover" />
+              <Image
+                src={logo.image} // dynamic or static path
+                alt="لوگوی آیوا"
+                height={48}
+                className="w-8 h-8 object-cover"
+              />
               <span className="font-medium text-lg">آیوا</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed mb-6 text-right">

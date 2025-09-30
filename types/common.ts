@@ -7,10 +7,6 @@ export interface BaseComponentProps {
   id?: string;
 }
 
-
- 
-
-  // types.ts
 export type PageType =
   | "landing"
   | "signup"
@@ -21,9 +17,7 @@ export type PageType =
   | "tickets"
   | "login"
   | "otp-verification"
-  | "components"
-  | "register";
-
+  | "components";
 
 // تایپ‌های دکمه
 export interface ButtonProps extends BaseComponentProps {
@@ -42,15 +36,15 @@ export interface ButtonProps extends BaseComponentProps {
     | "check"
     | "x"
     | "play"
-    // | "layers"
-    ;
+    | "null";
+  // | "layers"
   iconPosition?: "right" | "left";
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 // تایپ‌های ورودی
 export interface InputProps extends BaseComponentProps {
-  type: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search';
+  type: "text" | "email" | "password" | "tel" | "url" | "search";
   placeholder?: string;
   value?: string;
   required?: boolean;
@@ -76,9 +70,9 @@ export interface NavItem {
 export interface LinkProps extends BaseComponentProps {
   href: string;
   title: string; // الزامی برای accessibility
-  target?: '_blank' | '_self' | '_parent' | '_top';
+  target?: "_blank" | "_self" | "_parent" | "_top";
   rel?: string;
-  'aria-current'?: 'page' | 'step' | 'location' | 'date' | 'time';
+  "aria-current"?: "page" | "step" | "location" | "date" | "time";
 }
 
 // تایپ‌های کارت و محتوا
@@ -90,7 +84,7 @@ export interface CardProps extends BaseComponentProps {
     alt: string;
   };
   actions?: React.ReactNode;
-  variant?: 'default' | 'outlined' | 'elevated';
+  variant?: "default" | "outlined" | "elevated";
 }
 
 // تایپ‌های فرم
@@ -103,7 +97,15 @@ export interface FormState {
 export interface FormField {
   name: string;
   label: string;
-  type: 'text' | 'email' | 'password' | 'tel' | 'textarea' | 'select' | 'checkbox' | 'radio';
+  type:
+    | "text"
+    | "email"
+    | "password"
+    | "tel"
+    | "textarea"
+    | "select"
+    | "checkbox"
+    | "radio";
   required?: boolean;
   placeholder?: string;
   options?: { value: string; label: string }[];
@@ -116,7 +118,7 @@ export interface FormField {
 }
 
 // تایپ‌های حالت‌های مختلف
-export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
+export type LoadingState = "idle" | "loading" | "success" | "error";
 
 export interface AsyncState<T> {
   data: T | null;
@@ -125,14 +127,14 @@ export interface AsyncState<T> {
 }
 
 // تایپ‌های responsive
-export type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type Breakpoint = "sm" | "md" | "lg" | "xl" | "2xl";
 
 export interface ResponsiveProps {
   sm?: string;
   md?: string;
   lg?: string;
   xl?: string;
-  '2xl'?: string;
+  "2xl"?: string;
 }
 
 // تایپ‌های سئو

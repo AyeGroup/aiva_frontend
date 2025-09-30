@@ -27,43 +27,42 @@ const Signup = lazy(() => import("@/app/auth/signup"));
 const ChatHistoryDemo = lazy(() => import("@/app/demo/chat-history-demo"));
 
 export default function App() {
-  const router = useRouter();  
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState<PageType>("landing");
 
-  // const navigate = useCallback((page: PageType) => {
-  //   try {
-  //     setCurrentPage(page);
-  //     const url = page === "landing" ? "/" : `/${page}`;
-  //     window.history.pushState({}, "", url);
-  //   } catch (error) {
-  //     console.error("Navigation error:", error);
-  //     setCurrentPage("landing");
-  //     window.history.pushState({}, "", "/");
-  //   }
-  // }, []);
-
-  // navigate در AppLayout
-  const navigate = useCallback(
-    (page: PageType) => {
+  const navigate = useCallback((page: PageType) => {
+    try {
       setCurrentPage(page);
+      const url = page === "landing" ? "/" : `/${page}`;
+      window.history.pushState({}, "", url);
+    } catch (error) {
+      console.error("Navigation error:", error);
+      setCurrentPage("landing");
+      window.history.pushState({}, "", "/");
+    }
+  }, []);
 
-      switch (page) {
-        case "landing":
-          router.push("/"); // باقی می‌ماند
-          break;
-        case "login":
-          router.push("/auth/login"); // مسیر رسمی
-          break;
-        case "signup":
-          router.push("/auth/signup"); // مسیر رسمی
-          break;
-        // ... بقیه صفحات مهم
-        default:
-          router.push("/");
-      }
-    },
-    [router]
-  );
+  // const navigate = useCallback(
+  //   (page: PageType) => {
+  //     setCurrentPage(page);
+
+  //     switch (page) {
+  //       case "landing":
+  //         router.push("/"); // باقی می‌ماند
+  //         break;
+  //       case "login":
+  //         router.push("/auth/login"); // مسیر رسمی
+  //         break;
+  //       case "signup":
+  //         router.push("/auth/signup"); // مسیر رسمی
+  //         break;
+  //       // ... بقیه صفحات مهم
+  //       default:
+  //         router.push("/");
+  //     }
+  //   },
+  //   [router]
+  // );
 
   const appContext = useMemo(
     () => ({
@@ -88,7 +87,7 @@ export default function App() {
         else if (path === "/login") setCurrentPage("login");
         else if (path === "/otp-verification")
           setCurrentPage("otp-verification");
-        else if (path === "/register") setCurrentPage("register");
+        // else if (path === "/register") setCurrentPage("register");
         else setCurrentPage("landing");
       } catch (error) {
         console.error("Error handling navigation:", error);
@@ -160,12 +159,7 @@ export default function App() {
             <OTPVerification onNavigate={navigate} phoneNumber="09123456789" />
           </Suspense>
         );
-      case "register":
-        return (
-          <Suspense fallback={<PageLoader />}>
-            <Signup onNavigate={navigate} />
-          </Suspense>
-        );
+
       case "consultation":
         return (
           <Suspense fallback={<PageLoader />}>
@@ -196,7 +190,7 @@ export default function App() {
             currentPage !== "tickets" &&
             currentPage !== "login" &&
             currentPage !== "otp-verification" &&
-            currentPage !== "register" && (
+            currentPage !== "signup" && (
               <ErrorBoundary>
                 <Header currentPage={currentPage} onNavigate={navigate} />
               </ErrorBoundary>

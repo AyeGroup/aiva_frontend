@@ -660,156 +660,162 @@ export function Signup({ onNavigate }: SignupProps) {
   };
 
   return (
-    <div
-      className="login-page min-h-screen relative overflow-hidden"
-      style={{
-        backgroundColor: "#FFFFFF",
-        fontFamily: "Vazirmatn, sans-serif",
-      }}
-    >
-      {/* Header Content */}
-      <div className="relative z-50 w-full p-2 pb-0">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between">
-            {/* Logo - Right Side */}
-            <div className="flex items-center gap-3">
-              <ImageWithFallback
-                src=""
-                // src=""
-                alt="آیوا"
-                className="w-20 h-20 object-cover"
-              />
-              <div className="flex flex-col">
-                <span className="text-grey-900 font-semibold text-xl text-right font-bold text-[24px]">
-                  آیوا
-                </span>
-                <p
-                  className="text-grey-500"
-                  style={{
-                    fontSize: "var(--text-body-small)",
-                    lineHeight: "var(--text-body-small-lh)",
-                  }}
-                >
-                  دستیار هوشمند کسب و کار تو
-                </p>
+    <div className="app-shell" dir="rtl">
+      <div className="app-content">
+        <div
+          className="login-page min-h-screen relative overflow-hidden"
+          style={{
+            backgroundColor: "#FFFFFF",
+            fontFamily: "Vazirmatn, sans-serif",
+          }}
+        >
+          {/* Header Content */}
+          <div className="relative z-50 w-full p-2 pb-0">
+            <div className="container mx-auto">
+              <div className="flex items-center justify-between">
+                {/* Logo - Right Side */}
+                <div className="flex items-center gap-3">
+                  <ImageWithFallback
+                    src=""
+                    // src=""
+                    alt="آیوا"
+                    className="w-20 h-20 object-cover"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-grey-900 font-semibold text-xl text-right font-bold text-[24px]">
+                      آیوا
+                    </span>
+                    <p
+                      className="text-grey-500"
+                      style={{
+                        fontSize: "var(--text-body-small)",
+                        lineHeight: "var(--text-body-small-lh)",
+                      }}
+                    >
+                      دستیار هوشمند کسب و کار تو
+                    </p>
+                  </div>
+                </div>
+
+                {/* Header Actions - Left Side */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => onNavigate("dashboard")}
+                    className="px-4 py-2 text-white flex items-center gap-2 hover:opacity-90 rounded-lg border-none"
+                    style={{
+                      backgroundColor: "var(--brand-primary)",
+                      fontSize: "var(--text-body-large)",
+                      fontWeight: "var(--font-weight-medium)",
+                      cursor: "pointer",
+                      userSelect: "none",
+                      minHeight: "44px",
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    بازگشت به ورود
+                  </button>
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* Header Actions - Left Side */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => onNavigate("dashboard")}
-                className="px-4 py-2 text-white flex items-center gap-2 hover:opacity-90 rounded-lg border-none"
-                style={{
-                  backgroundColor: "var(--brand-primary)",
-                  fontSize: "var(--text-body-large)",
-                  fontWeight: "var(--font-weight-medium)",
-                  cursor: "pointer",
-                  userSelect: "none",
-                  minHeight: "44px",
-                }}
-              >
-                <ArrowLeft className="w-4 h-4" />
-                بازگشت به ورود
-              </button>
+          {/* Background Decorations */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {/* Same background decorations as login page */}
+            <div className="absolute top-28 left-12 w-32 h-32 opacity-20">
+              <svg width="100%" height="100%" viewBox="0 0 128 128" fill="none">
+                <circle cx="20" cy="20" r="8" fill="#65BCB6" />
+                <circle cx="60" cy="20" r="6" fill="#FFA18E" />
+                <circle cx="100" cy="20" r="4" fill="#65BCB6" />
+                <circle cx="40" cy="60" r="8" fill="#FFA18E" />
+                <circle cx="80" cy="60" r="6" fill="#65BCB6" />
+                <circle cx="20" cy="100" r="6" fill="#65BCB6" />
+                <circle cx="100" cy="100" r="8" fill="#FFA18E" />
+              </svg>
+            </div>
+
+            <div className="absolute top-20 right-16 w-40 h-40 opacity-15">
+              <svg width="100%" height="100%" viewBox="0 0 160 160" fill="none">
+                <path
+                  d="M20 140 Q80 20 140 80 Q100 120 60 100 Q40 140 20 140Z"
+                  fill="#65BCB6"
+                />
+                <path
+                  d="M40 120 Q100 40 120 100 Q80 140 40 120Z"
+                  fill="#FFA18E"
+                  opacity="0.7"
+                />
+              </svg>
+            </div>
+
+            <div className="absolute bottom-20 right-24 w-20 h-24 opacity-20">
+              <div
+                className="absolute inset-0 rounded-2xl transform rotate-12"
+                style={{ backgroundColor: "#65BCB6" }}
+              ></div>
+              <div className="absolute inset-2 bg-white rounded-xl transform -rotate-6"></div>
+              <div
+                className="absolute inset-4 rounded-lg transform rotate-3"
+                style={{ backgroundColor: "#FFA18E" }}
+              ></div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Background Decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Same background decorations as login page */}
-        <div className="absolute top-28 left-12 w-32 h-32 opacity-20">
-          <svg width="100%" height="100%" viewBox="0 0 128 128" fill="none">
-            <circle cx="20" cy="20" r="8" fill="#65BCB6" />
-            <circle cx="60" cy="20" r="6" fill="#FFA18E" />
-            <circle cx="100" cy="20" r="4" fill="#65BCB6" />
-            <circle cx="40" cy="60" r="8" fill="#FFA18E" />
-            <circle cx="80" cy="60" r="6" fill="#65BCB6" />
-            <circle cx="20" cy="100" r="6" fill="#65BCB6" />
-            <circle cx="100" cy="100" r="8" fill="#FFA18E" />
-          </svg>
-        </div>
-
-        <div className="absolute top-20 right-16 w-40 h-40 opacity-15">
-          <svg width="100%" height="100%" viewBox="0 0 160 160" fill="none">
-            <path
-              d="M20 140 Q80 20 140 80 Q100 120 60 100 Q40 140 20 140Z"
-              fill="#65BCB6"
-            />
-            <path
-              d="M40 120 Q100 40 120 100 Q80 140 40 120Z"
-              fill="#FFA18E"
-              opacity="0.7"
-            />
-          </svg>
-        </div>
-
-        <div className="absolute bottom-20 right-24 w-20 h-24 opacity-20">
+          {/* Main Content */}
           <div
-            className="absolute inset-0 rounded-2xl transform rotate-12"
-            style={{ backgroundColor: "#65BCB6" }}
-          ></div>
-          <div className="absolute inset-2 bg-white rounded-xl transform -rotate-6"></div>
-          <div
-            className="absolute inset-4 rounded-lg transform rotate-3"
-            style={{ backgroundColor: "#FFA18E" }}
-          ></div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div
-        className="relative z-10 flex items-center justify-center p-2 pt-4 pb-16"
-        style={{ minHeight: "calc(100vh - 120px)" }}
-      >
-        <div className="w-full max-w-md">
-          {/* Signup Card */}
-          <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
-            {/* Step indicator */}
-            {currentStep !== "success" && (
-              <div className="flex justify-center gap-2 mb-6">
-                <div
-                  className={`w-2 h-2 rounded-full ${
-                    currentStep === "signup"
-                      ? "bg-brand-primary"
-                      : "bg-grey-300"
-                  }`}
-                ></div>
-                <div
-                  className={`w-2 h-2 rounded-full ${
-                    currentStep === "otp" ? "bg-brand-primary" : "bg-grey-300"
-                  }`}
-                ></div>
-              </div>
-            )}
-
-            {/* Step Content */}
-            {renderStepContent()}
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 p-2">
-        <div className="text-center">
-          <p
-            className="text-grey-500"
-            style={{ fontSize: "var(--text-caption)" }}
+            className="relative z-10 flex items-center justify-center p-2 pt-4 pb-16"
+            style={{ minHeight: "calc(100vh - 120px)" }}
           >
-            کپی رایت © آیوا ۱۴۰۳ |{" "}
-            <button
-              className="hover:text-grey-700 transition-colors"
-              style={{ background: "none", border: "none" }}
-            >
-              سیاست حفظ حریم خصوصی
-            </button>
-          </p>
+            <div className="w-full max-w-md">
+              {/* Signup Card */}
+              <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
+                {/* Step indicator */}
+                {currentStep !== "success" && (
+                  <div className="flex justify-center gap-2 mb-6">
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        currentStep === "signup"
+                          ? "bg-brand-primary"
+                          : "bg-grey-300"
+                      }`}
+                    ></div>
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        currentStep === "otp"
+                          ? "bg-brand-primary"
+                          : "bg-grey-300"
+                      }`}
+                    ></div>
+                  </div>
+                )}
+
+                {/* Step Content */}
+                {renderStepContent()}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="absolute bottom-0 left-0 right-0 p-2">
+            <div className="text-center">
+              <p
+                className="text-grey-500"
+                style={{ fontSize: "var(--text-caption)" }}
+              >
+                کپی رایت © آیوا ۱۴۰۳ |{" "}
+                <button
+                  className="hover:text-grey-700 transition-colors"
+                  style={{ background: "none", border: "none" }}
+                >
+                  سیاست حفظ حریم خصوصی
+                </button>
+              </p>
+            </div>
+          </div>
+
+          <Toaster position="top-center" dir="rtl" richColors closeButton />
         </div>
       </div>
-
-      <Toaster position="top-center" dir="rtl" richColors closeButton />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 .login-page {
   position: relative;
   overflow-x: hidden;
+  direction: rtl;
 }
 
 /* NO ANIMATIONS for ALL elements */
@@ -65,15 +66,15 @@
   .login-page {
     padding: 1rem;
   }
-  
+
   .login-page .max-w-md {
     max-width: 100%;
   }
-  
+
   .login-page .p-8 {
     padding: 1.5rem;
   }
-  
+
   .login-page .absolute.w-80 {
     display: none;
   }
@@ -84,7 +85,7 @@
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
-  
+
   .login-page .flex.justify-between {
     flex-direction: column;
     gap: 1rem;
@@ -121,7 +122,7 @@
   .login-page input {
     border-width: 2px;
   }
-  
+
   .login-page button {
     border-width: 2px;
     border-color: currentColor;
