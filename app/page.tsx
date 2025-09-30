@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Header } from "@/components/header/header";
 import { PageType } from "@/types/common";
@@ -26,19 +27,43 @@ const Signup = lazy(() => import("@/app/auth/signup"));
 const ChatHistoryDemo = lazy(() => import("@/app/demo/chat-history-demo"));
 
 export default function App() {
+  const router = useRouter();  
   const [currentPage, setCurrentPage] = useState<PageType>("landing");
 
-  const navigate = useCallback((page: PageType) => {
-    try {
+  // const navigate = useCallback((page: PageType) => {
+  //   try {
+  //     setCurrentPage(page);
+  //     const url = page === "landing" ? "/" : `/${page}`;
+  //     window.history.pushState({}, "", url);
+  //   } catch (error) {
+  //     console.error("Navigation error:", error);
+  //     setCurrentPage("landing");
+  //     window.history.pushState({}, "", "/");
+  //   }
+  // }, []);
+
+  // navigate در AppLayout
+  const navigate = useCallback(
+    (page: PageType) => {
       setCurrentPage(page);
-      const url = page === "landing" ? "/" : `/${page}`;
-      window.history.pushState({}, "", url);
-    } catch (error) {
-      console.error("Navigation error:", error);
-      setCurrentPage("landing");
-      window.history.pushState({}, "", "/");
-    }
-  }, []);
+
+      switch (page) {
+        case "landing":
+          router.push("/"); // باقی می‌ماند
+          break;
+        case "login":
+          router.push("/auth/login"); // مسیر رسمی
+          break;
+        case "signup":
+          router.push("/auth/signup"); // مسیر رسمی
+          break;
+        // ... بقیه صفحات مهم
+        default:
+          router.push("/");
+      }
+    },
+    [router]
+  );
 
   const appContext = useMemo(
     () => ({
