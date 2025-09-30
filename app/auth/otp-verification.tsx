@@ -175,7 +175,7 @@ export default function OTPVerification({
                   className="w-20 h-20 object-cover"
                 />
                 <div className="flex flex-col">
-                  <span className="text-grey-900 font-semibold text-xl text-right font-bold text-[24px]">
+                  <span className="text-grey-900 text-xl text-right font-bold text-[24px]">
                     آیوا
                   </span>
                   <p

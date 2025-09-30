@@ -1,4 +1,4 @@
-import { Card } from "@/components/Card";
+import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { Zap, Crown, ArrowUp } from "lucide-react";
 
@@ -44,7 +44,7 @@ export function UpgradeBanner() {
           // variant="primary"
           // size="small"
           className="w-full hover:shadow-md transition-all"
-          style={{ background: "var(--sharp-accent)" }}
+          // style={{ background: "var(--sharp-accent)" }}
         >
           <ArrowUp className="w-4 h-4 ml-2" />
           تماس با ما

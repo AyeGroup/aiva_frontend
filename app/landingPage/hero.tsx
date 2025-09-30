@@ -127,8 +127,10 @@ export function Hero({ onNavigate }: HeroProps) {
                 variant="tertiary"
                 size="lg"
                 title="مشاهده کامپوننت‌های کاستوم"
-                onClick={() => onNavigate("components")}
-                icon="layers"
+                // onClick={() => onNavigate("components")}
+                //elham
+                icon="check"
+                // icon="layers"
                 iconPosition="right"
                 className="w-full sm:w-auto px-8 py-4 border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white"
               >

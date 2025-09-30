@@ -1,5 +1,5 @@
 import { Button } from "@/components/button";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/card";
 import { pricingData } from "./landing.data";
 import { Star } from "lucide-react";
 
@@ -62,10 +62,10 @@ export function Pricing({ onNavigate }: PricingProps) {
                   : "hover:scale-105"
               }`}
               aria-labelledby={`plan-${plan.id}-title`}
-              style={{
-                animationDelay: `${index * 0.1}s`,
-                ...(plan.id === "growth" && { backgroundColor: "#FAEAE4" }),
-              }}
+              // style={{
+              //   animationDelay: `${index * 0.1}s`,
+              //   ...(plan.id === "growth" && { backgroundColor: "#FAEAE4" }),
+              // }}
             >
               {/* برچسب محبوب‌ترین برای پلان رشد */}
               {plan.id === "growth" && (

@@ -1,4 +1,4 @@
-import { Card } from "@/components/Card";
+import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { ChatHistoryCard } from "@/components/chat-history-card";
 import { MessageSquare, ArrowLeft } from "lucide-react";
@@ -145,7 +145,7 @@ export function RecentChats() {
           </div>
         </div>
 
-        <Button variant="tertiary" size="small">
+        <Button variant="tertiary" size="md">
           مشاهده همه
           <ArrowLeft className="w-4 h-4 mr-2" />
         </Button>

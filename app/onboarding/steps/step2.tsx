@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BotConfig } from "../onboarding";
 import { onboardingData } from "../onboarding.data";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import {

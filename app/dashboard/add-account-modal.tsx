@@ -176,6 +176,7 @@ export function AddAccountModal({
           <div className="flex gap-3 pt-4">
             <Button
               type="button"
+            
               variant="secondary"
               onClick={onClose}
               disabled={isSubmitting}
@@ -185,7 +186,7 @@ export function AddAccountModal({
             </Button>
             <Button
               type="submit"
-              // variant="primary"
+              variant="primary"
               disabled={
                 isSubmitting || !formData.name.trim() || !formData.email.trim()
               }

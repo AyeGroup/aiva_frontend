@@ -7,16 +7,35 @@ export interface BaseComponentProps {
   id?: string;
 }
 
+
+export type PageType =
+  | "landing"
+  | "signup"
+  | "dashboard"
+  | "consultation"
+  | "chatbot-management"
+  | "tickets";
+
 // تایپ‌های دکمه
 export interface ButtonProps extends BaseComponentProps {
-  variant: 'primary' | 'secondary' | 'tertiary';
-  size: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "tertiary";
+  size?: "sm" | "md" | "lg";
   loading?: boolean;
   disabled?: boolean;
-  title: string; // الزامی برای accessibility
-  type?: 'button' | 'submit' | 'reset';
-  icon?: 'arrow-right' | 'arrow-left' | 'external' | 'download' | 'plus' | 'check' | 'x' | 'play';
-  iconPosition?: 'right' | 'left';
+  title?: string; // الزامی برای accessibility
+  type?: "button" | "submit" | "reset";
+  icon?:
+    | "arrow-right"
+    | "arrow-left"
+    | "external"
+    | "download"
+    | "plus"
+    | "check"
+    | "x"
+    | "play"
+    // | "layers"
+    ;
+  iconPosition?: "right" | "left";
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 

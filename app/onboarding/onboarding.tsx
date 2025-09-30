@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/button";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/card";
 import { WizardStep1 } from "./steps/step1";
 import { WizardStep2 } from "./steps/step2";
 import { WizardStep3 } from "./steps/step3";
@@ -48,7 +48,9 @@ export interface BotConfig {
   };
 }
 
-export default function OnboardingWizard({ onNavigate }: OnboardingWizardProps) {
+export default function OnboardingWizard({
+  onNavigate,
+}: OnboardingWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [botConfig, setBotConfig] = useState<BotConfig>({
     name: "آیوا",
@@ -294,7 +296,7 @@ export default function OnboardingWizard({ onNavigate }: OnboardingWizardProps) 
                 >
                   {currentStep === totalSteps ? "اتمام و شروع" : "بعدی"}
                 </Button> */}
-              {/* elham */}
+                {/* elham */}
               </div>
             </div>
 

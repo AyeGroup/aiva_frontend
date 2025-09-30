@@ -5,15 +5,9 @@ import { AddChatbotModal } from "./add-chatbot-modal";
 import { AddAccountModal } from "./add-account-modal";
 import aivaLogo from "@/public/logo.png";
 import sidebarImage from "@/assets/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
+import { PageType } from "@/types/common";
 // import sidebarImage from "figma:asset/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
 
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "chatbot-management"
-  | "tickets";
 
 interface QAPair {
   id: string;
@@ -61,7 +55,8 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
 
 interface SidebarProps {
   onNavigate: (page: PageType) => void;
-  currentPage?: string;
+
+  currentPage?: PageType;
 }
 
 export function Sidebar({

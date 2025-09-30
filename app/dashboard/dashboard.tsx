@@ -361,7 +361,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                       value={timeRange}
                       onValueChange={setTimeRange}
                       placeholder="انتخاب بازه زمانی"
-                      size="small"
+                      // size="small"
                       className="min-w-[120px]"
                     >
                       <option value="1d">امروز</option>

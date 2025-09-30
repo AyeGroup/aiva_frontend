@@ -1,4 +1,4 @@
-import { Card } from "@/components/Card";
+import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import {
   Globe,

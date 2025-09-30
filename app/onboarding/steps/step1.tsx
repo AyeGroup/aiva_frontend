@@ -3,7 +3,7 @@ import { BotConfig } from "../onboarding";
 import { onboardingData } from "../onboarding.data";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/card";
 import { ColorWheel } from "@/components/color-wheel";
 
 interface WizardStep1Props {

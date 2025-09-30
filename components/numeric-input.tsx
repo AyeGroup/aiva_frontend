@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
-import { Input } from '../Input/input';
+import { Input } from '@/components/input';
 
-interface NumericInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface NumericInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   variant?: 'default' | 'search' | 'bordered';
   size?: 'small' | 'medium' | 'large';
   error?: boolean;
@@ -11,6 +11,7 @@ interface NumericInputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   allowDecimal?: boolean;
   maxLength?: number;
 }
+
 
 export const NumericInput = forwardRef<HTMLInputElement, NumericInputProps>(({
   allowDecimal = false,

@@ -15,18 +15,19 @@ import {
   Plus,
 } from "lucide-react";
 import { onboardingData } from "../onboarding/onboarding.data";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { Switch } from "@/components/ui/switch";
+import { PageType } from "@/types/common";
 
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "chatbot-management";
+// type PageType =
+//   | "landing"
+//   | "signup"
+//   | "dashboard"
+//   | "consultation"
+//   | "chatbot-management";
 
 interface ChatbotManagementProps {
   onNavigate: (page: PageType) => void;
@@ -69,7 +70,9 @@ interface Chatbot {
   };
 }
 
-export default function ChatbotManagement({ onNavigate }: ChatbotManagementProps) {
+export default function ChatbotManagement({
+  onNavigate,
+}: ChatbotManagementProps) {
   const [chatbots, setChatbots] = useState<Chatbot[]>([
     {
       id: "1",
@@ -653,7 +656,7 @@ export default function ChatbotManagement({ onNavigate }: ChatbotManagementProps
                                       !newKnowledgeItem.title ||
                                       !newKnowledgeItem.content
                                     }
-                                    size="small"
+                                    // size="small"
                                   >
                                     <Plus className="w-4 h-4 ml-2" />
                                     افزودن
