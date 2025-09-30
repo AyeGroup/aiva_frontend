@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { BotConfig } from "../onboarding";
-// import { Button } from "@/components/Button/button';
-// import { Input } from "@/components/Input/input';
-import { RadioGroup } from "@/components/RadioGroup/radio-group";
+// import { Button } from "@/components/button';
+// import { Input } from "@/components/input';
+import { RadioGroup } from "@/components/radio-group";
 import {
   Settings,
   MessageSquare,

@@ -8,7 +8,7 @@ import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
-import "./onboarding.css";
+import "@/styles/components.css";
 
 type PageType = "landing" | "signup" | "dashboard" | "consultation";
 
@@ -266,7 +266,7 @@ export default function OnboardingWizard({ onNavigate }: OnboardingWizardProps) 
 
               {/* Clean Navigation */}
               <div className="flex items-center justify-between mt-8">
-                <Button
+                {/* <Button
                   variant="tertiary"
                   onClick={prevStep}
                   disabled={currentStep === 1}
@@ -276,6 +276,7 @@ export default function OnboardingWizard({ onNavigate }: OnboardingWizardProps) 
                 >
                   قبلی
                 </Button>
+                elham */}
 
                 {/* Minimal Step Counter */}
                 <div className="bg-white border border-grey-200 px-4 py-2 rounded-lg shadow-sm">
@@ -284,7 +285,7 @@ export default function OnboardingWizard({ onNavigate }: OnboardingWizardProps) 
                   </span>
                 </div>
 
-                <Button
+                {/* <Button
                   variant="primary"
                   onClick={nextStep}
                   icon={currentStep < totalSteps ? "arrow-right" : "check"}
@@ -292,7 +293,8 @@ export default function OnboardingWizard({ onNavigate }: OnboardingWizardProps) 
                   className="px-6 shadow-md"
                 >
                   {currentStep === totalSteps ? "اتمام و شروع" : "بعدی"}
-                </Button>
+                </Button> */}
+              {/* elham */}
               </div>
             </div>
 

@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import './color-wheel.css';
+import "@/styles/components.css";
+
 
 interface ColorWheelProps {
   selectedColor: string;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { NumericInput } from '../NumericInput/numeric-input';
-import { Input } from '../Input/input';
-import { englishToPersian } from '../../../utils/number-utils';
+import { NumericInput } from "@/components/numeric-input";
+import { Input } from '@/components/input';
+import { englishToPersian } from '@/utils/number-utils';
 
 export function NumericInputExample() {
   const [phoneNumber, setPhoneNumber] = useState('');

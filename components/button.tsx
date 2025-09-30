@@ -1,4 +1,4 @@
-import { ButtonProps } from '../../../types/common';
+import { ButtonProps } from '@/types/common';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -12,7 +12,8 @@ import {
   Play,
   Loader2 
 } from 'lucide-react';
-import './button.css';
+import "@/styles/components.css";
+
 
 export function Button({ 
   variant, 

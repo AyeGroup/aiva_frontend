@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X, User } from "lucide-react";
 import { Button } from "@/components/button";
-import { Input } from "@/components/Input/input";
+import { Input } from "@/components/input";
 
 interface Account {
   id: string;

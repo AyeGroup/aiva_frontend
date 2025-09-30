@@ -1,5 +1,6 @@
 import React from 'react';
-import './performer-card.css';
+import "@/styles/components.css";
+
 
 export interface PerformerCardProps {
   name: string;

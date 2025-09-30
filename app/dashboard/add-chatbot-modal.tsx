@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -14,7 +14,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import "./add-chatbot-modal.css";
+import "@/styles/components.css";
 
 interface QAPair {
   id: string;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import './activity-chart.css';
+import "@/styles/components.css";
+
 
 export interface ActivityData {
   name: string;

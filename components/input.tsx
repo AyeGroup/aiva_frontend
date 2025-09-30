@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react';
-import { persianToEnglish, englishToPersian } from '../../../utils/number-utils';
-import './input.css';
+import { persianToEnglish, englishToPersian } from '@/utils/number-utils';
+import "@/styles/components.css";
+
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   variant?: 'default' | 'search' | 'bordered';

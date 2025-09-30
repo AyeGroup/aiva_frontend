@@ -1,5 +1,6 @@
 import React from 'react';
-import './heatmap-chart.css';
+import "@/styles/components.css";
+
 
 interface HeatmapData {
   day: number; // 0-6 (Sun-Sat)

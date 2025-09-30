@@ -1,6 +1,7 @@
 import { forwardRef, ReactNode, useState } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
-import './select.css';
+import "@/styles/components.css";
+
 
 interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   variant?: 'default' | 'bordered' | 'modern';

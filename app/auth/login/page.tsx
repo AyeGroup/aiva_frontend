@@ -16,7 +16,6 @@ import {
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
-// import "@/style/login.css";
 import "@/styles/login.css";
 import { login } from "@/services/auth.service";
 

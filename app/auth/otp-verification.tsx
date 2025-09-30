@@ -4,7 +4,7 @@ import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { persianToEnglish, englishToPersian } from "@/utils/number-utils";
 import { ArrowLeft } from "lucide-react";
 import aivaLogo from "@/public/logo.png";
-import "./login.css";
+import "@/styles/login.css";
 
 type PageType =
   | "landing"

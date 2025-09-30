@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Bot, Clock, MessageSquare, ChevronLeft, Circle } from 'lucide-react';
-import './chat-history-card.css';
+import "@/styles/components.css";
+
 
 interface Message {
   id: string;

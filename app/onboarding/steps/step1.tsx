@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { BotConfig } from "../onboarding";
 import { onboardingData } from "../onboarding.data";
-import { Input } from "@/components/Input/input";
-import { Select } from "@/components/Select/select";
+import { Input } from "@/components/input";
+import { Select } from "@/components/select";
 import { Card } from "@/components/Card";
-import { ColorWheel } from "@/components/ColorWheel/color-wheel";
+import { ColorWheel } from "@/components/color-wheel";
 
 interface WizardStep1Props {
   botConfig: BotConfig;

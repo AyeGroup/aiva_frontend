@@ -1,5 +1,6 @@
 import React from 'react';
-import './color-showcase.css';
+import "@/styles/components.css";
+
 
 interface ColorItem {
   name: string;

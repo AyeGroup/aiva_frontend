@@ -1,5 +1,6 @@
 import React from 'react';
-import './dashboard-card.css';
+import "@/styles/components.css";
+
 
 export interface DashboardCardProps {
   title?: string;

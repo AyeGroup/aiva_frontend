@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
-import './radio-group.css';
+import "@/styles/components.css";
+
 
 interface RadioGroupProps {
   value: string;

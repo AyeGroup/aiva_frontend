@@ -1,7 +1,7 @@
 import { NavItem } from "../../types/common";
 import { Button } from "@/components/button";
 import { headerData } from "./header.data";
-import "./header.css";
+import "@/styles/header.css";
 
 type PageType =
   | "landing"
@@ -11,6 +11,7 @@ type PageType =
   | "demo"
   | "chatbot-management"
   | "tickets"
+  | "components"
   | "login";
 
 interface HeaderProps {
@@ -48,7 +49,8 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
             >
               {logo.image ? (
                 <img
-                  src={logo.image}
+                  src=""
+                  // src={logo.image}
                   alt={logo.alt}
                   className="h-10 lg:h-12 w-auto"
                 />

@@ -1,5 +1,6 @@
 import React from 'react';
-import './channel-card.css';
+import "@/styles/components.css";
+
 
 export interface ChannelCardProps {
   name: string;

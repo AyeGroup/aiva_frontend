@@ -1,5 +1,5 @@
 import React from 'react';
-import './stat-card.css';
+import "@/styles/components.css";
 
 export interface StatCardProps {
   label: string;

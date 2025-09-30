@@ -13,7 +13,7 @@ import { QuickActions } from "./quick-actions";
 import { ActiveUsers } from "./active-users";
 import { Select } from "@/components/select";
 import { Toaster } from "@/components/ui/sonner";
-import "./active-users.css";
+import "@/styles/components.css";
 
 type PageType =
   | "landing"

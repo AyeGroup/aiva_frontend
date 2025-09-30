@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Modal } from "@/components/Modal/modal";
-import { Dropdown } from "@/components/Dropdown/dropdown";
-import { Slider } from "@/components/Slider/slider";
-import { Tooltip } from "@/components/Tooltip/tooltip";
-import { Toggle } from "@/components/Toggle/toggle";
-import { Tabs } from "@/components/Tabs/tabs";
-import { Accordion } from "@/components/Accordion/accordion";
+import { Modal } from "@/components/modal";
+import { Dropdown } from "@/components/dropdown";
+import { Slider } from "@/components/slider";
+import { Tooltip } from "@/components/tooltip";
+import { Toggle } from "@/components/toggle";
+import { Tabs } from "@/components/tabs";
+import { Accordion } from "@/components/accordion";
 
 export function ComponentsShowcase() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -181,8 +181,8 @@ export function ComponentsShowcase() {
             import کنید:
           </p>
           <pre className="bg-grey-100 p-3 rounded-lg text-body-small ltr text-left">
-            {`import { Modal } from './components/Modal/modal';
-import { Dropdown } from './components/Dropdown/dropdown';`}
+            {`import { Modal } from './components/modal';
+import { Dropdown } from './components/dropdown';`}
           </pre>
         </div>
       ),
