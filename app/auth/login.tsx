@@ -19,23 +19,14 @@ import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
 import "@/styles/login.css";
 import { login } from "@/services/auth.service";
 
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "demo"
-  | "chatbot-management"
-  | "tickets"
-  | "login"
-  | "otp-verification"
-  | "register";
+import { PageType } from "@/types/common";
 
-// interface LoginProps {
-//   onNavigate: (page: PageType) => void;
-// }
 
-function Login() {
+interface LoginProps {
+  onNavigate: (page: PageType) => void;
+}
+
+function Login({ onNavigate }: LoginProps) {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");

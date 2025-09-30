@@ -8,17 +8,8 @@ import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
 import aivaLogo from "@/public/logo.png";
 import "@/styles/login.css";
 
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "demo"
-  | "chatbot-management"
-  | "tickets"
-  | "login"
-  | "otp-verification"
-  | "register";
+import { PageType } from "@/types/common";
+
 
 interface SignupProps {
   onNavigate: (page: PageType) => void;

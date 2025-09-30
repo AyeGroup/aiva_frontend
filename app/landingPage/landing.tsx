@@ -8,8 +8,7 @@ import { Trust } from "./trust";
 import { FAQ } from "./faq";
 import { FinalCTA } from "./final-cta";
 import { Footer } from "./footer";
-
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
+import { PageType } from "@/types/common";
 
 interface LandingPageProps {
   onNavigate: (page: PageType) => void;

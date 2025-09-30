@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Sidebar } from './sidebar';
 import { Toaster } from '../../components/ui/sonner';
 
-type PageType = 'landing' | 'signup' | 'dashboard' | 'consultation' | 'chatbot-management' | 'tickets';
+import { PageType } from "@/types/common";
 
 interface TicketsProps {
   onNavigate: (page: PageType) => void;

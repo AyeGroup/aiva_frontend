@@ -3,16 +3,8 @@ import { Button } from "@/components/button";
 import { headerData } from "./header.data";
 import "@/styles/header.css";
 
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "demo"
-  | "chatbot-management"
-  | "tickets"
-  | "components"
-  | "login";
+import { PageType } from "@/types/common";
+
 
 interface HeaderProps {
   currentPage: PageType;

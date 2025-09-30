@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Header } from "@/components/header/header";
+import { PageType } from "@/types/common";
 
 // Lazy load components to improve initial bundle size
 const LandingPage = lazy(() => import("@/app/landingPage/landing"));
@@ -19,22 +20,10 @@ const ChatbotManagement = lazy(
   () => import("@/app/dashboard/chatbot-management")
 );
 const Tickets = lazy(() => import("@/app/dashboard/tickets"));
-const Login = lazy(() => import("@/app/auth/login/page"));
+const Login = lazy(() => import("@/app/auth/login"));
 const OTPVerification = lazy(() => import("@/app/auth/otp-verification"));
 const Signup = lazy(() => import("@/app/auth/signup"));
 const ChatHistoryDemo = lazy(() => import("@/app/demo/chat-history-demo"));
-
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "demo"
-  | "chatbot-management"
-  | "tickets"
-  | "login"
-  | "otp-verification"
-  | "register";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>("landing");
@@ -88,7 +77,10 @@ export default function App() {
 
   const PageLoader = () => (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="space-y-4" style={{ animation: "none", transition: "none" }}>
+      <div
+        className="space-y-4"
+        style={{ animation: "none", transition: "none" }}
+      >
         <div className="h-8 bg-gray-200 rounded w-48 mx-auto"></div>
         <div className="h-4 bg-gray-200 rounded w-32 mx-auto"></div>
         <div

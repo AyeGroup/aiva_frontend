@@ -10,7 +10,7 @@ import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
 import "@/styles/components.css";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
+import { PageType } from "@/types/common";
 
 interface OnboardingWizardProps {
   onNavigate: (page: PageType) => void;

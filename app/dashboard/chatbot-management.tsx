@@ -22,12 +22,7 @@ import { Select } from "@/components/select";
 import { Switch } from "@/components/ui/switch";
 import { PageType } from "@/types/common";
 
-// type PageType =
-//   | "landing"
-//   | "signup"
-//   | "dashboard"
-//   | "consultation"
-//   | "chatbot-management";
+ 
 
 interface ChatbotManagementProps {
   onNavigate: (page: PageType) => void;

@@ -3,7 +3,7 @@ import { Card } from "@/components/card";
 import { pricingData } from "./landing.data";
 import { Star } from "lucide-react";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
+import { PageType } from "@/types/common";
 
 interface PricingProps {
   onNavigate: (page: PageType) => void;

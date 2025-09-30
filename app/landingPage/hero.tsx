@@ -2,7 +2,7 @@ import { Button } from "@/components/button";
 import { heroData } from "./landing.data";
 import { AnimatedChatDemo } from "./animated-chat-demo";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
+import { PageType } from "@/types/common";
 
 interface HeroProps {
   onNavigate: (page: PageType) => void;

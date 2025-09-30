@@ -8,13 +8,22 @@ export interface BaseComponentProps {
 }
 
 
+ 
+
+  // types.ts
 export type PageType =
   | "landing"
   | "signup"
   | "dashboard"
   | "consultation"
+  | "demo"
   | "chatbot-management"
-  | "tickets";
+  | "tickets"
+  | "login"
+  | "otp-verification"
+  | "components"
+  | "register";
+
 
 // تایپ‌های دکمه
 export interface ButtonProps extends BaseComponentProps {

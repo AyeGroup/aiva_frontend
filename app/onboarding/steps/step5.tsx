@@ -13,7 +13,7 @@ import {
   BarChart3,
 } from "lucide-react";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
+import { PageType } from "@/types/common";
 
 interface WizardStep5Props {
   botConfig: BotConfig;

@@ -6,16 +6,8 @@ import { ArrowLeft } from "lucide-react";
 import aivaLogo from "@/public/logo.png";
 import "@/styles/login.css";
 
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "demo"
-  | "chatbot-management"
-  | "tickets"
-  | "login"
-  | "otp-verification";
+import { PageType } from "@/types/common";
+ 
 
 interface OTPVerificationProps {
   onNavigate: (page: PageType) => void;

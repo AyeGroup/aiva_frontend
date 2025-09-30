@@ -1,7 +1,7 @@
 import { Button } from "@/components/button";
 import { ctaData } from "./landing.data";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
+import { PageType } from "@/types/common";
 
 interface FinalCTAProps {
   onNavigate: (page: PageType) => void;

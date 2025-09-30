@@ -15,12 +15,8 @@ import { Select } from "@/components/select";
 import { Toaster } from "@/components/ui/sonner";
 import "@/styles/components.css";
 
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "chatbot-management";
+import { PageType } from "@/types/common";
+
 
 interface DashboardProps {
   onNavigate: (page: PageType) => void;
