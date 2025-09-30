@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { Input } from "@/components/input";
@@ -5,11 +7,11 @@ import { Eye, EyeOff, ArrowLeft, Check, Mail, Phone, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
-import aivaLogo from "@/public/logo.png";
 import "@/styles/login.css";
 
-import { PageType } from "@/types/common";
 
+import { PageType } from "@/types/common";
+import { useRouter } from "next/navigation";
 
 interface SignupProps {
   onNavigate: (page: PageType) => void;
@@ -26,6 +28,7 @@ export function Signup({ onNavigate }: SignupProps) {
   });
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();  
 
   const [isLoading, setIsLoading] = useState(false);
   const [otpTimer, setOtpTimer] = useState(120); // 2 minutes
@@ -161,7 +164,7 @@ export function Signup({ onNavigate }: SignupProps) {
 
       // Auto redirect to dashboard after 3 seconds
       setTimeout(() => {
-        onNavigate("dashboard");
+        router.push("dashboard");
       }, 3000);
     }, 2000);
   };
@@ -640,7 +643,7 @@ export function Signup({ onNavigate }: SignupProps) {
               حساب کاربری شما با موفقیت ایجاد شد. در حال انتقال به دشبورد...
             </p>
             <button
-              onClick={() => onNavigate("login")}
+              onClick={() => router.push("/auth/login")}
               className="text-white py-3 px-6 rounded-lg transition-all hover:opacity-90"
               style={{
                 backgroundColor: "var(--brand-primary)",
@@ -662,13 +665,7 @@ export function Signup({ onNavigate }: SignupProps) {
   return (
     <div className="app-shell" dir="rtl">
       <div className="app-content">
-        <div
-          className="login-page min-h-screen relative overflow-hidden"
-          style={{
-            backgroundColor: "#FFFFFF",
-            fontFamily: "Vazirmatn, sans-serif",
-          }}
-        >
+        <div className="login-page min-h-screen relative overflow-hidden">
           {/* Header Content */}
           <div className="relative z-50 w-full p-2 pb-0">
             <div className="container mx-auto">
@@ -676,13 +673,12 @@ export function Signup({ onNavigate }: SignupProps) {
                 {/* Logo - Right Side */}
                 <div className="flex items-center gap-3">
                   <ImageWithFallback
-                    src=""
-                    // src=""
+                    src="/logo.png"
                     alt="آیوا"
                     className="w-20 h-20 object-cover"
                   />
                   <div className="flex flex-col">
-                    <span className="text-grey-900 font-semibold text-xl text-right font-bold text-[24px]">
+                    <span className="text-grey-900   text-xl text-right font-bold text-[24px]">
                       آیوا
                     </span>
                     <p
@@ -700,8 +696,8 @@ export function Signup({ onNavigate }: SignupProps) {
                 {/* Header Actions - Left Side */}
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => onNavigate("dashboard")}
                     className="px-4 py-2 text-white flex items-center gap-2 hover:opacity-90 rounded-lg border-none"
+                    onClick={() => router.push("/auth/login")}
                     style={{
                       backgroundColor: "var(--brand-primary)",
                       fontSize: "var(--text-body-large)",

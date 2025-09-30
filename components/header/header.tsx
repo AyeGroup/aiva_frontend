@@ -139,7 +139,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
               }
               size="md"
               title={authButtons.login.title}
-              onClick={() => router.push("login")}
+              onClick={() => router.push("/auth/login")}
               className="hidden sm:inline-flex text-sm lg:text-base px-3 lg:px-4 py-2"
             >
               {authButtons.login.text}
@@ -154,7 +154,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
               }
               size="md"
               title={authButtons.signup.title}
-              onClick={() => router.push("signup")}
+              onClick={() => router.push("/auth/signup")}
               icon="arrow-right"
               iconPosition="right"
               className="hidden sm:inline-flex text-sm lg:text-base px-4 lg:px-6 py-2 "
@@ -167,7 +167,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
               variant="primary"
               size="sm"
               title={authButtons.signup.title}
-              onClick={() => router.push("signup")}
+              onClick={() => router.push("/auth/signup")}
               icon="arrow-right"
               iconPosition="right"
               className="sm:hidden text-xs px-3 py-2 "
@@ -245,14 +245,14 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
             <li className="pt-2 space-y-2">
               <button
                 // onClick={() => onNavigate("login")}
-                onClick={() => router.push("login")}
+                onClick={() => router.push("/auth/login")}
                 title={authButtons.login.title}
                 className="block w-full text-center py-2 px-4 border border-border rounded-md hover:bg-accent transition-colors"
               >
                 {authButtons.login.text}
               </button>
               <button
-                onClick={() => router.push("signup")}
+                onClick={() => router.push("/auth/signup")}
                 title={authButtons.signup.title}
                 className="block w-full text-center py-2 px-4 rounded-md hover:opacity-90 transition-colors text-white"
                 style={{ backgroundColor: "var(--brand-primary)" }}

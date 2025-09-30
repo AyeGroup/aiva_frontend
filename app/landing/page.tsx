@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Hero } from "./hero";
@@ -31,7 +32,7 @@ const LoadingSection = () => (
   </div>
 );
 
-export default function LandingPage({ onNavigate }: LandingPageProps) {
+export default function Landing({ onNavigate }: LandingPageProps) {
   return (
     <main className="landing-page min-h-screen bg-gradient-to-br from-bg-app via-bg-shell to-bg-soft-mint">
       {/* Hero Section */}

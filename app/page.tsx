@@ -14,16 +14,16 @@ import { Header } from "@/components/header/header";
 import { PageType } from "@/types/common";
 
 // Lazy load components to improve initial bundle size
-const LandingPage = lazy(() => import("@/app/landingPage/landing"));
+const LandingPage = lazy(() => import("@/app/landing/page"));
 const OnboardingWizard = lazy(() => import("@/app/onboarding/onboarding"));
 const Dashboard = lazy(() => import("@/app/dashboard/dashboard"));
 const ChatbotManagement = lazy(
   () => import("@/app/dashboard/chatbot-management")
 );
 const Tickets = lazy(() => import("@/app/dashboard/tickets"));
-const Login = lazy(() => import("@/app/auth/login"));
+const Login = lazy(() => import("@/app/auth/login/page"));
 const OTPVerification = lazy(() => import("@/app/auth/otp-verification"));
-const Signup = lazy(() => import("@/app/auth/signup"));
+const Signup = lazy(() => import("@/app/auth/signup/page"));
 const ChatHistoryDemo = lazy(() => import("@/app/demo/chat-history-demo"));
 
 export default function App() {
@@ -31,15 +31,15 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>("landing");
 
   const navigate = useCallback((page: PageType) => {
-    try {
-      setCurrentPage(page);
-      const url = page === "landing" ? "/" : `/${page}`;
-      window.history.pushState({}, "", url);
-    } catch (error) {
-      console.error("Navigation error:", error);
-      setCurrentPage("landing");
-      window.history.pushState({}, "", "/");
-    }
+    // try {
+    //   setCurrentPage(page);
+    //   const url = page === "landing" ? "/" : `/${page}`;
+    //   window.history.pushState({}, "", url);
+    // } catch (error) {
+    //   console.error("Navigation error:", error);
+    //   setCurrentPage("landing");
+    //   window.history.pushState({}, "", "/");
+    // }
   }, []);
 
   // const navigate = useCallback(

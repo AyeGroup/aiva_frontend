@@ -21,7 +21,7 @@ import "@/styles/login.css";
 import { login } from "@/services/auth.service";
 
 import { PageType } from "@/types/common";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface LoginProps {
   onNavigate: (page: PageType) => void;
@@ -611,7 +611,7 @@ function Login({ onNavigate }: LoginProps) {
               {/* Back to Landing */}
               <div className="flex justify-end mt-[24px] mr-[0px] mb-[0px] ml-[0px]">
                 <button
-                  onClick={() => router.push("landing")}
+                  onClick={() => router.push("/")}
                   //elham
                   className="text-grey-600 hover:text-grey-800 text-sm font-medium transition-colors flex items-center gap-2 self-center text-center"
                 >
