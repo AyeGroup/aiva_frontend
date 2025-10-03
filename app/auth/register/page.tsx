@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { Input } from "@/components/input";
-import { Eye, EyeOff, ArrowLeft, Check, Mail, Phone, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
-import "@/styles/login.css";
-
 import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
+import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
+import axios from "axios";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 interface RegisterProps {
   onNavigate: (page: PageType) => void;
@@ -30,6 +30,7 @@ export function Register({ onNavigate }: RegisterProps) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const [otpTimer, setOtpTimer] = useState(120); // 2 minutes
   const [errors, setErrors] = useState<{
     email?: string;
@@ -82,33 +83,62 @@ export function Register({ onNavigate }: RegisterProps) {
       return;
     }
   };
+
   // register form handler
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!submitValidation()) return;
-    // Validate all fields
+    setMessage("");
+    if (!submitValidation()) return; // client-side validation
 
     setIsLoading(true);
 
-    // Simulate signup and OTP sending
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success(
-        `کد تایید به شماره ${englishToPersian(formData.phone)} ارسال شد`
-      );
-      setCurrentStep("otp");
+    try {
+      const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
+        phone: formData.phone,
+      });
 
-      // Start countdown timer
-      const timer = setInterval(() => {
-        setOtpTimer((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }, 2000);
+      if (res.status === 200) {
+        // success response
+        toast.success(
+          `کد تایید به شماره ${englishToPersian(formData.phone)} ارسال شد`
+        );
+        setCurrentStep("otp");
+
+        // start countdown (60s for example)
+        setOtpTimer(60);
+        const timer = setInterval(() => {
+          setOtpTimer((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        setMessage("مشکلی در ارسال کد رخ داد. لطفا دوباره تلاش کنید.");
+        toast.error("مشکلی در ارسال کد رخ داد. لطفا دوباره تلاش کنید.");
+      }
+    } catch (err: any) {
+      console.error("Register error:", err);
+
+      if (err.response) {
+        // Server responded with error code
+        const msg =
+          err.response.data?.message ||
+          "خطا در برقراری ارتباط با سرور. دوباره تلاش کنید.";
+        // toast.error(msg);
+        setMessage("خطا در برقراری ارتباط با سرور. دوباره تلاش کنید." + msg);
+      } else if (err.request) {
+        // Request was sent but no response
+        toast.error("پاسخی از سرور دریافت نشد. اینترنت خود را بررسی کنید.");
+      } else {
+        // Other errors
+        toast.error("خطای ناشناخته‌ای رخ داد. دوباره تلاش کنید.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // OTP input handler
@@ -228,16 +258,11 @@ export function Register({ onNavigate }: RegisterProps) {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="example@domain.com"
-                  className={`w-full pr-4 pl-4 py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr text-right ${
+                  className={`w-full pr-4 pl-4 leading-6 text-base rounded-lg py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr text-right ${
                     errors.email
                       ? "border-danger focus:border-danger"
                       : "border-grey-300 focus:border-brand-primary"
                   }`}
-                  style={{
-                    borderRadius: "var(--radius-lg)",
-                    fontSize: "var(--text-body-large)",
-                    lineHeight: "var(--text-body-large-lh)",
-                  }}
                   dir="ltr"
                   disabled={isLoading}
                 />
@@ -340,7 +365,9 @@ export function Register({ onNavigate }: RegisterProps) {
                 </p>
               )}
             </div>
-
+            {message && (
+              <p className="text-danger text-body-small mt-1">{message}</p>
+            )}
             <button
               type="submit"
               disabled={isLoading}

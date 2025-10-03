@@ -6,6 +6,7 @@ export const API_ROUTES = {
     REFRESH: `${API_BASE_URL}/auth/refrsh`,
     REGISTER: `${API_BASE_URL}/auth/register`,
     VERIFY_OTP: `${API_BASE_URL}/auth/verify-otp`,
+    SEND_CODE: `${API_BASE_URL}/auth/phone/send-code`,
   },
   USER: {
     PROFILE: `${API_BASE_URL}/user/profile`,

@@ -286,10 +286,10 @@ function Login({ onNavigate }: LoginProps) {
                   {/* Password login link */}
                   <div className="text-center mt-3">
                     <span className="text-grey-600 text-base">
-                      حساب کاربری ندارید؟{" "}
+                      حساب کاربری ندارید؟
                       <button
                         type="button"
-                        onClick={() => router.push("/signup")}
+                        onClick={() => router.push("/auth/register")}
                         className="hover:opacity-80 border-0 text-base text-primary p-0 cursor-pointer active:opacity-60"
                       >
                         ثبت نام کنید
