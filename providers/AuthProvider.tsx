@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import API from "@/lib/api";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import axios from "axios";
 
 type User = {
   id: string;
@@ -10,10 +11,14 @@ type User = {
   name?: string;
 };
 
+type LoginResponse =
+  | { success: true; user: any }
+  | { success: false; status: number | null; message: string };
+
 type AuthContextType = {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (identity: string, password: string) => Promise<LoginResponse>;
   logout: () => void;
 };
 
@@ -39,19 +44,51 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const login = async (identity: string, password: string) => {
+  const login = async (
+    identity: string,
+    password: string
+  ): Promise<LoginResponse> => {
     try {
-      console.log("ali api: ", API_ROUTES.AUTH.LOGIN);
-      const res = await API.post(API_ROUTES.AUTH.LOGIN, { identity, password });
-      console.log("ali res: ", res);
+      // console.log("login api path: ", API_ROUTES.AUTH.LOGIN);
+      const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
+        identity,
+        password,
+      });
+      // console.log("sara login response: ", res);
+
       const { access_token, refresh_token, user } = res.data;
 
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
 
       setUser(user);
-    } catch (err) {
-      throw new Error("Login failed");
+
+      return { success: true, user };
+    } catch (err: any) {
+      console.log("err: ", err);
+
+      if (err.response) {
+        console.log("mmm: ", err.response);
+        if (err.response.status === 401) {
+          return {
+            success: false,
+            status: 401,
+            message: "اطلاعات ورود نادرست است",
+          };
+        }
+
+        return {
+          success: false,
+          status: err.response.status,
+          message: err.response.data?.message || "خطای ناشناخته از سرور",
+        };
+      } else {
+        return {
+          success: false,
+          status: null,
+          message: err.message || "خطای شبکه",
+        };
+      }
     }
   };
 

@@ -16,7 +16,7 @@ import { PageType } from "@/types/common";
 // Lazy load components to improve initial bundle size
 const LandingPage = lazy(() => import("@/app/landing/page"));
 const OnboardingWizard = lazy(() => import("@/app/onboarding/onboarding"));
-const Dashboard = lazy(() => import("@/app/dashboard/dashboard"));
+const Dashboard = lazy(() => import("@/app/dashboard/page"));
 const ChatbotManagement = lazy(
   () => import("@/app/dashboard/chatbot-management")
 );

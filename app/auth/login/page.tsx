@@ -16,8 +16,14 @@ import {
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
+import { PageType } from "@/types/common";
 
-function Login() {
+
+interface LoginProps {
+  onNavigate: (page: PageType) => void;
+}
+
+function Login({ onNavigate }: LoginProps) {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -37,22 +43,32 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const cleanedPhone = phone.trim();
-      console.log("cleanedPhone", cleanedPhone);
+    const identity = phone.trim();
 
-      if (!isValidEmail(cleanedPhone) && !isValidPhone(cleanedPhone)) {
-        toast.error("لطفاً شماره موبایل یا ایمیل معتبر وارد کنید");
+    if (!isValidEmail(identity) && !isValidPhone(identity)) {
+      toast.error("لطفاً شماره موبایل یا ایمیل معتبر وارد کنید");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const res = await login(identity, password);
+      // console.log("page res: ", res);
+      if (!res.success) {
+        toast.error(res.message);
+        // toast.error(`خطا: ${res.message} (کد: ${res.status || "-"})`);
         return;
       }
 
-      const res = await login(phone, password);
-      console.log("login res", res);
       toast.success("ورود موفق!");
+      router.push("/dashboard");
+
       // router.push("/dashboard/dashboard");
-      setIsLoading(true);
     } catch (err) {
       console.log(err);
+      toast.error("خطا در ورود");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -72,7 +88,7 @@ function Login() {
                     width={80}
                     height={80}
                     // className=" object-cover"
-                    priority={true}  
+                    priority={true}
                   />
                   <div className="flex flex-col">
                     <span className="text-grey-900 font-semibold text-xl text-right   text-[24px]">
