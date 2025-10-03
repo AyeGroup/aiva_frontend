@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BotConfig } from "./onboarding";
+import { BotConfig } from "./page";
 import { onboardingData } from "./onboarding.data";
 import aivaLogo from "@/public/logo.png";
 

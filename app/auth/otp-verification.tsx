@@ -129,7 +129,7 @@ export default function OTPVerification({
         onNavigate("dashboard");
       } else if (codeToVerify === "111111") {
         // If new user, go to onboarding
-        onNavigate("signup");
+        onNavigate("register");
       } else {
         setError("کد وارد شده صحیح نیست. لطفاً مجدداً تلاش کنید.");
         setOtp(["", "", "", "", "", ""]);

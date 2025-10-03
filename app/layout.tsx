@@ -25,9 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="fa">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <div className="app-shell" dir="rtl">
+          <div className="app-content">
+            <AuthProvider>{children}</AuthProvider>
+          </div>
+        </div>
       </body>
     </html>
   );

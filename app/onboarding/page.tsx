@@ -1,5 +1,5 @@
+"use client";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { WizardStep1 } from "./steps/step1";
 import { WizardStep2 } from "./steps/step2";
@@ -17,6 +17,7 @@ interface OnboardingWizardProps {
 }
 
 export interface BotConfig {
+  
   name: string;
   description: string;
   language: string;

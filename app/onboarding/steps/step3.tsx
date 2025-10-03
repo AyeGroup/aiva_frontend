@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BotConfig } from "../onboarding";
+import { BotConfig } from "../page";
 // import { Button } from "@/components/button';
 // import { Input } from "@/components/input';
 import { RadioGroup } from "@/components/radio-group";

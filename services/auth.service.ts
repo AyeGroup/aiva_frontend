@@ -12,7 +12,7 @@ export const login = (email: string, password: string) => {
   return api.post(API_ROUTES.AUTH.LOGIN, body);
 };
 
-export const signup = (identifier: string, password: string) =>
+export const register = (identifier: string, password: string) =>
   api.post(API_ROUTES.AUTH.SIGNUP, { identifier, password });
 
 export const verifyOtp = (identifier: string, otp: string) =>

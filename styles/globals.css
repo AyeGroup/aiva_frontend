@@ -563,7 +563,7 @@ html[dir="rtl"] .ltr {
 
 html {
   font-size: var(--font-size);
-  font-family: "Vazirmatn", "Inter", -apple-system, BlinkMacSystemFont,
+  font-family: "Vazirmatn", "Inter", "-apple-system", BlinkMacSystemFont,
     sans-serif;
 }
 

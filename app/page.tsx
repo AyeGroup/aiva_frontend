@@ -15,7 +15,7 @@ import { PageType } from "@/types/common";
 
 // Lazy load components to improve initial bundle size
 const LandingPage = lazy(() => import("@/app/landing/page"));
-const OnboardingWizard = lazy(() => import("@/app/onboarding/onboarding"));
+const OnboardingWizard = lazy(() => import("@/app/onboarding/page"));
 const Dashboard = lazy(() => import("@/app/dashboard/page"));
 const ChatbotManagement = lazy(
   () => import("@/app/dashboard/chatbot-management")
@@ -23,10 +23,10 @@ const ChatbotManagement = lazy(
 const Tickets = lazy(() => import("@/app/dashboard/tickets"));
 const Login = lazy(() => import("@/app/auth/login/page"));
 const OTPVerification = lazy(() => import("@/app/auth/otp-verification"));
-const Signup = lazy(() => import("@/app/auth/signup/page"));
+const Register = lazy(() => import("@/app/auth/register/page"));
 const ChatHistoryDemo = lazy(() => import("@/app/demo/chat-history-demo"));
 
-export default function App() {
+export default function OnBoarding() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<PageType>("landing");
 
@@ -77,7 +77,7 @@ export default function App() {
       try {
         const path = window.location.pathname;
         if (path === "/") setCurrentPage("landing");
-        else if (path === "/signup") setCurrentPage("signup");
+        else if (path === "/signup") setCurrentPage("register");
         else if (path === "/dashboard") setCurrentPage("dashboard");
         else if (path === "/chatbot-management")
           setCurrentPage("chatbot-management");
@@ -123,7 +123,7 @@ export default function App() {
             <LandingPage onNavigate={navigate} />
           </Suspense>
         );
-      case "signup":
+      case "register":
         return (
           <Suspense fallback={<PageLoader />}>
             <OnboardingWizard onNavigate={navigate} />
@@ -190,7 +190,7 @@ export default function App() {
             currentPage !== "tickets" &&
             currentPage !== "login" &&
             currentPage !== "otp-verification" &&
-            currentPage !== "signup" && (
+            currentPage !== "register" && (
               <ErrorBoundary>
                 <Header currentPage={currentPage} onNavigate={navigate} />
               </ErrorBoundary>

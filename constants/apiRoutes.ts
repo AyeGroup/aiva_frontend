@@ -4,7 +4,7 @@ export const API_ROUTES = {
   AUTH: {
     LOGIN: `${API_BASE_URL}/auth/login`,
     REFRESH: `${API_BASE_URL}/auth/refrsh`,
-    SIGNUP: `${API_BASE_URL}/auth/signup`,
+    REGISTER: `${API_BASE_URL}/auth/register`,
     VERIFY_OTP: `${API_BASE_URL}/auth/verify-otp`,
   },
   USER: {

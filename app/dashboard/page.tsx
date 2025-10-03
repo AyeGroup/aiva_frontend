@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { DashboardCard } from "@/components/dashboard-card";
 import { StatCard } from "@/components/stat-card";
@@ -16,7 +17,6 @@ import { Toaster } from "@/components/ui/sonner";
 import "@/styles/components.css";
 
 import { PageType } from "@/types/common";
-
 
 interface DashboardProps {
   onNavigate: (page: PageType) => void;

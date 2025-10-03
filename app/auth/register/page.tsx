@@ -12,14 +12,14 @@ import "@/styles/login.css";
 import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
 
-interface SignupProps {
+interface RegisterProps {
   onNavigate: (page: PageType) => void;
 }
 
-type SignupStep = "signup" | "otp" | "success" | "password";
+type RegisterStep = "signup" | "otp" | "success" | "password";
 
-export function Signup({ onNavigate }: SignupProps) {
-  const [currentStep, setCurrentStep] = useState<SignupStep>("signup");
+export function Register({ onNavigate }: RegisterProps) {
+  const [currentStep, setCurrentStep] = useState<RegisterStep>("signup");
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
@@ -82,8 +82,8 @@ export function Signup({ onNavigate }: SignupProps) {
       return;
     }
   };
-  // Signup form handler
-  const handleSignupSubmit = async (e: React.FormEvent) => {
+  // register form handler
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!submitValidation()) return;
     // Validate all fields
@@ -190,7 +190,7 @@ export function Signup({ onNavigate }: SignupProps) {
     switch (currentStep) {
       case "signup":
         return (
-          <form onSubmit={handleSignupSubmit} className="space-y-6">
+          <form onSubmit={handleRegisterSubmit} className="space-y-6">
             <div className="text-center mb-6">
               <h1
                 className="text-grey-900 mb-3"
@@ -762,7 +762,7 @@ export function Signup({ onNavigate }: SignupProps) {
             style={{ minHeight: "calc(100vh - 120px)" }}
           >
             <div className="w-full max-w-md">
-              {/* Signup Card */}
+              {/* register Card */}
               <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
                 {/* Step indicator */}
                 {currentStep !== "success" && (
@@ -815,4 +815,4 @@ export function Signup({ onNavigate }: SignupProps) {
   );
 }
 
-export default Signup;
+export default Register;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BotConfig } from "../onboarding";
+import { BotConfig } from "../page";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { HelpCircle, Plus, Trash2, Edit3, Save, X } from "lucide-react";

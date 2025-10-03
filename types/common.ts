@@ -9,7 +9,7 @@ export interface BaseComponentProps {
 
 export type PageType =
   | "landing"
-  | "signup"
+  | "register"
   | "dashboard"
   | "consultation"
   | "demo"

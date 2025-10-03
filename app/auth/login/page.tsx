@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -9,15 +10,13 @@ import "@/styles/globals.css";
 import "@/styles/login.css";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
-import Image from "next/image";
+import { PageType } from "@/types/common";
 import {
   LoginTopLef2,
   LoginTopLeft,
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
-import { PageType } from "@/types/common";
-
 
 interface LoginProps {
   onNavigate: (page: PageType) => void;
@@ -61,7 +60,8 @@ function Login({ onNavigate }: LoginProps) {
       }
 
       toast.success("ورود موفق!");
-      router.push("/dashboard");
+      console.log("redirecting...");
+      router.push("/onboarding");
 
       // router.push("/dashboard/dashboard");
     } catch (err) {
@@ -73,8 +73,7 @@ function Login({ onNavigate }: LoginProps) {
   };
 
   return (
-    <div className="app-shell" dir="rtl">
-      <div className="app-content">
+  
         <div className="login-page min-h-screen bg-white relative overflow-hidden">
           {/* Header Content */}
           <div className="relative z-50 w-full p-2 pb-0">
@@ -290,7 +289,7 @@ function Login({ onNavigate }: LoginProps) {
                       حساب کاربری ندارید؟{" "}
                       <button
                         type="button"
-                        onClick={() => router.push("signup")}
+                        onClick={() => router.push("/signup")}
                         className="hover:opacity-80 border-0 text-base text-primary p-0 cursor-pointer active:opacity-60"
                       >
                         ثبت نام کنید
@@ -330,8 +329,8 @@ function Login({ onNavigate }: LoginProps) {
 
           <Toaster position="top-center" dir="rtl" richColors closeButton />
         </div>
-      </div>
-    </div>
+    //   </div>
+    // </div>
   );
 }
 
