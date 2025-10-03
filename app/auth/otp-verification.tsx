@@ -7,7 +7,7 @@ import aivaLogo from "@/public/logo.png";
 import "@/styles/login.css";
 
 import { PageType } from "@/types/common";
- 
+import { toast } from "sonner";
 
 interface OTPVerificationProps {
   onNavigate: (page: PageType) => void;
@@ -64,6 +64,34 @@ export default function OTPVerification({
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
+  };
+
+  const handleSendOtp = async () => {
+    const cleanedPhone = "1"; // cleanPhoneNumber(phone);
+
+    if (!cleanedPhone) {
+      toast.error("لطفاً شماره تلفن خود را وارد کنید");
+      return;
+    }
+
+    // Simple validation - just check if we have some digits
+    if (cleanedPhone.length < 10) {
+      toast.error("لطفاً شماره تلفن معتبر وارد کنید");
+      return;
+    }
+
+    setIsLoading(true);
+
+    // Simulate OTP sending
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success("کد تایید به شماره شما ارسال شد");
+
+      // Navigate to OTP verification page
+      // onNavigate("otp-verification");
+      // router.push("otp-verification");
+      // elham
+    }, 2000);
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {

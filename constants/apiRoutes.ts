@@ -1,11 +1,14 @@
+import { API_BASE_URL } from "@/config";
+
 export const API_ROUTES = {
   AUTH: {
-    LOGIN: "/auth/login",
-    SIGNUP: "/auth/signup",
-    VERIFY_OTP: "/auth/verify-otp",
+    LOGIN: `${API_BASE_URL}/auth/login`,
+    REFRESH: `${API_BASE_URL}/auth/refrsh`,
+    SIGNUP: `${API_BASE_URL}/auth/signup`,
+    VERIFY_OTP: `${API_BASE_URL}/auth/verify-otp`,
   },
   USER: {
-    PROFILE: "/user/profile",
-    UPDATE: "/user/update",
+    PROFILE: `${API_BASE_URL}/user/profile`,
+    UPDATE: `${API_BASE_URL}/user/update`,
   },
 };

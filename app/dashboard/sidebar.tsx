@@ -4,7 +4,7 @@ import { ChevronDown, User, LogOut, ArrowLeft } from "lucide-react";
 import { AddChatbotModal } from "./add-chatbot-modal";
 import { AddAccountModal } from "./add-account-modal";
 import aivaLogo from "@/public/logo.png";
-import sidebarImage from "@/assets/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
+import sidebarImage from "@/public/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
 import { PageType } from "@/types/common";
 // import sidebarImage from "figma:asset/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
 

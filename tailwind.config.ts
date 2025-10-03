@@ -9,9 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#2563eb", // رنگ اصلی (مثال: آبی)
-        secondary: "#64748b", // رنگ دوم (مثال: خاکستری)
-        accent: "#f59e0b", // رنگ تاکیدی (مثال: زرد-نارنجی)
+        primary: "##65BCB6",
+        secondary: "##FFA18E",
+        text: "#4b5563",
+        accent: "#f59e0b",
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"], // فونت پیش‌فرض

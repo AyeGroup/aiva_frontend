@@ -9,7 +9,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
 import "@/styles/login.css";
 
-
 import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
 
@@ -28,7 +27,7 @@ export function Signup({ onNavigate }: SignupProps) {
   });
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();  
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [otpTimer, setOtpTimer] = useState(120); // 2 minutes
@@ -65,13 +64,8 @@ export function Signup({ onNavigate }: SignupProps) {
     }
   };
 
-  // Signup form handler
-  const handleSignupSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const submitValidation = async () => {
     const newErrors: typeof errors = {};
-
-    // Validate all fields
     if (!formData.email || !validateEmail(formData.email)) {
       newErrors.email = "لطفاً ایمیل معتبر وارد کنید";
     }
@@ -83,11 +77,16 @@ export function Signup({ onNavigate }: SignupProps) {
     if (!formData.password || !validatePassword(formData.password)) {
       newErrors.password = "رمز عبور باید حداقل ۶ حرف باشد";
     }
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+  };
+  // Signup form handler
+  const handleSignupSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!submitValidation()) return;
+    // Validate all fields
 
     setIsLoading(true);
 
