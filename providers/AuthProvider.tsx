@@ -9,6 +9,7 @@ type User = {
   id: string;
   email: string;
   name?: string;
+  token: string;
 };
 
 type LoginResponse =
@@ -27,11 +28,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // بررسی توکن‌ها هنگام mount
   useEffect(() => {
     const token = localStorage.getItem("access_token");
-    if (token) {
-      fetchProfile();
+    const savedUser = localStorage.getItem("user");
+    if (token && savedUser) {
+      setUser(JSON.parse(savedUser));
     }
   }, []);
 
@@ -54,12 +55,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         identity,
         password,
       });
-      // console.log("sara login response: ", res);
+      // console.log("sara  : ", res.data.data);
 
-      const { access_token, refresh_token, user } = res.data;
+      // const { access_token, refresh_token } = res.data;
 
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
+      localStorage.setItem("access_token", res.data.data.access_token);
+      localStorage.setItem("refresh_token", res.data.data.refresh_token);
+      const user: User = {
+        id: identity,
+        name: "",
+        email: "",
+        token: res.data.data.access_token,
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
 
       setUser(user);
 

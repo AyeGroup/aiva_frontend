@@ -8,45 +8,15 @@ import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
-import "@/styles/components.css";
-
-import { PageType } from "@/types/common";
+import { BotConfig, PageType } from "@/types/common";
+import { Button } from "@/components/button";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/providers/AuthProvider";
+import axios from "axios";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 interface OnboardingWizardProps {
   onNavigate: (page: PageType) => void;
-}
-
-export interface BotConfig {
-  
-  name: string;
-  description: string;
-  language: string;
-  tone: string;
-  color: string;
-  welcomeMessage: string;
-  fallbackMessage: string;
-  knowledge: Array<{
-    id: string;
-    type: "faq" | "document" | "url" | "text";
-    title: string;
-    content?: string;
-    url?: string;
-  }>;
-  branding: {
-    logo?: string;
-    position: "bottom-right" | "bottom-left";
-    size: "small" | "medium" | "large";
-  };
-  behaviors?: {
-    responseStyle: "concise" | "detailed" | "helpful";
-    maxResponseLength: number;
-    useEmojis: boolean;
-    escalationTriggers: string[];
-    autoGreeting: boolean;
-    contextMemory: boolean;
-    privacyMode: boolean;
-    responseDelay: number;
-  };
 }
 
 export default function OnboardingWizard({
@@ -54,30 +24,36 @@ export default function OnboardingWizard({
 }: OnboardingWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [botConfig, setBotConfig] = useState<BotConfig>({
-    name: "آیوا",
+    name: "",
     description: "",
-    language: "fa",
-    tone: "friendly",
-    color: "#4CA7A5",
-    welcomeMessage: "سلام! چطور می‌تونم کمکتون کنم؟",
-    fallbackMessage:
-      "متأسفانه نمی‌تونم پاسخ این سؤال رو بدم. لطفاً با پشتیبانی تماس بگیرید.",
-    knowledge: [],
-    branding: {
-      position: "bottom-right",
-      size: "medium",
-    },
-    behaviors: {
-      responseStyle: "helpful",
-      maxResponseLength: 300,
-      useEmojis: true,
-      escalationTriggers: ["پشتیبانی", "مدیر", "شکایت"],
-      autoGreeting: true,
-      contextMemory: true,
-      privacyMode: false,
-      responseDelay: 1000,
-    },
+    guidelines: "",
+    language: "",
+    tone: "",
+    color: "",
+    button_size: "",
+    widget_position: "",
+    answer_length: "",
+    support_phone: "",
+    use_emoji: "",
+    greetings: "",
+    k: "",
+    reranker_enabled: "",
+    llm_model: "",
+    llm_api_key: "",
+    primary_color: "",
+    accent_color: "",
+    logo: "",
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
+
+  console.log("user",user)
+  useEffect(() => {
+    if (!user) {
+      router.push("/auth/login"); 
+    }
+  }, [user]);
 
   // Load saved data from localStorage on component mount
   useEffect(() => {
@@ -92,6 +68,23 @@ export default function OnboardingWizard({
       }
     }
   }, []);
+
+  const saveBotConfig = async () => {
+    setIsSaving(true);
+    try {
+      console.log("botConfig", botConfig);
+      const res = axios.post(API_ROUTES.BOTS.CREATE, botConfig, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      console.log("reponse",res)
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   // Save data to localStorage whenever botConfig or currentStep changes
   useEffect(() => {
@@ -113,15 +106,20 @@ export default function OnboardingWizard({
     }));
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
+    // قبل از رفتن به مرحله بعد، ذخیره روی بک‌اند
+    await saveBotConfig();
+
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Complete onboarding and go to dashboard
-      localStorage.removeItem("aiva-onboarding-data"); // Clear saved data on completion
-      onNavigate("dashboard");
+      // اتمام و رفتن به داشبورد
+      localStorage.removeItem("aiva-onboarding-data");
+      // onNavigate("dashboard");
+      router.push("/dashboard");
     }
   };
+ 
 
   const prevStep = () => {
     if (currentStep > 1) {
@@ -132,6 +130,7 @@ export default function OnboardingWizard({
   const goToStep = (step: number) => {
     setCurrentStep(step);
   };
+  if (!user) return <p>در حال بررسی ورود...</p>;
 
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -269,7 +268,7 @@ export default function OnboardingWizard({
 
               {/* Clean Navigation */}
               <div className="flex items-center justify-between mt-8">
-                {/* <Button
+                <Button
                   variant="tertiary"
                   onClick={prevStep}
                   disabled={currentStep === 1}
@@ -279,7 +278,6 @@ export default function OnboardingWizard({
                 >
                   قبلی
                 </Button>
-                elham */}
 
                 {/* Minimal Step Counter */}
                 <div className="bg-white border border-grey-200 px-4 py-2 rounded-lg shadow-sm">
@@ -288,16 +286,21 @@ export default function OnboardingWizard({
                   </span>
                 </div>
 
-                {/* <Button
+                <Button
                   variant="primary"
                   onClick={nextStep}
                   icon={currentStep < totalSteps ? "arrow-right" : "check"}
                   iconPosition="right"
                   className="px-6 shadow-md"
                 >
-                  {currentStep === totalSteps ? "اتمام و شروع" : "بعدی"}
-                </Button> */}
-                {/* elham */}
+                  {isSaving
+                    ? "در حال ذخیره..."
+                    : currentStep === totalSteps
+                    ? "اتمام و شروع"
+                    : "بعدی"}
+
+                  {/* {currentStep === totalSteps ? "اتمام و شروع" : "بعدی"} */}
+                </Button>
               </div>
             </div>
 

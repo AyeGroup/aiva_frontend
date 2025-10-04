@@ -19,6 +19,53 @@ export type PageType =
   | "otp-verification"
   | "components";
 
+  export interface BotConfig {
+    name: string;
+    description: string;
+    guidelines: string;
+    language: string;
+    tone: string;
+    color: string;
+    button_size: string;
+    widget_position: string;
+    answer_length: string;
+    support_phone: string;
+    use_emoji: string;
+    greetings: string;
+    k: string;
+    reranker_enabled: string;
+    llm_model: string;
+    llm_api_key: string;
+    primary_color: string;
+    accent_color: string;
+    logo: string;
+  }
+
+    // ----------
+    // welcomeMessage: string;
+    // fallbackMessage: string;
+    // knowledge: Array<{
+    //   id: string;
+    //   type: "faq" | "document" | "url" | "text";
+    //   title: string;
+    //   content?: string;
+    //   url?: string;
+    // }>;
+    // branding: {
+    //   logo?: string;
+    //   position: "bottom-right" | "bottom-left";
+    //   size: "small" | "medium" | "large";
+    // };
+    // behaviors?: {
+    //   responseStyle: "concise" | "detailed" | "helpful";
+    //   maxResponseLength: number;
+    //   useEmojis: boolean;
+    //   escalationTriggers: string[];
+    //   autoGreeting: boolean;
+    //   contextMemory: boolean;
+    //   privacyMode: boolean;
+    //   responseDelay: number;
+    // };
 // تایپ‌های دکمه
 export interface ButtonProps extends BaseComponentProps {
   variant?: "primary" | "secondary" | "tertiary";

@@ -1,10 +1,22 @@
+import Image from "next/image";
 import { useState, useEffect } from "react";
-import { BotConfig } from "../page";
 import { onboardingData } from "../onboarding.data";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { Card } from "@/components/card";
 import { ColorWheel } from "@/components/color-wheel";
+import {
+  StepBigStar,
+  StepChatButton,
+  StepCheck,
+  StepColor,
+  StepLogin,
+  StepMessage,
+  StepStar,
+  StepUpload,
+  StepUser,
+} from "@/public/icons/AppIcons";
+import { BotConfig } from "@/types/common";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -33,13 +45,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
       {/* Header */}
       <div className="flex items-start gap-4 px-[0px] py-[12px]">
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg
-            className="w-8 h-8 text-brand-primary"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-          </svg>
+          <StepBigStar />
         </div>
         <div className="flex-1">
           <h2 className="text-grey-900 mb-2 text-right text-[24px] font-bold">
@@ -56,18 +62,11 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
         <div className="space-y-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-brand-primary"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
+              <StepUser />
             </div>
             <h3 className="text-grey-900">اطلاعات پایه</h3>
           </div>
 
-          {/* Bot Name & Language - Horizontal Layout */}
           <div className="grid grid-cols-2 gap-6">
             {/* Bot Name */}
             <div className="form-group">
@@ -179,19 +178,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
           <div className="mt-6">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-6 h-6 bg-brand-primary/10 rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-4 h-4 text-brand-primary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"
-                  />
-                </svg>
+                <StepColor />
               </div>
               <h4 className="text-grey-900 text-sm">رنگ اصلی چت‌بات</h4>
             </div>
@@ -221,13 +208,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                       {/* Inner checkmark with better contrast */}
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md">
-                          <svg
-                            className="w-4 h-4 text-grey-900"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                          </svg>
+                          <StepCheck />
                         </div>
                       </div>
                     </>
@@ -288,13 +269,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
         <div className="space-y-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 bg-brand-purple/10 rounded-lg flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-brand-purple"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
-              </svg>
+              <StepChatButton />
             </div>
             <h3 className="text-grey-900">تنظیمات دکمه چت</h3>
           </div>
@@ -313,32 +288,25 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                     className={`
                       p-3 cursor-pointer border-2
                       ${
-                        botConfig.branding.size === size.id
+                        botConfig.button_size === size.id
                           ? "border-brand-primary bg-brand-primary/5 shadow-md"
                           : "border-border-soft hover:border-brand-primary/30"
                       }
                     `}
-                    onClick={() =>
-                      updateConfig({
-                        branding: {
-                          ...botConfig.branding,
-                          size: size.id as "small" | "medium" | "large",
-                        },
-                      })
-                    }
+                    onClick={() => updateConfig({ button_size: size.id })}
                   >
                     <div className="flex items-center gap-3" dir="rtl">
                       <div
                         className={`
                         w-4 h-4 rounded-full border-2 flex items-center justify-center
                         ${
-                          botConfig.branding.size === size.id
+                          botConfig.button_size === size.id
                             ? "border-brand-primary bg-brand-primary"
                             : "border-grey-300"
                         }
                       `}
                       >
-                        {botConfig.branding.size === size.id && (
+                        {botConfig.button_size === size.id && (
                           <div className="w-2 h-2 bg-white rounded-full" />
                         )}
                       </div>
@@ -398,34 +366,38 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                     className={`
                       p-3 cursor-pointer border-2
                       ${
-                        botConfig.branding.position === position.id
+                        botConfig.widget_position === position.id
                           ? "border-brand-primary bg-brand-primary/5 shadow-md"
                           : "border-border-soft hover:border-brand-primary/30"
                       }
                     `}
                     onClick={() =>
-                      updateConfig({
-                        branding: {
-                          ...botConfig.branding,
-                          position: position.id as
-                            | "bottom-right"
-                            | "bottom-left",
-                        },
-                      })
+                      updateConfig({ widget_position: position.id })
                     }
+
+                    // onClick={() =>
+                    //   updateConfig({
+                    //     branding: {
+                    //       ...botConfig.branding,
+                    //       position: position.id as
+                    //         | "bottom-right"
+                    //         | "bottom-left",
+                    //     },
+                    //   })
+                    // }
                   >
                     <div className="flex items-center gap-3" dir="rtl">
                       <div
                         className={`
                         w-4 h-4 rounded-full border-2 flex items-center justify-center
                         ${
-                          botConfig.branding.position === position.id
+                          botConfig.widget_position === position.id
                             ? "border-brand-primary bg-brand-primary"
                             : "border-grey-300"
                         }
                       `}
                       >
-                        {botConfig.branding.position === position.id && (
+                        {botConfig.widget_position === position.id && (
                           <div className="w-2 h-2 bg-white rounded-full" />
                         )}
                       </div>
@@ -462,24 +434,18 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
         <div className="space-y-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 bg-brand-emerald/10 rounded-lg flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-brand-emerald"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-              </svg>
+              <StepLogin />
             </div>
             <h3 className="text-grey-900">لوگوی شرکت (اختیاری)</h3>
           </div>
 
           <Card className="p-4 !border-0 hover:bg-grey-50 cursor-pointer">
             <div className="text-center">
-              {botConfig.branding.logo ? (
+              {botConfig.logo ? (
                 <div className="space-y-3">
                   <div className="w-16 h-16 mx-auto bg-grey-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img
-                      src={botConfig.branding.logo}
+                    <Image
+                      src={botConfig.logo}
                       alt="لوگوی انتخاب شده"
                       className="w-full h-full object-contain"
                     />
@@ -488,11 +454,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                   <div className="flex gap-2 justify-center">
                     <button
                       type="button"
-                      onClick={() =>
-                        updateConfig({
-                          branding: { ...botConfig.branding, logo: undefined },
-                        })
-                      }
+                      onClick={() => updateConfig({ logo: undefined })}
                       className="px-3 py-1 text-xs bg-danger/10 text-danger rounded-lg hover:bg-danger/20"
                     >
                       حذف
@@ -504,7 +466,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                         const newLogo = prompt("آدرس لوگوی جدید را وارد کنید:");
                         if (newLogo) {
                           updateConfig({
-                            branding: { ...botConfig.branding, logo: newLogo },
+                            logo: newLogo,
                           });
                         }
                       }}
@@ -517,19 +479,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
               ) : (
                 <div className="space-y-3">
                   <div className="w-12 h-12 bg-grey-200 rounded-lg flex items-center justify-center mx-auto">
-                    <svg
-                      className="w-6 h-6 text-grey-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
+                    <StepUpload />
                   </div>
                   <div>
                     <p className="text-grey-700 text-sm mb-1">
@@ -547,9 +497,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                         "آدرس لوگو را وارد کنید (برای تست):"
                       );
                       if (logoUrl) {
-                        updateConfig({
-                          branding: { ...botConfig.branding, logo: logoUrl },
-                        });
+                        updateConfig({ logo: logoUrl });
                       }
                     }}
                     className="px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 text-sm"
@@ -563,13 +511,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
 
           <div className="bg-bg-soft-mint p-3 rounded-lg">
             <div className="flex items-start gap-2">
-              <svg
-                className="w-4 h-4 text-brand-secondary mt-0.5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
+              <StepStar />
               <p className="text-grey-600 text-xs">
                 لوگو در کنار دکمه چت نمایش داده می‌شود و اعتماد کاربران را
                 افزایش می‌دهد
@@ -582,13 +524,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
         <div className="space-y-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 bg-brand-coral/10 rounded-lg flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-brand-coral"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
-              </svg>
+              <StepMessage />
             </div>
             <h3 className="text-grey-900">پیام‌های سفارشی</h3>
           </div>
@@ -607,10 +543,8 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 </label>
                 <textarea
                   id="welcomeMessage"
-                  value={botConfig.welcomeMessage}
-                  onChange={(e) =>
-                    updateConfig({ welcomeMessage: e.target.value })
-                  }
+                  value={botConfig.greetings}
+                  onChange={(e) => updateConfig({ greetings: e.target.value })}
                   placeholder="سلام! چطور می‌تونم کمکتون کنم؟"
                   rows={3}
                   className="w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary resize-none"
@@ -629,9 +563,9 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 </label>
                 <textarea
                   id="fallbackMessage"
-                  value={botConfig.fallbackMessage}
+                  value={botConfig.k}
                   onChange={(e) =>
-                    updateConfig({ fallbackMessage: e.target.value })
+                    updateConfig({ k: e.target.value })
                   }
                   placeholder="متأسفانه نمی‌تونم پاسخ این سؤال رو بدم. لطفاً با پشتیبانی تماس بگیرید."
                   rows={3}

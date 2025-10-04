@@ -11,6 +11,7 @@ import { Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
 import axios from "axios";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { labelPrevious } from "react-day-picker";
 
 interface RegisterProps {
   onNavigate: (page: PageType) => void;
@@ -123,17 +124,13 @@ export function Register({ onNavigate }: RegisterProps) {
       console.error("Register error:", err);
 
       if (err.response) {
-        // Server responded with error code
         const msg =
           err.response.data?.message ||
           "خطا در برقراری ارتباط با سرور. دوباره تلاش کنید.";
-        // toast.error(msg);
         setMessage("خطا در برقراری ارتباط با سرور. دوباره تلاش کنید." + msg);
       } else if (err.request) {
-        // Request was sent but no response
         toast.error("پاسخی از سرور دریافت نشد. اینترنت خود را بررسی کنید.");
       } else {
-        // Other errors
         toast.error("خطای ناشناخته‌ای رخ داد. دوباره تلاش کنید.");
       }
     } finally {
@@ -184,24 +181,39 @@ export function Register({ onNavigate }: RegisterProps) {
     }
 
     setIsLoading(true);
+    const res = await axios.post(API_ROUTES.AUTH.VERIFY_OTP, {
+      phone: formData.phone,
+      code: otpValue,
+    });
 
-    // Simulate OTP verification and account creation
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success("حساب کاربری شما با موفقیت ایجاد شد");
-      setCurrentStep("success");
+    if (res.status === 200) {
+      toast.success(
+        `کد تایید به شماره ${englishToPersian(formData.phone)} ارسال شد`
+      );
+    } else {
+      toast.success("کد صحیح نیست");
+      return;
+    }
 
-      // Auto redirect to dashboard after 3 seconds
-      setTimeout(() => {
-        router.push("dashboard");
-      }, 3000);
-    }, 2000);
+    toast.success("حساب کاربری شما با موفقیت ایجاد شد");
+    setCurrentStep("success");
+    router.push("/dashboard");
   };
 
   // Resend OTP handler
-  const handleResendOtp = () => {
+  const handleResendOtp = async () => {
     setOtpTimer(120);
     setOtp(["", "", "", "", "", ""]);
+    const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
+      phone: formData.phone,
+    });
+
+    if (res.status === 200) {
+      // success response
+      toast.success(
+        `کد تایید به شماره ${englishToPersian(formData.phone)} ارسال شد`
+      );
+    }
     toast.success("کد تایید مجدداً ارسال شد");
 
     // Restart timer

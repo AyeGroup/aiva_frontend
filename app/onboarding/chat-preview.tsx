@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { BotConfig } from "./page";
+// import { BotConfig } from "./page";
 import { onboardingData } from "./onboarding.data";
 import aivaLogo from "@/public/logo.png";
+import Image from "next/image";
+import { BotConfig } from "@/types/common";
 
 interface ChatPreviewProps {
   botConfig: BotConfig;
@@ -103,7 +105,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
       {
         id: "1",
         text:
-          botConfig.welcomeMessage ||
+          botConfig.greetings ||
           currentTone?.example ||
           "سلام! چطور می‌تونم کمکتون کنم؟",
         isBot: true,
@@ -111,7 +113,8 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
       },
     ];
 
-    if (step >= 2 && botConfig.knowledge.length > 0) {
+    if (step >= 2 && botConfig.llm_model.length > 0) {
+      // if (step >= 2 && botConfig.knowledge.length > 0) {
       base.push({
         id: "2",
         text: "سوال‌های متداول را می‌بینم!",
@@ -148,7 +151,8 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
     const newMessages = getSampleMessages(currentStep);
     setMessages(newMessages);
     setSelectedKnowledgeItem(null); // Reset selection when step changes
-  }, [currentStep, botConfig.welcomeMessage, botConfig.knowledge.length]);
+  }, [currentStep, botConfig.greetings, botConfig.llm_model.length]);
+  // }, [currentStep, botConfig.greetings, botConfig.knowledge.length]);
 
   // Get current tone example
   const currentTone = onboardingData.tones.find((t) => t.id === botConfig.tone);
@@ -168,15 +172,15 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
   }, [messages]);
 
   const chatButtonSize =
-    botConfig.branding.size === "small"
+    botConfig.button_size === "small"
       ? "50px"
-      : botConfig.branding.size === "large"
+      : botConfig.button_size === "large"
       ? "70px"
       : "60px";
   const chatButtonFontSize =
-    botConfig.branding.size === "small"
+    botConfig.button_size === "small"
       ? "16px"
-      : botConfig.branding.size === "large"
+      : botConfig.button_size === "large"
       ? "24px"
       : "20px";
 
@@ -250,7 +254,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
       <div className="max-w-md mx-auto relative">
         {/* Update Flash Effect Overlay */}
         <div
-          key={`${botConfig.color}-${botConfig.name}-${botConfig.branding.position}-${botConfig.branding.size}`}
+          key={`${botConfig.color}-${botConfig.name}-${botConfig.widget_position}-${botConfig.button_size}`}
           className="absolute inset-0 bg-brand-primary/10 rounded-2xl opacity-0 pointer-events-none z-50"
         ></div>
 
@@ -272,8 +276,10 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
               >
                 {/* Bot Avatar */}
                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-white/30">
-                  <img
-                    src=""
+                  <Image
+                    src="/logo.png"
+                    height={64}
+                    width={64}
                     alt="آیوا"
                     className="w-8 h-8 object-cover rounded-full"
                   />
@@ -308,8 +314,10 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                         className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm mb-1 overflow-hidden"
                         style={{ backgroundColor: `${botConfig.color}20` }}
                       >
-                        <img
-                          src=""
+                        <Image
+                          src="/logo.png"
+                          height={64}
+                          width={64}
                           alt="آیوا"
                           className="w-6 h-6 object-cover"
                         />
@@ -375,7 +383,13 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                       className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm mb-1 overflow-hidden"
                       style={{ backgroundColor: `${botConfig.color}20` }}
                     >
-                      <img src="" alt="آیوا" className="w-6 h-6 object-cover" />
+                      <Image
+                        src="/logo.png"
+                        height={64}
+                        width={64}
+                        alt="آیوا"
+                        className="w-6 h-6 object-cover"
+                      />
                     </div>
                     <div
                       className={`bg-white border border-grey-100 px-5 py-3 shadow-sm ${
@@ -419,10 +433,13 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
               {/* Input Area */}
               <div className="p-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
                 {/* Knowledge Base Quick Actions */}
-                {botConfig.knowledge.length > 0 && currentStep >= 2 && (
+                {botConfig.llm_model.length > 0 && currentStep >= 2 && (
+                  // elham
+                  // {botConfig.knowledge.length > 0 && currentStep >= 2 && (
                   <div className="mb-3">
                     <div className="flex flex-wrap gap-2">
-                      {botConfig.knowledge.slice(0, 3).map((item) => {
+                      {/* elham */}
+                      {/* {botConfig.knowledge.slice(0, 3).map((item) => {
                         const icon =
                           item.type === "faq"
                             ? "❓"
@@ -442,11 +459,11 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                             {icon} {item.title}
                           </button>
                         );
-                      })}
+                      })} */}
 
-                      {botConfig.knowledge.length > 3 && (
+                      {Number(botConfig.answer_length) > 3 && (
                         <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
-                          +{botConfig.knowledge.length - 3} بیشتر
+                          +{Number(botConfig.answer_length) - 3} بیشتر
                         </button>
                       )}
                     </div>
@@ -454,7 +471,8 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                 )}
 
                 {/* Default Quick Actions - Only show if no knowledge base */}
-                {(botConfig.knowledge.length === 0 || currentStep < 2) && (
+                {/* {(botConfig.knowledge.length === 0 || currentStep < 2) && ( */}
+                {(Number(botConfig.answer_length) === 0 || currentStep < 2) && (
                   <div className="flex items-center gap-2 mb-3">
                     {botConfig.tone === "friendly" && (
                       <>
