@@ -20,6 +20,7 @@ interface RegisterProps {
 type RegisterStep = "signup" | "otp" | "success" | "password";
 
 export function Register({ onNavigate }: RegisterProps) {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState<RegisterStep>("signup");
   const [formData, setFormData] = useState({
     email: "",
@@ -28,8 +29,6 @@ export function Register({ onNavigate }: RegisterProps) {
   });
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
-
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [otpTimer, setOtpTimer] = useState(120); // 2 minutes
@@ -39,7 +38,6 @@ export function Register({ onNavigate }: RegisterProps) {
     password?: string;
   }>({});
 
-  // Validation functions
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -54,7 +52,6 @@ export function Register({ onNavigate }: RegisterProps) {
     return password.length >= 6;
   };
 
-  // Form input change handler
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
@@ -85,7 +82,6 @@ export function Register({ onNavigate }: RegisterProps) {
     }
   };
 
-  // register form handler
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
@@ -94,6 +90,11 @@ export function Register({ onNavigate }: RegisterProps) {
     setIsLoading(true);
 
     try {
+      const resReg = await axios.post(API_ROUTES.AUTH.REGISTER, { formData });
+      if (resReg.status !== 200) {
+        setMessage("در ثبت اطلاعات خطایی رخ داد.")
+        return
+      }
       const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
         phone: formData.phone,
       });
@@ -130,7 +131,9 @@ export function Register({ onNavigate }: RegisterProps) {
         setMessage("خطا در برقراری ارتباط با سرور. دوباره تلاش کنید." + msg);
       } else if (err.request) {
         toast.error("پاسخی از سرور دریافت نشد. اینترنت خود را بررسی کنید.");
+        setMessage("خطا در برقراری ارتباط با سرور. دوباره تلاش کنید." );
       } else {
+        setMessage("خطا در برقراری ارتباط با سرور. دوباره تلاش کنید." );
         toast.error("خطای ناشناخته‌ای رخ داد. دوباره تلاش کنید.");
       }
     } finally {
@@ -138,7 +141,6 @@ export function Register({ onNavigate }: RegisterProps) {
     }
   };
 
-  // OTP input handler
   const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) return;
 
@@ -153,7 +155,6 @@ export function Register({ onNavigate }: RegisterProps) {
     }
   };
 
-  // Handle keyboard navigation for RTL OTP
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
     if (e.key === "Backspace" && !otp[index] && index < 5) {
       // Move to next input (right) when backspace on empty field
@@ -170,7 +171,6 @@ export function Register({ onNavigate }: RegisterProps) {
     }
   };
 
-  // OTP step handler
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -200,7 +200,6 @@ export function Register({ onNavigate }: RegisterProps) {
     router.push("/dashboard");
   };
 
-  // Resend OTP handler
   const handleResendOtp = async () => {
     setOtpTimer(120);
     setOtp(["", "", "", "", "", ""]);

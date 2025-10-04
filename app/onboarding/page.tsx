@@ -1,6 +1,11 @@
 "use client";
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { Card } from "@/components/card";
+import { Button } from "@/components/button";
+import { useAuth } from "@/providers/AuthProvider";
+import { useRouter } from "next/navigation";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import { WizardStep1 } from "./steps/step1";
 import { WizardStep2 } from "./steps/step2";
 import { WizardStep3 } from "./steps/step3";
@@ -9,11 +14,6 @@ import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
 import { BotConfig, PageType } from "@/types/common";
-import { Button } from "@/components/button";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/providers/AuthProvider";
-import axios from "axios";
-import { API_ROUTES } from "@/constants/apiRoutes";
 
 interface OnboardingWizardProps {
   onNavigate: (page: PageType) => void;
@@ -47,11 +47,14 @@ export default function OnboardingWizard({
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
+  const { title, subtitle, steps } = onboardingData;
+  const totalSteps = steps.length;
+  // console.log("user",user)
 
-  console.log("user",user)
   useEffect(() => {
     if (!user) {
-      router.push("/auth/login"); 
+      console.log("onboarding not user")
+      router.push("/auth/login");
     }
   }, [user]);
 
@@ -69,23 +72,6 @@ export default function OnboardingWizard({
     }
   }, []);
 
-  const saveBotConfig = async () => {
-    setIsSaving(true);
-    try {
-      console.log("botConfig", botConfig);
-      const res = axios.post(API_ROUTES.BOTS.CREATE, botConfig, {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      console.log("reponse",res)
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   // Save data to localStorage whenever botConfig or currentStep changes
   useEffect(() => {
     const dataToSave = {
@@ -96,8 +82,22 @@ export default function OnboardingWizard({
     localStorage.setItem("aiva-onboarding-data", JSON.stringify(dataToSave));
   }, [botConfig, currentStep]);
 
-  const { title, subtitle, steps } = onboardingData;
-  const totalSteps = steps.length;
+  const saveBotConfig = async () => {
+    setIsSaving(true);
+    try {
+      console.log("botConfig", botConfig);
+      const res = axios.post(API_ROUTES.BOTS.CREATE, botConfig, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      console.log("reponse", res);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const updateBotConfig = (updates: Partial<BotConfig>) => {
     setBotConfig((prev) => ({
@@ -119,7 +119,6 @@ export default function OnboardingWizard({
       router.push("/dashboard");
     }
   };
- 
 
   const prevStep = () => {
     if (currentStep > 1) {
@@ -130,7 +129,6 @@ export default function OnboardingWizard({
   const goToStep = (step: number) => {
     setCurrentStep(step);
   };
-  if (!user) return <p>در حال بررسی ورود...</p>;
 
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -158,6 +156,8 @@ export default function OnboardingWizard({
         );
     }
   };
+
+  if (!user) return <p>در حال بررسی ورود...</p>;
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app" dir="rtl">

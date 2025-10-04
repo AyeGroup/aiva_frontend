@@ -1,10 +1,11 @@
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { onboardingData } from "../onboarding.data";
+import { Card } from "@/components/card";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
-import { Card } from "@/components/card";
+import { BotConfig } from "@/types/common";
 import { ColorWheel } from "@/components/color-wheel";
+import { onboardingData } from "../onboarding.data";
+import { useState, useEffect } from "react";
 import {
   StepBigStar,
   StepChatButton,
@@ -16,7 +17,6 @@ import {
   StepUpload,
   StepUser,
 } from "@/public/icons/AppIcons";
-import { BotConfig } from "@/types/common";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -33,6 +33,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
   }, [botConfig.tone]);
 
   const handleToneChange = (toneId: string) => {
+    console.log("tone", toneId);
     setSelectedTone(toneId);
     updateConfig({ tone: toneId });
   };
@@ -127,35 +128,39 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
 
           {/* Tone Selection */}
           <div className="grid grid-cols-2 gap-3">
-            {onboardingData.tones.map((tone) => (
-              <Card
+            {onboardingData.tones.map((tone: any) => (
+              <div
                 key={tone.id}
-                className={`
-                  p-3 cursor-pointer border-2
-                  ${
-                    selectedTone === tone.id
-                      ? "border-brand-primary bg-brand-primary/5 shadow-md"
-                      : "border-border-soft hover:border-brand-primary/30"
-                  }
-                `}
-                onClick={() => handleToneChange(tone.id)}
+                className={`p-3 cursor-pointer border-2 rounded-lg transition
+            ${
+              selectedTone === tone.id
+                ? "border-brand-primary bg-brand-primary/5 shadow-md"
+                : "border-border-soft hover:border-brand-primary/30"
+            }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  handleToneChange(String(tone.id));
+                }}
               >
                 <div className="flex items-start gap-2" dir="rtl">
+                  {/* دایره رادیو */}
                   <div
                     className={`
-                    w-4 h-4 rounded-full border-2 flex items-center justify-center mt-0.5
-                    ${
-                      selectedTone === tone.id
-                        ? "border-brand-primary bg-brand-primary"
-                        : "border-grey-300"
-                    }
-                  `}
+                w-4 h-4 rounded-full border-2 flex items-center justify-center mt-0.5
+                ${
+                  selectedTone === tone.id
+                    ? "border-brand-primary bg-brand-primary"
+                    : "border-grey-300"
+                }
+              `}
                   >
                     {selectedTone === tone.id && (
                       <div className="w-2 h-2 bg-white rounded-full" />
                     )}
                   </div>
 
+                  {/* متن */}
                   <div className="flex-1 min-w-0 text-right">
                     <h4 className="text-grey-900 text-sm mb-1 font-bold">
                       {tone.name}
@@ -170,7 +175,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                     </div>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
 
@@ -283,7 +288,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
               </label>
               <div className="grid grid-cols-1 gap-2">
                 {onboardingData.sizeOptions.map((size) => (
-                  <Card
+                  <div
                     key={size.id}
                     className={`
                       p-3 cursor-pointer border-2
@@ -348,7 +353,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                         </div>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             </div>
@@ -564,9 +569,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 <textarea
                   id="fallbackMessage"
                   value={botConfig.k}
-                  onChange={(e) =>
-                    updateConfig({ k: e.target.value })
-                  }
+                  onChange={(e) => updateConfig({ k: e.target.value })}
                   placeholder="متأسفانه نمی‌تونم پاسخ این سؤال رو بدم. لطفاً با پشتیبانی تماس بگیرید."
                   rows={3}
                   className="w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary resize-none"

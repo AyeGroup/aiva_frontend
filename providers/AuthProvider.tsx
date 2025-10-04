@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (token && savedUser) {
       setUser(JSON.parse(savedUser));
     }
+    console.log("AuthContext check user");
   }, []);
 
   const fetchProfile = async () => {
