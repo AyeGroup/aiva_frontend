@@ -1,0 +1,139 @@
+/* Login Page Styles - ALL ANIMATIONS DISABLED */
+
+.login-page {
+  position: relative;
+  overflow-x: hidden;
+  direction: rtl;
+}
+
+/* NO ANIMATIONS for ALL elements */
+.login-page *,
+.login-page *::before,
+.login-page *::after {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.login-page button:hover,
+.login-page input:focus,
+.login-page input:hover {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* ALL ANIMATIONS REMOVED */
+
+/* Social buttons - no animations */
+.login-page .grid button {
+  position: relative;
+  overflow: hidden;
+}
+
+.login-page .grid button::before {
+  display: none !important;
+}
+
+/* Card - no animations */
+.login-page .bg-white {
+  transition: none !important;
+}
+
+.login-page .bg-white:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading - no spin animation */
+.animate-spin {
+  animation: none !important;
+}
+
+.login-page .absolute:nth-child(1) {
+  animation: float 6s ease-in-out infinite;
+}
+
+.login-page .absolute:nth-child(2) {
+  animation: float 8s ease-in-out infinite 1s;
+}
+
+.login-page .absolute:nth-child(3) {
+  animation: float 7s ease-in-out infinite 2s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .login-page {
+    padding: 1rem;
+  }
+
+  .login-page .max-w-md {
+    max-width: 100%;
+  }
+
+  .login-page .p-8 {
+    padding: 1.5rem;
+  }
+
+  .login-page .absolute.w-80 {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page .grid-cols-3 {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .login-page .flex.justify-between {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Custom scrollbar for the page */
+.login-page::-webkit-scrollbar {
+  width: 6px;
+}
+
+.login-page::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.login-page::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.login-page::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .login-page {
+    color-scheme: light;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .login-page input {
+    border-width: 2px;
+  }
+
+  .login-page button {
+    border-width: 2px;
+    border-color: currentColor;
+  }
+}
+
+/* All motion disabled globally */
+.login-page *,
+.login-page *::before,
+.login-page *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
