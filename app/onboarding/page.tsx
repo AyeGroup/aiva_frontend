@@ -1,8 +1,9 @@
 "use client";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
 import { Button } from "@/components/button";
+import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { BotConfig } from "@/types/common";
@@ -14,21 +15,24 @@ import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
-import { Header } from "@/components/header/header";
-import PageLoader from "@/components/pageLoader";
+import { useState, useEffect } from "react";
+import { Alert } from "@/components/ui/alert";
 
 export default function OnboardingWizard() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
+  const [uuid, setUuid] = useState("");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [botConfig, setBotConfig] = useState<BotConfig>({
+    uuid: "",
     name: "",
     description: "",
     guidelines: "",
-    language: "",
-    tone: "",
+    language: "persian",
+    tone: "دوستانه",
     color: "",
-    button_size: "",
-    widget_position: "",
+    button_size: "small",
+    widget_position: "bottom_right",
     answer_length: "",
     support_phone: "",
     use_emoji: "",
@@ -39,27 +43,71 @@ export default function OnboardingWizard() {
     llm_api_key: "",
     primary_color: "",
     accent_color: "",
-    logo: "",
   });
   const [isSaving, setIsSaving] = useState(false);
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const totalSteps = steps.length;
-  // console.log("onboarding user: ", user);
 
   // Load saved data from localStorage on component mount
   useEffect(() => {
-    const savedData = localStorage.getItem("aiva-onboarding-data");
-    if (savedData) {
+    const loadOnboardingData = async () => {
       try {
+        const savedData = localStorage.getItem("aiva-onboarding-data");
+
+        // If no saved data, do nothing
+        if (!savedData) return;
+
         const parsedData = JSON.parse(savedData);
-        setBotConfig(parsedData.botConfig || botConfig);
-        setCurrentStep(parsedData.currentStep || 1);
+
+        // Always set UUID from saved data if available
+        if (parsedData.botConfig?.uuid) {
+          setUuid(parsedData.botConfig.uuid);
+        }
+
+        // If we have a UUID, fetch from API, otherwise use local storage
+        if (parsedData.botConfig?.uuid) {
+          try {
+            const response = await axios.get(API_ROUTES.BOTS.GET, {
+              withCredentials: true,
+              headers: {
+                Authorization: `Bearer ${user?.token}`,
+              },
+            });
+
+            if (
+              response.data.success === true &&
+              (!response.data.data || response.data.data.length === 0)
+            ) {
+              console.log("BOTS data", response.data.data?.length);
+              setBotConfig(response.data.botConfig || parsedData.botConfig);
+              setCurrentStep(
+                response.data.currentStep || parsedData.currentStep || 1
+              );
+            } else {
+              // If API has data, use local storage as fallback
+              setBotConfig(parsedData.botConfig || botConfig);
+              setCurrentStep(parsedData.currentStep || 1);
+            }
+          } catch (apiError) {
+            console.warn("API fetch failed, using local data:", apiError);
+            // Fallback to local storage if API call fails
+            setBotConfig(parsedData.botConfig || botConfig);
+            setCurrentStep(parsedData.currentStep || 1);
+          }
+        } else {
+          // No UUID, use local storage data
+          setBotConfig(parsedData.botConfig || botConfig);
+          setCurrentStep(parsedData.currentStep || 1);
+        }
       } catch (error) {
         console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
       }
-    }
-  }, []);
+    };
+
+    loadOnboardingData();
+  }, [user?.token]); // Added dependency
 
   // Save data to localStorage whenever botConfig or currentStep changes
   useEffect(() => {
@@ -77,16 +125,59 @@ export default function OnboardingWizard() {
     }
   }, [user, loading, router]);
 
+  const validateFields = () => {
+    console.log("call validateFields ");
+
+    const newErrors: { [key: string]: string } = {};
+    if (!botConfig.name?.trim()) newErrors.name = "نام دستیار الزامی است";
+    if (!botConfig.language) newErrors.language = "زبان الزامی است";
+    if (!botConfig.tone) newErrors.tone = "شخصیت الزامی است";
+    if (!botConfig.primary_color)
+      newErrors.primary_color = "رنگ اصلی الزامی است";
+    return newErrors;
+  };
+
   const saveBotConfig = async () => {
+    const fieldErrors = validateFields();
+    console.log("fieldErrors", fieldErrors);
+    console.log("logofile", logoFile);
+    setErrors(fieldErrors);
+
+    if (Object.keys(fieldErrors).length > 0) {
+      // Alert("اطلاعات را کامل کنید ");
+      return;
+    }
+
     setIsSaving(true);
     try {
       console.log("botConfig", botConfig);
-      const res = axios.post(API_ROUTES.BOTS.CREATE, botConfig, {
+      const formData = new FormData();
+      formData.append("name", botConfig.name);
+      formData.append("language", botConfig.language);
+      formData.append("tone", botConfig.tone);
+      formData.append("primary_color", botConfig.primary_color);
+      formData.append("accent_color", botConfig.accent_color);
+      formData.append("button_size", botConfig.button_size);
+      // formData.append("widget_position", botConfig.widget_position);
+      // formData.append("logo", botConfig.logo);
+      if (logoFile) {
+        formData.append("logo", logoFile); // 📂 فایل لوگو اینجا اضافه می‌شود
+      }
+      const res = await axios.post(API_ROUTES.BOTS.SAVE, formData, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       });
-      console.log("reponse", res);
+
+      console.log("bot save:", res.data);
+      if (res.data.success) {
+        setUuid(res.data.data.uuid);
+        console.log("uuid", res.data.data.uuid);
+        return true;
+      } else {
+        setUuid("");
+        return false;
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -102,9 +193,11 @@ export default function OnboardingWizard() {
   };
 
   const nextStep = async () => {
-    // قبل از رفتن به مرحله بعد، ذخیره روی بک‌اند
-    await saveBotConfig();
+    console.log("call nextStep ");
 
+    const isSaved = await saveBotConfig();
+    console.log("Bot saved:", isSaved);
+    if (!isSaved) return;
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -129,7 +222,13 @@ export default function OnboardingWizard() {
     switch (currentStep) {
       case 1:
         return (
-          <WizardStep1 botConfig={botConfig} updateConfig={updateBotConfig} />
+          <WizardStep1
+            botConfig={botConfig}
+            updateConfig={updateBotConfig}
+            errors={errors}
+            logoFile={logoFile}
+            setLogoFile={setLogoFile}
+          />
         );
       case 2:
         return (
@@ -148,7 +247,12 @@ export default function OnboardingWizard() {
       // return <WizardStep5 botConfig={botConfig} onNavigate={onNavigate} />;
       default:
         return (
-          <WizardStep1 botConfig={botConfig} updateConfig={updateBotConfig} />
+          <WizardStep1
+            botConfig={botConfig}
+            updateConfig={updateBotConfig}
+            logoFile={logoFile}
+            setLogoFile={setLogoFile}
+          />
         );
     }
   };
@@ -159,7 +263,7 @@ export default function OnboardingWizard() {
         <PageLoader />
       </div>
     );
-  if (!user) return null;  
+  if (!user) return null;
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app" dir="rtl">

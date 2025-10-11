@@ -10,13 +10,19 @@ interface User {
   id: number;
   name: string;
   email: string;
-  [key: string]: any;
+  phone: string;
+  // [key: string]: any;
+  token: string;
 }
+
+type LoginResponse =
+  | { success: true; user: any }
+  | { success: false; status: number | null; message: string };
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (data: any) => Promise<void>;
+  login: (identity: string, password: string) => Promise<LoginResponse>;
   logout: () => void;
   refreshAccessToken: () => Promise<void>;
 }
@@ -31,34 +37,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // setup axios defaults
   axios.defaults.withCredentials = true;
 
-  // 🔹 Fetch user info when app loads
+  // Fetch user info when app loads
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     const savedUser = localStorage.getItem("user");
     if (token && savedUser) {
       setUser(JSON.parse(savedUser));
     }
+    console.log("AuthContext check user");
+
     setLoading(false);
   }, []);
 
-  // useEffect(() => {
-  //   const checkAuth = async () => {
-  //     try {
-  //       const response = await axios.get(API_ROUTES.auth_me, {
-  //         withCredentials: true,
-  //       });
-  //       setUser(response.data.user);
-  //     } catch (err) {
-  //       console.warn("User not authenticated, trying refresh...");
-  //       await refreshAccessToken();
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   checkAuth();
-  // }, []);
-
-  // 🔹 Refresh token if access token expired
+  //  Refresh token if access token expired
   const refreshAccessToken = async () => {
     try {
       const res = await axios.post(
@@ -80,21 +71,80 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // 🔹 Login handler
-  const login = async (data: any) => {
-    const response = await axios.post(API_ROUTES.AUTH.LOGIN, data, {
-      withCredentials: true,
-    });
-    setUser(response.data.user);
-    router.push("/dashboard");
+  //  Login handler
+  const login = async (
+    identity: string,
+    password: string
+  ): Promise<LoginResponse> => {
+    try {
+      // console.log("login api path: ", API_ROUTES.AUTH.LOGIN);
+      const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
+        identity,
+        password,
+      });
+      // console.log("sara  : ", res.data.data);
+
+      // const { access_token, refresh_token } = res.data;
+
+      localStorage.setItem("access_token", res.data.data.access_token);
+      localStorage.setItem("refresh_token", res.data.data.refresh_token);
+      const user: User = {
+        id: res.data.data.id,
+        name: "",
+        email: res.data.data.email,
+        phone: res.data.data.phone,
+        token: res.data.data.access_token,
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
+
+      setUser(user);
+
+      return { success: true, user };
+    } catch (err: any) {
+      console.log("err: ", err);
+
+      if (err.response) {
+        console.log("login err response: ", err.response);
+        if (err.response.status === 401) {
+          return {
+            success: false,
+            status: 401,
+            message: "اطلاعات ورود نادرست است",
+          };
+        }
+        if (err.response.status === 403) {
+          return {
+            success: false,
+            status: 403,
+            message: "لازم است شماره موبایل خود را تایید کنید",
+          };
+        }
+
+        return {
+          success: false,
+          status: err.response.status,
+          message: err.response.data?.message || "خطای ناشناخته از سرور",
+        };
+      } else {
+        return {
+          success: false,
+          status: null,
+          message: err.message || "خطای شبکه",
+        };
+      }
+    }
   };
 
-  // 🔹 Logout handler
+  //  Logout handler
   const logout = async () => {
     try {
       await axios.post(API_ROUTES.AUTH.LOGOUT, {}, { withCredentials: true });
     } finally {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
       setUser(null);
+
       router.push("/auth/login");
     }
   };

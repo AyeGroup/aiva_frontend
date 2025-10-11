@@ -7,6 +7,16 @@ export interface BaseComponentProps {
   id?: string;
 }
 
+export const colorPalette = [
+  { name: "صورتی", value: "#ec4899" },
+  { name: "بنفش", value: "#8b5cf6" },
+  { name: "سبز", value: "#22c55e" },
+  { name: "آبی", value: "#3b82f6" },
+  { name: "عنبری", value: "#f5a623" },
+  { name: "فیروزه‌ای", value: "#4ca7a5" },
+  { name: "کورال", value: "#eb6e5b" },
+];
+
 export type PageType =
   | "landing"
   | "register"
@@ -21,53 +31,56 @@ export type PageType =
   // | "otp-verification"
   | "components";
 
-  export interface BotConfig {
-    name: string;
-    description: string;
-    guidelines: string;
-    language: string;
-    tone: string;
-    color: string;
-    button_size: string;
-    widget_position: string;
-    answer_length: string;
-    support_phone: string;
-    use_emoji: string;
-    greetings: string;
-    k: string;
-    reranker_enabled: string;
-    llm_model: string;
-    llm_api_key: string;
-    primary_color: string;
-    accent_color: string;
-    logo: string;
-  }
+export interface BotConfig {
+  uuid: string;
+  name: string;
+  description: string;
+  guidelines: string;
+  language: string;
+  tone: string;
+  color: string;
+  button_size: string;
+  widget_position: string;
+  answer_length: string;
+  support_phone: string;
+  use_emoji: string;
+  greetings: string;
+  k: string;
+  reranker_enabled: string;
+  llm_model: string;
+  llm_api_key: string;
+  primary_color: string;
+  accent_color: string;
+  knowledge: Array<{
+    id: string;
+    type: "faq" | "document" | "url" | "text";
+    title: string;
+    content?: string;
+    status?: string;
+    url?: string;
+  }>;
+  // logo: string;
+}
 
-    // ----------
-    // welcomeMessage: string;
-    // fallbackMessage: string;
-    // knowledge: Array<{
-    //   id: string;
-    //   type: "faq" | "document" | "url" | "text";
-    //   title: string;
-    //   content?: string;
-    //   url?: string;
-    // }>;
-    // branding: {
-    //   logo?: string;
-    //   position: "bottom-right" | "bottom-left";
-    //   size: "small" | "medium" | "large";
-    // };
-    // behaviors?: {
-    //   responseStyle: "concise" | "detailed" | "helpful";
-    //   maxResponseLength: number;
-    //   useEmojis: boolean;
-    //   escalationTriggers: string[];
-    //   autoGreeting: boolean;
-    //   contextMemory: boolean;
-    //   privacyMode: boolean;
-    //   responseDelay: number;
-    // };
+// ----------
+// welcomeMessage: string;
+// fallbackMessage: string;
+//
+// branding: {
+//   logo?: string;
+//   position: "bottom-right" | "bottom-left";
+//   size: "small" | "medium" | "large";
+// };
+// behaviors?: {
+//   responseStyle: "concise" | "detailed" | "helpful";
+//   maxResponseLength: number;
+//   useEmojis: boolean;
+//   escalationTriggers: string[];
+//   autoGreeting: boolean;
+//   contextMemory: boolean;
+//   privacyMode: boolean;
+//   responseDelay: number;
+// };
 // تایپ‌های دکمه
 export interface ButtonProps extends BaseComponentProps {
   variant?: "primary" | "secondary" | "tertiary";

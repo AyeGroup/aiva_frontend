@@ -197,10 +197,10 @@ export default function Register() {
       toast.error("لطفاً کد ۶ رقمی را کامل وارد کنید");
       return;
     }
-    toast.success("حساب کاربری شما با موفقیت ایجاد شد");
-    setCurrentStep("success");
-    router.push("/dashboard");
-    return;
+    // toast.success("حساب کاربری شما با موفقیت ایجاد شد");
+    // setCurrentStep("success");
+    // router.push("/dashboard");
+    // return;
 
     try {
       setIsLoading(true);

@@ -52,7 +52,7 @@ interface Chatbot {
   fallbackMessage: string;
   branding: {
     logo?: string;
-    position: "bottom-right" | "bottom-left";
+    position: "bottom_right" | "bottom_left";
     size: "small" | "medium" | "large";
   };
   knowledgeBase: KnowledgeSource[];
@@ -83,7 +83,7 @@ export default function ChatbotManagement( ) {
       fallbackMessage:
         "متأسفانه نمی‌تونم پاسخ این سؤال رو بدم. لطفاً با پشتیبانی تماس بگیرید.",
       branding: {
-        position: "bottom-right",
+        position: "bottom_right",
         size: "medium",
       },
       knowledgeBase: [
@@ -118,7 +118,7 @@ export default function ChatbotManagement( ) {
       welcomeMessage: "با سلام. چگونه می‌توانم به شما کمک کنم؟",
       fallbackMessage: "برای اطلاعات بیشتر با فروش تماس بگیرید.",
       branding: {
-        position: "bottom-right",
+        position: "bottom_right",
         size: "large",
       },
       knowledgeBase: [],
@@ -145,7 +145,7 @@ export default function ChatbotManagement( ) {
       welcomeMessage: "سلاام! چه خبر؟ چی می‌تونم برات بکنم؟",
       fallbackMessage: "ببخشید، نمی‌دونم! بزودی یاد می‌گیرم.",
       branding: {
-        position: "bottom-left",
+        position: "bottom_left",
         size: "small",
       },
       knowledgeBase: [],
@@ -172,7 +172,7 @@ export default function ChatbotManagement( ) {
         "با توجه به سؤال شما، پاسخ دقیق این موضوع عبارت است از...",
       fallbackMessage: "لطفاً سؤال خود را دقیق‌تر مطرح کنید.",
       branding: {
-        position: "bottom-right",
+        position: "bottom_right",
         size: "medium",
       },
       knowledgeBase: [],
@@ -860,7 +860,7 @@ export default function ChatbotManagement( ) {
                                   <div
                                     className={`absolute rounded-full shadow-lg flex items-center justify-center text-white font-medium ${
                                       editForm.branding?.position ===
-                                      "bottom-right"
+                                      "bottom_right"
                                         ? "bottom-4 left-4"
                                         : "bottom-4 right-4"
                                     }`}

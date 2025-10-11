@@ -1,9 +1,6 @@
 import { useState } from "react";
-// import { BotConfig } from "../page";
-import { onboardingData } from "../onboarding.data";
-import { Card } from "@/components/card";
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
+// import { Button } from "../../_components/Button/button";
+// import { Input } from "../../_components/Input/input";
 import {
   Plus,
   FileText,
@@ -12,8 +9,16 @@ import {
   Type,
   Trash2,
   Upload,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  Edit2,
 } from "lucide-react";
 import { BotConfig } from "@/types/common";
+import { Card } from "@/components/card";
+import { onboardingData } from "../onboarding.data";
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -26,11 +31,15 @@ interface KnowledgeItem {
   title: string;
   content?: string;
   url?: string;
+  status: "processing" | "applied" | "error";
+  createdAt: string;
 }
 
 export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const [selectedType, setSelectedType] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
 
   const getIcon = (type: string) => {
@@ -48,11 +57,49 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     }
   };
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "processing":
+        return Clock;
+      case "applied":
+        return CheckCircle;
+      case "error":
+        return AlertTriangle;
+      default:
+        return Clock;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "processing":
+        return "bg-brand-amber text-white";
+      case "applied":
+        return "bg-success text-white";
+      case "error":
+        return "bg-danger text-white";
+      default:
+        return "bg-grey-400 text-white";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "processing":
+        return "در حال بررسی";
+      case "applied":
+        return "اعمال شده";
+      case "error":
+        return "خطا";
+      default:
+        return "نامشخص";
+    }
+  };
+
   const startAdding = (type: string) => {
     setSelectedType(type);
     setIsAdding(true);
-    // setNewItem({ type: type as any, title: '', content: '' });
-    //elham
+    setNewItem({ type: type as any, title: "", content: "" });
   };
 
   const cancelAdding = () => {
@@ -61,30 +108,90 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     setNewItem({});
   };
 
+  const startEditing = (item: KnowledgeItem) => {
+    setIsEditing(true);
+    setEditingItem(item);
+    setSelectedType(item.type);
+    setNewItem({
+      title: item.title,
+      content: item.content,
+      url: item.url,
+      type: item.type,
+    });
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+    setEditingItem(null);
+    setSelectedType("");
+    setNewItem({});
+  };
+
   const saveItem = () => {
     if (newItem.title && (newItem.content || newItem.url)) {
-      const item: KnowledgeItem = {
-        id: Date.now().toString(),
-        type: newItem.type as any,
-        title: newItem.title,
-        content: newItem.content,
-        url: newItem.url,
-      };
+      if (isEditing && editingItem) {
+        // ویرایش آیتم موجود
+        const updatedItem: KnowledgeItem = {
+          ...editingItem,
+          title: newItem.title,
+          content: newItem.content,
+          url: newItem.url,
+          status: "processing",
+        };
 
-      // updateConfig({
-      //   knowledge: [...botConfig.knowledge, item],
-      // });
-      // elham
+        const updatedKnowledge = botConfig.knowledge.map((k) =>
+          k.id === editingItem.id ? updatedItem : k
+        );
 
-      cancelAdding();
+        updateConfig({
+          knowledge: updatedKnowledge,
+        });
+
+        // شبیه‌سازی پردازش برای آیتم ویرایش شده
+        setTimeout(() => {
+          updateConfig({
+            knowledge: updatedKnowledge.map((k) =>
+              k.id === editingItem.id ? { ...k, status: "applied" as const } : k
+            ),
+          });
+        }, 3000);
+
+        cancelEditing();
+      } else {
+        // اضافه کردن آیتم جدید
+        const item: KnowledgeItem = {
+          id: Date.now().toString(),
+          type: newItem.type as any,
+          title: newItem.title,
+          content: newItem.content,
+          url: newItem.url,
+          status: "processing",
+          createdAt: new Date().toISOString(),
+        };
+
+        const newKnowledge = [...botConfig.knowledge, item];
+        updateConfig({
+          knowledge: newKnowledge,
+        });
+
+        // شبیه‌سازی پردازش: بعد از 3 ثانیه وضعیت را به applied تغییر دهیم
+        setTimeout(() => {
+          updateConfig({
+            knowledge: newKnowledge.map((k) =>
+              k.id === item.id ? { ...k, status: "applied" as const } : k
+            ),
+          });
+        }, 3000);
+
+        cancelAdding();
+      }
     }
   };
 
   const removeItem = (id: string) => {
-    // updateConfig({
-    //   knowledge: botConfig.knowledge.filter((item) => item.id !== id),
-    // });
-    // elham
+    updateConfig({
+      knowledge: botConfig.knowledge.filter((item) => item.id !== id),
+    });
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,10 +231,62 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           </p>
         </div>
       </div>
+
       {/* Sample Questions Section */}
       <div className="space-y-4 mb-8"></div>
+
+      {/* Important Notice */}
+      <div className="bg-gradient-to-br from-brand-amber/10 to-sharp-amber/10 border-2 border-brand-amber/30 rounded-2xl mb-[32px] relative overflow-hidden mt-[0px] mr-[0px] ml-[0px] px-[24px] py-[12px]">
+        {/* Background Pattern */}
+
+        <div className="relative z-10">
+          <div className="flex items-start gap-4 m-[0px]">
+            <div className="w-12 h-12 bg-brand-amber rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <svg
+                className="w-6 h-6 text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15c-.553 0-1-.448-1-1s.447-1 1-1 1 .448 1 1-.447 1-1 1zm1-3h-2V7h2v7z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <div className="bg-white/70 backdrop-blur-sm rounded-lg border border-brand-amber/20 text-[15px] px-[16px] py-[8px]">
+                <p className="text-[rgba(245,158,11,1)] text-right leading-relaxed text-[14px]">
+                  <span className="font-medium text-brand-amber text-[14px]">
+                    پاسخ‌هایی که چت‌بات به کاربر می‌دهد برمبنای دانشی است که شما
+                    اینجا وارد می‌کنید
+                  </span>
+                  ، لذا در اضافه کردن منابع دانشی دقت زیادی داشته باشید.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Processing Time Notice */}
+      <div className="bg-gradient-to-br from-brand-primary/10 to-bg-soft-mint border-2 border-brand-primary/30 rounded-2xl mb-[32px] relative overflow-hidden py-[8px] px-[24px] py-[12px]">
+        <div className="relative z-10">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <Clock className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <div className="bg-white/70 backdrop-blur-sm rounded-lg border border-brand-primary/20 px-[16px] py-[0px] py-[8px]">
+                <p className="text-[rgba(101,188,182,1)] text-right leading-relaxed text-[14px]">
+                  اعمال دانش جدید مقداری زمان نیاز دارد. پس از اضافه کردن هر
+                  محتوا، دستیار بلافاصله قادر به پاسخگویی نخواهد بود و باید
+                  منتظر تکمیل فرآیند پردازش باشید.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Knowledge Type Selection */}
-      {!isAdding && (
+      {!isAdding && !isEditing && (
         <div className="bg-bg-soft-mint border-2 border-brand-primary/20 rounded-xl p-6 mb-8">
           <h3 className="text-grey-900 mb-6 flex items-center gap-3">
             <div className="w-6 h-6 bg-brand-primary rounded-full flex items-center justify-center">
@@ -152,9 +311,9 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                         <IconComponent className="w-7 h-7 text-brand-primary" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-grey-900 mb-1">آدرس وب</h3>
-                        <p className="text-grey-600 text-body-small">
-                          صفحات سایت یا منابع آنلاین
+                        <h3 className="text-grey-900 mb-1">{type.title}</h3>
+                        <p className="text-grey-600 text-body-small text-[14px]">
+                          {type.description}
                         </p>
                       </div>
                     </div>
@@ -187,20 +346,23 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           </div>
         </div>
       )}
-      {/* Add New Item Form */}
-      {isAdding && (
+
+      {/* Add/Edit Item Form */}
+      {(isAdding || isEditing) && (
         <Card className="p-6 border-2 border-brand-primary/30 bg-bg-soft-mint shadow-lg">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-grey-900">
-              {
-                onboardingData.knowledgeTypes.find((t) => t.id === selectedType)
-                  ?.title
-              }
+              {isEditing
+                ? "ویرایش محتوا"
+                : onboardingData.knowledgeTypes.find(
+                    (t) => t.id === selectedType
+                  )?.title}
             </h3>
             <Button
-              // variant="tertiary"
+              variant="tertiary"
               // size="small"
-              onClick={cancelAdding}
+              size="sm"
+              onClick={isEditing ? cancelEditing : cancelAdding}
             >
               انصراف
             </Button>
@@ -337,7 +499,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                   />
                   <Button
                     variant="secondary"
-                    // size="small"
+                    size="sm"
                     onClick={() =>
                       document.getElementById("file-upload")?.click()
                     }
@@ -354,38 +516,75 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
           <div className="flex justify-end gap-6 mt-8 pt-6 border-t border-border-soft">
             <Button
-              // variant="tertiary"
-              onClick={cancelAdding}
+              variant="tertiary"
+              onClick={isEditing ? cancelEditing : cancelAdding}
               className="px-8 py-3 min-w-[120px]"
             >
               انصراف
             </Button>
             <Button
-              // variant="primary"
+              variant="primary"
               onClick={saveItem}
               disabled={!newItem.title || (!newItem.content && !newItem.url)}
               className="px-12 py-3 min-w-[160px] shadow-lg hover:shadow-xl"
             >
-              ذخیره سؤال
+              {isEditing ? "ذخیره تغییرات" : "ذخیره سؤال"}
             </Button>
           </div>
         </Card>
       )}
+
       {/* Existing Knowledge Items */}
-      {/* // elham knowledge:k  */}
-      {botConfig.k.length > 0 && (
+      {botConfig.knowledge.length > 0 && (
         <div className="bg-bg-soft-teal border-2 border-brand-primary/20 rounded-xl p-6 space-y-4">
-          <h3 className="text-grey-900 flex items-center gap-3">
-            <div className="w-6 h-6 bg-brand-primary rounded-full flex items-center justify-center">
-              <span className="text-white text-sm">✅</span>
+          <div className="flex items-center justify-between">
+            <h3 className="text-grey-900 flex items-center gap-3">
+              <div className="w-6 h-6 bg-brand-primary rounded-full flex items-center justify-center">
+                <span className="text-white text-sm">✅</span>
+              </div>
+              دانش اضافه شده ({botConfig.knowledge.length})
+            </h3>
+
+            {/* Status Summary */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-brand-amber"></div>
+                <span className="text-xs text-grey-600">
+                  {
+                    botConfig.knowledge.filter((k) => k.status === "processing")
+                      .length
+                  }{" "}
+                  در حال پردازش
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-success"></div>
+                <span className="text-xs text-grey-600">
+                  {
+                    botConfig.knowledge.filter((k) => k.status === "applied")
+                      .length
+                  }{" "}
+                  اعمال شده
+                </span>
+              </div>
+              {botConfig.knowledge.filter((k) => k.status === "error").length >
+                0 && (
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-full bg-danger"></div>
+                  <span className="text-xs text-grey-600">
+                    {
+                      botConfig.knowledge.filter((k) => k.status === "error")
+                        .length
+                    }{" "}
+                    خطا
+                  </span>
+                </div>
+              )}
             </div>
-            دانش اضافه شده ({botConfig.k.length})
-          </h3>
+          </div>
 
           <div className="space-y-3">
-            {/* {botConfig.k.map((item:any) => { */}
-            {/* elham */}
-            {/* {botConfig.k.map((item:any) => {
+            {botConfig.knowledge.map((item) => {
               const IconComponent = getIcon(item.type);
 
               return (
@@ -400,7 +599,24 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                       </div>
 
                       <div className="flex-1 min-w-0 text-right">
-                        <h4 className="text-grey-900 mb-1">{item.title}</h4>
+                        <div className="flex items-center justify-between gap-3 mb-2">
+                          <h4 className="text-grey-900 flex-1">{item.title}</h4>
+
+                          {/* Status Tag */}
+                          <div
+                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                              item.status || ""
+                            )}`}
+                          >
+                            {(() => {
+                              const StatusIcon = getStatusIcon(
+                                item?.status || ""
+                              );
+                              return <StatusIcon className="w-3 h-3" />;
+                            })()}
+                            <span>{getStatusText(item?.status || "")}</span>
+                          </div>
+                        </div>
 
                         {item.content && (
                           <p className="text-grey-500 text-body-small truncate">
@@ -414,26 +630,45 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                             {item.url}
                           </p>
                         )}
+
+                        {/* Created date */}
+                        <p className="text-grey-400 text-xs mt-1">
+                          اضافه شده: {new Date("").toLocaleDateString("fa-IR")}
+                          {/* {new Date(item.createdAt).toLocaleDateString("fa-IR")} */}
+                          {/* //elham */}
+                        </p>
                       </div>
                     </div>
 
-                    <Button
-                      // variant="tertiary"
-                      // size="small"
-                      onClick={() => removeItem(item.id)}
-                      className="text-danger hover:bg-danger/10 flex-shrink-0 border border-danger/20"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-1 flex-shrink-0 mr-2">
+                      <button
+                        // onClick={() => startEditing(item)}
+                        //elham
+                        title="ویرایش محتوا"
+                        className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        title="حذف محتوا"
+                        className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </Card>
               );
-            })} */}
+            })}
           </div>
         </div>
       )}
+
       {/* Empty State */}
-      {botConfig.k.length === 0 && !isAdding && (
+      {botConfig.knowledge.length === 0 && !isAdding && !isEditing && (
         <Card className="p-8 text-center border-2 border-dashed border-brand-primary/30 bg-bg-soft-mint">
           <div className="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-brand-primary/20">
             <FileText className="w-8 h-8 text-brand-primary" />
@@ -445,9 +680,10 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           </p>
         </Card>
       )}
+
       {/* Tips */}
       <Card className="p-6 bg-bg-soft-peach border-2 border-brand-secondary/30 shadow-lg">
-        <h4 className="text-grey-900 mb-3 flex items-center gap-2">
+        <h4 className="text-grey-900 mb-3 flex items-center gap-2 font-bold">
           <div className="w-6 h-6 bg-brand-secondary rounded-full flex items-center justify-center border border-brand-secondary/20">
             <span className="text-white text-sm">💡</span>
           </div>
@@ -458,13 +694,20 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             <span className="text-brand-secondary">•</span>
             هرچه اطلاعات بیشتری اضافه کنید، دستیار پاسخ‌های دقیق‌تری می‌دهد
           </li>
-          <li className="flex items-start gap-2 p-2 bg-bg-surface rounded-lg border border-brand-secondary/10">
-            <span className="text-brand-secondary">•</span>
-            سؤالات متداول مشتریان را حتماً اضافه کنید
-          </li>
+
           <li className="flex items-start gap-2 p-2 bg-bg-surface rounded-lg border border-brand-secondary/10">
             <span className="text-brand-secondary">•</span>
             می‌توانید بعد از راه‌اندازی نیز اطلاعات جدید اضافه کنید
+          </li>
+
+          <li className="flex items-start gap-2 p-2 bg-bg-surface rounded-lg border border-brand-amber/20">
+            <Clock className="w-4 h-4 text-brand-amber flex-shrink-0 mt-0.5" />
+            دانش جدید ابتدا «در حال بررسی» است و پس از پردازش «اعمال» می‌شود
+          </li>
+
+          <li className="flex items-start gap-2 p-2 bg-bg-surface rounded-lg border border-success/20">
+            <CheckCircle className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
+            تنها محتوای «اعمال شده» در پاسخ‌های دستیار استفاده می‌شود
           </li>
         </ul>
       </Card>

@@ -187,7 +187,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
               <div className="flex justify-between">
                 <span className="text-grey-600">موقعیت نمایش:</span>
                 <span className="text-grey-900 font-medium">
-                  {botConfig.widget_position === "bottom-right"
+                  {botConfig.widget_position === "bottom_right"
                     ? "پایین راست"
                     : "پایین چپ"}
                 </span>

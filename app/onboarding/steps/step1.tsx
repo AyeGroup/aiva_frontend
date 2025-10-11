@@ -1,18 +1,19 @@
+import axios from "axios";
 import Image from "next/image";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
-import { BotConfig } from "@/types/common";
-import { ColorWheel } from "@/components/color-wheel";
+import { useAuth } from "@/providers/AuthProvider";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { ColorSlider } from "@/components/ColorSlider";
 import { onboardingData } from "../onboarding.data";
-import { useState, useEffect } from "react";
+import { BotConfig, colorPalette } from "@/types/common";
+import { useState, useEffect, useRef } from "react";
 import {
   StepBigStar,
   StepChatButton,
-  StepCheck,
   StepColor,
   StepLogin,
-  StepMessage,
   StepStar,
   StepUpload,
   StepUser,
@@ -21,13 +22,32 @@ import {
 interface WizardStep1Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
+  errors?: { [key: string]: string };
+  logoFile: File | null;
+  setLogoFile: (file: File | null) => void;
 }
 
-export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
+export function WizardStep1({
+  botConfig,
+  updateConfig,
+  errors,
+  logoFile,
+  setLogoFile,
+}: WizardStep1Props) {
+  const { user, loading } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedTone, setSelectedTone] = useState(botConfig.tone);
-  const [isColorWheelOpen, setIsColorWheelOpen] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [selectedColorAccent, setSelectedColorAccent] = useState(
+    botConfig.accent_color
+  );
+  const [selectedColorPrimary, setSelectedColorPrimary] = useState(
+    botConfig.primary_color
+  );
 
   useEffect(() => {
+    console.log("botConfig",botConfig)
     setSelectedTone(botConfig.tone);
   }, [botConfig.tone]);
 
@@ -37,18 +57,77 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
     updateConfig({ tone: toneId });
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLogoFile(file);
+
+    // نمایش پیش‌نمایش تصویر
+    const reader = new FileReader();
+    reader.onloadend = () => setPreview(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileSelect1 = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // ✅ نمایش فوری پیش‌نمایش
+    const reader = new FileReader();
+    reader.onloadend = () => setPreview(reader.result as string);
+    reader.readAsDataURL(file);
+    // botConfig.logo = file;
+
+    // ✅ ارسال فایل به بک‌اند
+    try {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append("logo", file);
+
+      const res = axios.post(API_ROUTES.BOTS.SAVE, formData, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      console.log("upload logo", res);
+      // فرض می‌کنیم سرور URL فایل را در res.data.url برمی‌گرداند
+      // if (res.data?.url) {
+      //   updateConfig({ logo: res.data.url });
+      // } else {
+      //   alert("آپلود موفق نبود!");
+      // }
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert("خطا در آپلود فایل!");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handlePrimaryColor = (color: string) => {
+    setSelectedColorPrimary(color);
+    updateConfig({ primary_color: color });
+    // console.log("p color: ", color);
+  };
+
+  const handleAccentColor = (color: string) => {
+    setSelectedColorAccent(color);
+    updateConfig({ accent_color: color });
+  };
+
   return (
     <div
-      className="space-y-8 bg-bg-surface px-[20px] py-[16px] border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]"
+      className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg "
       dir="rtl"
     >
       {/* Header */}
-      <div className="flex items-start gap-4 px-[0px] py-[12px]">
+      <div className="flex items-start gap-4 px-0 py-3">
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
           <StepBigStar />
         </div>
         <div className="flex-1">
-          <h2 className="text-grey-900 mb-2 text-right text-[24px] font-bold">
+          <h2 className="text-grey-900 mb-2 text-right text-lg font-bold">
             تنظیمات اولیه دستیار
           </h2>
           <p className="text-grey-600 text-right">
@@ -58,7 +137,6 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
       </div>
 
       <div className="space-y-8">
-        {/* Basic Information Section */}
         <div className="space-y-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center">
@@ -79,7 +157,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 value={botConfig.name}
                 onChange={(e) => updateConfig({ name: e.target.value })}
                 placeholder="مثال: آیوا، ربات مشاور"
-                className="w-full"
+                className={`w-full ${errors?.name ? "!border-red-600" : ""}`}
               />
             </div>
 
@@ -92,6 +170,9 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
               <Select
                 value={botConfig.language}
                 onValueChange={(value) => updateConfig({ language: value })}
+                className={`w-full ${
+                  errors?.language ? "!border-red-600 " : ""
+                }`}
                 placeholder="زبان را انتخاب کنید"
               >
                 {onboardingData.languages.map((lang) => (
@@ -107,7 +188,6 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
             </div>
           </div>
 
-          {/* Description */}
         </div>
 
         {/* Personality Section */}
@@ -142,7 +222,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                   handleToneChange(String(tone.id));
                 }}
               >
-                <div className="flex items-start gap-2" dir="rtl">
+                <div className="flex items-start gap-2">
                   {/* دایره رادیو */}
                   <div
                     className={`
@@ -178,93 +258,155 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
             ))}
           </div>
 
-          {/* Color Selection */}
+          {/* primary Color  */}
           <div className="mt-6">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-6 h-6 bg-brand-primary/10 rounded-lg flex items-center justify-center">
                 <StepColor />
               </div>
-              <h4 className="text-grey-900 text-sm">رنگ اصلی چت‌بات</h4>
+              <h4 className="text-grey-900 text-sm font-bold">
+                رنگ‌های چت‌بات
+              </h4>
             </div>
 
-            <div className="grid grid-cols-4 gap-3">
-              {onboardingData.colors.slice(0, -1).map((color) => (
-                <button
-                  key={color.value}
-                  type="button"
-                  title={`انتخاب رنگ ${color.name}`}
-                  onClick={() => updateConfig({ color: color.value })}
-                  className={`
-                    relative w-full h-14 rounded-2xl border-3 
-                    ${
-                      botConfig.color === color.value
-                        ? "ring-4 ring-grey-900/20 border-grey-900 shadow-lg scale-105"
-                        : "border-white hover:border-grey-300 hover:scale-102 shadow-md"
-                    }
-                  `}
-                  style={{ backgroundColor: color.value }}
-                >
-                  {botConfig.color === color.value && (
-                    <>
-                      {/* Outer ring for better visibility */}
-                      <div className="absolute -inset-1 bg-grey-900 rounded-2xl opacity-20 -z-10"></div>
+            <div className="flex flex-col">
+              <div className="my-2">انتخاب از طیف رنگ:</div>
+              <div className="flex w-full  my-3 justify-between">
+                <div className="flex">
+                  <div>رنگ انتخابی</div>
+                  <div
+                    className="mx-2 size-7 rounded-full"
+                    style={{ backgroundColor: selectedColorPrimary }}
+                  ></div>
+                </div>
+                <div>
+                  {colorPalette.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => {
+                        handlePrimaryColor(color.value);
+                        setSelectedColorPrimary(color.value);
+                      }}
+                      className="  rounded-full  size-8 mx-1 border-2 border-white shadow cursor-pointer"
+                      style={{ backgroundColor: color.value }}
+                      title={color.name}
+                    >
+                      <div
+                        aria-hidden="true"
+                        className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-2 shadow "
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                      {/* Inner checkmark with better contrast */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md">
-                          <StepCheck />
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </button>
-              ))}
-
-              {/* Custom Color Picker Button */}
-              <button
-                type="button"
-                title="انتخاب رنگ کاستوم"
-                onClick={() => setIsColorWheelOpen(true)}
-                className={`
-                  relative w-full h-14 rounded-2xl border-3 overflow-hidden
-                  hover:scale-102 shadow-md
-                  ${
-                    !onboardingData.colors.some(
-                      (c) => c.value === botConfig.color
-                    )
-                      ? "ring-4 ring-brand-primary/20 border-brand-primary shadow-lg scale-105"
-                      : "border-white hover:border-grey-300"
+              <div className="w-full p-1 space-y-4">
+                <ColorSlider
+                  value={
+                    botConfig.primary_color
+                      ? botConfig.primary_color
+                      : "#0062ff"
                   }
-                `}
-                style={{
-                  background:
-                    "conic-gradient(from 0deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080, #ff0000)",
-                }}
-              >
-                {!onboardingData.colors.some(
-                  (c) => c.value === botConfig.color
-                ) ? (
-                  <>
-                    {/* Outer ring for better visibility */}
-                    <div className="absolute -inset-1 bg-brand-primary rounded-2xl opacity-20 -z-10"></div>
+                  onChange={handlePrimaryColor}
+                />
+              </div>
+              <div className="flex justify-between items-center my-4">
+                <div>کد رنگ دلخواه</div>
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    value={selectedColorPrimary}
+                    onChange={(e) => handlePrimaryColor(e.target.value)}
+                    placeholder="فرمت قابل قبول کد رنگ 6رقمی"
+                    dir="ltr"
+                    className="w-64 p-2 mx-2 border-2 rounded-2xl border-primary  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400"
+                  />
+                  <div
+                    className="relative rounded-full size-8"
+                    style={{ backgroundColor: selectedColorPrimary }}
+                  >
+                    <div
+                      aria-hidden="true"
+                      className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-full shadow"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                    {/* Inner checkmark with better contrast */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md">
-                        <svg
-                          className="w-4 h-4 text-brand-primary"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-sm rounded-2xl"></div>
-                )}
-              </button>
+          {/* accent Color  */}
+          <div className="mt-6">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-6 h-6 bg-brand-primary/10 rounded-lg flex items-center justify-center">
+                <StepColor />
+              </div>
+              <h4 className="text-grey-900 text-sm font-bold">
+                رنگ پس‌زمینه چت
+              </h4>
+            </div>
+
+            <div className="flex flex-col">
+              <div className="my-2">انتخاب از طیف رنگ:</div>
+              <div className="flex w-full  my-3 justify-between">
+                <div className="flex">
+                  <div>رنگ انتخابی</div>
+                  <div
+                    className="mx-2 size-7 rounded-full"
+                    style={{ backgroundColor: selectedColorAccent }}
+                  ></div>
+                </div>
+                <div>
+                  {colorPalette.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => {
+                        handleAccentColor(color.value);
+                        setSelectedColorAccent(color.value);
+                      }}
+                      className="  rounded-full  size-8 mx-1 border-2 border-white shadow cursor-pointer"
+                      style={{ backgroundColor: color.value }}
+                      title={color.name}
+                    >
+                      <div
+                        aria-hidden="true"
+                        className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-2 shadow "
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="w-full p-1 space-y-4">
+                <ColorSlider
+                  value={
+                    botConfig.accent_color ? botConfig.accent_color : "#333333"
+                  }
+                  onChange={handleAccentColor}
+                />
+              </div>
+              <div className="flex justify-between items-center my-4">
+                <div>کد رنگ دلخواه</div>
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    value={selectedColorAccent}
+                    onChange={(e) => handleAccentColor(e.target.value)}
+                    placeholder="فرمت قابل قبول کد رنگ 6رقمی"
+                    dir="ltr"
+                    className="w-64 p-2 mx-2 border-2 rounded-2xl border-primary  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400"
+                  />
+                  <div
+                    className="relative rounded-full size-8"
+                    style={{ backgroundColor: selectedColorAccent }}
+                  >
+                    <div
+                      aria-hidden="true"
+                      className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-full shadow"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -290,16 +432,12 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                   <div
                     key={size.id}
                     className={`
-                      p-3 cursor-pointer border-2
-                      ${
-                        botConfig.button_size === size.id
-                          ? "border-brand-primary bg-brand-primary/5 shadow-md"
-                          : "border-border-soft hover:border-brand-primary/30"
-                      }
+                      p-4 cursor-pointer border-2 rounded-3xl border-gray-200 shadow
+                      
                     `}
                     onClick={() => updateConfig({ button_size: size.id })}
                   >
-                    <div className="flex items-center gap-3" dir="rtl">
+                    <div className="flex items-center gap-3">
                       <div
                         className={`
                         w-4 h-4 rounded-full border-2 flex items-center justify-center
@@ -319,9 +457,9 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                         <h4 className="text-grey-900 text-sm font-medium">
                           {size.name}
                         </h4>
-                        <p className="text-grey-600 text-xs">
+                        {/* <p className="text-grey-600 text-xs">
                           {size.description}
-                        </p>
+                        </p> */}
                       </div>
 
                       {/* Size Preview */}
@@ -334,7 +472,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                               ? "w-10 h-10"
                               : "w-12 h-12"
                           }`}
-                          style={{ backgroundColor: botConfig.color }}
+                          style={{ backgroundColor: botConfig.primary_color }}
                         >
                           <svg
                             className={`text-white ${
@@ -365,69 +503,55 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
               </label>
               <div className="grid grid-cols-1 gap-2">
                 {onboardingData.positionOptions.map((position) => (
-                  <Card
+                  <button
                     key={position.id}
-                    className={`
-                      p-3 cursor-pointer border-2
-                      ${
-                        botConfig.widget_position === position.id
-                          ? "border-brand-primary bg-brand-primary/5 shadow-md"
-                          : "border-border-soft hover:border-brand-primary/30"
-                      }
-                    `}
                     onClick={() =>
                       updateConfig({ widget_position: position.id })
                     }
-
-                    // onClick={() =>
-                    //   updateConfig({
-                    //     branding: {
-                    //       ...botConfig.branding,
-                    //       position: position.id as
-                    //         | "bottom-right"
-                    //         | "bottom-left",
-                    //     },
-                    //   })
-                    // }
+                    className={`flex items-center gap-3 w-full text-right p-3 border-2 rounded-lg shadow-md transition
+                      ${
+                        botConfig.widget_position === position.id
+                          ? "border-brand-primary bg-brand-primary/5"
+                          : "border-grey-200 hover:border-brand-primary/40"
+                      }`}
                   >
-                    <div className="flex items-center gap-3" dir="rtl">
+                    {/* دایره انتخاب */}
+                    <div
+                      className={`w-4 h-4 flex items-center justify-center rounded-full border-2 transition
+                      ${
+                        botConfig.widget_position === position.id
+                          ? "border-brand-primary bg-brand-primary"
+                          : "border-grey-300"
+                      }`}
+                    >
+                      {botConfig.widget_position === position.id && (
+                        <div className="w-2 h-2 bg-white rounded-full" />
+                      )}
+                    </div>
+
+                    {/* توضیحات */}
+                    <div className="flex-1 text-right">
+                      <h4 className="text-grey-900 text-sm font-medium">
+                        {position.name}
+                      </h4>
+                      <p className="text-grey-600 text-xs">
+                        {position.description}
+                      </p>
+                    </div>
+
+                    {/* پیش‌نمایش موقعیت */}
+                    <div className="relative w-12 h-8 bg-grey-100 rounded border overflow-hidden">
                       <div
-                        className={`
-                        w-4 h-4 rounded-full border-2 flex items-center justify-center
-                        ${
-                          botConfig.widget_position === position.id
-                            ? "border-brand-primary bg-brand-primary"
-                            : "border-grey-300"
-                        }
-                      `}
-                      >
-                        {botConfig.widget_position === position.id && (
-                          <div className="w-2 h-2 bg-white rounded-full" />
-                        )}
-                      </div>
-
-                      <div className="flex-1 text-right">
-                        <h4 className="text-grey-900 text-sm font-medium">
-                          {position.name}
-                        </h4>
-                        <p className="text-grey-600 text-xs">
-                          {position.description}
-                        </p>
-                      </div>
-
-                      {/* Position Preview */}
-                      <div className="relative w-12 h-8 bg-grey-100 rounded border overflow-hidden">
-                        <div
-                          className={`absolute w-3 h-3 rounded-full ${
-                            position.id === "bottom-right"
+                        className={`absolute w-3 h-3 rounded-full transition
+                          ${
+                            position.id === "bottom_right"
                               ? "bottom-0.5 right-0.5"
                               : "bottom-0.5 left-0.5"
                           }`}
-                          style={{ backgroundColor: botConfig.color }}
-                        ></div>
-                      </div>
+                        style={{ backgroundColor: botConfig.primary_color }}
+                      ></div>
                     </div>
-                  </Card>
+                  </button>
                 ))}
               </div>
             </div>
@@ -440,10 +564,89 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
             <div className="w-8 h-8 bg-brand-emerald/10 rounded-lg flex items-center justify-center">
               <StepLogin />
             </div>
-            <h3 className="text-grey-900">لوگوی شرکت (اختیاری)</h3>
+            <h3 className="text-grey-900">لوگوی چت‌بات </h3>
           </div>
+          <Card
+            className="p-4 !border-0 hover:bg-grey-50 cursor-pointer text-center"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/svg+xml"
+              className="hidden"
+              onChange={handleFileSelect}
+              // onChange={(e) => setLogoFile(e.target.files?.[0] || null)}
+            />
 
-          <Card className="p-4 !border-0 hover:bg-grey-50 cursor-pointer">
+            {preview ? (
+              <div className="space-y-3">
+                <div className="w-16 h-16 mx-auto bg-grey-100 rounded-lg flex items-center justify-center overflow-hidden">
+                  <Image
+                    src={preview}
+                    alt="لوگوی انتخاب شده"
+                    className="w-full h-full object-contain"
+                    width={64}
+                    height={64}
+                  />
+                </div>
+                <p className="text-grey-700 text-sm">
+                  {isUploading ? "در حال آپلود..." : "لوگو انتخاب شده"}
+                </p>
+                {!isUploading && (
+                  <div className="flex gap-2 justify-center">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreview(null);
+                        setLogoFile(null);
+                        // updateConfig({ logo: undefined });
+                      }}
+                      className="px-3 py-1 text-xs bg-danger/10 text-danger rounded-lg hover:bg-danger/20"
+                    >
+                      حذف
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fileInputRef.current?.click();
+                      }}
+                      className="px-3 py-1 text-xs bg-brand-primary/10 text-brand-primary rounded-lg hover:bg-brand-primary/20"
+                    >
+                      تغییر
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="w-12 h-12 bg-grey-200 rounded-lg flex items-center justify-center mx-auto">
+                  <StepUpload />
+                </div>
+                <div>
+                  <p className="text-grey-700 text-sm mb-1">آپلود لوگوی شرکت</p>
+                  <p className="text-grey-500 text-xs">
+                    PNG، JPG یا SVG • حداکثر ۲ مگابایت
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fileInputRef.current?.click();
+                  }}
+                  className="px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 text-sm"
+                >
+                  انتخاب فایل
+                </button>
+              </div>
+            )}
+          </Card>
+
+          {/* <Card className="p-4 !border-0 hover:bg-grey-50 cursor-pointer"
+          >
             <div className="text-center">
               {botConfig.logo ? (
                 <div className="space-y-3">
@@ -458,7 +661,12 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                   <div className="flex gap-2 justify-center">
                     <button
                       type="button"
-                      onClick={() => updateConfig({ logo: undefined })}
+                      // onClick={() => updateConfig({ logo: undefined })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreview(null);
+                        updateConfig({ logo: undefined });
+                      }}
                       className="px-3 py-1 text-xs bg-danger/10 text-danger rounded-lg hover:bg-danger/20"
                     >
                       حذف
@@ -511,7 +719,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 </div>
               )}
             </div>
-          </Card>
+          </Card> */}
 
           <div className="bg-bg-soft-mint p-3 rounded-lg">
             <div className="flex items-start gap-2">
@@ -525,7 +733,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
         </div>
 
         {/* Custom Messages Section */}
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 bg-brand-coral/10 rounded-lg flex items-center justify-center">
               <StepMessage />
@@ -534,8 +742,6 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
           </div>
 
           <div className="grid grid-cols-1 gap-6">
-            {/* Welcome Message */}
-            {/* Messages - Side by Side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-group">
                 <label
@@ -579,18 +785,18 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Progress Info */}
       </div>
 
       {/* Color Wheel Modal */}
-      <ColorWheel
+      {/* <ColorWheel
         selectedColor={botConfig.color}
         onColorChange={(color) => updateConfig({ color })}
         onClose={() => setIsColorWheelOpen(false)}
         isOpen={isColorWheelOpen}
-      />
+      /> */}
     </div>
   );
 }
