@@ -59,7 +59,7 @@ export interface BotConfig {
     status?: string;
     url?: string;
   }>;
-  // logo: string;
+  logo_path: string;
 }
 
 // ----------

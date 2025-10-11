@@ -194,7 +194,7 @@ function Login() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder=""
-                    className="w-full pr-4 pl-4 py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr text-right border-grey-300 focus:border-brand-primary"
+                    className="w-full text-left pr-4 pl-4 py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr text-right border-grey-300 focus:border-brand-primary"
                     style={{
                       borderRadius: "var(--radius-lg)",
                       fontSize: "var(--text-body-large)",

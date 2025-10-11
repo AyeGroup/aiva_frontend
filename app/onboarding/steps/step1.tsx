@@ -18,6 +18,7 @@ import {
   StepUpload,
   StepUser,
 } from "@/public/icons/AppIcons";
+import { normalizeFileUrl } from "@/utils/common";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -39,17 +40,18 @@ export function WizardStep1({
   const [selectedTone, setSelectedTone] = useState(botConfig.tone);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [selectedColorAccent, setSelectedColorAccent] = useState(
-    botConfig.accent_color
-  );
-  const [selectedColorPrimary, setSelectedColorPrimary] = useState(
-    botConfig.primary_color
-  );
 
   useEffect(() => {
-    console.log("botConfig",botConfig)
-    setSelectedTone(botConfig.tone);
-  }, [botConfig.tone]);
+    const fileUrl = normalizeFileUrl(botConfig.logo_path);
+
+    if (botConfig.logo_path) setPreview(fileUrl);
+  }, [botConfig.logo_path]);
+
+  useEffect(() => {
+    if (botConfig?.tone && botConfig.tone !== selectedTone) {
+      setSelectedTone(botConfig.tone);
+    }
+  }, [botConfig?.tone]);
 
   const handleToneChange = (toneId: string) => {
     console.log("tone", toneId);
@@ -106,13 +108,13 @@ export function WizardStep1({
   };
 
   const handlePrimaryColor = (color: string) => {
-    setSelectedColorPrimary(color);
+    // setSelectedColorPrimary(color);
     updateConfig({ primary_color: color });
     // console.log("p color: ", color);
   };
 
   const handleAccentColor = (color: string) => {
-    setSelectedColorAccent(color);
+    // setSelectedColorAccent(color);
     updateConfig({ accent_color: color });
   };
 
@@ -187,7 +189,6 @@ export function WizardStep1({
               </Select>
             </div>
           </div>
-
         </div>
 
         {/* Personality Section */}
@@ -276,7 +277,7 @@ export function WizardStep1({
                   <div>رنگ انتخابی</div>
                   <div
                     className="mx-2 size-7 rounded-full"
-                    style={{ backgroundColor: selectedColorPrimary }}
+                    style={{ backgroundColor: botConfig.primary_color }}
                   ></div>
                 </div>
                 <div>
@@ -285,7 +286,7 @@ export function WizardStep1({
                       key={color.value}
                       onClick={() => {
                         handlePrimaryColor(color.value);
-                        setSelectedColorPrimary(color.value);
+                        // setSelectedColorPrimary(color.value);
                       }}
                       className="  rounded-full  size-8 mx-1 border-2 border-white shadow cursor-pointer"
                       style={{ backgroundColor: color.value }}
@@ -315,7 +316,7 @@ export function WizardStep1({
                 <div className="flex items-center">
                   <input
                     type="text"
-                    value={selectedColorPrimary}
+                    value={botConfig.primary_color}
                     onChange={(e) => handlePrimaryColor(e.target.value)}
                     placeholder="فرمت قابل قبول کد رنگ 6رقمی"
                     dir="ltr"
@@ -323,7 +324,7 @@ export function WizardStep1({
                   />
                   <div
                     className="relative rounded-full size-8"
-                    style={{ backgroundColor: selectedColorPrimary }}
+                    style={{ backgroundColor: botConfig.primary_color }}
                   >
                     <div
                       aria-hidden="true"
@@ -353,7 +354,7 @@ export function WizardStep1({
                   <div>رنگ انتخابی</div>
                   <div
                     className="mx-2 size-7 rounded-full"
-                    style={{ backgroundColor: selectedColorAccent }}
+                    style={{ backgroundColor: botConfig.accent_color }}
                   ></div>
                 </div>
                 <div>
@@ -362,7 +363,7 @@ export function WizardStep1({
                       key={color.value}
                       onClick={() => {
                         handleAccentColor(color.value);
-                        setSelectedColorAccent(color.value);
+                        // setSelectedColorAccent(color.value);
                       }}
                       className="  rounded-full  size-8 mx-1 border-2 border-white shadow cursor-pointer"
                       style={{ backgroundColor: color.value }}
@@ -390,7 +391,7 @@ export function WizardStep1({
                 <div className="flex items-center">
                   <input
                     type="text"
-                    value={selectedColorAccent}
+                    value={botConfig.accent_color}
                     onChange={(e) => handleAccentColor(e.target.value)}
                     placeholder="فرمت قابل قبول کد رنگ 6رقمی"
                     dir="ltr"
@@ -398,7 +399,7 @@ export function WizardStep1({
                   />
                   <div
                     className="relative rounded-full size-8"
-                    style={{ backgroundColor: selectedColorAccent }}
+                    style={{ backgroundColor: botConfig.accent_color }}
                   >
                     <div
                       aria-hidden="true"

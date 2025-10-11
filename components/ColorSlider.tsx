@@ -14,23 +14,25 @@ export const ColorSlider: React.FC<ColorSliderProps> = ({
   const [hue, setHue] = useState(0);
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
-  // 🎨 وقتی hue تغییر می‌کند، رنگ جدید به فرمت HEX تولید و ارسال شود
-  useEffect(() => {
-    const hex = hslToHex(hue, 100, 50);
+useEffect(() => {
+  const hex = hslToHex(hue, 100, 50);
+  // فقط وقتی واقعا رنگ تغییر کرده، onChange صدا بزن
+  if (hex !== value) {
     onChange?.(hex);
-  }, [hue]);
+  }
+}, [hue]);
 
-  // ✅ وقتی prop `value` تغییر کرد (مثلاً با کلیک روی پالت)
-  // hue جدید را از رنگ hex استخراج کن و اسلایدر را آپدیت کن
-  useEffect(() => {
-    if (value) {
-      const h = hexToHue(value);
-      setHue(h);
-    }
-    // console.log("value", value);
-    // console.log("hue",hue)
-    // console.log("value", value);
-  }, [value]);
+useEffect(() => {
+  if (value) {
+    const h = hexToHue(value);
+    // فقط وقتی hue فعلی با مقدار جدید فرق داره، setHue بزن
+   if (Math.round(h) !== Math.round(hue)) {
+     setHue(h);
+   }
+
+  }
+}, [value]);
+
 
   const handleMove = (clientX: number) => {
     const rect = sliderRef.current?.getBoundingClientRect();

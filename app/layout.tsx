@@ -15,6 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fa">
+      {/* <header> */}
+        <link rel="icon" type="image/png" href="/favicon.png" />
+      {/* </header> */}
       <body>
         <div className="app-shell" dir="rtl">
           <div className="app-content">
