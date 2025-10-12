@@ -16,6 +16,7 @@ import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
 import { useState, useEffect } from "react";
+import Alert from "@/components/alert";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function OnboardingWizard() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const totalSteps = steps.length;
 
-  // 1️⃣ بارگذاری اطلاعات ذخیره‌شده
+  //  بارگذاری اطلاعات ذخیره‌شده
   useEffect(() => {
     const loadOnboardingData = async () => {
       try {
@@ -94,7 +95,15 @@ export default function OnboardingWizard() {
                 })
               );
             }
-          } catch (apiError) {
+          } catch (apiError: any) {
+            // ✅ بررسی خطای 401
+            if (apiError.response?.status === 401) {
+              console.warn("Unauthorized - redirecting to login...");
+              localStorage.removeItem("aiva-onboarding-data");
+              router.push("/auth/login") 
+              return;
+            }
+
             console.warn("API fetch failed, using local data:", apiError);
             setBotConfig(parsedData.botConfig);
             setCurrentStep(parsedData.currentStep || 1);
@@ -109,9 +118,9 @@ export default function OnboardingWizard() {
     };
 
     if (user?.token) loadOnboardingData();
-  }, [user?.token]); // ✅ فقط وقتی توکن عوض بشه
+  }, []);
 
-  // 2️⃣ ذخیره‌ی داده‌ها بدون ایجاد حلقه
+  //   ذخیره‌ی داده‌ها
   useEffect(() => {
     if (!botConfig) return;
     const dataToSave = {
@@ -126,9 +135,6 @@ export default function OnboardingWizard() {
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
-
- 
-
 
   // Load saved data from localStorage on component mount
   // useEffect(() => {
@@ -218,6 +224,9 @@ export default function OnboardingWizard() {
     if (!botConfig.tone) newErrors.tone = "شخصیت الزامی است";
     if (!botConfig.primary_color)
       newErrors.primary_color = "رنگ اصلی الزامی است";
+    if (!botConfig.accent_color)
+      newErrors.accent_color = "رنگ پس زمینه الزامی است";
+
     return newErrors;
   };
 
@@ -228,7 +237,7 @@ export default function OnboardingWizard() {
     setErrors(fieldErrors);
 
     if (Object.keys(fieldErrors).length > 0) {
-      // Alert("اطلاعات را کامل کنید ");
+      Alert("اطلاعات را کامل کنید ");
       return;
     }
 
@@ -260,27 +269,43 @@ export default function OnboardingWizard() {
             },
           }
         );
+        if (res.data.success) return true;
       } else {
         res = await axios.post(API_ROUTES.BOTS.SAVE, formData, {
           headers: {
             Authorization: `Bearer ${user?.token}`,
           },
         });
+        if (res.data.success) {
+          botConfig.uuid = res.data.data.uuid;
+          // const savedData = localStorage.getItem("aiva-onboarding-data");
+          localStorage.setItem(
+            "aiva-onboarding-data",
+            JSON.stringify(botConfig)
+          );
+
+          setUuid(res.data.data.uuid);
+          console.log("uuid", res.data.data.uuid);
+          return true;
+        } else {
+          setUuid("");
+          return false;
+        }
       }
 
-      console.log("bot save:", res.data);
-      if (res.data.success) {
-        botConfig.uuid = res.data.data.uuid;
-        // const savedData = localStorage.getItem("aiva-onboarding-data");
-        localStorage.setItem("aiva-onboarding-data", JSON.stringify(botConfig));
+      // console.log("bot save:", res.data);
+      // if (res.data.success) {
+      //   botConfig.uuid = res.data.data.uuid;
+      //   // const savedData = localStorage.getItem("aiva-onboarding-data");
+      //   localStorage.setItem("aiva-onboarding-data", JSON.stringify(botConfig));
 
-        setUuid(res.data.data.uuid);
-        console.log("uuid", res.data.data.uuid);
-        return true;
-      } else {
-        setUuid("");
-        return false;
-      }
+      //   setUuid(res.data.data.uuid);
+      //   console.log("uuid", res.data.data.uuid);
+      //   return true;
+      // } else {
+      //   setUuid("");
+      //   return false;
+      // }
     } catch (err) {
       console.error(err);
     } finally {

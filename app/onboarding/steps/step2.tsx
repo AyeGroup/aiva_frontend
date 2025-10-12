@@ -1,8 +1,17 @@
-import { useState } from "react";
-// import { Button } from "../../_components/Button/button";
-// import { Input } from "../../_components/Input/input";
+import axios from "axios";
+import Alert from "@/components/alert";
+import PageLoader from "@/components/pageLoader";
+import { Card } from "@/components/card";
+import { Input } from "@/components/input";
+import { Button } from "@/components/button";
+import { useAuth } from "@/providers/AuthProvider";
+import { useRouter } from "next/navigation";
+import { BotConfig } from "@/types/common";
+import { Info, Tick } from "@/public/icons/AppIcons";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { onboardingData } from "../onboarding.data";
+import { useCallback, useEffect, useState } from "react";
 import {
-  Plus,
   FileText,
   Link,
   HelpCircle,
@@ -14,11 +23,6 @@ import {
   AlertTriangle,
   Edit2,
 } from "lucide-react";
-import { BotConfig } from "@/types/common";
-import { Card } from "@/components/card";
-import { onboardingData } from "../onboarding.data";
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -41,6 +45,184 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    const loadOnboardingData = async () => {
+      console.log("botConfig", botConfig);
+      try {
+        const savedData = localStorage.getItem("aiva-onboarding-data");
+        if (!savedData) return;
+
+        const parsedData = JSON.parse(savedData);
+        // if (parsedData.botConfig?.uuid) setUuid(parsedData.botConfig.uuid);
+
+        if (parsedData.botConfig?.uuid) {
+          try {
+            const response = await axios.get(
+              API_ROUTES.QA.DOCUMENT(parsedData.botConfig.uuid),
+              {
+                withCredentials: true,
+                headers: {
+                  Authorization: `Bearer ${user?.token}`,
+                },
+              }
+            );
+
+            console.log("res qa docs: ", response.data);
+            const hasApiData = response.data?.success && response.data?.data;
+
+            botConfig.knowledge = response.data.data;
+
+            // ذخیره فقط اگر داده جدید اومده
+            // if (hasApiData) {
+            //   localStorage.setItem(
+            //     "aiva-onboarding-data",
+            //     JSON.stringify({
+            //       botConfig: response.data.data,
+            //       currentStep:
+            //         response.data?.currentStep || parsedData.currentStep || 1,
+            //     })
+            //   );
+            // }
+          } catch (apiError: any) {
+            // ✅ بررسی خطای 401
+            if (apiError.response?.status === 401) {
+              console.warn("Unauthorized - redirecting to login...");
+              localStorage.removeItem("aiva-onboarding-data");
+              router.push("/auth/login");
+              return;
+            }
+
+            console.warn("API fetch failed, using local data:", apiError);
+            // setBotConfig(parsedData.botConfig);
+            // setCurrentStep(parsedData.currentStep || 1);
+          }
+        } else {
+          // setBotConfig(parsedData.botConfig);
+          // setCurrentStep(parsedData.currentStep || 1);
+        }
+      } catch (error) {
+        console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
+      }
+    };
+
+    if (user?.token) loadOnboardingData();
+  }, [user?.token]);
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+       const allowedTypes = [".pdf", ".doc", ".docx", ".txt"];
+      const fileExtension = file.name
+        .slice(((file.name.lastIndexOf(".") - 1) >>> 0) + 2)
+        .toLowerCase();
+
+      if (allowedTypes.includes(`.${fileExtension}`)) {
+        // ذخیره فایل در متغیر State
+        setSelectedFile(file);
+        console.log(`فایل انتخاب شد: ${file.name} (اندازه: ${file.size} بایت)`);
+      } else {
+        setSelectedFile(null);
+        console.error(
+          "فرمت فایل مجاز نیست. لطفاً PDF، DOC، DOCX یا TXT انتخاب کنید."
+        );
+      }
+    } else {
+      setSelectedFile(null);
+    }
+  };
+
+  const saveItem = async () => {
+    if (!newItem.title) {
+      Alert("لطفاً عنوان را وارد کنید.");
+      return;
+    }
+
+    try {
+      if (isEditing && editingItem) {
+        // 🟡 ویرایش آیتم موجود
+        const updatedItem = {
+          ...editingItem,
+          title: newItem.title,
+          content: newItem.content,
+          url: newItem.url,
+        };
+
+        const res = await axios.put(
+          API_ROUTES.QA.DOCUMENT(botConfig.uuid),
+          updatedItem,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          }
+        );
+
+        if (!res.data?.success) {
+          Alert("خطا در ویرایش اطلاعات");
+          return;
+        }
+
+        updateConfig({
+          knowledge: botConfig.knowledge.map((k) =>
+            k.id === editingItem.id ? res.data.data : k
+          ),
+        });
+
+        cancelEditing();
+      } else {
+        // 🟢 افزودن آیتم جدید
+
+        const formData = new FormData();
+        formData.append("title", newItem.title || "");
+        formData.append("type", selectedType);
+        formData.append("url", newItem.url || "");
+        formData.append("content", newItem.content || "");
+
+        // اگر نوع محتوا document بود و فایلی انتخاب شده:
+        if (selectedType === "document" && selectedFile) {
+          formData.append("file", selectedFile);
+        }
+
+        const res = await axios.post(
+          API_ROUTES.QA.DOCUMENT(botConfig.uuid),
+          formData,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (!res.data?.success) {
+          Alert("خطا در ثبت آیتم جدید");
+          return;
+        }
+
+        const savedItem = res.data.data;
+
+        updateConfig({
+          knowledge: [...(botConfig.knowledge || []), savedItem],
+        });
+
+        cancelAdding();
+        setSelectedFile(null);
+      }
+    } catch (err) {
+      console.error("❌ خطا در ذخیره آیتم:", err);
+      Alert("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
+    }
+  };
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -97,6 +279,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   };
 
   const startAdding = (type: string) => {
+    console.log("add type", type);
     setSelectedType(type);
     setIsAdding(true);
     setNewItem({ type: type as any, title: "", content: "" });
@@ -127,8 +310,13 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     setNewItem({});
   };
 
-  const saveItem = () => {
-    if (newItem.title && (newItem.content || newItem.url)) {
+  const saveItem1 = async () => {
+    if (!newItem.title || (!newItem.content && !newItem.url)) return;
+    if (newItem.content) {
+      Alert("فایل را وارد کنید ");
+      return;
+    }
+    try {
       if (isEditing && editingItem) {
         // ویرایش آیتم موجود
         const updatedItem: KnowledgeItem = {
@@ -139,26 +327,29 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           status: "processing",
         };
 
-        const updatedKnowledge = botConfig.knowledge.map((k) =>
-          k.id === editingItem.id ? updatedItem : k
-        );
-
-        updateConfig({
-          knowledge: updatedKnowledge,
+        const res = await axios.put(API_ROUTES.QA.DOCUMENT(botConfig.uuid), {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+          body: JSON.stringify(updatedItem),
         });
 
-        // شبیه‌سازی پردازش برای آیتم ویرایش شده
-        setTimeout(() => {
-          updateConfig({
-            knowledge: updatedKnowledge.map((k) =>
-              k.id === editingItem.id ? { ...k, status: "applied" as const } : k
-            ),
-          });
-        }, 3000);
+        if (!res.data.success) Alert("خطا در ثبت اطلاعات");
+        // throw new Error("خطا در ویرایش آیتم");
+
+        const savedItem = await res.data.json();
+
+        // به‌روزرسانی local state
+        updateConfig({
+          knowledge: botConfig.knowledge.map((k) =>
+            k.id === editingItem.id ? savedItem : k
+          ),
+        });
 
         cancelEditing();
       } else {
-        // اضافه کردن آیتم جدید
+        // ایجاد آیتم جدید
         const item: KnowledgeItem = {
           id: Date.now().toString(),
           type: newItem.type as any,
@@ -169,22 +360,33 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           createdAt: new Date().toISOString(),
         };
 
-        const newKnowledge = [...botConfig.knowledge, item];
-        updateConfig({
-          knowledge: newKnowledge,
-        });
+        const formData = new FormData();
 
-        // شبیه‌سازی پردازش: بعد از 3 ثانیه وضعیت را به applied تغییر دهیم
-        setTimeout(() => {
-          updateConfig({
-            knowledge: newKnowledge.map((k) =>
-              k.id === item.id ? { ...k, status: "applied" as const } : k
-            ),
-          });
-        }, 3000);
+        // formData.append("file", newItem.content);
+        const res = await axios.post(
+          API_ROUTES.QA.DOCUMENT(botConfig.uuid),
+          { formData },
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          }
+        );
+
+        if (!res.data.success) throw new Error("خطا در ثبت آیتم جدید");
+
+        const savedItem = await res.data.json();
+
+        updateConfig({
+          knowledge: [...botConfig.knowledge, savedItem],
+        });
 
         cancelAdding();
       }
+    } catch (err) {
+      console.error(err);
+      Alert("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
     }
   };
 
@@ -194,18 +396,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     });
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // In a real app, you would upload the file and get content
-      setNewItem((prev) => ({
-        ...prev,
-        title: file.name,
-        content: `محتوای فایل ${file.name} (در نسخه واقعی، محتوا از فایل استخراج می‌شود)`,
-      }));
-    }
-  };
-
   return (
     <div
       className="space-y-8 bg-bg-surface px-[20px] py-[16px] border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]"
@@ -213,14 +403,9 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     >
       {/* Header */}
       <div className="flex items-start gap-4 px-[0px] py-[12px]">
+        {loading && <PageLoader />}
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg
-            className="w-8 h-8 text-brand-primary"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          <Tick />
         </div>
         <div className="flex-1">
           <h2 className="text-grey-900 mb-2 text-right text-[24px] font-bold">
@@ -242,16 +427,10 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         <div className="relative z-10">
           <div className="flex items-start gap-4 m-[0px]">
             <div className="w-12 h-12 bg-brand-amber rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15c-.553 0-1-.448-1-1s.447-1 1-1 1 .448 1 1-.447 1-1 1zm1-3h-2V7h2v7z" />
-              </svg>
+              <Info />
             </div>
             <div className="flex-1">
-              <div className="bg-white/70 backdrop-blur-sm rounded-lg border border-brand-amber/20 text-[15px] px-[16px] py-[8px]">
+              <div className="bg-white/70 backdrop-blur-sm rounded-lg border border-brand-amber/20 text-base px-4 py-2">
                 <p className="text-[rgba(245,158,11,1)] text-right leading-relaxed text-[14px]">
                   <span className="font-medium text-brand-amber text-[14px]">
                     پاسخ‌هایی که چت‌بات به کاربر می‌دهد برمبنای دانشی است که شما
@@ -266,14 +445,14 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       </div>
 
       {/* Processing Time Notice */}
-      <div className="bg-gradient-to-br from-brand-primary/10 to-bg-soft-mint border-2 border-brand-primary/30 rounded-2xl mb-[32px] relative overflow-hidden py-[8px] px-[24px] py-[12px]">
+      <div className="bg-gradient-to-br from-brand-primary/10 to-bg-soft-mint border-2 border-brand-primary/30 rounded-2xl mb-8 relative overflow-hidden py-2 px-6">
         <div className="relative z-10">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
               <Clock className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <div className="bg-white/70 backdrop-blur-sm rounded-lg border border-brand-primary/20 px-[16px] py-[0px] py-[8px]">
+              <div className="bg-white/70 backdrop-blur-sm rounded-lg border border-brand-primary/20 px-4  py-2">
                 <p className="text-[rgba(101,188,182,1)] text-right leading-relaxed text-[14px]">
                   اعمال دانش جدید مقداری زمان نیاز دارد. پس از اضافه کردن هر
                   محتوا، دستیار بلافاصله قادر به پاسخگویی نخواهد بود و باید
@@ -300,10 +479,13 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               const IconComponent = getIcon(type.id);
 
               return (
-                <Card
+                <div
                   key={type.id}
-                  className="p-6 cursor-pointer border-2 border-brand-primary/30 bg-bg-surface hover:border-brand-primary hover:shadow-lg group"
-                  onClick={() => startAdding(type.id)}
+                  className="p-6 rounded-lg cursor-pointer border-2 border-brand-primary/30 bg-bg-surface hover:border-brand-primary hover:shadow-lg group"
+                  onClick={() => {
+                    console.log("fired");
+                    startAdding(type.id);
+                  }}
                 >
                   <div className="text-right">
                     <div className="flex items-center gap-4 mb-4">
@@ -318,29 +500,13 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                       </div>
                     </div>
 
-                    <div className="bg-brand-primary/5 rounded-xl p-4 border border-brand-primary/20">
-                      <div className="flex items-center justify-between">
-                        <span className="text-grey-700 text-sm">شروع کنید</span>
-                        <div className="flex items-center gap-2 text-brand-primary">
-                          <Plus className="w-4 h-4" />
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M15 19l-7-7 7-7"
-                            />
-                          </svg>
-                        </div>
+                    <div className="bg-primary text-white rounded-xl p-4 border border-primary">
+                      <div className="flex items-center justify-center">
+                        شروع کنید
                       </div>
                     </div>
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
@@ -371,7 +537,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           <div className="space-y-4">
             <div>
               <label className="block text-grey-900 mb-2 text-right">
-                سؤال
+                عنوان
                 <span className="text-brand-primary mr-1">*</span>
               </label>
               <Input
@@ -528,14 +694,14 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               disabled={!newItem.title || (!newItem.content && !newItem.url)}
               className="px-12 py-3 min-w-[160px] shadow-lg hover:shadow-xl"
             >
-              {isEditing ? "ذخیره تغییرات" : "ذخیره سؤال"}
+              {isEditing ? "ذخیره تغییرات" : "ذخیره  "}
             </Button>
           </div>
         </Card>
       )}
 
       {/* Existing Knowledge Items */}
-      {botConfig.knowledge.length > 0 && (
+      {botConfig?.knowledge && botConfig?.knowledge?.length > 0 && (
         <div className="bg-bg-soft-teal border-2 border-brand-primary/20 rounded-xl p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-grey-900 flex items-center gap-3">
@@ -668,18 +834,21 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       )}
 
       {/* Empty State */}
-      {botConfig.knowledge.length === 0 && !isAdding && !isEditing && (
-        <Card className="p-8 text-center border-2 border-dashed border-brand-primary/30 bg-bg-soft-mint">
-          <div className="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-brand-primary/20">
-            <FileText className="w-8 h-8 text-brand-primary" />
-          </div>
-          <h3 className="text-grey-900 mb-2">هنوز دانشی اضافه نشده است</h3>
-          <p className="text-grey-600 max-w-md mx-auto mb-6">
-            برای شروع، یکی از انواع محتوا را انتخاب کنید و اطلاعات مربوط به
-            کسب‌وکار خود را اضافه کنید
-          </p>
-        </Card>
-      )}
+      {botConfig.knowledge &&
+        botConfig.knowledge?.length === 0 &&
+        !isAdding &&
+        !isEditing && (
+          <Card className="p-8 text-center border-2 border-dashed border-brand-primary/30 bg-bg-soft-mint">
+            <div className="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-brand-primary/20">
+              <FileText className="w-8 h-8 text-brand-primary" />
+            </div>
+            <h3 className="text-grey-900 mb-2">هنوز دانشی اضافه نشده است</h3>
+            <p className="text-grey-600 max-w-md mx-auto mb-6">
+              برای شروع، یکی از انواع محتوا را انتخاب کنید و اطلاعات مربوط به
+              کسب‌وکار خود را اضافه کنید
+            </p>
+          </Card>
+        )}
 
       {/* Tips */}
       <Card className="p-6 bg-bg-soft-peach border-2 border-brand-secondary/30 shadow-lg">

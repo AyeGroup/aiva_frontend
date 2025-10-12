@@ -8,7 +8,7 @@ interface ColorSliderProps {
 }
 
 export const ColorSlider: React.FC<ColorSliderProps> = ({
-  value = "",
+  value ,
   onChange,
 }) => {
   const [hue, setHue] = useState(0);
@@ -16,8 +16,7 @@ export const ColorSlider: React.FC<ColorSliderProps> = ({
 
 useEffect(() => {
   const hex = hslToHex(hue, 100, 50);
-  // فقط وقتی واقعا رنگ تغییر کرده، onChange صدا بزن
-  if (hex !== value) {
+   if (hex !== value) {
     onChange?.(hex);
   }
 }, [hue]);
@@ -25,8 +24,7 @@ useEffect(() => {
 useEffect(() => {
   if (value) {
     const h = hexToHue(value);
-    // فقط وقتی hue فعلی با مقدار جدید فرق داره، setHue بزن
-   if (Math.round(h) !== Math.round(hue)) {
+    if (Math.round(h) !== Math.round(hue)) {
      setHue(h);
    }
 

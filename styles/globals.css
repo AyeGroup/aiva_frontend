@@ -293,6 +293,21 @@ body {
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
 }
+@layer base {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important; /* or bg-gray-50 for Tailwind-like color */
+    -webkit-text-fill-color: #111827 !important; /* Tailwind 'text-gray-900' */
+    transition: background-color 9999s ease-in-out 0s !important;
+  }
+}
 
 @theme inline {
   /* Brand Colors */
@@ -1009,4 +1024,14 @@ html {
     padding-left: 1rem !important;
     padding-right: 1rem !important;
   }
+}
+/* تغییر رنگ نوار */
+#nprogress .bar {
+  background: var(--lightGold) !important;
+  height: 6px !important; /* ضخامت بیشتر */
+}
+
+/* تغییر رنگ افکت زیر */
+#nprogress .peg {
+  box-shadow: 0 0 20px var(--lightGold), 0 0 5px var(--lightGold) !important;
 }

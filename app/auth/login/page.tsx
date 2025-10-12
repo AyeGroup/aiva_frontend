@@ -194,7 +194,7 @@ function Login() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder=""
-                    className="w-full text-left pr-4 pl-4 py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr text-right border-grey-300 focus:border-brand-primary"
+                    className="w-full text-center pr-4 pl-4 py-6 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary"
                     style={{
                       borderRadius: "var(--radius-lg)",
                       fontSize: "var(--text-body-large)",
@@ -220,7 +220,7 @@ function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder=""
-                    className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-4 border border-grey-300 !bg-white text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none"
+                    className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 !bg-white text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none text-center"
                     style={{
                       borderRadius: "var(--radius-lg)",
                       fontSize: "var(--text-body-large)",

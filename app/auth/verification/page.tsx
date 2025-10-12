@@ -16,7 +16,7 @@ export default function Verification() {
   const phoneNumber = "1";
   const email =   "";
   
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [countdown, setCountdown] = useState(120); // 2 minutes
@@ -96,8 +96,8 @@ export default function Verification() {
     const pastedText = e.clipboardData.getData("text");
     // Convert Persian to English first, then filter digits
     const englishText = persianToEnglish(pastedText);
-    const pastedData = englishText.replace(/\D/g, "").slice(0, 6);
-    const newOtp = pastedData.split("").concat(Array(6).fill("")).slice(0, 6);
+    const pastedData = englishText.replace(/\D/g, "").slice(0, 5);
+    const newOtp = pastedData.split("").concat(Array(5).fill("")).slice(0, 5);
     setOtp(newOtp);
 
     if (pastedData.length === 6) {
@@ -108,8 +108,8 @@ export default function Verification() {
   const handleVerify = async (otpCode?: string) => {
     const codeToVerify = otpCode || otp.join("");
 
-    if (codeToVerify.length !== 6) {
-      setError("لطفاً کد ۶ رقمی را کامل وارد کنید");
+    if (codeToVerify.length !== 5) {
+      setError("لطفاً کد 5 رقمی را کامل وارد کنید");
       return;
     }
 

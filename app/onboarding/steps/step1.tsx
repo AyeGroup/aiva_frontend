@@ -19,6 +19,8 @@ import {
   StepUser,
 } from "@/public/icons/AppIcons";
 import { normalizeFileUrl } from "@/utils/common";
+import { API_BASE_URL } from "@/config";
+import { Console } from "console";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -42,9 +44,11 @@ export function WizardStep1({
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    const fileUrl = normalizeFileUrl(botConfig.logo_path);
+    const fileUrl = `${API_BASE_URL}/public/${botConfig.uuid}/logo`;
+    console.log("logo: ", fileUrl);
+    setPreview(fileUrl);
 
-    if (botConfig.logo_path) setPreview(fileUrl);
+    // if (botConfig.logo_path) setPreview(fileUrl);
   }, [botConfig.logo_path]);
 
   useEffect(() => {
@@ -106,7 +110,6 @@ export function WizardStep1({
       setIsUploading(false);
     }
   };
-
   const handlePrimaryColor = (color: string) => {
     // setSelectedColorPrimary(color);
     updateConfig({ primary_color: color });
@@ -303,11 +306,7 @@ export function WizardStep1({
 
               <div className="w-full p-1 space-y-4">
                 <ColorSlider
-                  value={
-                    botConfig.primary_color
-                      ? botConfig.primary_color
-                      : "#0062ff"
-                  }
+                  value={botConfig.primary_color}
                   onChange={handlePrimaryColor}
                 />
               </div>
@@ -320,7 +319,11 @@ export function WizardStep1({
                     onChange={(e) => handlePrimaryColor(e.target.value)}
                     placeholder="فرمت قابل قبول کد رنگ 6رقمی"
                     dir="ltr"
-                    className="w-64 p-2 mx-2 border-2 rounded-2xl border-primary  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400"
+                    className={`w-64 p-2 mx-2 border-2 rounded-2xl  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400 ${
+                      errors?.primary_color
+                        ? " border-red-500"
+                        : " border-primary "
+                    }`}
                   />
                   <div
                     className="relative rounded-full size-8"
@@ -380,9 +383,7 @@ export function WizardStep1({
 
               <div className="w-full p-1 space-y-4">
                 <ColorSlider
-                  value={
-                    botConfig.accent_color ? botConfig.accent_color : "#333333"
-                  }
+                  value={botConfig.accent_color}
                   onChange={handleAccentColor}
                 />
               </div>
@@ -395,7 +396,11 @@ export function WizardStep1({
                     onChange={(e) => handleAccentColor(e.target.value)}
                     placeholder="فرمت قابل قبول کد رنگ 6رقمی"
                     dir="ltr"
-                    className="w-64 p-2 mx-2 border-2 rounded-2xl border-primary  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400"
+                    className={`w-64 p-2 mx-2 border-2 rounded-2xl   text-gray-900 bg-transparent outline-none  placeholder:text-gray-400 ${
+                      errors?.accent_color
+                        ? " border-red-500"
+                        : " border-primary"
+                    }`}
                   />
                   <div
                     className="relative rounded-full size-8"
@@ -584,11 +589,17 @@ export function WizardStep1({
               <div className="space-y-3">
                 <div className="w-16 h-16 mx-auto bg-grey-100 rounded-lg flex items-center justify-center overflow-hidden">
                   <Image
-                    src={preview}
+                    // src={`${API_BASE_URL}/public/${botConfig?.uuid}/logo`}
+                    src={
+                      preview
+                        ? preview // مسیر preview که از FileReader ساخته میشه
+                        : `${API_BASE_URL}/public/${botConfig?.uuid}/logo.png` // مسیر لوگو در بک‌اند
+                    }
                     alt="لوگوی انتخاب شده"
                     className="w-full h-full object-contain"
                     width={64}
                     height={64}
+                    unoptimized // ← اگر تصویر از api لود می‌شود، بهتر است این را اضافه کنی
                   />
                 </div>
                 <p className="text-grey-700 text-sm">

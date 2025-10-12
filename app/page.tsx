@@ -1,5 +1,21 @@
 "use client";
+import Router from "next/router";
 import AppShell from "@/components/shell/AppShell";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+
+// تنظیمات نوار پیشرفت
+NProgress.configure({ showSpinner: false, speed: 400 });
+
+Router.events.on("routeChangeStart", () => {
+  NProgress.start();
+});
+Router.events.on("routeChangeComplete", () => {
+  NProgress.done();
+});
+Router.events.on("routeChangeError", () => {
+  NProgress.done();
+});
 
 export default function Page() {
   return <AppShell page="landing" />;

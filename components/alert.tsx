@@ -7,7 +7,7 @@ export default async function Alert(messageTitle:string, isQuestion = false) {
       // Simple alert
       await Swal.fire({
         title: messageTitle,
-        imageUrl: "true",
+        // imageUrl: "true",
         confirmButtonText: "تایید",
       });
     } else {

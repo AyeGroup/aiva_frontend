@@ -68,14 +68,18 @@ export default function Dashboard() {
             Authorization: `Bearer ${user.token}`,
           },
         });
-        if (
-          response.data.success === true &&
-          (!response.data.data || response.data.data.length == 0)
-        ) {
-          console.log("BOTS data", response.data.data.length);
-          setIsNew(true);
-        }
         console.log("BOTS.GET", response.data);
+        console.log("BOTS data", response.data.data.length);
+        if (
+          response.data.success &&
+          response.data.data &&
+          response.data.data.length > 0
+        ) {
+          setIsNew(false);
+        }
+        else
+          setIsNew(true);
+
         // if (!response.data.success) {
         //   setIsNew(true);
         // }

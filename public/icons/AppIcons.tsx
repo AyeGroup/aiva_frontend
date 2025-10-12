@@ -240,16 +240,24 @@ export const StepBigStar = () => {
     </svg>
   );
 };
-// export const LoginTopLeft = () => {
-//   return (
-
-//      );
-// };
-// export const LoginTopLeft = () => {
-//   return (
-
-//      );
-// };
+export const Info = () => {
+  return (
+    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15c-.553 0-1-.448-1-1s.447-1 1-1 1 .448 1 1-.447 1-1 1zm1-3h-2V7h2v7z" />
+    </svg>
+  );
+};
+export const Tick = () => {
+  return (
+    <svg
+      className="w-8 h-8 text-brand-primary"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  );
+};
 // export const LoginTopLeft = () => {
 //   return (
 

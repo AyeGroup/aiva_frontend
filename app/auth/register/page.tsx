@@ -22,7 +22,7 @@ export default function Register() {
     phone: "",
     password: "",
   });
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState([ "", "", "", "", ""]);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -44,7 +44,7 @@ export default function Register() {
   };
 
   const validatePassword = (password: string): boolean => {
-    return password.length >= 6;
+    return password.length >= 5;
   };
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
@@ -193,8 +193,8 @@ export default function Register() {
 
     // console.log("test");
     const otpValue = otp.join("");
-    if (otpValue.length !== 6) {
-      toast.error("لطفاً کد ۶ رقمی را کامل وارد کنید");
+    if (otpValue.length !== 5) {
+      toast.error("لطفاً کد 5 رقمی را کامل وارد کنید");
       return;
     }
     // toast.success("حساب کاربری شما با موفقیت ایجاد شد");
@@ -459,7 +459,7 @@ export default function Register() {
                   lineHeight: "var(--text-body-large-lh)",
                 }}
               >
-                کد 6 رقمی ارسال شده به شماره {englishToPersian(formData.phone)}{" "}
+                کد 5 رقمی ارسال شده به شماره {englishToPersian(formData.phone)}{" "}
                 را وارد کنید
               </p>
             </div>
