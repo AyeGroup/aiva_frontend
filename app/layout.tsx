@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/providers/AuthProvider";
+import NProgressHandler from "@/components/NProgressHandler";
 import "@/styles/globals.css";
 import "@/styles/login.css";
+import "nprogress/nprogress.css";
 
 export const metadata: Metadata = {
   title: "دستیار هوشمند آیوا",
@@ -15,10 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fa">
-      {/* <header> */}
+      <head>
         <link rel="icon" type="image/png" href="/favicon.png" />
-      {/* </header> */}
+      </head>
       <body>
+        <NProgressHandler />
         <div className="app-shell" dir="rtl">
           <div className="app-content">
             <AuthProvider>{children}</AuthProvider>

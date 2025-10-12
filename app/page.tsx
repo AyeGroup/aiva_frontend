@@ -1,23 +1,21 @@
 "use client";
-import Router from "next/router";
+import { useEffect } from "react";
 import AppShell from "@/components/shell/AppShell";
 import NProgress from "nprogress";
-import "nprogress/nprogress.css";
-
-// تنظیمات نوار پیشرفت
-NProgress.configure({ showSpinner: false, speed: 400 });
-
-Router.events.on("routeChangeStart", () => {
-  NProgress.start();
-});
-Router.events.on("routeChangeComplete", () => {
-  NProgress.done();
-});
-Router.events.on("routeChangeError", () => {
-  NProgress.done();
-});
 
 export default function Page() {
+  useEffect(() => {
+    // Start progress when page starts loading
+    NProgress.start();
+
+    // Complete after component mounts
+    const timer = setTimeout(() => {
+      NProgress.done();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return <AppShell page="landing" />;
 }
 

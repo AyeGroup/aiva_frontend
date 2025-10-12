@@ -1,8 +1,9 @@
 "use client";
 
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { Header } from "@/components/header/header";
 import { PageType } from "@/types/common";
+import NProgress from "nprogress";
 
 // Lazy load صفحات
 const LandingPage = lazy(() => import("@/app/landing/page"));
@@ -19,16 +20,25 @@ const ChatHistoryDemo = lazy(
   () => import("@/app/onboarding/demo/chat-history-demo")
 );
 
-// Loader برای صفحات lazy
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="space-y-4">
-      <div className="h-8 bg-gray-200 rounded w-48 mx-auto"></div>
-      <div className="h-4 bg-gray-200 rounded w-32 mx-auto"></div>
-      <div className="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full mx-auto animate-spin"></div>
+// Enhanced Loader with NProgress
+const PageLoader = () => {
+  useEffect(() => {
+    NProgress.start();
+    return () => {
+      NProgress.done();
+    };
+  }, []);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="space-y-4">
+        <div className="h-8 bg-gray-200 rounded w-48 mx-auto"></div>
+        <div className="h-4 bg-gray-200 rounded w-32 mx-auto"></div>
+        <div className="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full mx-auto animate-spin"></div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 interface AppShellProps {
   page: PageType;
@@ -65,7 +75,7 @@ export default function AppShell({ page }: AppShellProps) {
     "chatbot-management",
     "tickets",
     "login",
-    "otp-verification",
+    "verification", // Fixed typo: was "otp-verification"
     "register",
   ].includes(page);
 
