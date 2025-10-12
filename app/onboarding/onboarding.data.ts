@@ -100,22 +100,22 @@ export const onboardingData = {
   knowledgeTypes: [
     {
       id: "document",
-      title: "آپلود فایل",
-      description: "ورد، پی دی اف یا فایل متنی",
+      title: "افزودن فایل",
+      description: "فایل با فرمت word ٬ pdf ٬ csv",
       icon: "file-text",
       placeholder: "فایل‌های خود را اینجا بکشید یا کلیک کنید",
     },
     {
       id: "url",
-      title: "آدرس وب سایت",
+      title: "افزودن لینک وب سایت",
       description: "صفحات سایت یا منابع آنلاین",
       icon: "link",
       placeholder: "https://example.com/about",
     },
     {
       id: "text",
-      title: "اطلاعات آزاد",
-      description: "اطلاعات مستقیم درباره کسب و کار",
+      title: "افزودن پرسش و پاسخ",
+      description: "اضافه کردن محتوا",
       icon: "type",
       placeholder: "درباره شرکت، محصولات، خدمات...",
     },

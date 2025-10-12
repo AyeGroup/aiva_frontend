@@ -240,7 +240,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
             <span className="text-xs text-grey-500">رنگ:</span>
             <div
               className="w-3 h-3 rounded-full border border-grey-200"
-              style={{ backgroundColor: botConfig.color }}
+              style={{ backgroundColor: botConfig.primary_color }}
             ></div>
           </div>
         </div>
@@ -254,23 +254,30 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
       <div className="max-w-md mx-auto relative">
         {/* Update Flash Effect Overlay */}
         <div
-          key={`${botConfig.color}-${botConfig.name}-${botConfig.widget_position}-${botConfig.button_size}`}
+          key={`${botConfig.primary_color}-${botConfig.name}-${botConfig.widget_position}-${botConfig.button_size}`}
           className="absolute inset-0 bg-brand-primary/10 rounded-2xl opacity-0 pointer-events-none z-50"
         ></div>
 
         {/* Live Chat Widget - Centered */}
         <div>
-          <div className="sticky top-0">
+          <div
+            className="sticky top-0"
+          
+          >
             {/* Chat Widget Container */}
             <div
               className="w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-grey-200 flex flex-col overflow-hidden"
-              style={{ height: "700px" }}
+              // style={{ height: "700px" }}
+                style={{ height: "600px",
+              background: `linear-gradient(135deg,white 0%, ${botConfig.accent_color}ee 120%)`,
+            }}
+
             >
               {/* Chat Header */}
               <div
                 className={`relative p-4 text-white flex items-center gap-4 backdrop-blur-sm ${toneStyles.headerStyle}`}
                 style={{
-                  background: `linear-gradient(135deg, ${botConfig.color} 0%, ${botConfig.color}ee 100%)`,
+                  background: `linear-gradient(135deg, ${botConfig.primary_color} 0%, ${botConfig.primary_color}ee 100%)`,
                   height: "80px",
                 }}
               >
@@ -312,7 +319,9 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                     {message.isBot && (
                       <div
                         className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm mb-1 overflow-hidden"
-                        style={{ backgroundColor: `${botConfig.color}20` }}
+                        style={{
+                          backgroundColor: `${botConfig.primary_color}20`,
+                        }}
                       >
                         <Image
                           src="/logo.png"
@@ -351,7 +360,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                       style={
                         !message.isBot
                           ? {
-                              background: `linear-gradient(135deg, ${botConfig.color} 0%, ${botConfig.color}dd 100%)`,
+                              background: `linear-gradient(135deg, ${botConfig.accent_color} 0%, ${botConfig.accent_color}dd 100%)`,
                             }
                           : {}
                       }
@@ -381,7 +390,9 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                   <div className="flex items-end gap-3 justify-start">
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm mb-1 overflow-hidden"
-                      style={{ backgroundColor: `${botConfig.color}20` }}
+                      style={{
+                        backgroundColor: `${botConfig.primary_color}20`,
+                      }}
                     >
                       <Image
                         src="/logo.png"
@@ -408,19 +419,21 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                         </span>
                         <div
                           className="w-2 h-2 rounded-full animate-bounce"
-                          style={{ backgroundColor: `${botConfig.color}60` }}
+                          style={{
+                            backgroundColor: `${botConfig.primary_color}60`,
+                          }}
                         ></div>
                         <div
                           className="w-2 h-2 rounded-full animate-bounce"
                           style={{
-                            backgroundColor: `${botConfig.color}60`,
+                            backgroundColor: `${botConfig.primary_color}60`,
                             animationDelay: "0.1s",
                           }}
                         ></div>
                         <div
                           className="w-2 h-2 rounded-full animate-bounce"
                           style={{
-                            backgroundColor: `${botConfig.color}60`,
+                            backgroundColor: `${botConfig.primary_color}60`,
                             animationDelay: "0.2s",
                           }}
                         ></div>
@@ -555,7 +568,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
                   <button
                     className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md disabled:opacity-50"
-                    style={{ backgroundColor: botConfig.color }}
+                    style={{ backgroundColor: botConfig.primary_color }}
                     disabled
                   >
                     <svg

@@ -17,10 +17,12 @@ export const API_ROUTES = {
     GET_EMBED: `${API_BASE_URL}/widget/embed-script/`, //bot_uuid
   },
   QA: {
-    // DOCUMENT: `${API_BASE_URL}/chatbots/{bot_uuid}/documents`,
+    DOCUMENT: (bot_uuid: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/documents`,
 
-    DOCUMENT: (bot_uuid:string) => `${API_BASE_URL}/chatbots/${bot_uuid}/documents`,
-    QUESTION: `${API_BASE_URL}/chatbots/{bot_uuid}/qa`,
+    FAQ: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/qa`,
+    URL: (bot_uuid: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/documents/url`,
   },
   USER: {
     PROFILE: `${API_BASE_URL}/user/profile`,

@@ -6,11 +6,11 @@ import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
-import { BotConfig } from "@/types/common";
 import { Info, Tick } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { onboardingData } from "../onboarding.data";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { BotConfig, KnowledgeItem } from "@/types/common";
 import {
   FileText,
   Link,
@@ -29,34 +29,26 @@ interface WizardStep2Props {
   updateConfig: (updates: Partial<BotConfig>) => void;
 }
 
-interface KnowledgeItem {
-  id: string;
-  type: "faq" | "document" | "url" | "text";
-  title: string;
-  content?: string;
-  url?: string;
-  status: "processing" | "applied" | "error";
-  createdAt: string;
-}
-
 export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const [selectedType, setSelectedType] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
-  const { user, loading } = useAuth();
-  const router = useRouter();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     const loadOnboardingData = async () => {
-      console.log("botConfig", botConfig);
+      setIsLoading(true);
       try {
         const savedData = localStorage.getItem("aiva-onboarding-data");
         if (!savedData) return;
 
         const parsedData = JSON.parse(savedData);
-        // if (parsedData.botConfig?.uuid) setUuid(parsedData.botConfig.uuid);
+        console.log("uuid: ", parsedData.botConfig?.uuid);
 
         if (parsedData.botConfig?.uuid) {
           try {
@@ -70,10 +62,11 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               }
             );
 
-            console.log("res qa docs: ", response.data);
-            const hasApiData = response.data?.success && response.data?.data;
+            // console.log("get qa docs: ", response.data);
+            // const hasApiData = response.data?.success && response.data?.data;
 
             botConfig.knowledge = response.data.data;
+            console.log("botConfig.knowledge: ", botConfig.knowledge);
 
             // ذخیره فقط اگر داده جدید اومده
             // if (hasApiData) {
@@ -105,13 +98,13 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         }
       } catch (error) {
         console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     if (user?.token) loadOnboardingData();
   }, [user?.token]);
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -119,14 +112,16 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     const file = event.target.files?.[0];
 
     if (file) {
-       const allowedTypes = [".pdf", ".doc", ".docx", ".txt"];
+      const allowedTypes = [".pdf", ".doc", ".docx", ".txt"];
       const fileExtension = file.name
         .slice(((file.name.lastIndexOf(".") - 1) >>> 0) + 2)
         .toLowerCase();
 
       if (allowedTypes.includes(`.${fileExtension}`)) {
-        // ذخیره فایل در متغیر State
         setSelectedFile(file);
+        // setNewItem()
+        setNewItem((prev) => ({ ...prev, title: file.name }));
+
         console.log(`فایل انتخاب شد: ${file.name} (اندازه: ${file.size} بایت)`);
       } else {
         setSelectedFile(null);
@@ -134,20 +129,15 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           "فرمت فایل مجاز نیست. لطفاً PDF، DOC، DOCX یا TXT انتخاب کنید."
         );
       }
+      // console.log("newItem", newItem);
     } else {
       setSelectedFile(null);
     }
   };
 
   const saveItem = async () => {
-    if (!newItem.title) {
-      Alert("لطفاً عنوان را وارد کنید.");
-      return;
-    }
-
     try {
       if (isEditing && editingItem) {
-        // 🟡 ویرایش آیتم موجود
         const updatedItem = {
           ...editingItem,
           title: newItem.title,
@@ -179,30 +169,37 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
         cancelEditing();
       } else {
-        // 🟢 افزودن آیتم جدید
+        //  افزودن آیتم جدید
 
         const formData = new FormData();
-        formData.append("title", newItem.title || "");
         formData.append("type", selectedType);
-        formData.append("url", newItem.url || "");
-        formData.append("content", newItem.content || "");
 
-        // اگر نوع محتوا document بود و فایلی انتخاب شده:
         if (selectedType === "document" && selectedFile) {
+          formData.append("title", newItem.title || "");
           formData.append("file", selectedFile);
+          formData.append("content", newItem.content || "");
+        } else if (selectedType === "text") {
+          formData.append("question", newItem.title || "");
+          formData.append("answer", newItem.content || "");
+        } else if (selectedType === "text") {
+          formData.append("url", newItem.url || "");
+          formData.append("title", newItem.title || "");
         }
 
-        const res = await axios.post(
-          API_ROUTES.QA.DOCUMENT(botConfig.uuid),
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const apiPath =
+          selectedType === "document"
+            ? API_ROUTES.QA.DOCUMENT(botConfig.uuid)
+            : selectedType === "url"
+            ? API_ROUTES.QA.URL(botConfig.uuid)
+            : API_ROUTES.QA.FAQ(botConfig.uuid);
+
+        const res = await axios.post(apiPath, formData, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         if (!res.data?.success) {
           Alert("خطا در ثبت آیتم جدید");
@@ -310,90 +307,37 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     setNewItem({});
   };
 
-  const saveItem1 = async () => {
-    if (!newItem.title || (!newItem.content && !newItem.url)) return;
-    if (newItem.content) {
-      Alert("فایل را وارد کنید ");
-      return;
-    }
+  const removeItem = async (id: string) => {
     try {
-      if (isEditing && editingItem) {
-        // ویرایش آیتم موجود
-        const updatedItem: KnowledgeItem = {
-          ...editingItem,
-          title: newItem.title,
-          content: newItem.content,
-          url: newItem.url,
-          status: "processing",
-        };
-
-        const res = await axios.put(API_ROUTES.QA.DOCUMENT(botConfig.uuid), {
+      const res = await axios.delete(
+        `${API_ROUTES.QA.DOCUMENT(botConfig.uuid)}/${id}`,
+        {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${user?.token}`,
           },
-          body: JSON.stringify(updatedItem),
-        });
+        }
+      );
 
-        if (!res.data.success) Alert("خطا در ثبت اطلاعات");
-        // throw new Error("خطا در ویرایش آیتم");
-
-        const savedItem = await res.data.json();
-
-        // به‌روزرسانی local state
+      if (res.data?.success) {
         updateConfig({
-          knowledge: botConfig.knowledge.map((k) =>
-            k.id === editingItem.id ? savedItem : k
-          ),
+          knowledge: botConfig.knowledge.filter((item) => item.id !== id),
         });
-
-        cancelEditing();
+        console.log("✅ Item removed successfully:", id);
       } else {
-        // ایجاد آیتم جدید
-        const item: KnowledgeItem = {
-          id: Date.now().toString(),
-          type: newItem.type as any,
-          title: newItem.title,
-          content: newItem.content,
-          url: newItem.url,
-          status: "processing",
-          createdAt: new Date().toISOString(),
-        };
-
-        const formData = new FormData();
-
-        // formData.append("file", newItem.content);
-        const res = await axios.post(
-          API_ROUTES.QA.DOCUMENT(botConfig.uuid),
-          { formData },
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
-        );
-
-        if (!res.data.success) throw new Error("خطا در ثبت آیتم جدید");
-
-        const savedItem = await res.data.json();
-
-        updateConfig({
-          knowledge: [...botConfig.knowledge, savedItem],
-        });
-
-        cancelAdding();
+        console.warn("⚠️ Unexpected response while removing item:", res.data);
       }
-    } catch (err) {
-      console.error(err);
-      Alert("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
-    }
-  };
+    } catch (error: any) {
+      // Handle unauthorized (401)
+      if (error.response?.status === 401) {
+        console.warn("Unauthorized — redirecting to login...");
+        localStorage.removeItem("aiva-onboarding-data");
+        router.push("/auth/login");
+        return;
+      }
 
-  const removeItem = (id: string) => {
-    updateConfig({
-      knowledge: botConfig.knowledge.filter((item) => item.id !== id),
-    });
+      console.error("❌ Failed to remove item:", error);
+    }
   };
 
   return (
@@ -403,7 +347,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     >
       {/* Header */}
       <div className="flex items-start gap-4 px-[0px] py-[12px]">
-        {loading && <PageLoader />}
+        {loading || (isLoading && <PageLoader />)}
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
           <Tick />
         </div>
@@ -537,8 +481,15 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           <div className="space-y-4">
             <div>
               <label className="block text-grey-900 mb-2 text-right">
-                عنوان
-                <span className="text-brand-primary mr-1">*</span>
+                {selectedType === "text" ? (
+                  <div>
+                    سؤال <span className="text-brand-primary mr-1">*</span>
+                  </div>
+                ) : (
+                  "عنوان"
+                )}
+
+                {/* */}
               </label>
               <Input
                 type="text"
@@ -652,10 +603,16 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               <div>
                 <label className="block text-grey-900 mb-2">آپلود فایل</label>
                 <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">
-                  <Upload className="w-8 h-8 text-grey-400 mx-auto mb-4" />
-                  <p className="text-grey-600 mb-4">
-                    فایل خود را اینجا بکشید یا کلیک کنید
-                  </p>
+                  {selectedFile ? (
+                    <div>{selectedFile.name}</div>
+                  ) : (
+                    <div>
+                      <Upload className="w-8 h-8 text-grey-400 mx-auto mb-4" />
+                      <p className="text-grey-600 mb-4">
+                        فایل خود را اینجا بکشید یا کلیک کنید
+                      </p>
+                    </div>
+                  )}
                   <input
                     type="file"
                     onChange={handleFileUpload}
@@ -691,8 +648,9 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             <Button
               variant="primary"
               onClick={saveItem}
-              disabled={!newItem.title || (!newItem.content && !newItem.url)}
-              className="px-12 py-3 min-w-[160px] shadow-lg hover:shadow-xl"
+              disabled={!newItem.title}
+              // disabled={!newItem.title || (!newItem.content && !newItem.url)}
+              className="px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
             >
               {isEditing ? "ذخیره تغییرات" : "ذخیره  "}
             </Button>
@@ -751,10 +709,12 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
           <div className="space-y-3">
             {botConfig.knowledge.map((item) => {
+              // console.log("item",item)
               const IconComponent = getIcon(item.type);
 
               return (
                 <Card
+                  // key={index}
                   key={item.id}
                   className="p-4 border-2 border-brand-primary/10 bg-bg-surface shadow-sm"
                 >
@@ -799,9 +759,9 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
                         {/* Created date */}
                         <p className="text-grey-400 text-xs mt-1">
-                          اضافه شده: {new Date("").toLocaleDateString("fa-IR")}
-                          {/* {new Date(item.createdAt).toLocaleDateString("fa-IR")} */}
-                          {/* //elham */}
+                          {new Date(item?.created_at ?? "").toLocaleDateString(
+                            "fa-IR"
+                          )}
                         </p>
                       </div>
                     </div>
@@ -809,7 +769,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                     {/* Action Buttons */}
                     <div className="flex items-center gap-1 flex-shrink-0 mr-2">
                       <button
-                        // onClick={() => startEditing(item)}
+                        onClick={() => startEditing(item)}
                         //elham
                         title="ویرایش محتوا"
                         className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"

@@ -74,7 +74,7 @@ export default function OnboardingWizard() {
               }
             );
 
-            console.log("res data: ", response.data);
+            console.log("BotConfig: ", response.data.data);
             const hasApiData = response.data?.success && response.data?.data;
 
             setBotConfig(
@@ -278,14 +278,14 @@ export default function OnboardingWizard() {
         });
         if (res.data.success) {
           botConfig.uuid = res.data.data.uuid;
-          // const savedData = localStorage.getItem("aiva-onboarding-data");
+          console.log("uuid", res.data.data.uuid);
+          console.log("botConfig1", botConfig );
           localStorage.setItem(
             "aiva-onboarding-data",
             JSON.stringify(botConfig)
           );
 
           setUuid(res.data.data.uuid);
-          console.log("uuid", res.data.data.uuid);
           return true;
         } else {
           setUuid("");

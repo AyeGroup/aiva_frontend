@@ -51,15 +51,20 @@ export interface BotConfig {
   llm_api_key: string;
   primary_color: string;
   accent_color: string;
-  knowledge: Array<{
-    id: string;
-    type: "faq" | "document" | "url" | "text";
-    title: string;
-    content?: string;
-    status?: string;
-    url?: string;
-  }>;
+  knowledge: Array<KnowledgeItem>;
+ 
   logo_path: string;
+}
+
+export interface KnowledgeItem {
+  id: string;
+  type: "faq" | "document" | "url" | "text";
+  title: string;
+  content?: string;
+  status?: string;
+  url?: string;
+  created_at?: string;
+  qa_id?: string;
 }
 
 // ----------
