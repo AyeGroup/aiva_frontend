@@ -99,21 +99,21 @@ export const onboardingData = {
 
   knowledgeTypes: [
     {
-      id: "document",
+      id: "file",
       title: "افزودن فایل",
       description: "فایل با فرمت word ٬ pdf ٬ csv",
       icon: "file-text",
       placeholder: "فایل‌های خود را اینجا بکشید یا کلیک کنید",
     },
     {
-      id: "url",
+      id: "website",
       title: "افزودن لینک وب سایت",
       description: "صفحات سایت یا منابع آنلاین",
       icon: "link",
       placeholder: "https://example.com/about",
     },
     {
-      id: "text",
+      id: "qa_pair",
       title: "افزودن پرسش و پاسخ",
       description: "اضافه کردن محتوا",
       icon: "type",

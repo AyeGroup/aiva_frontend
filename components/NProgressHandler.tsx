@@ -2,14 +2,14 @@
 
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import NProgress from "nprogress";
+// import NProgress from "nprogress";
 
-NProgress.configure({
-  showSpinner: false,
-  speed: 400,
-  minimum: 0.1,
-  trickleSpeed: 200,
-});
+// NProgress.configure({
+//   showSpinner: false,
+//   speed: 400,
+//   minimum: 0.1,
+//   trickleSpeed: 200,
+// });
 
 export default function NProgressHandler() {
   const pathname = usePathname();
@@ -17,11 +17,11 @@ export default function NProgressHandler() {
 
   useEffect(() => {
     // Start progress bar when route changes
-    NProgress.start();
+    // NProgress.start();
 
     // Complete progress bar after a short delay
     const timer = setTimeout(() => {
-      NProgress.done();
+      // NProgress.done();
     }, 100);
 
     return () => clearTimeout(timer);

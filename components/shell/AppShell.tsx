@@ -3,7 +3,7 @@
 import React, { Suspense, lazy, useEffect } from "react";
 import { Header } from "@/components/header/header";
 import { PageType } from "@/types/common";
-import NProgress from "nprogress";
+// import NProgress from "nprogress";
 
 // Lazy load صفحات
 const LandingPage = lazy(() => import("@/app/landing/page"));
@@ -22,12 +22,12 @@ const ChatHistoryDemo = lazy(
 
 // Enhanced Loader with NProgress
 const PageLoader = () => {
-  useEffect(() => {
-    NProgress.start();
-    return () => {
-      NProgress.done();
-    };
-  }, []);
+  // useEffect(() => {
+  //   NProgress.start();
+  //   return () => {
+  //     NProgress.done();
+  //   };
+  // }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

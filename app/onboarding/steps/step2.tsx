@@ -137,24 +137,31 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
   const saveItem = async () => {
     try {
-      if (isEditing && editingItem) {
-        const updatedItem = {
-          ...editingItem,
-          title: newItem.title,
-          content: newItem.content,
-          url: newItem.url,
-        };
+      const apiPath =
+        selectedType === "file"
+          ? API_ROUTES.QA.DOCUMENT(botConfig.uuid)
+          : selectedType === "website"
+          ? API_ROUTES.QA.URL(botConfig.uuid)
+          : API_ROUTES.QA.FAQ(botConfig.uuid);
 
-        const res = await axios.put(
-          API_ROUTES.QA.DOCUMENT(botConfig.uuid),
-          updatedItem,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
-        );
+      const formData = new FormData();
+      formData.append("type", selectedType);
+
+      if (isEditing && editingItem) {
+
+        formData.append("id", editingItem.id || "");
+        formData.append("title", newItem.title || "");
+        if (selectedType === "qa_pair") {
+          formData.append("question", newItem.title || "");
+          formData.append("answer", newItem.content || "");
+        }
+
+        const res = await axios.put(`${apiPath}/${editingItem.id}`, formData, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
 
         if (!res.data?.success) {
           Alert("خطا در ویرایش اطلاعات");
@@ -170,29 +177,17 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         cancelEditing();
       } else {
         //  افزودن آیتم جدید
-
-        const formData = new FormData();
-        formData.append("type", selectedType);
-
-        if (selectedType === "document" && selectedFile) {
+        if (selectedType === "file" && selectedFile) {
           formData.append("title", newItem.title || "");
           formData.append("file", selectedFile);
           formData.append("content", newItem.content || "");
-        } else if (selectedType === "text") {
+        } else if (selectedType === "qa_pair") {
           formData.append("question", newItem.title || "");
           formData.append("answer", newItem.content || "");
-        } else if (selectedType === "text") {
+        } else if (selectedType === "website") {
           formData.append("url", newItem.url || "");
           formData.append("title", newItem.title || "");
         }
-
-        const apiPath =
-          selectedType === "document"
-            ? API_ROUTES.QA.DOCUMENT(botConfig.uuid)
-            : selectedType === "url"
-            ? API_ROUTES.QA.URL(botConfig.uuid)
-            : API_ROUTES.QA.FAQ(botConfig.uuid);
-
         const res = await axios.post(apiPath, formData, {
           withCredentials: true,
           headers: {
@@ -225,11 +220,11 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     switch (type) {
       case "faq":
         return HelpCircle;
-      case "document":
+      case "file":
         return FileText;
-      case "url":
+      case "website":
         return Link;
-      case "text":
+      case "qa_pair":
         return Type;
       default:
         return Type;
@@ -279,7 +274,10 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     console.log("add type", type);
     setSelectedType(type);
     setIsAdding(true);
-    setNewItem({ type: type as any, title: "", content: "" });
+    setIsEditing(false);
+    setNewItem({});
+    //elham
+    // setNewItem({ type: type as any, title: "", content: "" });
   };
 
   const cancelAdding = () => {
@@ -289,15 +287,12 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   };
 
   const startEditing = (item: KnowledgeItem) => {
+    setIsAdding(false);
     setIsEditing(true);
     setEditingItem(item);
     setSelectedType(item.type);
-    setNewItem({
-      title: item.title,
-      content: item.content,
-      url: item.url,
-      type: item.type,
-    });
+    setNewItem(item);
+    
   };
 
   const cancelEditing = () => {
@@ -463,7 +458,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-grey-900">
               {isEditing
-                ? "ویرایش محتوا"
+                ? "ویرایش "
                 : onboardingData.knowledgeTypes.find(
                     (t) => t.id === selectedType
                   )?.title}
@@ -481,15 +476,13 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           <div className="space-y-4">
             <div>
               <label className="block text-grey-900 mb-2 text-right">
-                {selectedType === "text" ? (
+                {selectedType === "qa_pair" ? (
                   <div>
                     سؤال <span className="text-brand-primary mr-1">*</span>
                   </div>
                 ) : (
                   "عنوان"
                 )}
-
-                {/* */}
               </label>
               <Input
                 type="text"
@@ -502,12 +495,10 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               />
             </div>
 
-            {selectedType === "faq" && (
+            {selectedType === "qa_pair" && (
               <div>
-                {/* سوالات پیشنهادی */}
-
                 <label className="block text-grey-900 mb-2 text-right">
-                  سؤال و پاسخ
+                  پاسخ
                   <span className="text-brand-primary mr-1">*</span>
                 </label>
                 <textarea
@@ -559,7 +550,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               </div>
             )}
 
-            {selectedType === "text" && (
+            {selectedType === "qa_pair1" && (
               <div>
                 <label className="block text-grey-900 mb-2">
                   محتوا
@@ -577,7 +568,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               </div>
             )}
 
-            {selectedType === "url" && (
+            {selectedType === "website" && isAdding && (
               <div>
                 <label className="block text-grey-900 mb-2">
                   آدرس وب
@@ -599,7 +590,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               </div>
             )}
 
-            {selectedType === "document" && (
+            {selectedType === "file" && isAdding && (
               <div>
                 <label className="block text-grey-900 mb-2">آپلود فایل</label>
                 <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">
@@ -677,7 +668,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                   {
                     botConfig.knowledge.filter((k) => k.status === "processing")
                       .length
-                  }{" "}
+                  }
                   در حال پردازش
                 </span>
               </div>
@@ -708,14 +699,14 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           </div>
 
           <div className="space-y-3">
-            {botConfig.knowledge.map((item) => {
-              // console.log("item",item)
+            {botConfig.knowledge.map((item, index) => {
+              console.log("item", item);
               const IconComponent = getIcon(item.type);
 
               return (
                 <Card
-                  // key={index}
-                  key={item.id}
+                  // key={item.id}
+                  key={item.id ? item.id : index}
                   className="p-4 border-2 border-brand-primary/10 bg-bg-surface shadow-sm"
                 >
                   <div className="flex items-start justify-between">

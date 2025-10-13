@@ -335,8 +335,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
                     {/* Message Bubble */}
                     <div
-                      className={`
-                        max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm text-right
+                      className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm text-right
                         ${
                           message.isBot
                             ? `bg-white border border-grey-100 text-grey-800 ${
@@ -360,7 +359,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                       style={
                         !message.isBot
                           ? {
-                              background: `linear-gradient(135deg, ${botConfig.accent_color} 0%, ${botConfig.accent_color}dd 100%)`,
+                              background:  botConfig.primary_color 
                             }
                           : {}
                       }

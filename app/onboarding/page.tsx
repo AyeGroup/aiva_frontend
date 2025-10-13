@@ -100,7 +100,7 @@ export default function OnboardingWizard() {
             if (apiError.response?.status === 401) {
               console.warn("Unauthorized - redirecting to login...");
               localStorage.removeItem("aiva-onboarding-data");
-              router.push("/auth/login") 
+              router.push("/auth/login");
               return;
             }
 
@@ -118,7 +118,7 @@ export default function OnboardingWizard() {
     };
 
     if (user?.token) loadOnboardingData();
-  }, []);
+  }, [user?.token]);
 
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
@@ -136,85 +136,7 @@ export default function OnboardingWizard() {
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
-  // Load saved data from localStorage on component mount
-  // useEffect(() => {
-  //   const loadOnboardingData = async () => {
-  //     try {
-  //       const savedData = localStorage.getItem("aiva-onboarding-data");
-  //       if (!savedData) return;
-
-  //       const parsedData = JSON.parse(savedData);
-  //       if (parsedData.botConfig?.uuid) {
-  //         setUuid(parsedData.botConfig.uuid);
-  //       }
-  //       console.log("uuid: ", parsedData.botConfig?.uuid);
-
-  //       if (parsedData.botConfig?.uuid) {
-  //         try {
-  //           const response = await axios.get(
-  //             `${API_ROUTES.BOTS.GET}${parsedData.botConfig.uuid}`,
-  //             {
-  //               withCredentials: true,
-  //               headers: {
-  //                 Authorization: `Bearer ${user?.token}`,
-  //               },
-  //             }
-  //           );
-
-  //           console.log("res data: ", response.data);
-  //           if (
-  //             response.data.success === true &&
-  //             (!response.data.data || response.data.data.length === 0)
-  //           ) {
-  //             console.log("BOTS data", response.data.data?.length);
-  //             setBotConfig(response.data.data || parsedData.botConfig);
-  //             localStorage.setItem(
-  //               "aiva-onboarding-data",
-  //               response.data.data
-  //             );
-  //             setCurrentStep(
-  //               response.data.currentStep || parsedData.currentStep || 1
-  //             );
-  //           } else {
-  //             // If API has data, use local storage as fallback
-  //             setBotConfig(parsedData.botConfig || botConfig);
-  //             setCurrentStep(parsedData.currentStep || 1);
-  //           }
-  //         } catch (apiError) {
-  //           console.warn("API fetch failed, using local data:", apiError);
-  //           // Fallback to local storage if API call fails
-  //           setBotConfig(parsedData.botConfig || botConfig);
-  //           setCurrentStep(parsedData.currentStep || 1);
-  //         }
-  //       } else {
-  //         // No UUID, use local storage data
-  //         setBotConfig(parsedData.botConfig || botConfig);
-  //         setCurrentStep(parsedData.currentStep || 1);
-  //       }
-  //     } catch (error) {
-  //       console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
-  //     }
-  //   };
-
-  //   loadOnboardingData();
-  // }, [user?.token]); // Added dependency
-
-  // // Save data to localStorage whenever botConfig or currentStep changes
-  // useEffect(() => {
-  //   const dataToSave = {
-  //     botConfig,
-  //     currentStep,
-  //     timestamp: new Date().toISOString(),
-  //   };
-  //   localStorage.setItem("aiva-onboarding-data", JSON.stringify(dataToSave));
-  // }, [botConfig, currentStep]);
-
-  // useEffect(() => {
-  //   if (!loading && !user) {
-  //     router.push("/auth/login");
-  //   }
-  // }, [user, loading, router]);
-
+ 
   const validateFields = () => {
     console.log("call validateFields ");
 

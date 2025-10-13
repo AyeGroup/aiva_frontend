@@ -1,20 +1,20 @@
 "use client";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import AppShell from "@/components/shell/AppShell";
-import NProgress from "nprogress";
+// import NProgress from "nprogress";
 
 export default function Page() {
-  useEffect(() => {
-    // Start progress when page starts loading
-    NProgress.start();
+  // useEffect(() => {
+  //   // Start progress when page starts loading
+  //   NProgress.start();
 
-    // Complete after component mounts
-    const timer = setTimeout(() => {
-      NProgress.done();
-    }, 300);
+  //   // Complete after component mounts
+  //   const timer = setTimeout(() => {
+  //     NProgress.done();
+  //   }, 300);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return <AppShell page="landing" />;
 }
