@@ -44,6 +44,7 @@ export default function OnboardingWizard() {
     primary_color: "",
     accent_color: "",
     knowledge: [],
+    faqs: [],
     logo_path: "",
   });
   const [isSaving, setIsSaving] = useState(false);
@@ -99,7 +100,7 @@ export default function OnboardingWizard() {
             // ✅ بررسی خطای 401
             if (apiError.response?.status === 401) {
               console.warn("Unauthorized - redirecting to login...");
-              localStorage.removeItem("aiva-onboarding-data");
+              // localStorage.removeItem("aiva-onboarding-data");
               router.push("/auth/login");
               return;
             }
@@ -136,7 +137,6 @@ export default function OnboardingWizard() {
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
- 
   const validateFields = () => {
     console.log("call validateFields ");
 
@@ -201,7 +201,7 @@ export default function OnboardingWizard() {
         if (res.data.success) {
           botConfig.uuid = res.data.data.uuid;
           console.log("uuid", res.data.data.uuid);
-          console.log("botConfig1", botConfig );
+          console.log("botConfig1", botConfig);
           localStorage.setItem(
             "aiva-onboarding-data",
             JSON.stringify(botConfig)
@@ -244,16 +244,16 @@ export default function OnboardingWizard() {
 
   const nextStep = async () => {
     console.log("call nextStep ");
-
-    const isSaved = await saveBotConfig();
-    console.log("Bot saved:", isSaved);
-    if (!isSaved) return;
+    if (currentStep == 1) {
+      const isSaved = await saveBotConfig();
+      console.log("Bot saved:", isSaved);
+      if (!isSaved) return;
+    }
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
       // اتمام و رفتن به داشبورد
       localStorage.removeItem("aiva-onboarding-data");
-      // onNavigate("dashboard");
       router.push("/dashboard");
     }
   };

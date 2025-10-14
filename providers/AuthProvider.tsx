@@ -35,11 +35,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   // setup axios defaults
-  axios.defaults.withCredentials = true;
+  // axios.defaults.withCredentials = true;
 
   // Fetch user info when app loads
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("accessToken");
     const savedUser = localStorage.getItem("user");
     if (token && savedUser) {
       setUser(JSON.parse(savedUser));
@@ -86,8 +86,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       // const { access_token, refresh_token } = res.data;
 
-      localStorage.setItem("access_token", res.data.data.access_token);
-      localStorage.setItem("refresh_token", res.data.data.refresh_token);
+      localStorage.setItem("accessToken", res.data.data.access_token);
+      localStorage.setItem("refreshToken", res.data.data.refresh_token);
       const user: User = {
         id: res.data.data.id,
         name: "",
@@ -141,8 +141,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await axios.post(API_ROUTES.AUTH.LOGOUT, {}, { withCredentials: true });
     } finally {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       setUser(null);
 
       router.push("/auth/login");

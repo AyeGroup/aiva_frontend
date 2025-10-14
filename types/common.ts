@@ -52,8 +52,15 @@ export interface BotConfig {
   primary_color: string;
   accent_color: string;
   knowledge: Array<KnowledgeItem>;
- 
+  faqs: Array<FAQ>;
   logo_path: string;
+}
+
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  isEditing?: boolean;
 }
 
 export interface KnowledgeItem {

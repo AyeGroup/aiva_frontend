@@ -53,7 +53,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         if (parsedData.botConfig?.uuid) {
           try {
             const response = await axios.get(
-              API_ROUTES.QA.DOCUMENT(parsedData.botConfig.uuid),
+              API_ROUTES.KNOWLEDGE.DOCUMENT(parsedData.botConfig.uuid),
               {
                 withCredentials: true,
                 headers: {
@@ -83,7 +83,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             // ✅ بررسی خطای 401
             if (apiError.response?.status === 401) {
               console.warn("Unauthorized - redirecting to login...");
-              localStorage.removeItem("aiva-onboarding-data");
+              // localStorage.removeItem("aiva-onboarding-data");
               router.push("/auth/login");
               return;
             }
@@ -137,17 +137,14 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
   const saveItem = async () => {
     try {
-      const apiPath =
-        selectedType === "file"
-          ? API_ROUTES.QA.DOCUMENT(botConfig.uuid)
-          : selectedType === "website"
-          ? API_ROUTES.QA.URL(botConfig.uuid)
-          : API_ROUTES.QA.FAQ(botConfig.uuid);
-
       const formData = new FormData();
       formData.append("type", selectedType);
 
       if (isEditing && editingItem) {
+        const apiPath =
+          selectedType === "file" || selectedType === "website"
+            ? API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(botConfig.uuid, editingItem.id)
+            : API_ROUTES.KNOWLEDGE.FAQ(botConfig.uuid);
 
         formData.append("id", editingItem.id || "");
         formData.append("title", newItem.title || "");
@@ -176,6 +173,13 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
         cancelEditing();
       } else {
+        const apiPath =
+          selectedType === "file"
+            ? API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)
+            : selectedType === "website"
+            ? API_ROUTES.KNOWLEDGE.URL(botConfig.uuid)
+            : API_ROUTES.KNOWLEDGE.FAQ(botConfig.uuid);
+
         //  افزودن آیتم جدید
         if (selectedType === "file" && selectedFile) {
           formData.append("title", newItem.title || "");
@@ -202,9 +206,9 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         }
 
         const savedItem = res.data.data;
-
+        // setNewItem(item);
         updateConfig({
-          knowledge: [...(botConfig.knowledge || []), savedItem],
+        knowledge: [...(botConfig.knowledge || []), savedItem],
         });
 
         cancelAdding();
@@ -292,7 +296,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     setEditingItem(item);
     setSelectedType(item.type);
     setNewItem(item);
-    
   };
 
   const cancelEditing = () => {
@@ -305,7 +308,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const removeItem = async (id: string) => {
     try {
       const res = await axios.delete(
-        `${API_ROUTES.QA.DOCUMENT(botConfig.uuid)}/${id}`,
+        `${API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)}/${id}`,
         {
           withCredentials: true,
           headers: {
@@ -326,7 +329,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       // Handle unauthorized (401)
       if (error.response?.status === 401) {
         console.warn("Unauthorized — redirecting to login...");
-        localStorage.removeItem("aiva-onboarding-data");
+        // localStorage.removeItem("aiva-onboarding-data");
         router.push("/auth/login");
         return;
       }

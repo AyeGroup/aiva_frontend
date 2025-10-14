@@ -1,18 +1,13 @@
 import { useState } from "react";
-// import { BotConfig } from "../page";
-// import { Button } from "@/components/button';
-// import { Input } from "@/components/input';
-import { RadioGroup } from "@/components/radio-group";
+import { BotConfig } from "@/types/common";
 import {
   Settings,
   MessageSquare,
   UserCheck,
-  AlertTriangle,
   Clock,
   Shield,
   Zap,
 } from "lucide-react";
-import { BotConfig } from "@/types/common";
 
 interface WizardStep3Props {
   botConfig: BotConfig;
