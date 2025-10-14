@@ -47,9 +47,7 @@ function Login() {
       if (!res.success) {
         toast.error(res.message);
         if (res.status === 403) {
-          router.push(
-            `/auth/verification?phone=${identity}`
-          );
+          router.push(`/auth/verification?phone=${identity}`);
         }
         return;
       }
@@ -183,24 +181,19 @@ function Login() {
             <form className="space-y-3" onSubmit={handleSubmit}>
               <div>
                 <div className="relative">
-                  {!phone && (
+                  {/* {!phone && (
                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-grey-400 pointer-events-none z-10">
                       <span className="text-grey-400">موبایل / ایمیل </span>
                     </div>
-                  )}
+                  )} */}
                   <Input
                     id="phone"
                     type="text"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder=""
-                    className="w-full text-center pr-4 pl-4 py-6 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary"
-                    style={{
-                      borderRadius: "var(--radius-lg)",
-                      fontSize: "var(--text-body-large)",
-                      lineHeight: "var(--text-body-large-lh)",
-                    }}
-                    dir="ltr"
+                    placeholder="موبایل / ایمیل "
+                    className="w-full rounded-3xl pr-4 pl-4 py-6 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
+                    
                     maxLength={32}
                   />
                 </div>
@@ -209,24 +202,18 @@ function Login() {
               {/* Password Field */}
               <div>
                 <div className="relative">
-                  {!password && (
+                  {/* {!password && (
                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-grey-400 pointer-events-none z-10 text-sm">
                       <span className="text-grey-400">رمز عبور</span>
                     </div>
-                  )}
+                  )} */}
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={password}
+                    placeholder="رمز عبور"
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder=""
-                    className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 !bg-white text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none text-center"
-                    style={{
-                      borderRadius: "var(--radius-lg)",
-                      fontSize: "var(--text-body-large)",
-                      lineHeight: "var(--text-body-large-lh)",
-                    }}
-                    dir="rtl"
+                    className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 !bg-white text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none !text-center !placeholder:text-center "
                   />
                   {/* Password toggle button */}
                   <button

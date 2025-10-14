@@ -14,8 +14,8 @@ export default function Verification() {
   // const email = searchParams.get("email") || "";
 
   const phoneNumber = "1";
-  const email =   "";
-  
+  const email = "";
+
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -128,7 +128,7 @@ export default function Verification() {
         router.push("dashboard");
       } else {
         setError("کد وارد شده صحیح نیست. لطفاً مجدداً تلاش کنید.");
-        setOtp(["", "", "", "", "", ""]);
+        setOtp(["", "", "", "", ""]);
         inputRefs.current[0]?.focus();
       }
     } catch (error) {
@@ -145,8 +145,6 @@ export default function Verification() {
     setError("");
 
     try {
-      // Simulate API call
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
       const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
         phone: phoneNumber,
       });
@@ -154,7 +152,7 @@ export default function Verification() {
       }
 
       setCountdown(120);
-      setOtp(["", "", "", "", "", ""]);
+      setOtp(["", "", "", "", ""]);
       inputRefs.current[0]?.focus();
 
       // Show success message

@@ -31,7 +31,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
             Authorization: `Bearer ${user?.token}`,
           },
         });
-        setFaqs(res.data || []);
+        setFaqs(res.data.data || []);
       } catch (err) {
         console.error("خطا در دریافت FAQها:", err);
       } finally {
@@ -44,8 +44,14 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   // 📤 افزودن FAQ
   const addFaq = async () => {
     if (!newFaq.question.trim() || !newFaq.answer.trim()) return;
+    const payload = {
+      question: newFaq.question,
+      answer: newFaq.answer,
+    };
+
+
     try {
-      const res = await axios.post(API_ROUTES.FAQ(botId), newFaq, {
+      const res = await axios.post(API_ROUTES.FAQ(botId), payload, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -117,7 +123,8 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
 
   //   آپدیت botConfig در حالت محلی (اختیاری)
   useEffect(() => {
-    if (!faqs) return;
+    console.log("faq",faqs)
+    if (!faqs || faqs.length===0) return;
 
     updateConfig({
       faqs: faqs.map((f) => ({

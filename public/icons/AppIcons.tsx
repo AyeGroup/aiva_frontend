@@ -258,11 +258,21 @@ export const Tick = () => {
     </svg>
   );
 };
-// export const LoginTopLeft = () => {
-//   return (
-
-//      );
-// };
+export const RegisterTopLeft = () => {
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 160 160" fill="none">
+      <path
+        d="M20 140 Q80 20 140 80 Q100 120 60 100 Q40 140 20 140Z"
+        fill="#65BCB6"
+      />
+      <path
+        d="M40 120 Q100 40 120 100 Q80 140 40 120Z"
+        fill="#FFA18E"
+        opacity="0.7"
+      />
+    </svg>
+  );
+};
 // export const LoginTopLeft = () => {
 //   return (
 

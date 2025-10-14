@@ -10,7 +10,7 @@ import { Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
 import axios from "axios";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { LoginTopLeft } from "@/public/icons/AppIcons";
+import { LoginTopLeft, RegisterTopLeft } from "@/public/icons/AppIcons";
 
 type RegisterStep = "signup" | "otp" | "success" | "password";
 
@@ -22,7 +22,7 @@ export default function Register() {
     phone: "",
     password: "",
   });
-  const [otp, setOtp] = useState([ "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -191,16 +191,11 @@ export default function Register() {
     e.preventDefault();
     console.log("handleOtpSubmit");
 
-    // console.log("test");
     const otpValue = otp.join("");
     if (otpValue.length !== 5) {
       toast.error("لطفاً کد 5 رقمی را کامل وارد کنید");
       return;
     }
-    // toast.success("حساب کاربری شما با موفقیت ایجاد شد");
-    // setCurrentStep("success");
-    // router.push("/dashboard");
-    // return;
 
     try {
       setIsLoading(true);
@@ -232,36 +227,47 @@ export default function Register() {
   };
 
   const handleResendOtp = async () => {
-    console.log("handleResendOtp");
-    setOtpTimer(120);
-    setOtp(["", "", "", "", "", ""]);
-    const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
-      phone: formData.phone,
-    });
+    setOtpTimer(0);
 
-    if (res.status === 200) {
-      // success response
+    console.log("handleResendOtp");
+    setOtp(["", "", "", "", ""]);
+    try {
+      const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
+        phone: formData.phone,
+      });
+
+      if (res.status !== 200) {
+        toast.error("خطا در ارسال پیامک");
+        console.log("resend otp: ", res);
+        return;
+      }
+      setOtpTimer(120);
+
       toast.success(
         `کد تایید به شماره ${englishToPersian(formData.phone)} ارسال شد`
       );
-    }
-    toast.success("کد تایید مجدداً ارسال شد");
 
-    // Restart timer
-    const timer = setInterval(() => {
-      setOtpTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+      // Restart timer
+      const timer = setInterval(() => {
+        setOtpTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (err: any) {
+      console.error("Register error:", err);
+      toast.error("خطا در ارسال پیامک");
+    } finally {
+      // setIsLoading(false);
+    }
   };
 
   const renderStepContent = () => {
-    console.log("renderStepContent",currentStep);
-  
+    console.log("renderStepContent", currentStep);
+
     switch (currentStep) {
       case "signup":
         return (
@@ -593,8 +599,6 @@ export default function Register() {
   };
 
   return (
-    // <div className="app-shell" dir="rtl">
-    //   <div className="app-content">
     <div className="login-page min-h-screen relative overflow-hidden">
       {/* Header Content */}
       <div className="relative z-50 w-full p-2 pb-0">
@@ -653,17 +657,7 @@ export default function Register() {
         </div>
 
         <div className="absolute top-20 right-16 w-40 h-40 opacity-15">
-          <svg width="100%" height="100%" viewBox="0 0 160 160" fill="none">
-            <path
-              d="M20 140 Q80 20 140 80 Q100 120 60 100 Q40 140 20 140Z"
-              fill="#65BCB6"
-            />
-            <path
-              d="M40 120 Q100 40 120 100 Q80 140 40 120Z"
-              fill="#FFA18E"
-              opacity="0.7"
-            />
-          </svg>
+          <RegisterTopLeft />
         </div>
 
         <div className="absolute bottom-20 right-24 w-20 h-24 opacity-20">
