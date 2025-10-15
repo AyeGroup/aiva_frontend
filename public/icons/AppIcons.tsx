@@ -172,6 +172,7 @@ export const StepChatButton = () => {
     </svg>
   );
 };
+
 export const StepSize = () => {
   return (
     <svg fill="currentColor" viewBox="0 0 24 24">
@@ -179,6 +180,7 @@ export const StepSize = () => {
     </svg>
   );
 };
+
 export const StepLogin = () => {
   return (
     <svg
@@ -190,6 +192,7 @@ export const StepLogin = () => {
     </svg>
   );
 };
+
 export const StepUpload = () => {
   return (
     <svg
@@ -207,6 +210,7 @@ export const StepUpload = () => {
     </svg>
   );
 };
+
 export const StepStar = () => {
   return (
     <svg
@@ -218,6 +222,7 @@ export const StepStar = () => {
     </svg>
   );
 };
+
 export const StepMessage = () => {
   return (
     <svg
@@ -229,6 +234,7 @@ export const StepMessage = () => {
     </svg>
   );
 };
+
 export const StepBigStar = () => {
   return (
     <svg
@@ -240,6 +246,7 @@ export const StepBigStar = () => {
     </svg>
   );
 };
+
 export const Info = () => {
   return (
     <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -247,17 +254,15 @@ export const Info = () => {
     </svg>
   );
 };
+
 export const Tick = () => {
   return (
-    <svg
-      className="w-8 h-8 text-brand-primary"
-      fill="currentColor"
-      viewBox="0 0 24 24"
-    >
+    <svg fill="currentColor" viewBox="0 0 24 24">
       <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   );
 };
+
 export const RegisterTopLeft = () => {
   return (
     <svg width="100%" height="100%" viewBox="0 0 160 160" fill="none">
@@ -273,7 +278,24 @@ export const RegisterTopLeft = () => {
     </svg>
   );
 };
+
+export const AivaWhite = () => {
+  return (
+    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 3.04 1.05 4.36L2 22l5.64-1.05C9.96 21.64 11.46 22 13 22h6c1.1 0 2-.9 2-2V12c0-5.52-4.48-10-10-10z" />
+    </svg>
+  );
+};
+
 // export const LoginTopLeft = () => {
+//   return (
+
+//      );
+// };// export const LoginTopLeft = () => {
+//   return (
+
+//      );
+// };// export const LoginTopLeft = () => {
 //   return (
 
 //      );

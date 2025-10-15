@@ -41,11 +41,6 @@ export interface BotConfig {
   color: string;
   button_size: string;
   widget_position: string;
-  answer_length: string;
-  support_phone: string;
-  use_emoji: string;
-  greetings: string;
-  k: string;
   reranker_enabled: string;
   llm_model: string;
   llm_api_key: string;
@@ -54,6 +49,7 @@ export interface BotConfig {
   knowledge: Array<KnowledgeItem>;
   faqs: Array<FAQ>;
   logo_path: string;
+  behaviors: BehaviorSettings;
 }
 
 export interface FAQ {
@@ -73,6 +69,25 @@ export interface KnowledgeItem {
   created_at?: string;
   qa_id?: string;
 }
+export interface BehaviorSettings {
+  k: number;
+  maxResponseLength: string;
+  phone: string;
+  useGreeting: boolean;
+  useEmojis: boolean;
+  useSupport: boolean;
+}
+
+// interface behaviors {
+//   responseStyle: "concise" | "detailed" | "helpful";
+//   maxResponseLength: number;
+//   useEmojis: boolean;
+//   escalationTriggers: string[];
+//   autoGreeting: boolean;
+//   contextMemory: boolean;
+//   privacyMode: boolean;
+//   responseDelay: number;
+// };
 
 // ----------
 // welcomeMessage: string;
@@ -82,16 +97,6 @@ export interface KnowledgeItem {
 //   logo?: string;
 //   position: "bottom-right" | "bottom-left";
 //   size: "small" | "medium" | "large";
-// };
-// behaviors?: {
-//   responseStyle: "concise" | "detailed" | "helpful";
-//   maxResponseLength: number;
-//   useEmojis: boolean;
-//   escalationTriggers: string[];
-//   autoGreeting: boolean;
-//   contextMemory: boolean;
-//   privacyMode: boolean;
-//   responseDelay: number;
 // };
 // تایپ‌های دکمه
 export interface ButtonProps extends BaseComponentProps {

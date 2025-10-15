@@ -58,7 +58,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
         },
       });
 
-      const created = res.data;
+      const created = res.data.data;
       setFaqs((prev) => [...prev, created]);
       setNewFaq({ question: "", answer: "" });
     } catch (err) {
@@ -230,7 +230,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
                 />
               ) : (
                 <div className="bg-bg-surface border border-border-soft rounded-lg p-4 relative">
-                  <div className="flex justify-end mb-2">
+                  <div className="flex justify-start mb-2">
                     <div className="bg-brand-primary text-white px-3 py-2 rounded-lg">
                       {faq.question}
                     </div>
@@ -241,7 +241,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
                     </div>
                   </div>
 
-                  <div className="absolute top-2 right-2 flex gap-1 opacity-60 hover:opacity-100">
+                  <div className="absolute top-2 left-2 flex gap-1 opacity-60 hover:opacity-100">
                     <button
                       onClick={() => startEdit(faq.id)}
                       title="ویرایش"

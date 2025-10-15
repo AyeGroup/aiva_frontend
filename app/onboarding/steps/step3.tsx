@@ -1,322 +1,151 @@
+import { Input } from "@/components/input";
 import { useState } from "react";
-import { BotConfig } from "@/types/common";
-import {
-  Settings,
-  MessageSquare,
-  UserCheck,
-  Clock,
-  Shield,
-  Zap,
-} from "lucide-react";
+import { BehaviorSettings, BotConfig } from "@/types/common";
+import { Settings, MessageSquare, Shield } from "lucide-react";
+import ToggleSetting from "@/components/toggle-setting";
+import ThreeLevelSlider from "@/components/ThreeLevelSlider";
 
 interface WizardStep3Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
 }
-
-interface BehaviorSettings {
-  responseStyle: "concise" | "detailed" | "helpful";
-  maxResponseLength: number;
-  useEmojis: boolean;
-  escalationTriggers: string[];
-  autoGreeting: boolean;
-  contextMemory: boolean;
-  privacyMode: boolean;
-  responseDelay: number;
-}
+const AnswerLength=[ "short","medium","long"]
+  
 
 export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
   const [behaviors, setBehaviors] = useState<BehaviorSettings>({
-    responseStyle: "helpful",
-    maxResponseLength: 300,
+    k: 10,
+    maxResponseLength: "medium",
+    useGreeting: false,
     useEmojis: true,
-    escalationTriggers: ["پشتیبانی", "مدیر", "شکایت"],
-    autoGreeting: true,
-    contextMemory: true,
-    privacyMode: false,
-    responseDelay: 1000,
+    useSupport: false,
+    phone: "",
   });
 
-  const [customTrigger, setCustomTrigger] = useState("");
-
-  const responseStyles = [
-    {
-      id: "concise",
-      title: "مختصر و مفید",
-      description: "پاسخ‌های کوتاه و مستقیم",
-      icon: <Zap className="w-5 h-5" />,
-    },
-    {
-      id: "detailed",
-      title: "جزئیات کامل",
-      description: "پاسخ‌های توضیحی و کامل",
-      icon: <MessageSquare className="w-5 h-5" />,
-    },
-    {
-      id: "helpful",
-      title: "راهنما و دوستانه",
-      description: "پاسخ‌های کاربردی با پیشنهادات",
-      icon: <UserCheck className="w-5 h-5" />,
-    },
-  ];
-
-  const addEscalationTrigger = () => {
-    if (
-      customTrigger.trim() &&
-      !behaviors.escalationTriggers.includes(customTrigger.trim())
-    ) {
-      setBehaviors((prev) => ({
-        ...prev,
-        escalationTriggers: [...prev.escalationTriggers, customTrigger.trim()],
-      }));
-      setCustomTrigger("");
-    }
-  };
-
-  const removeEscalationTrigger = (trigger: string) => {
-    setBehaviors((prev) => ({
-      ...prev,
-      escalationTriggers: prev.escalationTriggers.filter((t) => t !== trigger),
-    }));
-  };
+  const [sliderValue, setSliderValue] = useState(10);
 
   const handleBehaviorChange = (key: keyof BehaviorSettings, value: any) => {
-    setBehaviors((prev) => ({ ...prev, [key]: value }));
-
-    // Update bot config with behavior settings
-    // updateConfig({
-    //   behaviors: { ...behaviors, [key]: value },
-    // });
-    // elham
+    const updated = { ...behaviors, [key]: value };
+    setBehaviors(updated);
+    updateConfig({ behaviors: updated });
+    console.log("beha",key,value)
   };
 
   return (
-    <div className="space-y-8 bg-bg-surface px-[20px] py-[16px] border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]">
+    <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg">
       {/* Header */}
-      <div className="flex items-start gap-4 px-[0px] py-[12px]">
-        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+      <div className="flex items-start gap-4 py-3">
+        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center">
           <Settings className="w-8 h-8 text-brand-primary" />
         </div>
-        <div className="flex-1">
-          <h2 className="text-grey-900 mb-2 text-right text-[24px] font-bold">
+        <div className="flex-1 text-right">
+          <h2 className="text-grey-900 mb-2 text-[24px] font-bold">
             تنظیمات پاسخ‌گویی
           </h2>
-          <p className="text-grey-600 text-right">
+          <p className="text-grey-600">
             رفتار و قوانین پاسخ‌گویی چت‌بات خود را تنظیم کنید
           </p>
         </div>
       </div>
 
-      <div className="space-y-6">
-        {/* Response Style */}
-        <div className="space-y-4">
-          {/* elham */}
-          {/* <RadioGroup
-            name="responseStyle"
-            value={behaviors.responseStyle}
-            onChange={(value) => handleBehaviorChange("responseStyle", value)}
-            options={responseStyles.map((style) => ({
-              id: style.id,
-              label: style.title,
-              description: style.description,
-              icon: style.icon,
-            }))}
-            layout="vertical"
+      {/* Response Style */}
+      <div className="space-y-4">
+        <h3 className="text-grey-900 font-semibold flex items-center gap-2">
+          <MessageSquare className="w-5 h-5 text-brand-primary" />
+          میزان انطباق پاسخ با اسناد
+        </h3>
+        <ThreeLevelSlider value={sliderValue} onChange={setSliderValue} />
+      </div>
+
+      {/* Response Length */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <MessageSquare className="w-5 h-5 text-brand-primary" />
+          <h3 className="text-grey-900">حداکثر طول پاسخ</h3>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4">
+          {AnswerLength.map((length) => (
+            <button
+              key={length}
+              onClick={() => handleBehaviorChange("maxResponseLength", length)}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                behaviors.maxResponseLength === String(length)
+                  ? "border-brand-primary bg-brand-primary/5"
+                  : "border-border-soft hover:border-brand-primary/50"
+              }`}
+            >
+              <div className="text-center text-grey-600 text-body-small">
+                {length === "short"
+                  ? "کوتاه"
+                  : length === "medium"
+                  ? "متوسط"
+                  : "بلند"}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Advanced Settings */}
+      <div className="space-y-4">
+        <h3 className="text-grey-900 flex items-center gap-3">
+          <Shield className="w-5 h-5 text-brand-primary" />
+          تنظیمات پیشرفته
+        </h3>
+
+        <div className="space-y-3">
+          {/* Auto Greeting */}
+          <ToggleSetting
+            label="خوشامدگویی خودکار"
+            description="پیام خوشامد به صورت خودکار نمایش یابد"
+            value={behaviors.useGreeting}
+            onToggle={() =>
+              handleBehaviorChange("useGreeting", !behaviors.useGreeting)
+            }
+          />
+
+          {/* Use Emojis */}
+          <ToggleSetting
+            label="استفاده از ایموجی"
+            description="ایموجی در پاسخ‌ها استفاده شود"
+            value={behaviors.useEmojis}
+            onToggle={() =>
+              handleBehaviorChange("useEmojis", !behaviors.useEmojis)
+            }
+          />
+
+          {/* Fallback to Support */}
+          {/* <ToggleSetting
+            label="انتقال به پشتیبانی"
+            description="اگر پاسخی نیافت، کاربر به پشتیبانی راهنمایی شود"
+            value={behaviors.useSupport}
+            onToggle={() =>
+              handleBehaviorChange("useSupport", !behaviors.useSupport)
+            }
           /> */}
         </div>
-
-        {/* Response Length */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <MessageSquare className="w-5 h-5 text-brand-primary" />
-            <h3 className="text-grey-900">حداکثر طول پاسخ</h3>
+        <div className="flex justify-between items-center p-3  rounded-lg border border-secondary bg-secondary/20">
+          <div className="flex text-gray-900">
+            شماره تماس
+            <span className="text-brand-primary p-1">*</span>
           </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            {[150, 300, 500].map((length) => (
-              <button
-                key={length}
-                onClick={() =>
-                  handleBehaviorChange("maxResponseLength", length)
-                }
-                className={`p-4 rounded-lg border-2 transition-all ${
-                  behaviors.maxResponseLength === length
-                    ? "border-brand-primary bg-brand-primary/5"
-                    : "border-border-soft hover:border-brand-primary/50"
-                }`}
-              >
-                <div className="text-center">
-                  <p className="text-grey-900 mb-1">{length} کاراکتر</p>
-                  <p className="text-grey-600 text-body-small">
-                    {length === 150
-                      ? "کوتاه"
-                      : length === 300
-                      ? "متوسط"
-                      : "بلند"}
-                  </p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Advanced Settings */}
-        <div className="space-y-4">
-          <h3 className="text-grey-900 flex items-center gap-3">
-            <Shield className="w-5 h-5 text-brand-primary" />
-            تنظیمات پیشرفته
-          </h3>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Auto Greeting */}
-            <div className="p-4 rounded-lg border border-border-soft">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-grey-900 mb-1">خوشامدگویی خودکار</h4>
-                  <p className="text-grey-600 text-body-small">
-                    پیام خوشامد به صورت خودکار نمایش یابد
-                  </p>
-                </div>
-                <button
-                  onClick={() =>
-                    handleBehaviorChange(
-                      "autoGreeting",
-                      !behaviors.autoGreeting
-                    )
-                  }
-                  className={`w-12 h-6 rounded-full transition-colors ${
-                    behaviors.autoGreeting ? "bg-brand-primary" : "bg-grey-300"
-                  }`}
-                >
-                  <div
-                    className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                      behaviors.autoGreeting
-                        ? "translate-x-6"
-                        : "translate-x-0.5"
-                    }`}
-                  />
-                </button>
-              </div>
-            </div>
-
-            {/* Context Memory */}
-            <div className="p-4 rounded-lg border border-border-soft">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-grey-900 mb-1">حافظه مکالمه</h4>
-                  <p className="text-grey-600 text-body-small">
-                    پیام‌های قبلی کاربر در نظر گرفته شود
-                  </p>
-                </div>
-                <button
-                  onClick={() =>
-                    handleBehaviorChange(
-                      "contextMemory",
-                      !behaviors.contextMemory
-                    )
-                  }
-                  className={`w-12 h-6 rounded-full transition-colors ${
-                    behaviors.contextMemory ? "bg-brand-primary" : "bg-grey-300"
-                  }`}
-                >
-                  <div
-                    className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                      behaviors.contextMemory
-                        ? "translate-x-6"
-                        : "translate-x-0.5"
-                    }`}
-                  />
-                </button>
-              </div>
-            </div>
-
-            {/* Use Emojis */}
-            <div className="p-4 rounded-lg border border-border-soft">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-grey-900 mb-1">استفاده از ایموجی</h4>
-                  <p className="text-grey-600 text-body-small">
-                    ایموجی در پاسخ‌ه�� استفاده شود
-                  </p>
-                </div>
-                <button
-                  onClick={() =>
-                    handleBehaviorChange("useEmojis", !behaviors.useEmojis)
-                  }
-                  className={`w-12 h-6 rounded-full transition-colors ${
-                    behaviors.useEmojis ? "bg-brand-primary" : "bg-grey-300"
-                  }`}
-                >
-                  <div
-                    className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                      behaviors.useEmojis ? "translate-x-6" : "translate-x-0.5"
-                    }`}
-                  />
-                </button>
-              </div>
-            </div>
-
-            {/* Privacy Mode */}
-            <div className="p-4 rounded-lg border border-border-soft">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-grey-900 mb-1">حالت حریم خصوصی</h4>
-                  <p className="text-grey-600 text-body-small">
-                    مکالمات ذخیره نشوند
-                  </p>
-                </div>
-                <button
-                  onClick={() =>
-                    handleBehaviorChange("privacyMode", !behaviors.privacyMode)
-                  }
-                  className={`w-12 h-6 rounded-full transition-colors ${
-                    behaviors.privacyMode ? "bg-warning" : "bg-grey-300"
-                  }`}
-                >
-                  <div
-                    className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                      behaviors.privacyMode
-                        ? "translate-x-6"
-                        : "translate-x-0.5"
-                    }`}
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Response Delay */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <Clock className="w-5 h-5 text-brand-primary" />
-            <h3 className="text-grey-900">تاخیر پاسخ</h3>
-          </div>
-          <p className="text-grey-600 text-body-small text-right text-[14px]">
-            زمان انتظار قبل از نمایش پاسخ (برای طبیعی‌تر به نظر رسیدن)
-          </p>
-
-          <div className="grid grid-cols-4 gap-3">
-            {[500, 1000, 1500, 2000].map((delay) => (
-              <button
-                key={delay}
-                onClick={() => handleBehaviorChange("responseDelay", delay)}
-                className={`p-3 rounded-lg border-2 transition-all ${
-                  behaviors.responseDelay === delay
-                    ? "border-brand-primary bg-brand-primary/5"
-                    : "border-border-soft hover:border-brand-primary/50"
-                }`}
-              >
-                <div className="text-center">
-                  <p className="text-grey-900 text-body-small">
-                    {delay / 1000}ثانیه
-                  </p>
-                </div>
-              </button>
-            ))}
-          </div>
+          <Input
+            id="phone"
+            type="text"
+            numeric={true}
+            inputMode="numeric"
+            value={behaviors.phone}
+            onChange={(e) => handleBehaviorChange("phone", e.target.value)}
+            placeholder="شماره پشتیبانی را وارد کنید"
+            className="w-full text-sm rounded-2xl p-4 border !bg-white text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
+            maxLength={16}
+          />
+          {/* <Input></Input> */}
         </div>
       </div>
     </div>
   );
 }
+
+// ✅ Reusable toggle switch component

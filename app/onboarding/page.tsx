@@ -1,12 +1,13 @@
 "use client";
 import axios from "axios";
+import Alert from "@/components/alert";
 import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
-import { BotConfig } from "@/types/common";
+import { AivaWhite } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WizardStep1 } from "./steps/step1";
 import { WizardStep2 } from "./steps/step2";
@@ -16,13 +17,25 @@ import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
 import { useState, useEffect } from "react";
-import Alert from "@/components/alert";
+import { BehaviorSettings, BotConfig } from "@/types/common";
 
 export default function OnboardingWizard() {
   const router = useRouter();
+  const { user, loading } = useAuth();
+  const { title, subtitle, steps } = onboardingData;
   const [currentStep, setCurrentStep] = useState(1);
-  const [uuid, setUuid] = useState("");
+  const [lastStep, setLastStep] = useState(0);
   const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const initialBehaviorSettings: BehaviorSettings = {
+    k: 5,
+    maxResponseLength: "500",
+    useGreeting: true,
+    useEmojis: false,
+    useSupport: true,
+    phone: "",
+  };
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
     name: "",
@@ -33,11 +46,6 @@ export default function OnboardingWizard() {
     color: "",
     button_size: "small",
     widget_position: "bottom_right",
-    answer_length: "",
-    support_phone: "",
-    use_emoji: "",
-    greetings: "",
-    k: "",
     reranker_enabled: "",
     llm_model: "",
     llm_api_key: "",
@@ -46,11 +54,8 @@ export default function OnboardingWizard() {
     knowledge: [],
     faqs: [],
     logo_path: "",
+    behaviors: initialBehaviorSettings,
   });
-  const [isSaving, setIsSaving] = useState(false);
-  const { user, loading } = useAuth();
-  const { title, subtitle, steps } = onboardingData;
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const totalSteps = steps.length;
 
   //  بارگذاری اطلاعات ذخیره‌شده
@@ -61,7 +66,7 @@ export default function OnboardingWizard() {
         if (!savedData) return;
 
         const parsedData = JSON.parse(savedData);
-        if (parsedData.botConfig?.uuid) setUuid(parsedData.botConfig.uuid);
+        // if (parsedData.botConfig?.uuid) setUuid(parsedData.botConfig.uuid);
 
         if (parsedData.botConfig?.uuid) {
           try {
@@ -132,7 +137,7 @@ export default function OnboardingWizard() {
     localStorage.setItem("aiva-onboarding-data", JSON.stringify(dataToSave));
   }, [botConfig, currentStep]);
 
-  // 3️⃣ چک ورود کاربر
+  //   چک ورود کاربر
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
@@ -152,6 +157,57 @@ export default function OnboardingWizard() {
     return newErrors;
   };
 
+  //ذخیره استپ 4
+  const saveBotBehavior = async () => {
+    setIsSaving(true);
+    try {
+      if (
+        botConfig.behaviors.useSupport === true &&
+        botConfig.behaviors.phone.trim().length < 3
+      ) {
+        Alert("شماره پشتیبانی را وارد کنید");
+        return;
+      }
+      console.log("behavior", botConfig.behaviors);
+      const formData = new FormData();
+      formData.append("uuid", botConfig.uuid);
+      formData.append("k", String(botConfig.behaviors.k));
+      formData.append(
+        "answer_length",
+        String(botConfig.behaviors.maxResponseLength)
+      );
+      formData.append("greetings", String(botConfig.behaviors.useGreeting));
+      formData.append("use_emoji", String(botConfig.behaviors.useEmojis));
+      // formData.append(
+      //   "public_self_signup",
+      //   String(botConfig.behaviors.useSupport)
+      // );
+      formData.append("support_phone", botConfig.behaviors.phone);
+      const res = await axios.put(
+        `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      if (res.data.success) return true;
+      else return false;
+    } catch (error: any) {
+      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || "خطایی در ذخیره تنظیمات رخ داده است.";
+
+      Alert(errorMessage);
+
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  //ذخیره استپ 1
   const saveBotConfig = async () => {
     const fieldErrors = validateFields();
     console.log("fieldErrors", fieldErrors);
@@ -201,16 +257,17 @@ export default function OnboardingWizard() {
         if (res.data.success) {
           botConfig.uuid = res.data.data.uuid;
           console.log("uuid", res.data.data.uuid);
-          console.log("botConfig1", botConfig);
+          // console.log("botConfig1", botConfig);
           localStorage.setItem(
             "aiva-onboarding-data",
             JSON.stringify(botConfig)
           );
+          setLastStep(1)
 
-          setUuid(res.data.data.uuid);
+          // setUuid(res.data.data.uuid);
           return true;
         } else {
-          setUuid("");
+          // setUuid("");
           return false;
         }
       }
@@ -243,10 +300,15 @@ export default function OnboardingWizard() {
   };
 
   const nextStep = async () => {
-    console.log("call nextStep ");
+    console.log("call nextStep ", currentStep);
     if (currentStep == 1) {
       const isSaved = await saveBotConfig();
       console.log("Bot saved:", isSaved);
+      if (!isSaved) return;
+    }
+    if (currentStep == 4) {
+      const isSaved = await saveBotBehavior();
+      console.log("behavior saved:", isSaved);
       if (!isSaved) return;
     }
     if (currentStep < totalSteps) {
@@ -322,13 +384,7 @@ export default function OnboardingWizard() {
         {/* Clean Minimal Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
-            <svg
-              className="w-7 h-7 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 3.04 1.05 4.36L2 22l5.64-1.05C9.96 21.64 11.46 22 13 22h6c1.1 0 2-.9 2-2V12c0-5.52-4.48-10-10-10z" />
-            </svg>
+            <AivaWhite />
           </div>
 
           <h1 className="text-grey-900 mb-4 font-bold text-[20px]">{title}</h1>
@@ -365,13 +421,13 @@ export default function OnboardingWizard() {
                     <button
                       onClick={() => goToStep(stepNumber)}
                       className={`
-                        flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 text-sm font-medium border-2 shadow-sm
+                        flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 text-sm font-medium  shadow-sm
                         ${
                           isActive
-                            ? "text-white border-brand-primary shadow-lg"
+                            ? "text-white shadow-lg border-2"
                             : isCompleted
-                            ? "bg-success text-white border-success cursor-pointer hover:scale-105 shadow-md"
-                            : "bg-white border-grey-400 text-grey-600 hover:border-brand-primary hover:text-brand-primary"
+                            ? "bg-secondary text-secondary  cursor-pointer hover:scale-105 shadow-md"
+                            : "bg-white border-grey-400 text-grey-600  hover:text-brand-primary"
                         }
                       `}
                       style={
@@ -382,7 +438,7 @@ export default function OnboardingWizard() {
                       {isCompleted ? (
                         <svg
                           className="w-5 h-5"
-                          fill="currentColor"
+                          fill="white"
                           viewBox="0 0 20 20"
                         >
                           <path
@@ -401,7 +457,7 @@ export default function OnboardingWizard() {
                         isActive
                           ? "text-brand-primary"
                           : isCompleted
-                          ? "text-success"
+                          ? "text-secondary"
                           : "text-grey-600"
                       }`}
                     >
@@ -429,8 +485,8 @@ export default function OnboardingWizard() {
                   variant="tertiary"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  icon="arrow-left"
-                  iconPosition="left"
+                  icon="arrow-right"
+                  iconPosition="right"
                   className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   قبلی
@@ -446,8 +502,8 @@ export default function OnboardingWizard() {
                 <Button
                   variant="primary"
                   onClick={nextStep}
-                  icon={currentStep < totalSteps ? "arrow-right" : "check"}
-                  iconPosition="right"
+                  icon={currentStep < totalSteps ? "arrow-left" : "check"}
+                  iconPosition="left"
                   className="px-6 shadow-md"
                 >
                   {isSaving

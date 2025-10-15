@@ -105,8 +105,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
       {
         id: "1",
         text:
-          botConfig.greetings ||
-          currentTone?.example ||
+          (botConfig.behaviors?.useGreeting && currentTone?.example) ||
           "سلام! چطور می‌تونم کمکتون کنم؟",
         isBot: true,
         timestamp: new Date(),
@@ -151,7 +150,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
     const newMessages = getSampleMessages(currentStep);
     setMessages(newMessages);
     setSelectedKnowledgeItem(null); // Reset selection when step changes
-  }, [currentStep, botConfig.greetings, botConfig.llm_model.length]);
+  }, [currentStep, botConfig.llm_model.length]);
   // }, [currentStep, botConfig.greetings, botConfig.knowledge.length]);
 
   // Get current tone example
@@ -260,18 +259,15 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
         {/* Live Chat Widget - Centered */}
         <div>
-          <div
-            className="sticky top-0"
-          
-          >
+          <div className="sticky top-0">
             {/* Chat Widget Container */}
             <div
               className="w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-grey-200 flex flex-col overflow-hidden"
               // style={{ height: "700px" }}
-                style={{ height: "600px",
-              background: `linear-gradient(135deg,white 0%, ${botConfig.accent_color}ee 120%)`,
-            }}
-
+              style={{
+                height: "600px",
+                background: `linear-gradient(135deg, white 0%, ${botConfig.accent_color}33 100%)`,
+              }}
             >
               {/* Chat Header */}
               <div
@@ -359,7 +355,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                       style={
                         !message.isBot
                           ? {
-                              background:  botConfig.primary_color 
+                              background: botConfig.primary_color,
                             }
                           : {}
                       }
@@ -473,18 +469,21 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                         );
                       })} */}
 
-                      {Number(botConfig.answer_length) > 3 && (
+                      {/* {Number(botConfig.behaviors.maxResponseLength) > 3 && (
                         <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
-                          +{Number(botConfig.answer_length) - 3} بیشتر
+                          +{Number(botConfig.behaviors.maxResponseLength) - 3}{" "}
+                          بیشتر
                         </button>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 )}
 
                 {/* Default Quick Actions - Only show if no knowledge base */}
                 {/* {(botConfig.knowledge.length === 0 || currentStep < 2) && ( */}
-                {(Number(botConfig.answer_length) === 0 || currentStep < 2) && (
+                {(!botConfig.behaviors?.maxResponseLength ||
+                  botConfig.behaviors.maxResponseLength === "small" ||
+                  currentStep < 2) && (
                   <div className="flex items-center gap-2 mb-3">
                     {botConfig.tone === "friendly" && (
                       <>
