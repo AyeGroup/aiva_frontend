@@ -85,10 +85,10 @@ export function Header({ currentPage }: HeaderProps) {
               authButtons.login.variant as "primary" | "secondary" | "tertiary"
             }
             size="md"
-            onClick={() => router.push("/auth/login")}
+            onClick={() => router.push("/dashboard")}
           >
             {authButtons.login.text}
-          </Button>
+          </Button>                                                              
           <Button
             variant={
               authButtons.signup.variant as "primary" | "secondary" | "tertiary"

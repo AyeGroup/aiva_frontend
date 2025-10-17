@@ -15,6 +15,7 @@ import { LoginTopLeft, RegisterTopLeft } from "@/public/icons/AppIcons";
 type RegisterStep = "signup" | "otp" | "success" | "password";
 
 export default function Register() {
+  const otpTime = Number(process.env.PHONE_OTP_TTL_SECONDS) || 60;
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<RegisterStep>("signup");
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [otpTimer, setOtpTimer] = useState(120); // 2 minutes
+  const [otpTimer, setOtpTimer] = useState(otpTime); // 2 minutes
   const [errors, setErrors] = useState<{
     email?: string;
     phone?: string;
@@ -123,7 +124,7 @@ export default function Register() {
         setCurrentStep("otp");
 
         // start countdown (60s for example)
-        setOtpTimer(60);
+        setOtpTimer(otpTime);
         const timer = setInterval(() => {
           setOtpTimer((prev) => {
             if (prev <= 1) {
@@ -193,16 +194,18 @@ export default function Register() {
 
     const otpValue = otp.join("");
     if (otpValue.length !== 5) {
-      toast.error("لطفاً کد 5 رقمی را کامل وارد کنید");
+      toast.error("لطفاً کد ۵ رقمی را کامل وارد کنید");
       return;
     }
 
     try {
       setIsLoading(true);
+      const reversed = otpValue.split("").reverse().join("");
 
       const res = await axios.post(API_ROUTES.AUTH.VERIFY_PHONE, {
         phone: formData.phone,
-        code: otpValue,
+        code: reversed,
+        // code: otpValue,
       });
       if (res.status === 200) {
         toast.success("حساب کاربری شما با موفقیت ایجاد شد");
@@ -241,7 +244,7 @@ export default function Register() {
         console.log("resend otp: ", res);
         return;
       }
-      setOtpTimer(120);
+      setOtpTimer(otpTime);
 
       toast.success(
         `کد تایید به شماره ${englishToPersian(formData.phone)} ارسال شد`
@@ -266,7 +269,7 @@ export default function Register() {
   };
 
   const renderStepContent = () => {
-    console.log("renderStepContent", currentStep);
+    // console.log("renderStepContent", currentStep);
 
     switch (currentStep) {
       case "signup":
@@ -465,7 +468,7 @@ export default function Register() {
                   lineHeight: "var(--text-body-large-lh)",
                 }}
               >
-                کد 5 رقمی ارسال شده به شماره {englishToPersian(formData.phone)}{" "}
+                کد ۵ رقمی ارسال شده به شماره {englishToPersian(formData.phone)}{" "}
                 را وارد کنید
               </p>
             </div>
@@ -723,7 +726,7 @@ export default function Register() {
         </div>
       </div>
 
-      <Toaster position="top-center" dir="rtl" richColors closeButton />
+      {/* <Toaster position="top-center" dir="rtl" richColors closeButton /> */}
     </div>
     //   </div>
     // </div>

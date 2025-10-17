@@ -56,7 +56,7 @@ export default function Dashboard() {
   // console.log("dashboard user: ", user);
 
   useEffect(() => {
-    console.log("dashboard ");
+    console.log("dashboard ",user);
     if (!user) return;
     setIsNew(true);
 
@@ -627,7 +627,7 @@ export default function Dashboard() {
       </div>
 
       {/* Toast Notifications */}
-      <Toaster
+      {/* <Toaster
         position="top-center"
         richColors
         dir="rtl"
@@ -638,7 +638,7 @@ export default function Dashboard() {
             textAlign: "right",
           },
         }}
-      />
+      /> */}
     </div>
   );
 }

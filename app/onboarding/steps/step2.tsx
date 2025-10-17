@@ -23,6 +23,7 @@ import {
   AlertTriangle,
   Edit2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -161,7 +162,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         });
 
         if (!res.data?.success) {
-          Alert("خطا در ویرایش اطلاعات");
+          toast.error("خطا در ویرایش اطلاعات!");
           return;
         }
 
@@ -201,14 +202,14 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         });
 
         if (!res.data?.success) {
-          Alert("خطا در ثبت آیتم جدید");
+          toast.error("خطا در ثبت آیتم جدید!");
           return;
         }
 
         const savedItem = res.data.data;
         // setNewItem(item);
         updateConfig({
-        knowledge: [...(botConfig.knowledge || []), savedItem],
+          knowledge: [...(botConfig.knowledge || []), savedItem],
         });
 
         cancelAdding();
@@ -216,7 +217,8 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       }
     } catch (err) {
       console.error("❌ خطا در ذخیره آیتم:", err);
-      Alert("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
+   
+      toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.")
     }
   };
 
@@ -346,8 +348,11 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       {/* Header */}
       <div className="flex items-start gap-4 px-[0px] py-[12px]">
         {loading || (isLoading && <PageLoader />)}
-        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 "> 
+        <div className="w-8 h-8 text-brand-primary">
+
           <Tick />
+        </div>
         </div>
         <div className="flex-1">
           <h2 className="text-grey-900 mb-2 text-right text-[24px] font-bold">

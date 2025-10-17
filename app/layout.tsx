@@ -3,6 +3,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 // import NProgressHandler from "@/components/NProgressHandler";
 import "@/styles/globals.css";
 import "@/styles/login.css";
+import { Toaster } from "sonner";
 // import "nprogress/nprogress.css";
 
 export const metadata: Metadata = {
@@ -11,7 +12,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.png",
   },
-  
 };
 
 export default function RootLayout({
@@ -26,6 +26,19 @@ export default function RootLayout({
         <div className="app-shell">
           <div className="app-content">
             <AuthProvider>{children}</AuthProvider>
+            {/* <Toaster position="top-center" dir="rtl" richColors closeButton /> */}
+            <Toaster
+              position="top-center"
+              richColors
+              dir="rtl"
+              toastOptions={{
+                style: {
+                  fontFamily: "Vazirmatn, sans-serif",
+                  direction: "rtl",
+                  textAlign: "right",
+                },
+              }}
+            />
           </div>
         </div>
       </body>

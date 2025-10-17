@@ -8,9 +8,22 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "step2-gradient":
+          "linear-gradient(180deg, rgba(227, 243, 240, 0.51) 0%, #FBF4F4 100%)",
+        "step5-gradient":
+          "linear-gradient(0deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), linear-gradient(180deg, rgba(227, 243, 240, 0.51) 0%, #FBF4F4 100%)",
+
+        "step6-gradient":
+          "linear-gradient(0deg, #FFFFFF, #FFFFFF), linear-gradient(180deg, rgba(227, 243, 240, 0.51) 0%, #FBF4F4 100%)",
+      },
+      boxShadow: {
+        box1: "0px 4px 6px -4px #0000001A, 0px 10px 15px -3px #0000001A",
+      },
+
       colors: {
-        primary: "##65BCB6",
-        secondary: "##FFA18E",
+        primary: "#65BCB6",
+        secondary: "#FFA18E",
         accent: "#f59e0b",
         accentOrange: "#f59e0b",
         text: "#4b5563",

@@ -1,25 +1,27 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
-import { cleanPhoneNumber, persianToEnglish } from "@/utils/number-utils";
-import { ArrowLeft } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 import axios from "axios";
+import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import { cleanPhoneNumber, persianToEnglish } from "@/utils/number-utils";
+import { LoginTopLef2, LoginTopLeft3, LoginTopRight } from "@/public/icons/AppIcons";
 
 export default function Verification() {
-  // const searchParams = useSearchParams();
-  // const phoneNumber = searchParams.get("phone") || "";
-  // const email = searchParams.get("email") || "";
+  const searchParams = useSearchParams();
+  const phoneNumber = searchParams.get("phone") || "";
+  const email = searchParams.get("email") || "";
 
-  const phoneNumber = "1";
-  const email = "";
+  // const phoneNumber = "1";
+  // const email = "";
+  const otpTime = Number(process.env.PHONE_OTP_TTL_SECONDS) || 60;
 
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  const [countdown, setCountdown] = useState(120); // 2 minutes
+  const [countdown, setCountdown] = useState(otpTime);
   const [error, setError] = useState("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const router = useRouter();
@@ -43,6 +45,9 @@ export default function Verification() {
 
     const newOtp = [...otp];
     newOtp[index] = englishValue;
+    console.log("index", index);
+    console.log("englishValue", englishValue);
+    console.log("newOtp", newOtp);
     setOtp(newOtp);
     setError("");
 
@@ -109,7 +114,7 @@ export default function Verification() {
     const codeToVerify = otpCode || otp.join("");
 
     if (codeToVerify.length !== 5) {
-      setError("لطفاً کد 5 رقمی را کامل وارد کنید");
+      setError("لطفاً کد ۵ رقمی را کامل وارد کنید");
       return;
     }
 
@@ -118,20 +123,20 @@ export default function Verification() {
 
     // await new Promise((resolve) => setTimeout(resolve, 1500));
     try {
-      // const res = await axios.post(API_ROUTES.AUTH.VERIFY_PHONE, {
-      //   phone: phoneNumber,
-      //   code: codeToVerify,
-      // });
-      // if (res.status === 200) {
-      // }
-      if (codeToVerify === "123456") {
-        router.push("dashboard");
+      const res = await axios.post(API_ROUTES.AUTH.VERIFY_PHONE, {
+        phone: phoneNumber,
+        code: codeToVerify,
+      });
+      if (res.status === 200) {
+        // if (codeToVerify === "123456") {
+        router.push("/dashboard");
       } else {
         setError("کد وارد شده صحیح نیست. لطفاً مجدداً تلاش کنید.");
         setOtp(["", "", "", "", ""]);
         inputRefs.current[0]?.focus();
       }
     } catch (error) {
+      setOtp(["", "", "", "", ""]);
       setError("خطایی رخ داده است. لطفاً مجدداً تلاش کنید.");
     } finally {
       setIsLoading(false);
@@ -151,7 +156,7 @@ export default function Verification() {
       if (res.status === 200) {
       }
 
-      setCountdown(120);
+      setCountdown(otpTime);
       setOtp(["", "", "", "", ""]);
       inputRefs.current[0]?.focus();
 
@@ -219,81 +224,17 @@ export default function Verification() {
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Top Left - Geometric Pattern */}
           <div className="absolute top-28 left-12 w-32 h-32 opacity-20">
-            <svg width="100%" height="100%" viewBox="0 0 128 128" fill="none">
-              <circle cx="20" cy="20" r="8" fill="#65BCB6" />
-              <circle cx="60" cy="20" r="6" fill="#FFA18E" />
-              <circle cx="100" cy="20" r="4" fill="#65BCB6" />
-              <circle cx="40" cy="60" r="8" fill="#FFA18E" />
-              <circle cx="80" cy="60" r="6" fill="#65BCB6" />
-              <circle cx="20" cy="100" r="6" fill="#65BCB6" />
-              <circle cx="100" cy="100" r="8" fill="#FFA18E" />
-            </svg>
+            <LoginTopRight />
           </div>
 
           {/* Top Right - Flowing Curves */}
           <div className="absolute top-20 right-16 w-40 h-40 opacity-15">
-            <svg width="100%" height="100%" viewBox="0 0 160 160" fill="none">
-              <path
-                d="M20 140 Q80 20 140 80 Q100 120 60 100 Q40 140 20 140Z"
-                fill="#65BCB6"
-              />
-              <path
-                d="M40 120 Q100 40 120 100 Q80 140 40 120Z"
-                fill="#FFA18E"
-                opacity="0.7"
-              />
-            </svg>
+            <LoginTopLef2 />
           </div>
 
           {/* Center Left - Tech Elements */}
           <div className="absolute left-8 top-1/2 transform -translate-y-1/2 w-24 h-32 opacity-25">
-            <svg width="100%" height="100%" viewBox="0 0 96 128" fill="none">
-              {/* Chat bubbles */}
-              <rect
-                x="10"
-                y="10"
-                width="60"
-                height="20"
-                rx="10"
-                fill="#65BCB6"
-              />
-              <rect
-                x="20"
-                y="40"
-                width="50"
-                height="16"
-                rx="8"
-                fill="#FFA18E"
-              />
-              <rect
-                x="15"
-                y="70"
-                width="55"
-                height="18"
-                rx="9"
-                fill="#65BCB6"
-              />
-
-              {/* Connection lines */}
-              <line
-                x1="40"
-                y1="30"
-                x2="45"
-                y2="40"
-                stroke="#65BCB6"
-                strokeWidth="2"
-                opacity="0.6"
-              />
-              <line
-                x1="45"
-                y1="56"
-                x2="42"
-                y2="70"
-                stroke="#FFA18E"
-                strokeWidth="2"
-                opacity="0.6"
-              />
-            </svg>
+          <LoginTopLeft3/>
           </div>
 
           {/* Bottom Left - Modern Grid Pattern */}
@@ -432,7 +373,7 @@ export default function Verification() {
               <div className="text-center mb-8">
                 <h1 className="text-grey-900 mb-3">تأیید کد امنیتی</h1>
                 <p className="text-grey-600 leading-relaxed">
-                  کد ۶ رقمی ارسال شده به {contactType}
+                  کد ۵ رقمی ارسال شده به {contactType}
                   <span className="font-medium text-brand-primary mx-1">
                     {contactInfo}
                   </span>
@@ -484,11 +425,11 @@ export default function Verification() {
 
               {/* Verify Button */}
               <button
-                // variant="primary"
+                // ="primary"
                 // size="lg"
                 onClick={() => handleVerify()}
                 disabled={isLoading || otp.some((digit) => digit === "")}
-                className="w-full mb-6"
+                className="w-full py-4 px-4 flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? "در حال تأیید..." : "تأیید کد"}
               </button>
@@ -496,7 +437,7 @@ export default function Verification() {
               {/* Resend Code */}
               <div className="text-center">
                 {countdown > 0 ? (
-                  <p className="text-grey-500 text-sm">
+                  <p className="text-grey-500 text-sm mt-4">
                     ارسال مجدد کد در{" "}
                     <span className="font-medium text-brand-primary">
                       {formatTime(countdown)}

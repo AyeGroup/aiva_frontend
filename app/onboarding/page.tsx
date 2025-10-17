@@ -1,8 +1,8 @@
 "use client";
 import axios from "axios";
-import Alert from "@/components/alert";
 import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
+import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
@@ -16,6 +16,7 @@ import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
+import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { BehaviorSettings, BotConfig } from "@/types/common";
 
@@ -49,8 +50,8 @@ export default function OnboardingWizard() {
     reranker_enabled: "",
     llm_model: "",
     llm_api_key: "",
-    primary_color: "",
-    accent_color: "",
+    primary_color: "#65BCB6",
+    accent_color: "#65BCB6",
     knowledge: [],
     faqs: [],
     logo_path: "",
@@ -165,7 +166,7 @@ export default function OnboardingWizard() {
         botConfig.behaviors.useSupport === true &&
         botConfig.behaviors.phone.trim().length < 3
       ) {
-        Alert("شماره پشتیبانی را وارد کنید");
+        toast.info("شماره پشتیبانی را وارد کنید");
         return;
       }
       console.log("behavior", botConfig.behaviors);
@@ -199,7 +200,7 @@ export default function OnboardingWizard() {
       const errorMessage =
         error.response?.data?.message || "خطایی در ذخیره تنظیمات رخ داده است.";
 
-      Alert(errorMessage);
+      toast.info(errorMessage);
 
       return false;
     } finally {
@@ -215,7 +216,13 @@ export default function OnboardingWizard() {
     setErrors(fieldErrors);
 
     if (Object.keys(fieldErrors).length > 0) {
-      Alert("اطلاعات را کامل کنید ");
+      const errorMessages = Object.values(fieldErrors).join("\r\n");
+
+      toast.error(errorMessages, {
+        duration: 5000,
+        style: { whiteSpace: "pre-line", direction: "rtl", textAlign: "right" },
+      });
+      // toast.error("اطلاعات را کامل کنید ");
       return;
     }
 
@@ -262,7 +269,7 @@ export default function OnboardingWizard() {
             "aiva-onboarding-data",
             JSON.stringify(botConfig)
           );
-          setLastStep(1)
+          setLastStep(1);
 
           // setUuid(res.data.data.uuid);
           return true;
@@ -448,7 +455,7 @@ export default function OnboardingWizard() {
                           />
                         </svg>
                       ) : (
-                        stepNumber
+                        englishToPersian(String(stepNumber))
                       )}
                     </button>
 

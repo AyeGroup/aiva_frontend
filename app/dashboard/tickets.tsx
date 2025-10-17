@@ -223,7 +223,7 @@ export default function Tickets( ) {
       </div>
       
       {/* Toast Notifications */}
-      <Toaster 
+      {/* <Toaster 
         position="top-center"
         richColors
         dir="rtl"
@@ -234,7 +234,7 @@ export default function Tickets( ) {
             textAlign: 'right'
           }
         }}
-      />
+      /> */}
     </div>
   );
 }

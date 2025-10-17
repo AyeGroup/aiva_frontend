@@ -1,11 +1,13 @@
 import axios from "axios";
 import Image from "next/image";
 import { Card } from "@/components/card";
+import { toast } from "sonner";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ColorSlider } from "@/components/ColorSlider";
+import { API_BASE_URL } from "@/config";
 import { onboardingData } from "../onboarding.data";
 import { BotConfig, colorPalette } from "@/types/common";
 import { useState, useEffect, useRef } from "react";
@@ -18,9 +20,7 @@ import {
   StepUpload,
   StepUser,
 } from "@/public/icons/AppIcons";
-import { normalizeFileUrl } from "@/utils/common";
-import { API_BASE_URL } from "@/config";
-import { Console } from "console";
+
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -105,7 +105,7 @@ export function WizardStep1({
       // }
     } catch (err) {
       console.error("Upload failed:", err);
-      alert("خطا در آپلود فایل!");
+      toast.error("خطا در آپلود فایل!")
     } finally {
       setIsUploading(false);
     }

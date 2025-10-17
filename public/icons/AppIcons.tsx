@@ -287,11 +287,37 @@ export const AivaWhite = () => {
   );
 };
 
-// export const LoginTopLeft = () => {
-//   return (
+export const Install = () => {
+  return (
+    <svg viewBox="0 0 20 20" fill="none">
+      <g clip-path="url(#clip0_11_9797)">
+        <path
+          d="M13.3335 15L18.3335 10L13.3335 5"
+          stroke="currentColor"
+          strokeWidth="1.66667"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M6.6665 5L1.6665 10L6.6665 15"
+          stroke="currentColor"
+          strokeWidth="1.66667"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_11_9797">
+          <rect width="20" height="20" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
 
-//      );
-// };// export const LoginTopLeft = () => {
+
+
+// export const LoginTopLeft = () => {
 //   return (
 
 //      );
