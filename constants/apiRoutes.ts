@@ -11,6 +11,8 @@ export const API_ROUTES = {
     SEND_CODE: `${API_BASE_URL}/auth/phone/send-code`,
   },
   BOTS: {
+    LOGO_UPLOAD: (bot_uuid: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/logo`,
     SAVE: `${API_BASE_URL}/chatbots`,
     LIST: `${API_BASE_URL}/chatbots`,
     GET: `${API_BASE_URL}/chatbots/`, //bot_uuid

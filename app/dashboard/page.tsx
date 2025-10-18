@@ -56,8 +56,11 @@ export default function Dashboard() {
   // console.log("dashboard user: ", user);
 
   useEffect(() => {
-    console.log("dashboard ",user);
-    if (!user) return;
+    console.log("dashboard ", user);
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
     setIsNew(true);
 
     const fetchData = async () => {
@@ -76,9 +79,7 @@ export default function Dashboard() {
           response.data.data.length > 0
         ) {
           setIsNew(false);
-        }
-        else
-          setIsNew(true);
+        } else setIsNew(true);
 
         // if (!response.data.success) {
         //   setIsNew(true);

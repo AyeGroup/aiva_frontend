@@ -1,5 +1,6 @@
 import axios from "axios";
 import Image from "next/image";
+import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { Input } from "@/components/input";
@@ -7,7 +8,7 @@ import { Select } from "@/components/select";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ColorSlider } from "@/components/ColorSlider";
-import { API_BASE_URL } from "@/config";
+import { IMAGE_URL } from "@/config";
 import { onboardingData } from "../onboarding.data";
 import { BotConfig, colorPalette } from "@/types/common";
 import { useState, useEffect, useRef } from "react";
@@ -21,13 +22,12 @@ import {
   StepUser,
 } from "@/public/icons/AppIcons";
 
-
 interface WizardStep1Props {
   botConfig: BotConfig;
-  updateConfig: (updates: Partial<BotConfig>) => void;
-  errors?: { [key: string]: string };
   logoFile: File | null;
+  errors?: { [key: string]: string };
   setLogoFile: (file: File | null) => void;
+  updateConfig: (updates: Partial<BotConfig>) => void;
 }
 
 export function WizardStep1({
@@ -44,12 +44,17 @@ export function WizardStep1({
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    const fileUrl = `${API_BASE_URL}/public/${botConfig.uuid}/logo`;
-    console.log("logo: ", fileUrl);
-    setPreview(fileUrl);
+    console.log("uuid: ", botConfig.uuid);
+    console.log("logo_path: ", botConfig.logo_url);
+
+    if (botConfig.logo_url) {
+      const fileUrl = `${IMAGE_URL}${botConfig.uuid}/logo.png`;
+      console.log("fileUrl: ", fileUrl);
+      setPreview(fileUrl);
+    }
 
     // if (botConfig.logo_path) setPreview(fileUrl);
-  }, [botConfig.logo_path]);
+  }, [botConfig]);
 
   useEffect(() => {
     if (botConfig?.tone && botConfig.tone !== selectedTone) {
@@ -58,7 +63,6 @@ export function WizardStep1({
   }, [botConfig?.tone]);
 
   const handleToneChange = (toneId: string) => {
-    console.log("tone", toneId);
     setSelectedTone(toneId);
     updateConfig({ tone: toneId });
   };
@@ -73,51 +77,68 @@ export function WizardStep1({
     const reader = new FileReader();
     reader.onloadend = () => setPreview(reader.result as string);
     reader.readAsDataURL(file);
-  };
 
-  const handleFileSelect1 = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    if (!botConfig.uuid) return;
 
-    // ✅ نمایش فوری پیش‌نمایش
-    const reader = new FileReader();
-    reader.onloadend = () => setPreview(reader.result as string);
-    reader.readAsDataURL(file);
-    // botConfig.logo = file;
-
-    // ✅ ارسال فایل به بک‌اند
+    // در صورت ویرایش ارسال فایل به بک‌اند
     try {
       setIsUploading(true);
       const formData = new FormData();
       formData.append("logo", file);
 
-      const res = axios.post(API_ROUTES.BOTS.SAVE, formData, {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
+      const res = axios.put(
+        API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      toast.success("فایل آپلود شد");
       console.log("upload logo", res);
-      // فرض می‌کنیم سرور URL فایل را در res.data.url برمی‌گرداند
-      // if (res.data?.url) {
-      //   updateConfig({ logo: res.data.url });
-      // } else {
-      //   alert("آپلود موفق نبود!");
-      // }
     } catch (err) {
       console.error("Upload failed:", err);
-      toast.error("خطا در آپلود فایل!")
+      toast.error("خطا در آپلود فایل!");
     } finally {
       setIsUploading(false);
     }
   };
+
   const handlePrimaryColor = (color: string) => {
-    // setSelectedColorPrimary(color);
     updateConfig({ primary_color: color });
-    // console.log("p color: ", color);
+  };
+
+  const handleDeleteLogo = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    try {
+      setPreview(null);
+      setLogoFile(null);
+
+      const res = await axios.put(
+        `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
+        { logo: null },
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
+
+      if (res.status !== 200 || !res.data.success) {
+        toast.error("خطا در حذف فایل");
+        return;
+      }
+
+      toast.success("لوگو با موفقیت حذف شد");
+    } catch (err) {
+      console.error(err);
+      toast.error("خطا در حذف فایل");
+    }
   };
 
   const handleAccentColor = (color: string) => {
-    // setSelectedColorAccent(color);
     updateConfig({ accent_color: color });
   };
 
@@ -128,6 +149,7 @@ export function WizardStep1({
     >
       {/* Header */}
       <div className="flex items-start gap-4 px-0 py-3">
+        {loading && <PageLoader />}
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
           <StepBigStar />
         </div>
@@ -589,12 +611,13 @@ export function WizardStep1({
               <div className="space-y-3">
                 <div className="w-16 h-16 mx-auto bg-grey-100 rounded-lg flex items-center justify-center overflow-hidden">
                   <Image
+                    src={preview}
                     // src={`${API_BASE_URL}/public/${botConfig?.uuid}/logo`}
-                    src={
-                      preview
-                        ? preview // مسیر preview که از FileReader ساخته میشه
-                        : `${API_BASE_URL}/public/${botConfig?.uuid}/logo.png` // مسیر لوگو در بک‌اند
-                    }
+                    // src={
+                    //   preview
+                    //     ? preview // مسیر preview که از FileReader ساخته میشه
+                    //     : `${API_BASE_URL}/public/${botConfig?.uuid}/logo.png` // مسیر لوگو در بک‌اند
+                    // }
                     alt="لوگوی انتخاب شده"
                     className="w-full h-full object-contain"
                     width={64}
@@ -610,10 +633,7 @@ export function WizardStep1({
                     <button
                       type="button"
                       onClick={(e) => {
-                        e.stopPropagation();
-                        setPreview(null);
-                        setLogoFile(null);
-                        // updateConfig({ logo: undefined });
+                        handleDeleteLogo(e);
                       }}
                       className="px-3 py-1 text-xs bg-danger/10 text-danger rounded-lg hover:bg-danger/20"
                     >

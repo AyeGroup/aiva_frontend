@@ -48,7 +48,7 @@ export interface BotConfig {
   accent_color: string;
   knowledge: Array<KnowledgeItem>;
   faqs: Array<FAQ>;
-  logo_path: string;
+  logo_url: string;
   behaviors: BehaviorSettings;
 }
 

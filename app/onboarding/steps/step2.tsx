@@ -1,8 +1,8 @@
 import axios from "axios";
-import Alert from "@/components/alert";
 import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
+import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
@@ -23,7 +23,6 @@ import {
   AlertTriangle,
   Edit2,
 } from "lucide-react";
-import { toast } from "sonner";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -63,39 +62,16 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               }
             );
 
-            // console.log("get qa docs: ", response.data);
-            // const hasApiData = response.data?.success && response.data?.data;
-
             botConfig.knowledge = response.data.data;
             console.log("botConfig.knowledge: ", botConfig.knowledge);
-
-            // ذخیره فقط اگر داده جدید اومده
-            // if (hasApiData) {
-            //   localStorage.setItem(
-            //     "aiva-onboarding-data",
-            //     JSON.stringify({
-            //       botConfig: response.data.data,
-            //       currentStep:
-            //         response.data?.currentStep || parsedData.currentStep || 1,
-            //     })
-            //   );
-            // }
           } catch (apiError: any) {
-            // ✅ بررسی خطای 401
             if (apiError.response?.status === 401) {
               console.warn("Unauthorized - redirecting to login...");
-              // localStorage.removeItem("aiva-onboarding-data");
               router.push("/auth/login");
               return;
             }
-
             console.warn("API fetch failed, using local data:", apiError);
-            // setBotConfig(parsedData.botConfig);
-            // setCurrentStep(parsedData.currentStep || 1);
           }
-        } else {
-          // setBotConfig(parsedData.botConfig);
-          // setCurrentStep(parsedData.currentStep || 1);
         }
       } catch (error) {
         console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
@@ -206,19 +182,27 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           return;
         }
 
-        const savedItem = res.data.data;
+        // const savedItem = res.data.data;
+        // console.log("savedata", savedItem);
         // setNewItem(item);
+        // updateConfig({
+        //   knowledge: [...(botConfig.knowledge || []), newItem],
+        // });
         updateConfig({
-          knowledge: [...(botConfig.knowledge || []), savedItem],
+          knowledge: [
+            ...(botConfig.knowledge || []),
+            { id: crypto.randomUUID(), ...newItem } as KnowledgeItem,
+          ],
         });
+
 
         cancelAdding();
         setSelectedFile(null);
       }
     } catch (err) {
       console.error("❌ خطا در ذخیره آیتم:", err);
-   
-      toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.")
+
+      toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
     }
   };
 
@@ -282,8 +266,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     setIsAdding(true);
     setIsEditing(false);
     setNewItem({});
-    //elham
-    // setNewItem({ type: type as any, title: "", content: "" });
   };
 
   const cancelAdding = () => {
@@ -348,11 +330,10 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       {/* Header */}
       <div className="flex items-start gap-4 px-[0px] py-[12px]">
         {loading || (isLoading && <PageLoader />)}
-        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 "> 
-        <div className="w-8 h-8 text-brand-primary">
-
-          <Tick />
-        </div>
+        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 ">
+          <div className="w-8 h-8 text-brand-primary">
+            <Tick />
+          </div>
         </div>
         <div className="flex-1">
           <h2 className="text-grey-900 mb-2 text-right text-[24px] font-bold">
@@ -713,7 +694,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
               return (
                 <Card
-                  // key={item.id}
                   key={item.id ? item.id : index}
                   className="p-4 border-2 border-brand-primary/10 bg-bg-surface shadow-sm"
                 >

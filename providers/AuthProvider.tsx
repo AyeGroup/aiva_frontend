@@ -142,6 +142,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await axios.post(API_ROUTES.AUTH.LOGOUT, {}, { withCredentials: true });
     } finally {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("aiva-onboarding-data");
+      localStorage.removeItem("user");
       localStorage.removeItem("refreshToken");
       setUser(null);
 

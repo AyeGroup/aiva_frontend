@@ -6,8 +6,9 @@ import { AddAccountModal } from "./add-account-modal";
 import aivaLogo from "@/public/logo.png";
 import sidebarImage from "@/public/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
 import { PageType } from "@/types/common";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/providers/AuthProvider";
 // import sidebarImage from "figma:asset/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
-
 
 interface QAPair {
   id: string;
@@ -54,18 +55,17 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
 }
 
 interface SidebarProps {
-  // onNavigate: (page: PageType) => void;
-
   currentPage?: PageType;
 }
 
-export function Sidebar({
-  // onNavigate,
-  currentPage = "dashboard",
-}: SidebarProps) {
+export function Sidebar({ currentPage = "dashboard" }: SidebarProps) {
+  const router = useRouter();
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const [websites, setWebsites] = useState<Website[]>([]);
+  const { logout } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddWebsite = (newWebsite: Omit<Website, "id">) => {
     const website: Website = {
@@ -75,6 +75,27 @@ export function Sidebar({
     setWebsites((prev) => [...prev, website]);
   };
 
+  const handleLogout = async () => {
+    try {
+      setIsLoading(true);
+      logout();
+      // if (!res.success) {
+      //   toast.error(res.message);
+      //   if (res.status === 403) {
+      //     router.push(`/auth/verification?phone=${identity}`);
+      //     return;
+      //   }
+      // }
+      // toast.success("ورود موفق!");
+      // console.log("redirecting dashboard ...");
+      // router.push("/");
+    } catch (err) {
+      console.log(err);
+      // toast.error("خطا در ورود");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const handleAddAccount = (newAccount: Omit<Account, "id">) => {
     const account: Account = {
       ...newAccount,
@@ -130,14 +151,17 @@ export function Sidebar({
       {/* Bottom Actions */}
       <div className="px-6 py-4 border-t border-white/30 space-y-2">
         <button
-          // onClick={() => onNavigate("landing")}
+          onClick={() => router.push("/")}
           className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 transition-colors text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>بازگشت به سایت</span>
         </button>
 
-        <button className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 transition-colors text-sm">
+        <button
+          className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 transition-colors text-sm"
+          onClick={handleLogout}
+        >
           <LogOut className="w-4 h-4" />
           <span>خروج</span>
         </button>

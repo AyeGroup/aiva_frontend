@@ -7,24 +7,25 @@ import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { cleanPhoneNumber, persianToEnglish } from "@/utils/number-utils";
-import { LoginTopLef2, LoginTopLeft3, LoginTopRight } from "@/public/icons/AppIcons";
+import {
+  LoginTopLef2,
+  LoginTopLeft3,
+  LoginTopRight,
+} from "@/public/icons/AppIcons";
 
 export default function Verification() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const phoneNumber = searchParams.get("phone") || "";
   const email = searchParams.get("email") || "";
-
-  // const phoneNumber = "1";
-  // const email = "";
+  const phoneNumber = searchParams.get("phone") || "";
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpTime = Number(process.env.PHONE_OTP_TTL_SECONDS) || 60;
-
-  const [otp, setOtp] = useState(["", "", "", "", ""]);
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [isResending, setIsResending] = useState(false);
   const [countdown, setCountdown] = useState(otpTime);
-  const [error, setError] = useState("");
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const router = useRouter();
 
   // Countdown timer
   useEffect(() => {
@@ -34,13 +35,14 @@ export default function Verification() {
     }
   }, [countdown]);
 
+  useEffect(() => {
+    handleSendOtp();
+  }, []);
+
   const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) return; // Only allow single digit
+    if (value.length > 1) return;
 
-    // Convert Persian digits to English
     const englishValue = persianToEnglish(value);
-
-    // Only allow digits
     if (englishValue && !/^\d$/.test(englishValue)) return;
 
     const newOtp = [...otp];
@@ -62,17 +64,11 @@ export default function Verification() {
     }
   };
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
   const handleSendOtp = async () => {
     const cleanedPhone = cleanPhoneNumber(phoneNumber);
 
     if (!cleanedPhone) {
-      toast.error("لطفاً شماره تلفن خود را وارد کنید");
+      toast.error(" شماره تلفن صحیح نیست");
       return;
     }
 
@@ -83,16 +79,15 @@ export default function Verification() {
     }
 
     setIsLoading(true);
+    const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
+      phone: phoneNumber,
+    });
+    if (res.status === 200) {
+    }
 
-    // Simulate OTP sending
     setTimeout(() => {
       setIsLoading(false);
       toast.success("کد تایید به شماره شما ارسال شد");
-
-      // Navigate to OTP verification page
-      // onNavigate("otp-verification");
-      // router.push("otp-verification");
-      // elham
     }, 2000);
   };
 
@@ -110,6 +105,22 @@ export default function Verification() {
     }
   };
 
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
+    if (e.key === "Backspace" && !otp[index] && index < 5) {
+      // Move to next input (right) when backspace on empty field
+      const nextInput = document.getElementById(`otp-${index + 1}`);
+      nextInput?.focus();
+    } else if (e.key === "ArrowLeft" && index > 0) {
+      // Move to previous input (left)
+      const prevInput = document.getElementById(`otp-${index - 1}`);
+      prevInput?.focus();
+    } else if (e.key === "ArrowRight" && index < 5) {
+      // Move to next input (right)
+      const nextInput = document.getElementById(`otp-${index + 1}`);
+      nextInput?.focus();
+    }
+  };
+
   const handleVerify = async (otpCode?: string) => {
     const codeToVerify = otpCode || otp.join("");
 
@@ -118,7 +129,7 @@ export default function Verification() {
       return;
     }
 
-    setIsLoading(true);
+    setIsSubmit(true);
     setError("");
 
     // await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -139,7 +150,7 @@ export default function Verification() {
       setOtp(["", "", "", "", ""]);
       setError("خطایی رخ داده است. لطفاً مجدداً تلاش کنید.");
     } finally {
-      setIsLoading(false);
+      setIsSubmit(false);
     }
   };
 
@@ -234,7 +245,7 @@ export default function Verification() {
 
           {/* Center Left - Tech Elements */}
           <div className="absolute left-8 top-1/2 transform -translate-y-1/2 w-24 h-32 opacity-25">
-          <LoginTopLeft3/>
+            <LoginTopLeft3 />
           </div>
 
           {/* Bottom Left - Modern Grid Pattern */}
@@ -398,7 +409,7 @@ export default function Verification() {
                       maxLength={1}
                       value={digit}
                       onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
+                      onKeyDown={(e) => handleOtpKeyDown(index, e)}
                       className={`
                       w-12 h-12 text-center text-xl font-semibold rounded-xl border-2
                       ${
@@ -428,10 +439,12 @@ export default function Verification() {
                 // ="primary"
                 // size="lg"
                 onClick={() => handleVerify()}
-                disabled={isLoading || otp.some((digit) => digit === "")}
+                disabled={
+                  isSubmit || isLoading || otp.some((digit) => digit === "")
+                }
                 className="w-full py-4 px-4 flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? "در حال تأیید..." : "تأیید کد"}
+                {isSubmit ? "در حال تأیید..." : "تأیید کد"}
               </button>
 
               {/* Resend Code */}

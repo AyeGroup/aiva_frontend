@@ -1,16 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import axios from "axios";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
 import { useRouter } from "next/navigation";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
-import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
-import axios from "axios";
-import { API_ROUTES } from "@/constants/apiRoutes";
 import { LoginTopLeft, RegisterTopLeft } from "@/public/icons/AppIcons";
+import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
 
 type RegisterStep = "signup" | "otp" | "success" | "password";
 
@@ -726,11 +725,7 @@ export default function Register() {
         </div>
       </div>
 
-      {/* <Toaster position="top-center" dir="rtl" richColors closeButton /> */}
     </div>
-    //   </div>
-    // </div>
   );
 }
 
-// export default Register;

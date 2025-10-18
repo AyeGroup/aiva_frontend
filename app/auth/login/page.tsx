@@ -21,6 +21,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   const isValidEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -34,13 +35,15 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const identity = phone.trim();
+    let identity = phone.trim();
     console.log("login ", identity);
     if (!isValidEmail(identity) && !isValidPhone(identity)) {
       toast.error("لطفاً شماره موبایل یا ایمیل معتبر وارد کنید");
       return;
     }
-
+    if (!isValidPhone(identity)) {
+      identity = user?.phone || "";
+    }
     try {
       setIsLoading(true);
       const res = await login(identity, password);
@@ -48,8 +51,8 @@ function Login() {
         toast.error(res.message);
         if (res.status === 403) {
           router.push(`/auth/verification?phone=${identity}`);
+          return;
         }
-        return;
       }
       // toast.success("ورود موفق!");
       console.log("redirecting dashboard ...");
@@ -193,7 +196,6 @@ function Login() {
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="موبایل / ایمیل "
                     className="w-full rounded-3xl pr-4 pl-4 py-6 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
-                    
                     maxLength={32}
                   />
                 </div>
@@ -252,7 +254,7 @@ function Login() {
                 {isLoading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>در حال پردازش...</span>
+                    <span>در حالّ پردازش...</span>
                   </>
                 ) : (
                   <span>تایید</span>

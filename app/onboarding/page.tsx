@@ -54,7 +54,7 @@ export default function OnboardingWizard() {
     accent_color: "#65BCB6",
     knowledge: [],
     faqs: [],
-    logo_path: "",
+    logo_url: "",
     behaviors: initialBehaviorSettings,
   });
   const totalSteps = steps.length;

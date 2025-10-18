@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Button } from "@/components/button";
 import { Input } from "@/components/input";
-import { HelpCircle, Plus, Trash2, Edit3, Save, X } from "lucide-react";
-import { BotConfig, FAQ } from "@/types/common";
-import { API_ROUTES } from "@/constants/apiRoutes";
+import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { BotConfig, FAQ } from "@/types/common";
+import { HelpCircle, Trash2, Edit3, Save, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface WizardStep4Props {
   botConfig: BotConfig;
@@ -18,9 +19,9 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   const [isloading, setIsLoading] = useState(false);
   const { user, loading } = useAuth();
 
-  const botId = botConfig.uuid; // مثلاً uuid یا id بات
-  console.log("botId", botId);
-  // 📦 دریافت FAQ‌ها از بک‌اند
+  const botId = botConfig.uuid;
+
+  //  دریافت FAQ‌ها از بک‌اند
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
@@ -41,14 +42,13 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     fetchFaqs();
   }, [botId]);
 
-  // 📤 افزودن FAQ
+  //   افزودن FAQ
   const addFaq = async () => {
     if (!newFaq.question.trim() || !newFaq.answer.trim()) return;
     const payload = {
       question: newFaq.question,
       answer: newFaq.answer,
     };
-
 
     try {
       const res = await axios.post(API_ROUTES.FAQ(botId), payload, {
@@ -57,23 +57,29 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
           Authorization: `Bearer ${user?.token}`,
         },
       });
+      if (res.status === 200) {
+        // setFaqs((prev) => [...prev, newFaq]);
+        setFaqs([
+          ...(botConfig.faqs || []),
+          { id: crypto.randomUUID(), ...newFaq } as FAQ,
+        ]);
 
-      const created = res.data.data;
-      setFaqs((prev) => [...prev, created]);
-      setNewFaq({ question: "", answer: "" });
+        setNewFaq({ question: "", answer: "" });
+      }
     } catch (err) {
+      toast.error("خطا در افزودن FAQ:");
       console.error("خطا در افزودن FAQ:", err);
     }
   };
 
-  // ✏️ شروع ویرایش
+  //   شروع ویرایش
   const startEdit = (id: string) => {
     setFaqs((prev) =>
       prev.map((f) => (f.id === id ? { ...f, isEditing: true } : f))
     );
   };
 
-  // 💾 ذخیره ویرایش
+  //   ذخیره ویرایش
   const saveEdit = async (id: string, question: string, answer: string) => {
     try {
       // const res = await axios.put(`/api/faqs/${id}`, { question, answer });
@@ -98,7 +104,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     }
   };
 
-  // ❌ حذف FAQ
+  //   حذف FAQ
   const deleteFaq = async (id: string) => {
     try {
       await axios.delete(`${API_ROUTES.FAQ(botId)}/${id}`, {
@@ -123,8 +129,8 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
 
   //   آپدیت botConfig در حالت محلی (اختیاری)
   useEffect(() => {
-    console.log("faq",faqs)
-    if (!faqs || faqs.length===0) return;
+    console.log("faq", faqs);
+    if (!faqs || faqs.length === 0) return;
 
     updateConfig({
       faqs: faqs.map((f) => ({
