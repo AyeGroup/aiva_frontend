@@ -55,6 +55,7 @@ export default function OnboardingWizard() {
     knowledge: [],
     faqs: [],
     logo_url: "",
+    status:true,
     behaviors: initialBehaviorSettings,
   });
   const totalSteps = steps.length;

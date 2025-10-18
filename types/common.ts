@@ -50,6 +50,12 @@ export interface BotConfig {
   faqs: Array<FAQ>;
   logo_url: string;
   behaviors: BehaviorSettings;
+
+  // -------------------برای آمار
+  lastUpdated?: string;
+  status: boolean;
+  conversationsToday?: string;
+  url?:string;
 }
 
 export interface FAQ {
