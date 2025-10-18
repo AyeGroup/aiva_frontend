@@ -1,5 +1,6 @@
+"use client";
 import React, { useState } from "react";
-import { Sidebar } from "./sidebar";
+import { Sidebar } from "../sidebar";
 import {
   Edit3,
   Trash2,
@@ -14,15 +15,13 @@ import {
   X,
   Plus,
 } from "lucide-react";
-import { onboardingData } from "../onboarding/onboarding.data";
+import { onboardingData } from "../../onboarding/onboarding.data";
 import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { Switch } from "@/components/ui/switch";
 import { PageType } from "@/types/common";
-
- 
 
 interface ChatbotManagementProps {
   onNavigate: (page: PageType) => void;
@@ -65,7 +64,8 @@ interface Chatbot {
   };
 }
 
-export default function ChatbotManagement( ) {
+// export default function ChatbotManagement( ) {
+export function ChatbotManagement() {
   const [chatbots, setChatbots] = useState<Chatbot[]>([
     {
       id: "1",

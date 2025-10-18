@@ -440,7 +440,7 @@ export default function Verification() {
                 // size="lg"
                 onClick={() => handleVerify()}
                 disabled={
-                  isSubmit || isLoading || otp.some((digit) => digit === "")
+                  isSubmit  || otp.some((digit) => digit === "")
                 }
                 className="w-full py-4 px-4 flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >

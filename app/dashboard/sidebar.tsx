@@ -1,14 +1,14 @@
+"use client";
+
 import React, { useState } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { ChevronDown, User, LogOut, ArrowLeft } from "lucide-react";
 import { AddChatbotModal } from "./add-chatbot-modal";
 import { AddAccountModal } from "./add-account-modal";
-import aivaLogo from "@/public/logo.png";
-import sidebarImage from "@/public/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
 import { PageType } from "@/types/common";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
-// import sidebarImage from "figma:asset/ea78c89f3bbc3688a1b735ffbbc5ab4b48f59a00.png";
+import { useRouter } from "next/navigation";
+// import { AppRouterInstance } from "next/navigation";
 
 interface QAPair {
   id: string;
@@ -42,7 +42,7 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-center px-6 py-4 text-grey-900 hover:bg-white/30 transition-colors duration-200 relative"
+      className="w-full cursor-pointer text-center px-6 py-4 text-grey-900 hover:bg-white/30 transition-colors duration-200 relative"
     >
       {active && (
         <div className="absolute left-6 top-1/2 transform -translate-y-1/2 w-3 h-3 rounded-full bg-brand-secondary"></div>
@@ -56,46 +56,35 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
 
 interface SidebarProps {
   currentPage?: PageType;
+  router: ReturnType<typeof useRouter>;
 }
 
-export function Sidebar({ currentPage = "dashboard" }: SidebarProps) {
-  const router = useRouter();
-
+export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
-  const [websites, setWebsites] = useState<Website[]>([]);
   const { logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Temporary handler for adding a website (replace with real logic)
   const handleAddWebsite = (newWebsite: Omit<Website, "id">) => {
     const website: Website = {
       ...newWebsite,
       id: Date.now().toString(),
     };
-    setWebsites((prev) => [...prev, website]);
+    console.log("New website added:", website);
   };
 
   const handleLogout = async () => {
     try {
       setIsLoading(true);
       logout();
-      // if (!res.success) {
-      //   toast.error(res.message);
-      //   if (res.status === 403) {
-      //     router.push(`/auth/verification?phone=${identity}`);
-      //     return;
-      //   }
-      // }
-      // toast.success("ورود موفق!");
-      // console.log("redirecting dashboard ...");
-      // router.push("/");
     } catch (err) {
       console.log(err);
-      // toast.error("خطا در ورود");
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleAddAccount = (newAccount: Omit<Account, "id">) => {
     const account: Account = {
       ...newAccount,
@@ -118,9 +107,7 @@ export function Sidebar({ currentPage = "dashboard" }: SidebarProps) {
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
             style={{ backgroundColor: "#FFA18E" }}
-          >
-            ع
-          </div>
+          ></div>
           <div className="text-center">
             <p className="text-grey-900 font-semibold">علی احمدی</p>
           </div>
@@ -132,17 +119,18 @@ export function Sidebar({ currentPage = "dashboard" }: SidebarProps) {
         <SidebarItem
           label="میزکار"
           active={currentPage === "dashboard"}
-          // onClick={() => onNavigate("dashboard")}
+          onClick={() => router.push("/dashboard")}
         />
         <SidebarItem
           label="مدیریت چت بات"
           active={currentPage === "chatbot-management"}
-          // onClick={() => onNavigate("chatbot-management")}
+          // onClick={() => router.push("/dashboard/chatbot-management")}
+          onClick={() => router.push("/dashboard?tab=chatbot-management")}
         />
         <SidebarItem
           label="تیکت"
           active={currentPage === "tickets"}
-          // onClick={() => onNavigate("tickets")}
+          onClick={() => router.push("/dashboard/tickets")}
         />
         <SidebarItem label="پروفایل" />
         <SidebarItem label="مالی" />
@@ -152,15 +140,16 @@ export function Sidebar({ currentPage = "dashboard" }: SidebarProps) {
       <div className="px-6 py-4 border-t border-white/30 space-y-2">
         <button
           onClick={() => router.push("/")}
-          className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 transition-colors text-sm"
+          className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 cursor-pointer transition-colors text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>بازگشت به سایت</span>
         </button>
 
         <button
-          className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 transition-colors text-sm"
+          className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 transition-colors text-sm cursor-pointer"
           onClick={handleLogout}
+          disabled={isLoading}
         >
           <LogOut className="w-4 h-4" />
           <span>خروج</span>
@@ -173,7 +162,6 @@ export function Sidebar({ currentPage = "dashboard" }: SidebarProps) {
           <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
             <ImageWithFallback
               src=""
-              // src=""
               alt="آیوا - دستیار هوشمند"
               className="w-8 h-8 object-cover"
             />
@@ -191,7 +179,6 @@ export function Sidebar({ currentPage = "dashboard" }: SidebarProps) {
         onClose={() => setIsAddModalOpen(false)}
         onAdd={handleAddWebsite}
       />
-
       <AddAccountModal
         isOpen={isAddAccountModalOpen}
         onClose={() => setIsAddAccountModalOpen(false)}

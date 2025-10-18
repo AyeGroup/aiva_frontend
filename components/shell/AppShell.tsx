@@ -10,7 +10,7 @@ const LandingPage = lazy(() => import("@/app/landing/page"));
 const OnboardingWizard = lazy(() => import("@/app/onboarding/page"));
 const Dashboard = lazy(() => import("@/app/dashboard/page"));
 const ChatbotManagement = lazy(
-  () => import("@/app/dashboard/chatbot-management")
+  () => import("@/app/dashboard/components/chatbot-management")
 );
 const Tickets = lazy(() => import("@/app/dashboard/tickets"));
 const Login = lazy(() => import("@/app/auth/login/page"));
