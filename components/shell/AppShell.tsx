@@ -9,9 +9,9 @@ import { PageType } from "@/types/common";
 const LandingPage = lazy(() => import("@/app/landing/page"));
 const OnboardingWizard = lazy(() => import("@/app/onboarding/page"));
 const Dashboard = lazy(() => import("@/app/dashboard/page"));
-const ChatbotManagement = lazy(
-  () => import("@/app/dashboard/components/chatbot-management")
-);
+// const ChatbotManagement = lazy(
+//   () => import("@/app/dashboard/components/chatbot-management")
+// );
 const Tickets = lazy(() => import("@/app/dashboard/tickets"));
 const Login = lazy(() => import("@/app/auth/login/page"));
 const Register = lazy(() => import("@/app/auth/register/page"));
@@ -55,8 +55,8 @@ export default function AppShell({ page }: AppShellProps) {
         return <Register />;
       case "dashboard":
         return <Dashboard />;
-      case "chatbot-management":
-        return <ChatbotManagement />;
+      // case "chatbot-management":
+        // return <ChatbotManagement />;
       case "tickets":
         return <Tickets />;
       case "login":
