@@ -19,7 +19,7 @@ const OTPVerification = lazy(() => import("@/app/auth/verification/page"));
 const ChatHistoryDemo = lazy(
   () => import("@/app/onboarding/demo/chat-history-demo")
 );
-
+// version:1
 // Enhanced Loader with NProgress
 const PageLoader = () => {
   // useEffect(() => {
