@@ -48,9 +48,9 @@ export function WizardStep1({
     console.log("logo_path: ", botConfig.logo_url);
 
     if (botConfig.logo_url) {
-      const fileUrl = `${IMAGE_URL}${botConfig.uuid}/logo.png`;
-      console.log("fileUrl: ", fileUrl);
-      setPreview(fileUrl);
+      // const fileUrl = `${IMAGE_URL}${botConfig.uuid}/logo.png`;
+      // console.log("fileUrl: ", fileUrl);
+      setPreview(botConfig.logo_url);
     }
 
     // if (botConfig.logo_path) setPreview(fileUrl);

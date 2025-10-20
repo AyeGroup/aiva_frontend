@@ -43,11 +43,11 @@ export function ChatbotManagement() {
         setChatbots(response.data.data);
         console.log("bot list: ", response.data);
       } catch (apiError: any) {
-        if (apiError.response?.status === 401) {
-          console.warn("Unauthorized - redirecting to login...");
-          router.push("/auth/login");
-          return;
-        }
+        // if (apiError.response?.status === 401) {
+        //   console.warn("Unauthorized - redirecting to login...");
+        //   router.push("/auth/login");
+        //   return;
+        // }
         console.warn("API fetch failed, using local data:", apiError);
       } finally {
         setIsLoading(false);

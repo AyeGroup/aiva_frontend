@@ -10,6 +10,12 @@ export const API_ROUTES = {
     VERIFY_EMAIL: `${API_BASE_URL}/auth/verify-email`,
     SEND_CODE: `${API_BASE_URL}/auth/phone/send-code`,
   },
+
+  STATISTIC: {
+    GET_COVER: (bot_uuid: string) =>
+      `${API_BASE_URL}/dashboard/stats/${bot_uuid}/`,
+  },
+
   BOTS: {
     LOGO_UPLOAD: (bot_uuid: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/logo`,
@@ -20,16 +26,19 @@ export const API_ROUTES = {
     GET_EMBED: (bot_uuid: string) =>
       `${API_BASE_URL}/widget/embed-script/${bot_uuid}`,
   },
-  // /chatbots/{bot_uuid}/documents/item/{doc_id}/title
   KNOWLEDGE: {
     DOCUMENT: (bot_uuid: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents`,
     DOCUMENT_EDIT: (bot_uuid: string, doc_id: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents/item/${doc_id}/title`,
 
-    FAQ: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/qa`,
-    FAQ_EDIT: (bot_uuid: string, id: string) =>
+    QA_LIST: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/qa`,
+    QA_SAVE: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/qa`,
+    QA_GET: (bot_uuid: string, qa_id: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/qa/${qa_id}`,
+    QA_EDIT: (bot_uuid: string, id: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/qa/${id}`,
+
     URL: (bot_uuid: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents/url`,
   },

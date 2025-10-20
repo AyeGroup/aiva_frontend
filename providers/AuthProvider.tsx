@@ -5,6 +5,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
 import PageLoader from "@/components/pageLoader";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import axios from "axios";
 
 interface User {
   id: number;
@@ -32,8 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ Load user on mount
-  useEffect(() => {
+   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     const savedUser = localStorage.getItem("user");
 
@@ -50,13 +50,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string
   ): Promise<LoginResponse> => {
     try {
-      // لاگین نیاز به axios معمولی ندارد چون هنوز توکن نداریم
-      const res = await axiosInstance.post(API_ROUTES.AUTH.LOGIN, {
+       const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
         identity,
         password,
       });
+      console.log("login res",res)
+ 
       const data = res.data.data;
-
       localStorage.setItem("accessToken", data.access_token);
       localStorage.setItem("refreshToken", data.refresh_token);
 

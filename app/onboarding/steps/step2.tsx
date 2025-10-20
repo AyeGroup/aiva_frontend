@@ -42,47 +42,47 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const loadOnboardingData = async () => {
-      setIsLoading(true);
-      try {
-        const savedData = localStorage.getItem("aiva-onboarding-data");
-        if (!savedData) return;
-
-        const parsedData = JSON.parse(savedData);
-        console.log("uuid: ", parsedData.botConfig?.uuid);
-
-        if (parsedData.botConfig?.uuid) {
-          try {
-            const response = await axiosInstance.get(
-              API_ROUTES.KNOWLEDGE.DOCUMENT(parsedData.botConfig.uuid),
-              {
-                withCredentials: true,
-                headers: {
-                  Authorization: `Bearer ${user?.token}`,
-                },
-              }
-            );
-
-            botConfig.knowledge = response.data.data;
-            console.log("botConfig.knowledge: ", botConfig.knowledge);
-          } catch (apiError: any) {
-            if (apiError.response?.status === 401) {
-              console.warn("Unauthorized - redirecting to login...");
-              router.push("/auth/login");
-              return;
-            }
-            console.warn("API fetch failed, using local data:", apiError);
-          }
-        }
-      } catch (error) {
-        console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     if (user?.token) loadOnboardingData();
   }, [user?.token]);
+
+  const loadOnboardingData = async () => {
+    try {
+      const savedData = localStorage.getItem("aiva-onboarding-data");
+      if (!savedData) return;
+
+      const parsedData = JSON.parse(savedData);
+      loadQa(parsedData.botConfig?.uuid);
+    } catch (error) {
+      console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
+    }
+  };
+
+  const loadQa = async (botUuid: string) => {
+    if (!botUuid) return;
+    setIsLoading(true);
+    try {
+      try {
+        const response = await axiosInstance.get(
+          API_ROUTES.KNOWLEDGE.DOCUMENT(botUuid),
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          }
+        );
+
+        botConfig.knowledge = response.data.data;
+        // console.log("botConfig.knowledge: ", botConfig.knowledge);
+      } catch (apiError: any) {
+        console.warn("API fetch failed, using local data:", apiError);
+      }
+    } catch (error) {
+      console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -129,13 +129,19 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const saveItem = async () => {
     try {
       const formData = new FormData();
+      console.log("save: ", selectedType, isEditing);
+      console.log("editingItem: ", editingItem);
+
       formData.append("type", selectedType);
 
-      if (isEditing && editingItem) {
+      if (isEditing && editingItem && editingItem.qa_id) {
         const apiPath =
           selectedType === "file" || selectedType === "website"
-            ? API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(botConfig.uuid, editingItem.id)
-            : API_ROUTES.KNOWLEDGE.FAQ_EDIT(botConfig.uuid, editingItem.id);
+            ? API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(
+                botConfig.uuid,
+                editingItem.qa_id
+              )
+            : API_ROUTES.KNOWLEDGE.QA_EDIT(botConfig.uuid, editingItem.qa_id);
 
         // formData.append("id", editingItem.id || "");
         formData.append("title", newItem.title || "");
@@ -155,12 +161,13 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           toast.error("خطا در ویرایش اطلاعات!");
           return;
         }
+        loadQa(botConfig.uuid);
 
-        updateConfig({
-          knowledge: botConfig.knowledge.map((k) =>
-            k.id === editingItem.id ? res.data.data : k
-          ),
-        });
+        // updateConfig({
+        //   knowledge: botConfig.knowledge.map((k) =>
+        //     k.id === editingItem.id ? res.data.data : k
+        //   ),
+        // });
 
         cancelEditing();
       } else {
@@ -177,7 +184,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             ? API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)
             : selectedType === "website"
             ? API_ROUTES.KNOWLEDGE.URL(botConfig.uuid)
-            : API_ROUTES.KNOWLEDGE.FAQ(botConfig.uuid);
+            : API_ROUTES.KNOWLEDGE.QA_SAVE(botConfig.uuid);
 
         //  افزودن آیتم جدید
         if (selectedType === "file" && selectedFile) {
@@ -203,6 +210,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           toast.error("خطا در ثبت آیتم جدید!");
           return;
         }
+        loadQa(botConfig.uuid);
 
         // const savedItem = res.data.data;
         // console.log("savedata", savedItem);
@@ -211,18 +219,18 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         //   knowledge: [...(botConfig.knowledge || []), newItem],
         // });
         console.log("newitem", newItem);
-        updateConfig({
-          knowledge: [
-            ...(botConfig.knowledge || []),
-            {
-              status: "processing",
-              created_at: new Date().toISOString(),
-              id: botConfig.knowledge?.length || 0,
-              ...newItem,
-            } as KnowledgeItem,
-          ],
-        });
-        console.log("ali", botConfig.knowledge);
+        // updateConfig({
+        //   knowledge: [
+        //     ...(botConfig.knowledge || []),
+        //     {
+        //       status: "processing",
+        //       created_at: new Date().toISOString(),
+        //       id: botConfig.knowledge?.length || 0,
+        //       ...newItem,
+        //     } as KnowledgeItem,
+        //   ],
+        // });
+        // console.log("ali", botConfig.knowledge);
         cancelAdding();
         setSelectedFile(null);
       }
@@ -309,40 +317,42 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
   const startEditing = async (item: KnowledgeItem) => {
     try {
-      console.log("edit>>", item);
-      if (item.type === "qa_pair") {
-        const response = await axiosInstance.get(
-          API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid),
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
-        );
+      setIsAdding(false);
+      setIsEditing(true);
+      setSelectedType(item.type);
 
-        botConfig.knowledge = response.data.data;
-        console.log("botConfig.knowledge: ", botConfig.knowledge);
+      console.log("start edit >> ", item);
+      if (item.qa_id) {
+        const apiPath =
+          item.type === "qa_pair"
+            ? API_ROUTES.KNOWLEDGE.QA_GET(botConfig.uuid, item?.qa_id)
+            : API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(botConfig.uuid, item?.id);
+        const response = await axiosInstance.get(apiPath, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
+
+        const myItem = response.data.data;
+        myItem.content = response.data.data.answer;
+        // console.log("read qa: ", response.data.data);
+        // console.log("myitem: ", myItem);
+
+        setEditingItem(myItem);
+        setNewItem(myItem);
+      } else {
+        setEditingItem(item);
+        setNewItem(item);
       }
+
+      console.log("focus");
+      setTimeout(() => {
+        titleInputRef.current?.focus();
+      }, 0);
     } catch (apiError: any) {
-      // if (apiError.response?.status === 401) {
-      //   console.warn("Unauthorized - redirecting to login...");
-      //   router.push("/auth/login");
-      //   return;
-      // }
-      // console.warn("API fetch failed, using local data:", apiError);
+      console.error(apiError);
     }
-
-    setIsAdding(false);
-    setIsEditing(true);
-    setEditingItem(item);
-    setSelectedType(item.type);
-    setNewItem(item);
-
-    // فوکوس بعد از رندر
-    setTimeout(() => {
-      titleInputRef.current?.focus();
-    }, 0);
   };
 
   const cancelEditing = () => {
@@ -374,12 +384,12 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       }
     } catch (error: any) {
       // Handle unauthorized (401)
-      if (error.response?.status === 401) {
-        console.warn("Unauthorized — redirecting to login...");
-        // localStorage.removeItem("aiva-onboarding-data");
-        router.push("/auth/login");
-        return;
-      }
+      // if (error.response?.status === 401) {
+      //   console.warn("Unauthorized — redirecting to login...");
+      //   // localStorage.removeItem("aiva-onboarding-data");
+      //   router.push("/auth/login");
+      //   return;
+      // }
 
       console.error("❌ Failed to remove item:", error);
     }
@@ -544,7 +554,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                   setNewItem((prev) => ({ ...prev, title: e.target.value }))
                 }
                 placeholder="عنوان مناسب برای این محتوا"
-                className="w-full"
+                className="w-full !bg-white"
               />
             </div>
 
@@ -562,7 +572,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                   placeholder="سؤال: محصولات شما چه هستند؟
 پاسخ: ما انواع مختلفی از محصولات ارائه می‌دهیم شامل..."
                   rows={6}
-                  className="w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-colors resize-none"
+                  className="w-full bg-white px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-colors resize-none"
                 />
 
                 {/* سوالات پیشنهادی */}

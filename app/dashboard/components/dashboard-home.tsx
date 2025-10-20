@@ -15,11 +15,14 @@ import { ActivityChart } from "@/components/activity-chart";
 import { ColorShowcase } from "@/components/color-showcase";
 // import { UpgradeBanner } from "./upgrade-banner";
 import { convertToPersian } from "@/utils/common";
+import { BotConfig } from "@/types/common";
 
 export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [isNew, setIsNew] = useState(false);
+  const [statisticCover, setStatisticCover] = useState(null);
+  const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [timeRange, setTimeRange] = useState("30d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
@@ -49,17 +52,51 @@ export default function Dashboard() {
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
   const currentPage = pathname.split("/").pop();
 
+  //Authentication
   useEffect(() => {
-    console.log("dashboard ", user);
+    // console.log("dashboard ", user);
     if (!user) {
       router.push("/auth/login");
       return;
     }
   }, [loading, user]);
 
+  //statistic
   useEffect(() => {
     if (!user) return;
-    setIsNew(true);
+    if (!currentBot?.uuid) return;
+
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axiosInstance.get(
+          API_ROUTES.STATISTIC.GET_COVER(currentBot?.uuid),
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          }
+        );
+        // console.log("res",response.data);
+        if (response.status==200 && response.data) {
+          setStatisticCover(response.data);
+          console.log("setStatisticCover",response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching bots:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [user, currentBot]);
+
+  //کاربر بات ثبت شده دارد؟
+  useEffect(() => {
+    if (!user) return;
+    // setIsNew(true);
 
     const fetchData = async () => {
       try {
@@ -74,8 +111,11 @@ export default function Dashboard() {
           response.data.success &&
           response.data.data &&
           response.data.data.length > 0
-        )
+        ) {
           setIsNew(false);
+          setCurrentBot(response.data.data[0]);
+          console.log("curret bot :", response.data.data[0]);
+        } else setIsNew(true);
       } catch (error) {
         console.error("Error fetching bots:", error);
       } finally {

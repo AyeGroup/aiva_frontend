@@ -13,7 +13,10 @@ import {
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
-import { convertPersianToEnglishDigits, convertToPersian } from "@/utils/common";
+import {
+  convertPersianToEnglishDigits,
+
+} from "@/utils/common";
 
 function Login() {
   const router = useRouter();
@@ -36,15 +39,15 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let identity = phone.trim();
+    const identity = phone.trim();
     console.log("login ", identity);
     if (!isValidEmail(identity) && !isValidPhone(identity)) {
       toast.error("لطفاً شماره موبایل یا ایمیل معتبر وارد کنید");
       return;
     }
-    if (!isValidPhone(identity)) {
-      identity = user?.phone || "";
-    }
+    // if (!isValidPhone(identity)) {
+      // identity = user?.phone || "";
+    // }
     try {
       setIsLoading(true);
       const res = await login(identity, password);
@@ -197,10 +200,8 @@ function Login() {
                     // onChange={(e) => setPhone(e.target.value)}
                     onChange={(e) => {
                       const inputValue = e.target.value;
-
                       const normalizedValue =
                         convertPersianToEnglishDigits(inputValue);
-
                       setPhone(normalizedValue);
                     }}
                     placeholder="موبایل / ایمیل "
