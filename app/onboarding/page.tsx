@@ -62,7 +62,7 @@ export default function OnboardingWizard() {
 
   //   چک ورود کاربر
   useEffect(() => {
-    console.log("user:",user)
+    console.log("user:", user);
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
@@ -263,12 +263,21 @@ export default function OnboardingWizard() {
           },
         });
         if (res.data.success) {
-          botConfig.uuid = res.data.data.uuid;
-          console.log("uuid", res.data.data.uuid);
-          localStorage.setItem(
-            "aiva-onboarding-data",
-            JSON.stringify(botConfig)
-          );
+          // botConfig.uuid = res.data.data.uuid;
+          // console.log("uuid", res.data.data.uuid);
+          // localStorage.setItem(
+          //   "aiva-onboarding-data",
+          //   JSON.stringify(botConfig)
+          // );
+          const newId = res.data.data?.uuid;
+          setBotConfig((prev) => {
+            const updated = { ...prev, uuid: newId };
+            localStorage.setItem(
+              "aiva-onboarding-data",
+              JSON.stringify(updated)
+            );
+            return updated;
+          });
           setLastStep(1);
 
           return true;

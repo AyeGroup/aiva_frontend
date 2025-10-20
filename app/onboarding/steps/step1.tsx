@@ -87,7 +87,7 @@ export function WizardStep1({
       const formData = new FormData();
       formData.append("logo", file);
 
-      const res = await axiosInstance.put(
+      const res = await axiosInstance.post(
         API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
         formData,
         {

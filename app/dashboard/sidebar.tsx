@@ -171,6 +171,9 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
             <p className="text-grey-500 text-xs">دستیار هوشمند</p>
           </div>
         </div>
+          <div className="text-xs text-gray-500 mt-2 mr-12">
+            نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
+          </div>
       </div>
 
       {/* Modals */}
