@@ -81,7 +81,7 @@ export interface BehaviorSettings {
   phone: string;
   useGreeting: boolean;
   useEmojis: boolean;
-  useSupport: boolean;
+  // useSupport: boolean;
 }
 
 // interface behaviors {

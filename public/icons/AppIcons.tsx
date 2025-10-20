@@ -290,7 +290,7 @@ export const AivaWhite = () => {
 export const Install = () => {
   return (
     <svg viewBox="0 0 20 20" fill="none">
-      <g clip-path="url(#clip0_11_9797)">
+      <g>
         <path
           d="M13.3335 15L18.3335 10L13.3335 5"
           stroke="currentColor"
@@ -314,8 +314,6 @@ export const Install = () => {
     </svg>
   );
 };
-
-
 
 // export const LoginTopLeft = () => {
 //   return (

@@ -16,7 +16,9 @@ export const API_ROUTES = {
     SAVE: `${API_BASE_URL}/chatbots`,
     LIST: `${API_BASE_URL}/chatbots`,
     GET: `${API_BASE_URL}/chatbots/`, //bot_uuid
-    GET_EMBED: `${API_BASE_URL}/widget/embed-script/`, //bot_uuid
+
+    GET_EMBED: (bot_uuid: string) =>
+      `${API_BASE_URL}/widget/embed-script/${bot_uuid}`,
   },
   // /chatbots/{bot_uuid}/documents/item/{doc_id}/title
   KNOWLEDGE: {
@@ -26,6 +28,8 @@ export const API_ROUTES = {
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents/item/${doc_id}/title`,
 
     FAQ: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/qa`,
+    FAQ_EDIT: (bot_uuid: string, id: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/qa/${id}`,
     URL: (bot_uuid: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents/url`,
   },

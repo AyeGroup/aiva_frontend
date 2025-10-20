@@ -18,7 +18,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
     maxResponseLength: "medium",
     useGreeting: false,
     useEmojis: true,
-    useSupport: false,
+    // useSupport: false,
     phone: "",
   });
 
@@ -128,7 +128,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
         <div className="flex justify-between items-center p-3  rounded-lg border border-secondary bg-secondary/20">
           <div className="flex text-gray-900">
             شماره تماس
-            <span className="text-brand-primary p-1">*</span>
+            {/* <span className="text-brand-primary p-1">*</span> */}
           </div>
           <Input
             id="phone"

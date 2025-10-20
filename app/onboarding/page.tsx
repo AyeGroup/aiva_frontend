@@ -31,10 +31,10 @@ export default function OnboardingWizard() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const initialBehaviorSettings: BehaviorSettings = {
     k: 5,
-    maxResponseLength: "500",
+    maxResponseLength: "short",
     useGreeting: true,
     useEmojis: false,
-    useSupport: true,
+    // useSupport: true,
     phone: "",
   };
   const [botConfig, setBotConfig] = useState<BotConfig>({
@@ -55,7 +55,7 @@ export default function OnboardingWizard() {
     knowledge: [],
     faqs: [],
     logo_url: "",
-    status:true,
+    status: true,
     behaviors: initialBehaviorSettings,
   });
   const totalSteps = steps.length;
@@ -163,13 +163,13 @@ export default function OnboardingWizard() {
   const saveBotBehavior = async () => {
     setIsSaving(true);
     try {
-      if (
-        botConfig.behaviors.useSupport === true &&
-        botConfig.behaviors.phone.trim().length < 3
-      ) {
-        toast.info("شماره پشتیبانی را وارد کنید");
-        return;
-      }
+      // if (
+      //   botConfig.behaviors.useSupport === true &&
+      //   botConfig.behaviors.phone.trim().length < 3
+      // ) {
+      //   toast.info("شماره پشتیبانی را وارد کنید");
+      //   return;
+      // }
       console.log("behavior", botConfig.behaviors);
       const formData = new FormData();
       formData.append("uuid", botConfig.uuid);
@@ -180,11 +180,9 @@ export default function OnboardingWizard() {
       );
       formData.append("greetings", String(botConfig.behaviors.useGreeting));
       formData.append("use_emoji", String(botConfig.behaviors.useEmojis));
-      // formData.append(
-      //   "public_self_signup",
-      //   String(botConfig.behaviors.useSupport)
-      // );
+
       formData.append("support_phone", botConfig.behaviors.phone);
+      console.log("formdata", formData);
       const res = await axios.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
         formData,
@@ -244,6 +242,7 @@ export default function OnboardingWizard() {
       }
       let res;
       if (botConfig.uuid) {
+        // آپدیت چت بات
         res = await axios.put(
           `${API_ROUTES.BOTS.SAVE}${
             botConfig.uuid ? `/${botConfig.uuid}` : ""
@@ -256,7 +255,9 @@ export default function OnboardingWizard() {
           }
         );
         if (res.data.success) return true;
+        else toast.error(res.data?.message || "خطا در ثبت اطلاعات");
       } else {
+        // ثبت چت بات
         res = await axios.post(API_ROUTES.BOTS.SAVE, formData, {
           headers: {
             Authorization: `Bearer ${user?.token}`,
@@ -265,35 +266,24 @@ export default function OnboardingWizard() {
         if (res.data.success) {
           botConfig.uuid = res.data.data.uuid;
           console.log("uuid", res.data.data.uuid);
-          // console.log("botConfig1", botConfig);
           localStorage.setItem(
             "aiva-onboarding-data",
             JSON.stringify(botConfig)
           );
           setLastStep(1);
 
-          // setUuid(res.data.data.uuid);
           return true;
         } else {
-          // setUuid("");
+          toast.error(res.data?.message || "خطا در ثبت اطلاعات");
+
           return false;
         }
       }
+    } catch (err: any) {
+      toast.error(
+        "خطا در ثبت اطلاعات: " + (err.response?.data?.message || err.message)
+      );
 
-      // console.log("bot save:", res.data);
-      // if (res.data.success) {
-      //   botConfig.uuid = res.data.data.uuid;
-      //   // const savedData = localStorage.getItem("aiva-onboarding-data");
-      //   localStorage.setItem("aiva-onboarding-data", JSON.stringify(botConfig));
-
-      //   setUuid(res.data.data.uuid);
-      //   console.log("uuid", res.data.data.uuid);
-      //   return true;
-      // } else {
-      //   setUuid("");
-      //   return false;
-      // }
-    } catch (err) {
       console.error(err);
     } finally {
       setIsSaving(false);

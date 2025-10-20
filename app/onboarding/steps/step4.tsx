@@ -59,10 +59,16 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
       });
       if (res.status === 200) {
         // setFaqs((prev) => [...prev, newFaq]);
-        setFaqs([
-          ...(botConfig.faqs || []),
-          { id: crypto.randomUUID(), ...newFaq } as FAQ,
+        setFaqs((prev) => [
+          ...prev,
+          { id: String(prev.length), ...newFaq } as FAQ,
         ]);
+
+        // setFaqs([
+        //   ...(botConfig.faqs || []),
+
+        //   { id: botConfig.faqs?.length || 0, ...newFaq } as FAQ,
+        // ]);
 
         setNewFaq({ question: "", answer: "" });
       }

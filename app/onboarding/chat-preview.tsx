@@ -188,22 +188,22 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
     const styles = {
       friendly: {
         messageClass: "rounded-2xl",
-        headerStyle: "rounded-2xl",
+        headerStyle: "rounded-t-2xl",
         emoji: "😊",
       },
       professional: {
         messageClass: "rounded-lg",
-        headerStyle: "rounded-lg",
+        headerStyle: "rounded-t-lg",
         emoji: "💼",
       },
       casual: {
         messageClass: "rounded-3xl",
-        headerStyle: "rounded-3xl",
+        headerStyle: "rounded-t-3xl",
         emoji: "😎",
       },
       expert: {
         messageClass: "rounded-lg",
-        headerStyle: "rounded-lg",
+        headerStyle: "rounded-t-lg",
         emoji: "🎓",
       },
     };
@@ -541,7 +541,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                 )}
 
                 <div className="flex items-center gap-3">
-                  <button className="w-10 h-10 text-grey-400 hover:text-grey-600 rounded-xl hover:bg-grey-100 flex items-center justify-center">
+                  {/* <button className="w-10 h-10 text-grey-400 hover:text-grey-600 rounded-xl hover:bg-grey-100 flex items-center justify-center">
                     <svg
                       className="w-5 h-5"
                       fill="none"
@@ -555,7 +555,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                         d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                       />
                     </svg>
-                  </button>
+                  </button> */}
 
                   <input
                     type="text"

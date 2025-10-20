@@ -11,7 +11,7 @@
 yarn.lock
 # testing
 /coverage
-
+/widget
 # next.js
 /.next/
 /out/

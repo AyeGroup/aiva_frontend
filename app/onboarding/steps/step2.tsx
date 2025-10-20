@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { Info, Tick } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { onboardingData } from "../onboarding.data";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BotConfig, KnowledgeItem } from "@/types/common";
 import {
   FileText,
@@ -39,6 +39,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const loadOnboardingData = async () => {
@@ -112,6 +113,20 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     }
   };
 
+  function isValidUrl(url: string): boolean {
+    try {
+
+      return true;
+      const isValidUrl = /^https?:\/\/[^\s$.?#].[^\s]*$/i.test(url);
+      if (!isValidUrl) return false;
+
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   const saveItem = async () => {
     try {
       const formData = new FormData();
@@ -121,16 +136,16 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         const apiPath =
           selectedType === "file" || selectedType === "website"
             ? API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(botConfig.uuid, editingItem.id)
-            : API_ROUTES.KNOWLEDGE.FAQ(botConfig.uuid);
+            : API_ROUTES.KNOWLEDGE.FAQ_EDIT(botConfig.uuid, editingItem.id);
 
-        formData.append("id", editingItem.id || "");
+        // formData.append("id", editingItem.id || "");
         formData.append("title", newItem.title || "");
         if (selectedType === "qa_pair") {
           formData.append("question", newItem.title || "");
           formData.append("answer", newItem.content || "");
         }
 
-        const res = await axios.put(`${apiPath}/${editingItem.id}`, formData, {
+        const res = await axios.put(`${apiPath}`, formData, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${user?.token}`,
@@ -150,6 +165,14 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
         cancelEditing();
       } else {
+        if (
+          selectedType === "website" &&
+          (!newItem.url || !isValidUrl(newItem.url))
+        ) {
+          toast.error("آدرس معتبر وارد کنید");
+          return;
+        }
+
         const apiPath =
           selectedType === "file"
             ? API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)
@@ -188,14 +211,19 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         // updateConfig({
         //   knowledge: [...(botConfig.knowledge || []), newItem],
         // });
+        console.log("newitem", newItem);
         updateConfig({
           knowledge: [
             ...(botConfig.knowledge || []),
-            { id: crypto.randomUUID(), ...newItem } as KnowledgeItem,
+            {
+              status: "processing",
+              created_at: new Date().toISOString(),
+              id: botConfig.knowledge?.length || 0,
+              ...newItem,
+            } as KnowledgeItem,
           ],
         });
-
-
+        console.log("ali", botConfig.knowledge);
         cancelAdding();
         setSelectedFile(null);
       }
@@ -225,7 +253,9 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     switch (status) {
       case "processing":
         return Clock;
-      case "applied":
+      case "queued":
+        return Clock;
+      case "done":
         return CheckCircle;
       case "error":
         return AlertTriangle;
@@ -238,8 +268,10 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     switch (status) {
       case "processing":
         return "bg-brand-amber text-white";
-      case "applied":
+      case "done":
         return "bg-success text-white";
+      case "queued":
+        return "bg-brand-amber text-white";
       case "error":
         return "bg-danger text-white";
       default:
@@ -251,9 +283,11 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     switch (status) {
       case "processing":
         return "در حال بررسی";
-      case "applied":
-        return "اعمال شده";
-      case "error":
+      case "queued":
+        return "در صف بررسی";
+      case "done":
+        return "انجام شده";
+      case "failed":
         return "خطا";
       default:
         return "نامشخص";
@@ -275,11 +309,18 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   };
 
   const startEditing = (item: KnowledgeItem) => {
+    console.log("edit>>",item)
     setIsAdding(false);
     setIsEditing(true);
     setEditingItem(item);
     setSelectedType(item.type);
     setNewItem(item);
+
+    // فوکوس بعد از رندر
+    setTimeout(() => {
+      titleInputRef.current?.focus();
+    }, 0);
+
   };
 
   const cancelEditing = () => {
@@ -474,6 +515,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                 )}
               </label>
               <Input
+                ref={titleInputRef}
                 type="text"
                 value={newItem.title || ""}
                 onChange={(e) =>
@@ -517,7 +559,8 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                             setNewItem((prev) => ({
                               ...prev,
                               title: question,
-                              content: `سؤال: ${question}\nپاسخ: [پاسخ خود را اینجا بنویسید]`,
+                              content: "",
+                              // content: `سؤال: ${question}\nپاسخ: [پاسخ خود را اینجا بنویسید]`,
                             }));
                           }}
                           className="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-grey-200 hover:bg-brand-primary hover:text-white hover:border-brand-primary text-grey-700 text-body-small group"
@@ -689,7 +732,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
           <div className="space-y-3">
             {botConfig.knowledge.map((item, index) => {
-              console.log("item", item);
+              // console.log("item", item);
               const IconComponent = getIcon(item.type);
 
               return (

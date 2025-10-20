@@ -1,10 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import axios from "axios";
+import PageLoader from "@/components/pageLoader";
+import { useAuth } from "@/providers/AuthProvider";
 import { Install } from "@/public/icons/AppIcons";
-import { useState } from "react";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { useEffect, useState } from "react";
 import {
   Copy,
   Download,
@@ -21,62 +25,40 @@ interface WizardStep5Props {
 export function WizardStep5({ botConfig }: WizardStep5Props) {
   const router = useRouter();
   const [copied, setCopied] = useState(false);
-  const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [installCode, setInstallCode] = useState("");
+  // const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
+  const { user, loading } = useAuth();
 
-  const generateEmbedCode = () => {
-    const config = {
-      botId: `aiva_${Date.now()}`,
-      name: botConfig.name,
-      color: botConfig.primary_color,
-      position: botConfig.widget_position,
-      size: botConfig.button_size,
-      language: botConfig.language,
-      tone: botConfig.tone,
-      knowledge: botConfig.knowledge.length,
+  useEffect(() => {
+    const fetchCode = async () => {
+      try {
+        setIsLoading(true);
+        const res = await axios.get(API_ROUTES.BOTS.GET_EMBED(botConfig.uuid), {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
+        console.log("step 5 code", res.data?.data?.embed_script);
+        setInstallCode(res.data?.data?.embed_script || "");
+      } catch (err) {
+        console.error("خطا در دریافت کد نصب:", err);
+      } finally {
+        setIsLoading(false);
+      }
     };
-
-    return `<!-- Aiva Chatbot Integration -->
-<script>
-  window.AivaConfig = ${JSON.stringify(config, null, 2)};
-  (function() {
-    var script = document.createElement('script');
-    script.src = 'https://cdn.aiva.ai/widget/v1/aiva-widget.js';
-    script.async = true;
-    document.head.appendChild(script);
-  })();
-</script>
-<!-- End Aiva Chatbot Integration -->`;
-  };
+    fetchCode();
+  }, [botConfig.uuid]);
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(generateEmbedCode());
+      await navigator.clipboard.writeText(installCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
     }
-  };
-
-  const downloadConfig = () => {
-    const config = {
-      botConfig,
-      embedCode: generateEmbedCode(),
-      createdAt: new Date().toISOString(),
-      version: "1.0.0",
-    };
-
-    const blob = new Blob([JSON.stringify(config, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `aiva-bot-${botConfig.name.replace(/\s+/g, "-")}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
   };
 
   return (
@@ -92,6 +74,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 bg-blend-overlay border-2 rounded-2xl border-[#d1d5db] p-6 bg-linear-to-b from-[#E3F3F082] to-[#FBF4F4] gap-4">
+          {loading || (isloading && <PageLoader />)}
           <div className="bg-primary/10  rounded-2xl border border-primary p-6 ">
             <div className="flex items-center justify-start gap-2 mb-5">
               <div className="w-6 h-6 text-primary">
@@ -170,24 +153,11 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
               <div className="relative">
                 <div className="bg-brand-secondary rounded-2xl p-4 pr-24 h-56 overflow-hidden">
                   <div className="text-white text-sm leading-6 font-mono ltr text-left">
-                    <p className="mb-0">{`<!-- Aiva Chatbot Integration -->`}</p>
-                    <p className="mb-0">{`<script>`}</p>
-                    <p className="mb-0 whitespace-pre-wrap">{`  window.AivaConfig = { botId: "aiva_1759639310318", name: "${botConfig.name}" ... };`}</p>
-                    <p className="mb-0 whitespace-pre-wrap">{`  (function() { var script = document.createElement('script'); ... })();`}</p>
-                    <p className="mb-0">{`</script>`}</p>
-                    <p>{`<!-- End Aiva Chatbot Integration -->`}</p>
+                    {installCode}
                   </div>
                 </div>
 
                 <div className="absolute top-[12px] right-[40px] flex gap-[8px]">
-                  <button
-                    onClick={downloadConfig}
-                    className="bg-white rounded-full w-[32px] h-[32px] flex items-center justify-center shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]"
-                    title="دانلود فایل تنظیمات"
-                  >
-                    <Download className="w-[16px] h-[16px] text-brand-primary" />
-                  </button>
-
                   <button
                     onClick={copyToClipboard}
                     className="bg-white rounded-full w-[32px] h-[32px] flex items-center justify-center shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]"

@@ -67,26 +67,27 @@ export function WizardStep1({
     updateConfig({ tone: toneId });
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setLogoFile(file);
 
-    // نمایش پیش‌نمایش تصویر
+    // ✅ نمایش پیش‌نمایش
     const reader = new FileReader();
     reader.onloadend = () => setPreview(reader.result as string);
     reader.readAsDataURL(file);
 
+    // اگر uuid هنوز ساخته نشده نیازی به آپلود نیست
     if (!botConfig.uuid) return;
 
-    // در صورت ویرایش ارسال فایل به بک‌اند
     try {
       setIsUploading(true);
+
       const formData = new FormData();
       formData.append("logo", file);
 
-      const res = axios.put(
+      const res = await axios.put(
         API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
         formData,
         {
@@ -95,11 +96,14 @@ export function WizardStep1({
           },
         }
       );
-      toast.success("فایل آپلود شد");
-      console.log("upload logo", res);
-    } catch (err) {
+
+      toast.success("فایل با موفقیت آپلود شد ✅");
+      console.log("Upload logo response:", res.data);
+    } catch (err: any) {
       console.error("Upload failed:", err);
-      toast.error("خطا در آپلود فایل!");
+      toast.error(
+        "خطا در آپلود فایل: " + (err.response?.data?.message || err.message)
+      );
     } finally {
       setIsUploading(false);
     }
