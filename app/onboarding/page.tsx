@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
@@ -72,7 +72,7 @@ export default function OnboardingWizard() {
 
         if (parsedData.botConfig?.uuid) {
           try {
-            const response = await axios.get(
+            const response = await axiosInstance.get(
               `${API_ROUTES.BOTS.GET}${parsedData.botConfig.uuid}`,
               {
                 withCredentials: true,
@@ -183,7 +183,7 @@ export default function OnboardingWizard() {
 
       formData.append("support_phone", botConfig.behaviors.phone);
       console.log("formdata", formData);
-      const res = await axios.put(
+      const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
         formData,
         {
@@ -243,7 +243,7 @@ export default function OnboardingWizard() {
       let res;
       if (botConfig.uuid) {
         // آپدیت چت بات
-        res = await axios.put(
+        res = await axiosInstance.put(
           `${API_ROUTES.BOTS.SAVE}${
             botConfig.uuid ? `/${botConfig.uuid}` : ""
           }`,
@@ -258,7 +258,7 @@ export default function OnboardingWizard() {
         else toast.error(res.data?.message || "خطا در ثبت اطلاعات");
       } else {
         // ثبت چت بات
-        res = await axios.post(API_ROUTES.BOTS.SAVE, formData, {
+        res = await axiosInstance.post(API_ROUTES.BOTS.SAVE, formData, {
           headers: {
             Authorization: `Bearer ${user?.token}`,
           },

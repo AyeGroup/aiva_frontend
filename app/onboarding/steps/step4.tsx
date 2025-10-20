@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
@@ -26,7 +26,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     const fetchFaqs = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(API_ROUTES.FAQ(botId), {
+        const res = await axiosInstance.get(API_ROUTES.FAQ(botId), {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${user?.token}`,
@@ -51,7 +51,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     };
 
     try {
-      const res = await axios.post(API_ROUTES.FAQ(botId), payload, {
+      const res = await axiosInstance.post(API_ROUTES.FAQ(botId), payload, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -88,8 +88,8 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   //   ذخیره ویرایش
   const saveEdit = async (id: string, question: string, answer: string) => {
     try {
-      // const res = await axios.put(`/api/faqs/${id}`, { question, answer });
-      const res = await axios.put(
+      // const res = await axiosInstance.put(`/api/faqs/${id}`, { question, answer });
+      const res = await axiosInstance.put(
         `${API_ROUTES.FAQ(botId)}/${id}`,
         { question, answer },
         {
@@ -113,7 +113,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   //   حذف FAQ
   const deleteFaq = async (id: string) => {
     try {
-      await axios.delete(`${API_ROUTES.FAQ(botId)}/${id}`, {
+      await axiosInstance.delete(`${API_ROUTES.FAQ(botId)}/${id}`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${user?.token}`,

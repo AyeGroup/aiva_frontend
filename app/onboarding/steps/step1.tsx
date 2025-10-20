@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import Image from "next/image";
 import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
@@ -87,7 +87,7 @@ export function WizardStep1({
       const formData = new FormData();
       formData.append("logo", file);
 
-      const res = await axios.put(
+      const res = await axiosInstance.put(
         API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
         formData,
         {
@@ -120,7 +120,7 @@ export function WizardStep1({
       setPreview(null);
       setLogoFile(null);
 
-      const res = await axios.put(
+      const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
         { logo: null },
         {

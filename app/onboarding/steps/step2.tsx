@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
@@ -39,7 +39,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-const titleInputRef = useRef<HTMLInputElement>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const loadOnboardingData = async () => {
@@ -53,7 +53,7 @@ const titleInputRef = useRef<HTMLInputElement>(null);
 
         if (parsedData.botConfig?.uuid) {
           try {
-            const response = await axios.get(
+            const response = await axiosInstance.get(
               API_ROUTES.KNOWLEDGE.DOCUMENT(parsedData.botConfig.uuid),
               {
                 withCredentials: true,
@@ -115,7 +115,6 @@ const titleInputRef = useRef<HTMLInputElement>(null);
 
   function isValidUrl(url: string): boolean {
     try {
-
       return true;
       const isValidUrl = /^https?:\/\/[^\s$.?#].[^\s]*$/i.test(url);
       if (!isValidUrl) return false;
@@ -145,7 +144,7 @@ const titleInputRef = useRef<HTMLInputElement>(null);
           formData.append("answer", newItem.content || "");
         }
 
-        const res = await axios.put(`${apiPath}`, formData, {
+        const res = await axiosInstance.put(`${apiPath}`, formData, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${user?.token}`,
@@ -192,7 +191,7 @@ const titleInputRef = useRef<HTMLInputElement>(null);
           formData.append("url", newItem.url || "");
           formData.append("title", newItem.title || "");
         }
-        const res = await axios.post(apiPath, formData, {
+        const res = await axiosInstance.post(apiPath, formData, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${user?.token}`,
@@ -308,8 +307,32 @@ const titleInputRef = useRef<HTMLInputElement>(null);
     setNewItem({});
   };
 
-  const startEditing = (item: KnowledgeItem) => {
-    console.log("edit>>",item)
+  const startEditing = async (item: KnowledgeItem) => {
+    try {
+      console.log("edit>>", item);
+      if (item.type === "qa_pair") {
+        const response = await axiosInstance.get(
+          API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid),
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          }
+        );
+
+        botConfig.knowledge = response.data.data;
+        console.log("botConfig.knowledge: ", botConfig.knowledge);
+      }
+    } catch (apiError: any) {
+      // if (apiError.response?.status === 401) {
+      //   console.warn("Unauthorized - redirecting to login...");
+      //   router.push("/auth/login");
+      //   return;
+      // }
+      // console.warn("API fetch failed, using local data:", apiError);
+    }
+
     setIsAdding(false);
     setIsEditing(true);
     setEditingItem(item);
@@ -320,7 +343,6 @@ const titleInputRef = useRef<HTMLInputElement>(null);
     setTimeout(() => {
       titleInputRef.current?.focus();
     }, 0);
-
   };
 
   const cancelEditing = () => {
@@ -332,7 +354,7 @@ const titleInputRef = useRef<HTMLInputElement>(null);
 
   const removeItem = async (id: string) => {
     try {
-      const res = await axios.delete(
+      const res = await axiosInstance.delete(
         `${API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)}/${id}`,
         {
           withCredentials: true,

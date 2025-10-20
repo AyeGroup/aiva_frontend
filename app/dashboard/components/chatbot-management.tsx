@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
@@ -34,7 +34,7 @@ export function ChatbotManagement() {
       setIsLoading(true);
 
       try {
-        const response = await axios.get(API_ROUTES.BOTS.LIST, {
+        const response = await axiosInstance.get(API_ROUTES.BOTS.LIST, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${user?.token}`,
@@ -65,7 +65,7 @@ export function ChatbotManagement() {
     );
 
     // Optionally, make an API call to save the new status
-    // axios.put(`${API_ROUTES.BOTS.UPDATE_STATUS}/${id}`, { status: !currentStatus }, { headers: { Authorization: `Bearer ${user?.token}` } })
+    // axiosInstance.put(`${API_ROUTES.BOTS.UPDATE_STATUS}/${id}`, { status: !currentStatus }, { headers: { Authorization: `Bearer ${user?.token}` } })
   };
 
   const deleteChatbot = (id: string) => {

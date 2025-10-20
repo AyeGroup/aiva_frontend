@@ -1,9 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
-import PageLoader from "@/components/pageLoader";
+import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
+import PageLoader from "@/components/pageLoader";
 import { API_ROUTES } from "@/constants/apiRoutes";
 
 interface User {
@@ -11,12 +11,11 @@ interface User {
   name: string;
   email: string;
   phone: string;
-  // [key: string]: any;
   token: string;
 }
 
 type LoginResponse =
-  | { success: true; user: any }
+  | { success: true; user: User }
   | { success: false; status: number | null; message: string };
 
 interface AuthContextType {
@@ -24,7 +23,6 @@ interface AuthContextType {
   loading: boolean;
   login: (identity: string, password: string) => Promise<LoginResponse>;
   logout: () => void;
-  refreshAccessToken: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,130 +32,76 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // setup axios defaults
-  // axios.defaults.withCredentials = true;
-
-  // Fetch user info when app loads
+  // ✅ Load user on mount
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     const savedUser = localStorage.getItem("user");
+
     if (token && savedUser) {
       setUser(JSON.parse(savedUser));
     }
-    console.log("AuthContext check user");
 
     setLoading(false);
   }, []);
 
-  //  Refresh token if access token expired
-  const refreshAccessToken = async () => {
-    try {
-      const res = await axios.post(
-        API_ROUTES.AUTH.REFRESH,
-        {},
-        { withCredentials: true }
-      );
-      if (res.data?.user) {
-        setUser(res.data.user);
-        return;
-      }
-      // optional: get user info after refresh
-      // const me = await axios.get(API_ROUTES.auth_me, { withCredentials: true });
-      // setUser(me.data.user);
-    } catch (error) {
-      console.error("Refresh token failed:", error);
-      setUser(null);
-      router.push("/auth/login");
-    }
-  };
-
-  //  Login handler
+  // ✅ Login
   const login = async (
     identity: string,
     password: string
   ): Promise<LoginResponse> => {
     try {
-      // console.log("login api path: ", API_ROUTES.AUTH.LOGIN);
-      const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
+      // لاگین نیاز به axios معمولی ندارد چون هنوز توکن نداریم
+      const res = await axiosInstance.post(API_ROUTES.AUTH.LOGIN, {
         identity,
         password,
       });
-      // console.log("sara  : ", res.data.data);
+      const data = res.data.data;
 
-      // const { access_token, refresh_token } = res.data;
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
 
-      localStorage.setItem("accessToken", res.data.data.access_token);
-      localStorage.setItem("refreshToken", res.data.data.refresh_token);
       const user: User = {
-        id: res.data.data.id,
-        name: "",
-        email: res.data.data.email,
-        phone: res.data.data.phone,
-        token: res.data.data.access_token,
+        id: data.id,
+        name: data.name || "",
+        email: data.email,
+        phone: data.phone,
+        token: data.access_token,
       };
 
       localStorage.setItem("user", JSON.stringify(user));
-
       setUser(user);
 
       return { success: true, user };
     } catch (err: any) {
-      console.log("err: ", err);
+      console.error("Login error:", err);
 
-      if (err.response) {
-        console.log("login err response: ", err.response);
-        if (err.response.status === 401) {
-          return {
-            success: false,
-            status: 401,
-            message: "اطلاعات ورود نادرست است",
-          };
-        }
-        if (err.response.status === 403) {
-          return {
-            success: false,
-            status: 403,
-            message: "لازم است شماره موبایل خود را تایید کنید",
-          };
-        }
+      const status = err.response?.status ?? null;
+      let message = "خطای ناشناخته از سرور";
 
-        return {
-          success: false,
-          status: err.response.status,
-          message: err.response.data?.message || "خطای ناشناخته از سرور",
-        };
-      } else {
-        return {
-          success: false,
-          status: null,
-          message: err.message || "خطای شبکه",
-        };
-      }
+      if (status === 401) message = "اطلاعات ورود نادرست است";
+      else if (status === 403) message = "لطفاً شماره موبایل خود را تایید کنید";
+      else if (err.message) message = err.message;
+
+      return { success: false, status, message };
     }
   };
 
-  //  Logout handler
+  // ✅ Logout
   const logout = async () => {
     try {
-      await axios.post(API_ROUTES.AUTH.LOGOUT, {}, { withCredentials: true });
+      await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
+    } catch {
+      /* ignore logout errors */
     } finally {
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("aiva-onboarding-data");
-      localStorage.removeItem("user");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
       setUser(null);
-
       router.push("/auth/login");
     }
   };
 
-  const value: AuthContextType = {
-    user,
-    loading,
-    login,
-    logout,
-    refreshAccessToken,
-  };
+  const value: AuthContextType = { user, loading, login, logout };
 
   return (
     <AuthContext.Provider value={value}>

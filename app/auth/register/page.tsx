@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
 import { LoginTopLeft, RegisterTopLeft } from "@/public/icons/AppIcons";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
+import { convertPersianToEnglishDigits } from "@/utils/common";
 
 type RegisterStep = "signup" | "otp" | "success" | "password";
 
@@ -86,7 +87,7 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      const { data, status } = await axios.post(
+      const { data, status } = await axiosInstance.post(
         API_ROUTES.AUTH.REGISTER,
         formData
       );
@@ -97,21 +98,21 @@ export default function Register() {
         setIsLoading(false);
         return;
       }
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        setMessage(
-          err.response?.data?.message || "در ثبت اطلاعات خطایی رخ داد."
-        );
-      } else {
-        setMessage("یک خطای ناشناخته رخ داد.");
-      }
+    } catch (err: any) {
+      // if (axiosInstance.isAxiosError(err)) {
+      // setMessage(
+      // err.response?.data?.message || "در ثبت اطلاعات خطایی رخ داد."
+      // );
+      // } else {
+      setMessage("یک خطای ناشناخته رخ داد.");
+      // }
       setIsLoading(false);
       console.log("2");
       return;
     }
 
     try {
-      const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
+      const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
         phone: formData.phone,
       });
 
@@ -201,7 +202,7 @@ export default function Register() {
       setIsLoading(true);
       const reversed = otpValue.split("").reverse().join("");
 
-      const res = await axios.post(API_ROUTES.AUTH.VERIFY_PHONE, {
+      const res = await axiosInstance.post(API_ROUTES.AUTH.VERIFY_PHONE, {
         phone: formData.phone,
         code: reversed,
         // code: otpValue,
@@ -234,7 +235,7 @@ export default function Register() {
     console.log("handleResendOtp");
     setOtp(["", "", "", "", ""]);
     try {
-      const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
+      const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
         phone: formData.phone,
       });
 
@@ -340,7 +341,15 @@ export default function Register() {
                   id="phone"
                   type="tel"
                   value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+
+                    const normalizedValue =
+                      convertPersianToEnglishDigits(inputValue);
+
+                    handleInputChange("phone", normalizedValue);
+                  }}
+                  // onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="09123456789"
                   numeric
                   className={`w-full pr-4 pl-4 py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr text-right ${
@@ -724,8 +733,6 @@ export default function Register() {
           </p>
         </div>
       </div>
-
     </div>
   );
 }
-

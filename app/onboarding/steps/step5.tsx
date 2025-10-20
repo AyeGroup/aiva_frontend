@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
 import { useAuth } from "@/providers/AuthProvider";
 import { Install } from "@/public/icons/AppIcons";
@@ -34,12 +34,15 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
     const fetchCode = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(API_ROUTES.BOTS.GET_EMBED(botConfig.uuid), {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
+        const res = await axiosInstance.get(
+          API_ROUTES.BOTS.GET_EMBED(botConfig.uuid),
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          }
+        );
         console.log("step 5 code", res.data?.data?.embed_script);
         setInstallCode(res.data?.data?.embed_script || "");
       } catch (err) {

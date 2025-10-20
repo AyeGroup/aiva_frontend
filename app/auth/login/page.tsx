@@ -13,6 +13,7 @@ import {
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
+import { convertPersianToEnglishDigits, convertToPersian } from "@/utils/common";
 
 function Login() {
   const router = useRouter();
@@ -193,7 +194,15 @@ function Login() {
                     id="phone"
                     type="text"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    // onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+
+                      const normalizedValue =
+                        convertPersianToEnglishDigits(inputValue);
+
+                      setPhone(normalizedValue);
+                    }}
                     placeholder="موبایل / ایمیل "
                     className="w-full rounded-3xl pr-4 pl-4 py-6 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
                     maxLength={32}

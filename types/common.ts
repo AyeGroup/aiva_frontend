@@ -67,7 +67,7 @@ export interface FAQ {
 
 export interface KnowledgeItem {
   id: string;
-  type: "faq" | "document" | "url" | "text";
+  type: "qa_pair" | "document" | "url" | "text";
   title: string;
   content?: string;
   status?: string;

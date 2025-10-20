@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
 import { useEffect, useState } from "react";
 import { Select } from "@/components/select";
@@ -63,8 +63,8 @@ export default function Dashboard() {
 
     const fetchData = async () => {
       try {
-        setIsLoading(true)
-        const response = await axios.get(API_ROUTES.BOTS.GET, {
+        setIsLoading(true);
+        const response = await axiosInstance.get(API_ROUTES.BOTS.GET, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${user?.token}`,
@@ -78,10 +78,8 @@ export default function Dashboard() {
           setIsNew(false);
       } catch (error) {
         console.error("Error fetching bots:", error);
-      }
-      finally{
+      } finally {
         setIsLoading(false);
-
       }
     };
     fetchData();
@@ -93,7 +91,7 @@ export default function Dashboard() {
         {/* <Sidebar currentPage="dashboard" /> */}
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto h-screen">
-          {loading || isLoading && <PageLoader />}
+          {loading || (isLoading && <PageLoader />)}
           <div className="max-w-7xl mx-auto pb-8">
             {/* Page Header & Stats */}
             <div className="mb-8">
@@ -548,11 +546,7 @@ export default function Dashboard() {
             )}
 
             {/* Active Users Section */}
-            {!isNew && (
-              <div className="mb-8">
-                {/* <ActiveUsers /> */}
-              </div>
-            )}
+            {!isNew && <div className="mb-8">{/* <ActiveUsers /> */}</div>}
             {!isNew && (
               <div className="mb-8">
                 <ColorShowcase />

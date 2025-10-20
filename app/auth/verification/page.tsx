@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { API_ROUTES } from "@/constants/apiRoutes";
@@ -79,7 +79,7 @@ export default function Verification() {
     }
 
     setIsLoading(true);
-    const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
+    const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
       phone: phoneNumber,
     });
     if (res.status === 200) {
@@ -134,7 +134,7 @@ export default function Verification() {
 
     // await new Promise((resolve) => setTimeout(resolve, 1500));
     try {
-      const res = await axios.post(API_ROUTES.AUTH.VERIFY_PHONE, {
+      const res = await axiosInstance.post(API_ROUTES.AUTH.VERIFY_PHONE, {
         phone: phoneNumber,
         code: codeToVerify,
       });
@@ -161,7 +161,7 @@ export default function Verification() {
     setError("");
 
     try {
-      const res = await axios.post(API_ROUTES.AUTH.SEND_CODE, {
+      const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
         phone: phoneNumber,
       });
       if (res.status === 200) {
@@ -439,9 +439,7 @@ export default function Verification() {
                 // ="primary"
                 // size="lg"
                 onClick={() => handleVerify()}
-                disabled={
-                  isSubmit  || otp.some((digit) => digit === "")
-                }
+                disabled={isSubmit || otp.some((digit) => digit === "")}
                 className="w-full py-4 px-4 flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmit ? "در حال تأیید..." : "تأیید کد"}
