@@ -43,7 +43,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
             },
           }
         );
-        console.log("step 5 code", res.data?.data?.embed_script);
+        // console.log("step 5 code", res.data?.data?.embed_script);
         setInstallCode(res.data?.data?.embed_script || "");
       } catch (err) {
         console.error("خطا در دریافت کد نصب:", err);
@@ -160,10 +160,10 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   </div>
                 </div>
 
-                <div className="absolute top-[12px] right-[40px] flex gap-[8px]">
+                <div className="absolute top-3 right-4 flex gap-2">
                   <button
                     onClick={copyToClipboard}
-                    className="bg-white rounded-full w-[32px] h-[32px] flex items-center justify-center shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]"
+                    className="bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]"
                     title="کپی کردن کد"
                   >
                     {copied ? (

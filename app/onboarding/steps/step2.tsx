@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
-import { Info, Tick } from "@/public/icons/AppIcons";
+import { Info, Refresh, Tick } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { onboardingData } from "../onboarding.data";
 import { useEffect, useRef, useState } from "react";
@@ -90,6 +90,12 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     const file = event.target.files?.[0];
 
     if (file) {
+      const maxSize = 50 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        setSelectedFile(null);
+        console.error("حجم فایل نباید بیشتر از ۵۰ مگابایت باشد  ");
+        return;
+      }
       const allowedTypes = [".pdf", ".doc", ".docx", ".txt"];
       const fileExtension = file.name
         .slice(((file.name.lastIndexOf(".") - 1) >>> 0) + 2)
@@ -100,7 +106,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         // setNewItem()
         setNewItem((prev) => ({ ...prev, title: file.name }));
 
-        console.log(`فایل انتخاب شد: ${file.name} (اندازه: ${file.size} بایت)`);
+        // console.log(`فایل انتخاب شد: ${file.name} (اندازه: ${file.size} بایت)`);
       } else {
         setSelectedFile(null);
         console.error(
@@ -129,8 +135,8 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const saveItem = async () => {
     try {
       const formData = new FormData();
-      console.log("save: ", selectedType, isEditing);
-      console.log("editingItem: ", editingItem);
+      // console.log("save: ", selectedType, isEditing);
+      // console.log("editingItem: ", editingItem);
 
       formData.append("type", selectedType);
 
@@ -218,7 +224,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         // updateConfig({
         //   knowledge: [...(botConfig.knowledge || []), newItem],
         // });
-        console.log("newitem", newItem);
+        // console.log("newitem", newItem);
         // updateConfig({
         //   knowledge: [
         //     ...(botConfig.knowledge || []),
@@ -302,7 +308,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   };
 
   const startAdding = (type: string) => {
-    console.log("add type", type);
+    // console.log("add type", type);
     setSelectedType(type);
     setIsAdding(true);
     setIsEditing(false);
@@ -321,7 +327,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       setIsEditing(true);
       setSelectedType(item.type);
 
-      console.log("start edit >> ", item);
+      // console.log("start edit >> ", item);
       if (item.qa_id) {
         const apiPath =
           item.type === "qa_pair"
@@ -346,7 +352,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         setNewItem(item);
       }
 
-      console.log("focus");
+      // console.log("focus");
       setTimeout(() => {
         titleInputRef.current?.focus();
       }, 0);
@@ -378,7 +384,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         updateConfig({
           knowledge: botConfig.knowledge.filter((item) => item.id !== id),
         });
-        console.log("✅ Item removed successfully:", id);
+        // console.log("✅ Item removed successfully:", id);
       } else {
         console.warn("⚠️ Unexpected response while removing item:", res.data);
       }
@@ -402,7 +408,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     >
       {/* Header */}
       <div className="flex items-start gap-4 px-[0px] py-[12px]">
-        {loading || (isLoading && <PageLoader />)}
+        {(loading || isLoading) && <PageLoader />}
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 ">
           <div className="w-8 h-8 text-brand-primary">
             <Tick />
@@ -484,7 +490,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                   key={type.id}
                   className="p-6 rounded-lg cursor-pointer border-2 border-brand-primary/30 bg-bg-surface hover:border-brand-primary hover:shadow-lg group"
                   onClick={() => {
-                    console.log("fired");
+                    // console.log("fired");
                     startAdding(type.id);
                   }}
                 >
@@ -759,6 +765,14 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                   </span>
                 </div>
               )}
+              <button
+                className="cursor-pointer"
+                onClick={() => loadQa(botConfig.uuid)}
+              >
+                <div className="w-6 h-6 text-primary hover:text-secondary">
+                  <Refresh />
+                </div>
+              </button>
             </div>
           </div>
 

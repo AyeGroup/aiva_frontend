@@ -28,7 +28,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
     const updated = { ...behaviors, [key]: value };
     setBehaviors(updated);
     updateConfig({ behaviors: updated });
-    console.log("beha",key,value)
+    // console.log("beha",key,value)
   };
 
   return (
@@ -125,10 +125,10 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             }
           /> */}
         </div>
-        <div className="flex justify-between items-center p-3  rounded-lg border border-secondary bg-secondary/20">
-          <div className="flex text-gray-900">
+        <div className="flex justify-between items-center ">
+          <div className="flex items-center text-gray-900">
             شماره تماس
-            {/* <span className="text-brand-primary p-1">*</span> */}
+            <span className="text-gray-400 text-xs pr-2">اختیاری</span>
           </div>
           <Input
             id="phone"

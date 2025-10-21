@@ -25,7 +25,7 @@ export default function OnboardingWizard() {
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
   const [currentStep, setCurrentStep] = useState(1);
-  const [lastStep, setLastStep] = useState(0);
+  // const [lastStep, setLastStep] = useState(0);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -62,7 +62,7 @@ export default function OnboardingWizard() {
 
   //   چک ورود کاربر
   useEffect(() => {
-    console.log("user:", user);
+    // console.log("user:", user);
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
@@ -102,7 +102,7 @@ export default function OnboardingWizard() {
             }
           );
 
-          console.log("BotConfig: ", response.data.data);
+          // console.log("BotConfig: ", response.data.data);
           const hasApiData = response.data?.success && response.data?.data;
 
           setBotConfig(hasApiData ? response.data.data : parsedData.botConfig);
@@ -136,7 +136,8 @@ export default function OnboardingWizard() {
         }
       } else {
         setBotConfig(parsedData.botConfig);
-        setCurrentStep(parsedData.currentStep || 1);
+        setCurrentStep(1);
+        // setCurrentStep(parsedData.currentStep || 1);
       }
     } catch (error) {
       console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
@@ -144,7 +145,7 @@ export default function OnboardingWizard() {
   };
 
   const validateFields = () => {
-    console.log("call validateFields ");
+    // console.log("call validateFields ");
 
     const newErrors: { [key: string]: string } = {};
     if (!botConfig.name?.trim()) newErrors.name = "نام دستیار الزامی است";
@@ -162,26 +163,23 @@ export default function OnboardingWizard() {
   const saveBotBehavior = async () => {
     setIsSaving(true);
     try {
-      // if (
-      //   botConfig.behaviors.useSupport === true &&
-      //   botConfig.behaviors.phone.trim().length < 3
-      // ) {
-      //   toast.info("شماره پشتیبانی را وارد کنید");
-      //   return;
-      // }
-      console.log("behavior", botConfig.behaviors);
+      console.log("ali", botConfig);
       const formData = new FormData();
       formData.append("uuid", botConfig.uuid);
-      formData.append("k", String(botConfig.behaviors.k));
+      formData.append("k", String(botConfig.behaviors?.k) || "5");
       formData.append(
         "answer_length",
-        String(botConfig.behaviors.maxResponseLength)
+        String(botConfig.behaviors?.maxResponseLength) || "short"
       );
-      formData.append("greetings", String(botConfig.behaviors.useGreeting));
-      formData.append("use_emoji", String(botConfig.behaviors.useEmojis));
-
-      formData.append("support_phone", botConfig.behaviors.phone);
-      console.log("formdata", formData);
+      formData.append(
+        "greetings",
+        String(botConfig.behaviors?.useGreeting) || "false"
+      );
+      formData.append(
+        "use_emoji",
+        String(botConfig.behaviors?.useEmojis) || "true"
+      );
+      formData.append("support_phone", botConfig.behaviors?.phone || "");
       const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
         formData,
@@ -209,8 +207,8 @@ export default function OnboardingWizard() {
   //ذخیره استپ 1
   const saveBotConfig = async () => {
     const fieldErrors = validateFields();
-    console.log("fieldErrors", fieldErrors);
-    console.log("logofile", logoFile);
+    // console.log("fieldErrors", fieldErrors);
+    // console.log("logofile", logoFile);
     setErrors(fieldErrors);
 
     if (Object.keys(fieldErrors).length > 0) {
@@ -226,7 +224,7 @@ export default function OnboardingWizard() {
 
     setIsSaving(true);
     try {
-      console.log("botConfig", botConfig);
+      // console.log("botConfig", botConfig);
       const formData = new FormData();
       formData.append("uuid", botConfig.uuid);
       formData.append("name", botConfig.name);
@@ -236,9 +234,8 @@ export default function OnboardingWizard() {
       formData.append("accent_color", botConfig.accent_color);
       formData.append("button_size", botConfig.button_size);
       formData.append("widget_position", botConfig.widget_position);
-      if (logoFile) {
-        formData.append("logo", logoFile);
-      }
+      if (logoFile) formData.append("logo", logoFile);
+
       let res;
       if (botConfig.uuid) {
         // آپدیت چت بات
@@ -253,8 +250,8 @@ export default function OnboardingWizard() {
             },
           }
         );
-        if (res.data.success) return true;
-        else toast.error(res.data?.message || "خطا در ثبت اطلاعات");
+        if (res.data.success) return res.data.data.uuid;
+        toast.error(res.data?.message || "خطا در ثبت اطلاعات");
       } else {
         // ثبت چت بات
         res = await axiosInstance.post(API_ROUTES.BOTS.SAVE, formData, {
@@ -263,27 +260,16 @@ export default function OnboardingWizard() {
           },
         });
         if (res.data.success) {
-          // botConfig.uuid = res.data.data.uuid;
-          // console.log("uuid", res.data.data.uuid);
-          // localStorage.setItem(
-          //   "aiva-onboarding-data",
-          //   JSON.stringify(botConfig)
-          // );
           const newId = res.data.data?.uuid;
-          setBotConfig((prev) => {
-            const updated = { ...prev, uuid: newId };
-            localStorage.setItem(
-              "aiva-onboarding-data",
-              JSON.stringify(updated)
-            );
-            return updated;
-          });
-          setLastStep(1);
+          console.log("new id: ", newId);
 
-          return true;
+          const updated = { ...botConfig, uuid: newId };
+          setBotConfig(updated);
+          localStorage.setItem("aiva-onboarding-data", JSON.stringify(updated));
+
+          return newId;
         } else {
           toast.error(res.data?.message || "خطا در ثبت اطلاعات");
-
           return false;
         }
       }
@@ -291,8 +277,8 @@ export default function OnboardingWizard() {
       toast.error(
         "خطا در ثبت اطلاعات: " + (err.response?.data?.message || err.message)
       );
-
       console.error(err);
+      return false;
     } finally {
       setIsSaving(false);
     }
@@ -306,17 +292,18 @@ export default function OnboardingWizard() {
   };
 
   const nextStep = async () => {
-    console.log("call nextStep ", currentStep);
+    // console.log("call nextStep ", currentStep);
     if (currentStep == 1) {
-      const isSaved = await saveBotConfig();
-      // console.log("Bot saved:", isSaved);
-      if (!isSaved) return;
-    }
-    if (currentStep == 4) {
+      const uuid = await saveBotConfig();
+      if (!uuid) return;
+    } else if (currentStep == 4) {
       const isSaved = await saveBotBehavior();
-      console.log("behavior saved:", isSaved);
+      // console.log("behavior saved:", isSaved);
       if (!isSaved) return;
     }
+    // loadOnboardingData();
+    console.log("botConfig.uuid  :", botConfig.uuid);
+
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -333,7 +320,7 @@ export default function OnboardingWizard() {
   };
 
   const goToStep = (step: number) => {
-    setCurrentStep(step);
+    if (botConfig.uuid) setCurrentStep(step);
   };
 
   const renderCurrentStep = () => {

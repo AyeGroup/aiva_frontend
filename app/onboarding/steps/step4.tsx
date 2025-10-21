@@ -135,7 +135,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
 
   //   آپدیت botConfig در حالت محلی (اختیاری)
   useEffect(() => {
-    console.log("faq", faqs);
+    // console.log("faq", faqs);
     if (!faqs || faqs.length === 0) return;
 
     updateConfig({

@@ -44,16 +44,7 @@ export function WizardStep1({
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    console.log("uuid: ", botConfig.uuid);
-    console.log("logo_path: ", botConfig.logo_url);
-
-    if (botConfig.logo_url) {
-      // const fileUrl = `${IMAGE_URL}${botConfig.uuid}/logo.png`;
-      // console.log("fileUrl: ", fileUrl);
-      setPreview(botConfig.logo_url);
-    }
-
-    // if (botConfig.logo_path) setPreview(fileUrl);
+    if (botConfig.logo_url) setPreview(botConfig.logo_url);
   }, [botConfig]);
 
   useEffect(() => {
@@ -70,10 +61,16 @@ export function WizardStep1({
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+    // بررسی حجم فایل (حداکثر 3 مگابایت)
+    const maxSize = 3 * 1024 * 1024; // 3MB
+    if (file.size > maxSize) {
+      toast.error("حجم فایل نباید بیشتر از ۳ مگابایت باشد  ");
+      e.target.value = "";
+      return;
+    }
     setLogoFile(file);
 
-    // ✅ نمایش پیش‌نمایش
+    //   نمایش پیش‌نمایش
     const reader = new FileReader();
     reader.onloadend = () => setPreview(reader.result as string);
     reader.readAsDataURL(file);
@@ -85,7 +82,7 @@ export function WizardStep1({
       setIsUploading(true);
 
       const formData = new FormData();
-      formData.append("logo", file);
+      formData.append("file", file); // 👈 تغییر از "logo" به "file"
 
       const res = await axiosInstance.post(
         API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
@@ -98,7 +95,7 @@ export function WizardStep1({
       );
 
       toast.success("فایل با موفقیت آپلود شد ✅");
-      console.log("Upload logo response:", res.data);
+      // console.log("Upload logo response:", res.data);
     } catch (err: any) {
       console.error("Upload failed:", err);
       toast.error(
@@ -120,15 +117,31 @@ export function WizardStep1({
       setPreview(null);
       setLogoFile(null);
 
-      const res = await axiosInstance.put(
-        `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
-        { logo: null },
-        {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
+      const formData = new FormData();
+      // ارسال مقدار خالی برای حذف لوگو
+      formData.append(
+        "file",
+        new Blob([], { type: "application/octet-stream" })
       );
+
+       const res = await axiosInstance.put(
+         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
+         formData,
+         {
+           headers: {
+             Authorization: `Bearer ${user?.token}`,
+           },
+         }
+       );
+      // const res = await axiosInstance.post(
+      //   API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
+      //   formData,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${user?.token}`,
+      //     },
+      //   }
+      // );
 
       if (res.status !== 200 || !res.data.success) {
         toast.error("خطا در حذف فایل");
@@ -664,7 +677,7 @@ export function WizardStep1({
                 <div>
                   <p className="text-grey-700 text-sm mb-1">آپلود لوگوی شرکت</p>
                   <p className="text-grey-500 text-xs">
-                    PNG، JPG یا SVG • حداکثر ۲ مگابایت
+                    PNG، JPG یا SVG • حداکثر ۳ مگابایت
                   </p>
                 </div>
                 <button
