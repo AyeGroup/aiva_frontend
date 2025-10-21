@@ -1,33 +1,28 @@
 "use client";
 import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
-import { useEffect, useState } from "react";
 import { Select } from "@/components/select";
-// import { Sidebar } from "./sidebar";
 import { useAuth } from "@/providers/AuthProvider";
-import { usePathname, useRouter } from "next/navigation";
+import { BotConfig } from "@/types/common";
 import { API_ROUTES } from "@/constants/apiRoutes";
-// import { RecentChats } from "./recent-chats";
-// import { ActiveUsers } from "./active-users";
 import { HeatmapChart } from "@/components/heatmap-chart";
 import { DashboardCard } from "@/components/dashboard-card";
 import { ActivityChart } from "@/components/activity-chart";
 import { ColorShowcase } from "@/components/color-showcase";
-// import { UpgradeBanner } from "./upgrade-banner";
 import { convertToPersian } from "@/utils/common";
-import { BotConfig } from "@/types/common";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const [isNew, setIsNew] = useState(false);
+  const [isNew, setIsNew] = useState(true);
   const [statisticCover, setStatisticCover] = useState(null);
   const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [timeRange, setTimeRange] = useState("30d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
   const pathname = usePathname();
-  // Sample data for charts
   const usersData = [
     { name: "شنبه", value: 45 },
     { name: "یکشنبه", value: 52 },
@@ -54,7 +49,6 @@ export default function Dashboard() {
 
   //Authentication
   useEffect(() => {
-    // console.log("dashboard ", user);
     if (!user) {
       router.push("/auth/login");
       return;
@@ -65,7 +59,6 @@ export default function Dashboard() {
   useEffect(() => {
     if (!user) return;
     if (!currentBot?.uuid) return;
-
 
     const fetchData = async () => {
       try {
@@ -80,9 +73,9 @@ export default function Dashboard() {
           }
         );
         // console.log("res",response.data);
-        if (response.status==200 && response.data) {
+        if (response.status == 200 && response.data) {
           setStatisticCover(response.data);
-          console.log("setStatisticCover",response.data);
+          console.log("setStatisticCover", response.data);
         }
       } catch (error) {
         console.error("Error fetching bots:", error);
@@ -96,7 +89,6 @@ export default function Dashboard() {
   //کاربر بات ثبت شده دارد؟
   useEffect(() => {
     if (!user) return;
-    // setIsNew(true);
 
     const fetchData = async () => {
       try {
@@ -128,13 +120,11 @@ export default function Dashboard() {
   return (
     <div className="h-screen overflow-hidden bg-white">
       <div className="flex h-screen">
-        {/* <Sidebar currentPage="dashboard" /> */}
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto h-screen">
           {loading || (isLoading && <PageLoader />)}
           <div className="max-w-7xl mx-auto pb-8">
-            {/* Page Header & Stats */}
-            <div className="mb-8">
+             <div className="mb-8">
               {/* Page Header */}
               <header className="mb-6">
                 <div className="text-right">

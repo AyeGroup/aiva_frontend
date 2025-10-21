@@ -3,27 +3,21 @@ import Image from "next/image";
 import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
-import { Input } from "@/components/input";
-import { Select } from "@/components/select";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ColorSlider } from "@/components/ColorSlider";
-import { IMAGE_URL } from "@/config";
 import { onboardingData } from "../onboarding.data";
 import { BotConfig, colorPalette } from "@/types/common";
 import { useState, useEffect, useRef } from "react";
 import {
   Appearance,
-  StepBigStar,
   StepChatButton,
   StepColor,
   StepLogin,
   StepStar,
   StepUpload,
-  StepUser,
 } from "@/public/icons/AppIcons";
-import ColorBlackSlider from "@/components/ColorBlackSlider";
-// import { ColorBlackSlider } from "@/components/ColorBlackSlider";
+import { ColorBlackSlider } from "@/components/ColorBlackSlider";
 
 interface WizardStep6Props {
   botConfig: BotConfig;
@@ -84,12 +78,11 @@ export function WizardStep6({
       setIsUploading(true);
 
       const formData = new FormData();
-      formData.append("file", file);  
+      formData.append("file", file);
 
       const res = await axiosInstance.post(
         API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
         formData
-       
       );
 
       toast.success("فایل با موفقیت آپلود شد ✅");
@@ -122,15 +115,15 @@ export function WizardStep6({
         new Blob([], { type: "application/octet-stream" })
       );
 
-       const res = await axiosInstance.put(
-         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
-         formData,
-         {
-           headers: {
-             Authorization: `Bearer ${user?.token}`,
-           },
-         }
-       );
+      const res = await axiosInstance.put(
+        `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
       // const res = await axiosInstance.post(
       //   API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
       //   formData,
@@ -166,10 +159,9 @@ export function WizardStep6({
       <div className="flex items-start gap-4 px-0 py-3">
         {loading && <PageLoader />}
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-        <div className="w-8 h-8 text-primary">
-
-          <Appearance />
-        </div>
+          <div className="w-8 h-8 text-primary">
+            <Appearance />
+          </div>
         </div>
         <div className="flex-1">
           <h2 className="text-grey-900 mb-2 text-right text-lg font-bold">
@@ -182,8 +174,6 @@ export function WizardStep6({
       </div>
 
       <div className="space-y-8">
-       
-
         {/* Personality Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3 mb-4">
@@ -295,7 +285,7 @@ export function WizardStep6({
               </div>
 
               <div className="w-full p-1 space-y-4">
-                <ColorSlider
+                <ColorBlackSlider
                   value={botConfig.primary_color}
                   onChange={handlePrimaryColor}
                 />
@@ -725,8 +715,7 @@ export function WizardStep6({
             <div className="flex items-start gap-2">
               <StepStar />
               <p className="text-grey-600 text-xs">
-                لوگو در سایت نمایش داده می‌شود و اعتماد کاربران را
-                افزایش می‌دهد
+                لوگو در سایت نمایش داده می‌شود و اعتماد کاربران را افزایش می‌دهد
               </p>
             </div>
           </div>

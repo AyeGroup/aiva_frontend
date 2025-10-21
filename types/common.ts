@@ -67,13 +67,14 @@ export interface FAQ {
 
 export interface KnowledgeItem {
   id: string;
-  type: "qa_pair" | "document" | "url" | "text";
+  type: "qa_pair" | "file" | "website";
   title: string;
   content?: string;
   status?: string;
   url?: string;
   created_at?: string;
   qa_id?: string;
+  upload_id?: string;
 }
 export interface BehaviorSettings {
   k: number;

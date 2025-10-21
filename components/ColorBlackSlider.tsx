@@ -1,119 +1,197 @@
-import React, { useState, useEffect, useRef } from "react";
+"use client";
+
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 interface ColorSliderProps {
-  value?: string; // Hex value, like "#ff0000"
+  value: string;
   onChange?: (color: string) => void;
 }
 
-const ColorBlackSlider: React.FC<ColorSliderProps> = ({
-  value = "#000000",
+export const ColorBlackSlider: React.FC<ColorSliderProps> = ({
+  value,
   onChange,
 }) => {
-  const [color, setColor] = useState(value);
-  const [hue, setHue] = useState(hexToHue(value));
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement | null>(null);
+  const [position, setPosition] = useState(0); // 0-100 for slider position
+  const isDragging = useRef(false);
 
-  // وقتی value از بیرون تغییر کنه، رنگ و hue رو آپدیت می‌کنه
   useEffect(() => {
-    setColor(value);
-    setHue(hexToHue(value));
+    if (
+      value &&
+      typeof value === "string" &&
+      value.length === 7 &&
+      value.startsWith("#")
+    ) {
+      const pos = hexToSliderPosition(value);
+      setPosition(pos);
+    }
   }, [value]);
 
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!sliderRef.current) return;
-    const rect = sliderRef.current.getBoundingClientRect();
-    const x = Math.min(Math.max(0, e.clientX - rect.left), rect.width);
-    const newHue = Math.round((x / rect.width) * 360);
-    const newColor = hueToHex(newHue);
-    setHue(newHue);
-    setColor(newColor);
-    onChange?.(newColor);
+  // Convert slider position (0-100) to color
+  function positionToColor(pos: number): string {
+    if (pos <= 10) {
+      // Black to dark gray range (0-10)
+      const intensity = Math.round((pos / 10) * 50); // 0 to 50
+      const hex = intensity.toString(16).padStart(2, "0");
+      return `#${hex}${hex}${hex}`;
+    } else if (pos <= 20) {
+      // Gray range (10-20)
+      const intensity = Math.round(50 + ((pos - 10) / 10) * 155); // 50 to 205
+      const hex = intensity.toString(16).padStart(2, "0");
+      return `#${hex}${hex}${hex}`;
+    } else {
+      // Color spectrum (20-100)
+      const hue = Math.round(((pos - 20) / 80) * 360);
+      return hslToHex(hue, 100, 50);
+    }
+  }
+
+  // Convert color to slider position (0-100)
+  function hexToSliderPosition(hex: string): number {
+    const clean = hex.replace("#", "");
+    const r = parseInt(clean.substring(0, 2), 16);
+    const g = parseInt(clean.substring(2, 4), 16);
+    const b = parseInt(clean.substring(4, 6), 16);
+
+    // Check if it's a grayscale color
+    if (r === g && g === b) {
+      if (r <= 50) {
+        // Black to dark gray range (0-10)
+        return (r / 50) * 10;
+      } else {
+        // Gray range (10-20)
+        return 10 + ((r - 50) / 155) * 10;
+      }
+    } else {
+      // Color spectrum - convert to hue
+      const hue = hexToHue(hex);
+      return 20 + (hue / 360) * 80;
+    }
+  }
+
+  function hslToHex(h: number, s: number, l: number): string {
+    s /= 100;
+    l /= 100;
+    const k = (n: number) => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = (n: number) =>
+      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    const toHex = (x: number) =>
+      Math.round(x * 255)
+        .toString(16)
+        .padStart(2, "0");
+    return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+  }
+
+  function hexToHue(hex: string): number {
+    const clean = hex.replace("#", "");
+    const r = parseInt(clean.substring(0, 2), 16) / 255;
+    const g = parseInt(clean.substring(2, 4), 16) / 255;
+    const b = parseInt(clean.substring(4, 6), 16) / 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const delta = max - min;
+
+    let hue = 0;
+    if (delta === 0) hue = 0;
+    else if (max === r) hue = ((g - b) / delta) % 6;
+    else if (max === g) hue = (b - r) / delta + 2;
+    else hue = (r - g) / delta + 4;
+
+    hue = Math.round(hue * 60);
+    if (hue < 0) hue += 360;
+    return hue;
+  }
+
+  const currentColor = positionToColor(position);
+
+  const getSliderBackground = () => {
+    return `
+      linear-gradient(to right,
+        #000000 0%, 
+        #0a0a0a 10%,
+        #323232 20%,
+        #595959 30%,
+        #7f7f7f 40%,
+        #a5a5a5 50%,
+        #cccccc 60%,
+        #f2f2f2 70%,
+        #ffffff 80%,
+        #ff0000 85%,
+        #ffff00 90%,
+        #00ff00 95%,
+        #00ffff 100%,
+        #0000ff 105%,
+        #ff00ff 110%,
+        #ff0000 115%
+      )
+    `;
   };
 
+  const handleMove = useCallback(
+    (clientX: number) => {
+      const rect = sliderRef.current?.getBoundingClientRect();
+      if (!rect || !isDragging.current) return;
+
+      const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+      const newPosition = Math.round((x / rect.width) * 100);
+
+      setPosition(newPosition);
+
+      const newHex = positionToColor(newPosition);
+      if (newHex !== value) {
+        onChange?.(newHex);
+      }
+    },
+    [value, onChange]
+  );
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    handleMove(e.clientX);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      handleMove(e.clientX);
+    };
+    const handleMouseUp = () => {
+      isDragging.current = false;
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const leftPosition = `calc(${(position / 100) * 100}% - 8px)`;
+
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="w-full select-none">
+      <div className="text-xs text-gray-500 mb-1 flex justify-between">
+        <span>Black</span>
+        <span>Gray</span>
+        <span>Colors</span>
+      </div>
       <div
         ref={sliderRef}
-        onMouseDown={handleMove}
-        onMouseMove={(e) => e.buttons === 1 && handleMove(e)}
-        className="relative w-full h-6 rounded-md cursor-pointer"
+        onMouseDown={handleMouseDown}
+        className="relative h-6 rounded-full cursor-pointer border"
         style={{
-          background:
-            "linear-gradient(to right, #000000, #808080, #ffffff, red, yellow, lime, cyan, blue, magenta, red)",
+          background: getSliderBackground(),
+          backgroundSize: "100% 100%",
         }}
       >
         <div
-          className="absolute top-1/2 w-3 h-3 rounded-full border border-white shadow -translate-y-1/2"
+          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white shadow-md transition-all duration-75 ease-linear"
           style={{
-            left: `${(hue / 360) * 100}%`,
-            background: color,
+            left: leftPosition,
+            backgroundColor: currentColor,
           }}
-        ></div>
+        />
       </div>
-      <div className="text-sm text-gray-300">
-        {color.toUpperCase()} (Hue: {Math.round(hue)})
+      <div className="text-xs text-gray-500 mt-1 text-center">
+        {currentColor}
       </div>
     </div>
   );
 };
-
-export default ColorBlackSlider;
-
-function hueToHex(hue: number): string {
-  const c = 1;
-  const x = 1 - Math.abs(((hue / 60) % 2) - 1);
-  let [r, g, b] = [0, 0, 0];
-
-  if (hue < 60) [r, g, b] = [c, x, 0];
-  else if (hue < 120) [r, g, b] = [x, c, 0];
-  else if (hue < 180) [r, g, b] = [0, c, x];
-  else if (hue < 240) [r, g, b] = [0, x, c];
-  else if (hue < 300) [r, g, b] = [x, 0, c];
-  else [r, g, b] = [c, 0, x];
-
-  // در بخش خاکستری، بر اساس hue رنگ بین سیاه و سفید می‌سازیم
-  if (hue <= 60) {
-    const gray = (hue / 60) * 255;
-    return rgbToHex(gray, gray, gray);
-  }
-
-  return rgbToHex(r * 255, g * 255, b * 255);
-}
-
-function hexToHue(hex: string): number {
-  const clean = hex.replace("#", "");
-  const r = parseInt(clean.substring(0, 2), 16) / 255;
-  const g = parseInt(clean.substring(2, 4), 16) / 255;
-  const b = parseInt(clean.substring(4, 6), 16) / 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const delta = max - min;
-
-  if (delta === 0) {
-    // رنگ‌های سیاه، سفید یا خاکستری
-    const grayLevel = r * 255;
-    return (grayLevel / 255) * 60; // نگاشت خاکستری‌ها بین 0 تا 60
-  }
-
-  let hue = 0;
-  if (max === r) hue = ((g - b) / delta) % 6;
-  else if (max === g) hue = (b - r) / delta + 2;
-  else hue = (r - g) / delta + 4;
-
-  hue *= 60;
-  if (hue < 0) hue += 360;
-  return hue;
-}
-
-function rgbToHex(r: number, g: number, b: number): string {
-  return (
-    "#" +
-    [r, g, b]
-      .map((v) => {
-        const h = Math.round(v).toString(16);
-        return h.length === 1 ? "0" + h : h;
-      })
-      .join("")
-  );
-}

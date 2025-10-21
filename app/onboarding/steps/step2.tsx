@@ -31,7 +31,6 @@ interface WizardStep2Props {
 }
 
 export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
-  const router = useRouter();
   const { user, loading } = useAuth();
   const [selectedType, setSelectedType] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
@@ -52,7 +51,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       if (!savedData) return;
 
       const parsedData = JSON.parse(savedData);
-      loadQa(parsedData.botConfig?.uuid);
+      await loadQa(parsedData.botConfig?.uuid);
     } catch (error) {
       console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
     }
@@ -74,7 +73,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         );
 
         botConfig.knowledge = response.data.data;
-        // console.log("botConfig.knowledge: ", botConfig.knowledge);
+        console.log("botConfig.knowledge: ", botConfig.knowledge);
       } catch (apiError: any) {
         console.warn("API fetch failed, using local data:", apiError);
       }
@@ -135,50 +134,52 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   }
 
   const saveItem = async () => {
+    setIsLoading(true);
+
     try {
       const formData = new FormData();
-      // console.log("save: ", selectedType, isEditing);
-      // console.log("editingItem: ", editingItem);
-
       formData.append("type", selectedType);
 
-      if (isEditing && editingItem && editingItem.qa_id) {
-        const apiPath =
-          selectedType === "file" || selectedType === "website"
-            ? API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(
-                botConfig.uuid,
-                editingItem.qa_id
-              )
-            : API_ROUTES.KNOWLEDGE.QA_EDIT(botConfig.uuid, editingItem.qa_id);
+      //ویرایش پرسش و پاسخ
+      if (
+        isEditing &&
+        editingItem &&
+        selectedType === "qa_pair" &&
+        editingItem.qa_id
+      ) {
+        formData.append("question", newItem.title || "");
+        formData.append("answer", newItem.content || "");
 
-        // formData.append("id", editingItem.id || "");
-        formData.append("title", newItem.title || "");
-        if (selectedType === "qa_pair") {
-          formData.append("question", newItem.title || "");
-          formData.append("answer", newItem.content || "");
+        const res = await axiosInstance.put(
+          API_ROUTES.KNOWLEDGE.QA_EDIT(botConfig.uuid, editingItem.qa_id),
+          formData
+        );
+        if (!res.data?.success) {
+          toast.error("خطا در ویرایش اطلاعات!");
+          return;
         }
+        toast.success("اطلاعات ثبت شد");
+        cancelEditing();
+      }
+      // ویرایش وبسایت و فایل
+      else if (isEditing && editingItem) {
+        formData.append("title", newItem.title || "");
 
-        const res = await axiosInstance.put(`${apiPath}`, formData, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
+        console.log("formData", formData);
+        const res = await axiosInstance.put(
+          API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(botConfig.uuid, editingItem.id),
+          formData
+        );
 
         if (!res.data?.success) {
           toast.error("خطا در ویرایش اطلاعات!");
           return;
         }
-        loadQa(botConfig.uuid);
-
-        // updateConfig({
-        //   knowledge: botConfig.knowledge.map((k) =>
-        //     k.id === editingItem.id ? res.data.data : k
-        //   ),
-        // });
+        toast.success("اطلاعات ثبت شد");
 
         cancelEditing();
       } else {
+        // اضاافه کردن آیتم
         if (
           selectedType === "website" &&
           (!newItem.url || !isValidUrl(newItem.url))
@@ -206,46 +207,23 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           formData.append("url", newItem.url || "");
           formData.append("title", newItem.title || "");
         }
-        const res = await axiosInstance.post(apiPath, formData, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const res = await axiosInstance.post(apiPath, formData);
 
         if (!res.data?.success) {
           toast.error("خطا در ثبت آیتم جدید!");
           return;
         }
-        loadQa(botConfig.uuid);
+        toast.success("اطلاعات ثبت شد");
 
-        // const savedItem = res.data.data;
-        // console.log("savedata", savedItem);
-        // setNewItem(item);
-        // updateConfig({
-        //   knowledge: [...(botConfig.knowledge || []), newItem],
-        // });
-        // console.log("newitem", newItem);
-        // updateConfig({
-        //   knowledge: [
-        //     ...(botConfig.knowledge || []),
-        //     {
-        //       status: "processing",
-        //       created_at: new Date().toISOString(),
-        //       id: botConfig.knowledge?.length || 0,
-        //       ...newItem,
-        //     } as KnowledgeItem,
-        //   ],
-        // });
-        // console.log("ali", botConfig.knowledge);
         cancelAdding();
         setSelectedFile(null);
       }
+      await loadQa(botConfig.uuid);
     } catch (err) {
-      console.error("❌ خطا در ذخیره آیتم:", err);
-
+      console.error("  خطا در ذخیره آیتم:", err);
       toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -370,36 +348,35 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     setNewItem({});
   };
 
-  const removeItem = async (id: string) => {
+  const removeItem = async (item: KnowledgeItem) => {
+    setIsLoading(true);
+    console.log("ali",item)
     try {
-      const res = await axiosInstance.delete(
-        `${API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)}/${id}`,
-        {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
-      );
-
-      if (res.data?.success) {
-        updateConfig({
-          knowledge: botConfig.knowledge.filter((item) => item.id !== id),
-        });
-        // console.log("✅ Item removed successfully:", id);
+      let res;
+      if (item.type === "qa_pair" && item.qa_id) {
+        res = await axiosInstance.delete(
+          API_ROUTES.KNOWLEDGE.QA_EDIT(botConfig.uuid, item.qa_id)
+        );
+      } else if (item.type === "file" || item.type === "website") {
+        res = await axiosInstance.delete(
+          `${API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)}/${item.upload_id}`
+        );
       } else {
+        return;
+      }
+
+      if (res.data.success) {
+        await loadQa(botConfig.uuid);
+        toast.success("اطلاعات حذف شد");
+      } else {
+        toast.error("خطا در حذف اطلاعات");
         console.warn("⚠️ Unexpected response while removing item:", res.data);
       }
     } catch (error: any) {
-      // Handle unauthorized (401)
-      // if (error.response?.status === 401) {
-      //   console.warn("Unauthorized — redirecting to login...");
-      //   // localStorage.removeItem("aiva-onboarding-data");
-      //   router.push("/auth/login");
-      //   return;
-      // }
-
-      console.error("❌ Failed to remove item:", error);
+      toast.error("خطا در حذف اطلاعات");
+      console.error("  Failed to remove item:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -870,7 +847,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                       </button>
 
                       <button
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => removeItem(item)}
                         title="حذف محتوا"
                         className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
                       >
