@@ -1,4 +1,3 @@
-import PageLoader from "@/components/pageLoader";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { BotConfig } from "@/types/common";
@@ -7,14 +6,12 @@ import { StepBigStar, StepStar, StepUser } from "@/public/icons/AppIcons";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
-  errors?: { [key: string]: string };
-  updateConfig: (updates: Partial<BotConfig>) => void;
+   updateConfig: (updates: Partial<BotConfig>) => void;
 }
 
 export function WizardStep1({
   botConfig,
   updateConfig,
-  errors,
 }: WizardStep1Props) {
   return (
     <div
@@ -98,7 +95,7 @@ export function WizardStep1({
           <div className="form-group">
             <label className="block text-grey-900 mb-3">
               توضیحات
-              {/* <span className="text-brand-primary ml-1">*</span> */}
+              <span className="text-brand-primary ml-1">*</span>
             </label>
             <Input
               type="text"

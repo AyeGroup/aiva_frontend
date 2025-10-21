@@ -17,7 +17,6 @@ import {
   StepStar,
   StepUpload,
 } from "@/public/icons/AppIcons";
-import { ColorBlackSlider } from "@/components/ColorBlackSlider";
 
 interface WizardStep6Props {
   botConfig: BotConfig;
@@ -285,7 +284,7 @@ export function WizardStep6({
               </div>
 
               <div className="w-full p-1 space-y-4">
-                <ColorBlackSlider
+                <ColorSlider
                   value={botConfig.primary_color}
                   onChange={handlePrimaryColor}
                 />
@@ -570,17 +569,11 @@ export function WizardStep6({
                 <div className="w-16 h-16 mx-auto bg-grey-100 rounded-lg flex items-center justify-center overflow-hidden">
                   <Image
                     src={preview}
-                    // src={`${API_BASE_URL}/public/${botConfig?.uuid}/logo`}
-                    // src={
-                    //   preview
-                    //     ? preview // مسیر preview که از FileReader ساخته میشه
-                    //     : `${API_BASE_URL}/public/${botConfig?.uuid}/logo.png` // مسیر لوگو در بک‌اند
-                    // }
                     alt="لوگوی انتخاب شده"
                     className="w-full h-full object-contain"
                     width={64}
                     height={64}
-                    unoptimized // ← اگر تصویر از api لود می‌شود، بهتر است این را اضافه کنی
+                    unoptimized
                   />
                 </div>
                 <p className="text-grey-700 text-sm">
@@ -635,82 +628,6 @@ export function WizardStep6({
             )}
           </Card>
 
-          {/* <Card className="p-4 !border-0 hover:bg-grey-50 cursor-pointer"
-          >
-            <div className="text-center">
-              {botConfig.logo ? (
-                <div className="space-y-3">
-                  <div className="w-16 h-16 mx-auto bg-grey-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <Image
-                      src={botConfig.logo}
-                      alt="لوگوی انتخاب شده"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <p className="text-grey-700 text-sm">لوگو آپلود شده</p>
-                  <div className="flex gap-2 justify-center">
-                    <button
-                      type="button"
-                      // onClick={() => updateConfig({ logo: undefined })}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setPreview(null);
-                        updateConfig({ logo: undefined });
-                      }}
-                      className="px-3 py-1 text-xs bg-danger/10 text-danger rounded-lg hover:bg-danger/20"
-                    >
-                      حذف
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        // In real implementation, this would open file picker
-                        const newLogo = prompt("آدرس لوگوی جدید را وارد کنید:");
-                        if (newLogo) {
-                          updateConfig({
-                            logo: newLogo,
-                          });
-                        }
-                      }}
-                      className="px-3 py-1 text-xs bg-brand-primary/10 text-brand-primary rounded-lg hover:bg-brand-primary/20"
-                    >
-                      تغییر
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="w-12 h-12 bg-grey-200 rounded-lg flex items-center justify-center mx-auto">
-                    <StepUpload />
-                  </div>
-                  <div>
-                    <p className="text-grey-700 text-sm mb-1">
-                      آپلود لوگوی شرکت
-                    </p>
-                    <p className="text-grey-500 text-xs">
-                      PNG، JPG یا SVG • حداکثر ۲ مگابایت
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // In real implementation, this would open file picker
-                      const logoUrl = prompt(
-                        "آدرس لوگو را وارد کنید (برای تست):"
-                      );
-                      if (logoUrl) {
-                        updateConfig({ logo: logoUrl });
-                      }
-                    }}
-                    className="px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 text-sm"
-                  >
-                    انتخاب فایل
-                  </button>
-                </div>
-              )}
-            </div>
-          </Card> */}
-
           <div className="bg-bg-soft-mint p-3 rounded-lg">
             <div className="flex items-start gap-2">
               <StepStar />
@@ -720,72 +637,7 @@ export function WizardStep6({
             </div>
           </div>
         </div>
-
-        {/* Custom Messages Section */}
-        {/* <div className="space-y-4">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-brand-coral/10 rounded-lg flex items-center justify-center">
-              <StepMessage />
-            </div>
-            <h3 className="text-grey-900">پیام‌های سفارشی</h3>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="form-group">
-                <label
-                  htmlFor="welcomeMessage"
-                  className="block text-grey-900 mb-3"
-                >
-                  پیام خوش‌آمدگویی
-                  <span className="text-brand-primary ml-1">*</span>
-                </label>
-                <textarea
-                  id="welcomeMessage"
-                  value={botConfig.greetings}
-                  onChange={(e) => updateConfig({ greetings: e.target.value })}
-                  placeholder="سلام! چطور می‌تونم کمکتون کنم؟"
-                  rows={3}
-                  className="w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary resize-none"
-                />
-                <p className="text-grey-500 mt-2 text-body-small text-right">
-                  اولین پیامی که کاربران می‌بینند
-                </p>
-              </div>
-
-              <div className="form-group">
-                <label
-                  htmlFor="fallbackMessage"
-                  className="block text-grey-900 mb-3"
-                >
-                  پیام عدم درک سؤال
-                </label>
-                <textarea
-                  id="fallbackMessage"
-                  value={botConfig.k}
-                  onChange={(e) => updateConfig({ k: e.target.value })}
-                  placeholder="متأسفانه نمی‌تونم پاسخ این سؤال رو بدم. لطفاً با پشتیبانی تماس بگیرید."
-                  rows={3}
-                  className="w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary resize-none"
-                />
-                <p className="text-grey-500 mt-2 text-body-small text-right">
-                  زمانی که دستیار نمی‌تواند پاسخ دهد
-                </p>
-              </div>
-            </div>
-          </div>
-        </div> */}
-
-        {/* Progress Info */}
       </div>
-
-      {/* Color Wheel Modal */}
-      {/* <ColorWheel
-        selectedColor={botConfig.color}
-        onColorChange={(color) => updateConfig({ color })}
-        onClose={() => setIsColorWheelOpen(false)}
-        isOpen={isColorWheelOpen}
-      /> */}
     </div>
   );
 }

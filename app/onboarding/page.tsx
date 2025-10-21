@@ -17,13 +17,10 @@ import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
 import { WizardStep6 } from "./steps/step6";
 import { onboardingData } from "./onboarding.data";
+import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { BehaviorSettings, BotConfig } from "@/types/common";
-import {
-  convertPersianToEnglishDigits,
-  convertToPersian,
-} from "@/utils/common";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -38,7 +35,6 @@ export default function OnboardingWizard() {
     maxResponseLength: "short",
     useGreeting: true,
     useEmojis: false,
-    // useSupport: true,
     phone: "",
   };
   const [botConfig, setBotConfig] = useState<BotConfig>({
@@ -66,7 +62,6 @@ export default function OnboardingWizard() {
 
   //   چک ورود کاربر
   useEffect(() => {
-    // console.log("user:", user);
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
@@ -92,7 +87,6 @@ export default function OnboardingWizard() {
       if (!savedData) return;
 
       const parsedData = JSON.parse(savedData);
-      // if (parsedData.botConfig?.uuid) setUuid(parsedData.botConfig.uuid);
 
       if (parsedData.botConfig?.uuid) {
         try {
@@ -106,7 +100,6 @@ export default function OnboardingWizard() {
             }
           );
 
-          // console.log("BotConfig: ", response.data.data);
           const hasApiData = response.data?.success && response.data?.data;
 
           setBotConfig(hasApiData ? response.data.data : parsedData.botConfig);
@@ -126,14 +119,6 @@ export default function OnboardingWizard() {
             );
           }
         } catch (apiError: any) {
-          // ✅ بررسی خطای 401
-          // if (apiError.response?.status === 401) {
-          //   console.warn("Unauthorized - redirecting to login...");
-          //   // localStorage.removeItem("aiva-onboarding-data");
-          //   router.push("/auth/login");
-          //   return;
-          // }
-
           console.warn("API fetch failed, using local data:", apiError);
           setBotConfig(parsedData.botConfig);
           setCurrentStep(parsedData.currentStep || 1);
@@ -141,7 +126,6 @@ export default function OnboardingWizard() {
       } else {
         setBotConfig(parsedData.botConfig);
         setCurrentStep(1);
-        // setCurrentStep(parsedData.currentStep || 1);
       }
     } catch (error) {
       console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
@@ -379,11 +363,7 @@ export default function OnboardingWizard() {
     switch (currentStep) {
       case 1:
         return (
-          <WizardStep1
-            botConfig={botConfig}
-            updateConfig={updateBotConfig}
-            errors={errors}
-          />
+          <WizardStep1 botConfig={botConfig} updateConfig={updateBotConfig} />
         );
       case 2:
         return (
@@ -412,11 +392,7 @@ export default function OnboardingWizard() {
         return <WizardStep5 botConfig={botConfig} />;
       default:
         return (
-          <WizardStep1
-            botConfig={botConfig}
-            updateConfig={updateBotConfig}
-            errors={errors}
-          />
+          <WizardStep1 botConfig={botConfig} updateConfig={updateBotConfig} />
         );
     }
   };
@@ -572,8 +548,6 @@ export default function OnboardingWizard() {
                     : currentStep === totalSteps
                     ? "اتمام و شروع"
                     : "بعدی"}
-
-                  {/* {currentStep === totalSteps ? "اتمام و شروع" : "بعدی"} */}
                 </Button>
               </div>
             </div>
@@ -581,7 +555,6 @@ export default function OnboardingWizard() {
             {/* Preview Sidebar */}
             <div className="lg:col-span-1">
               <div className="sticky top-8">
-                {/* elham */}
                 <ChatPreview botConfig={botConfig} currentStep={currentStep} />
               </div>
             </div>
@@ -592,10 +565,8 @@ export default function OnboardingWizard() {
         <div className="text-center mt-16">
           <button
             onClick={() => {
-              localStorage.removeItem("aiva-onboarding-data"); // Clear saved data on cancel
+              localStorage.removeItem("aiva-onboarding-data");
               router.push("/");
-              // onNavigate("landing");
-              // elham
             }}
             className="text-grey-600 hover:text-grey-900 text-sm underline transition-colors font-medium cursor-pointer"
           >

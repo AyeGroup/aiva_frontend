@@ -11,7 +11,6 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { useEffect, useState } from "react";
 import {
   Copy,
-  Download,
   Globe,
   CheckCircle2,
   BarChart3,
@@ -26,7 +25,6 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [installCode, setInstallCode] = useState("");
-  // const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [isloading, setIsLoading] = useState(false);
   const { user, loading } = useAuth();
 
@@ -43,7 +41,6 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
             },
           }
         );
-        // console.log("step 5 code", res.data?.data?.embed_script);
         setInstallCode(res.data?.data?.embed_script || "");
       } catch (err) {
         console.error("خطا در دریافت کد نصب:", err);
@@ -249,12 +246,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
             >
               ۰۹۹۰۳۲۰۲۹۰۳
             </a>
-            {/* <button
-              className="bg-white border-2 border-brand-primary rounded-[12px] h-[52px] w-full flex items-center justify-center text-brand-primary text-base"
-              title="تماس با پشتیبانی"
-            >
-              ۰۹۹۰۳۲۰۲۹۰۳
-            </button> */}
+            
           </div>
         </div>
       </div>

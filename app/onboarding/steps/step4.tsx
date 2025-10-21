@@ -1,13 +1,12 @@
 import axiosInstance from "@/lib/axiosInstance";
-import { useState, useEffect } from "react";
+import PageLoader from "@/components/pageLoader";
 import { toast } from "sonner";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
-import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { BotConfig, FAQ } from "@/types/common";
+import { useState, useEffect } from "react";
 import { HelpCircle, Trash2, Edit3, Save, X } from "lucide-react";
-import PageLoader from "@/components/pageLoader";
 
 interface WizardStep4Props {
   botConfig: BotConfig;
@@ -108,7 +107,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     }
   };
 
-  //   حذف FAQ
+  //   حذف  
   const deleteFaq = async (id: string) => {
     setIsLoading(true);
 
@@ -145,11 +144,6 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   const addSuggestedQuestion = (question: string) => {
     setNewFaq({ ...newFaq, question });
   };
-
-  // if (loading || isloading)
-  //   return (
-  //     <div className="p-8 text-center text-grey-600">در حال بارگذاری ...</div>
-  //   );
 
   return (
     <div className="space-y-8 bg-bg-surface p-6 border-2 border-brand-primary/20 rounded-xl shadow-lg">
@@ -268,7 +262,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   );
 }
 
-// 📘 فرم ویرایش
+//   فرم ویرایش
 interface EditFaqFormProps {
   faq: FAQ;
   onSave: (id: string, question: string, answer: string) => void;

@@ -18,7 +18,6 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
     maxResponseLength: "medium",
     useGreeting: false,
     useEmojis: true,
-    // useSupport: false,
     phone: "",
   });
 
@@ -28,7 +27,6 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
     const updated = { ...behaviors, [key]: value };
     setBehaviors(updated);
     updateConfig({ behaviors: updated });
-    // console.log("beha",key,value)
   };
 
   return (
@@ -115,7 +113,6 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             }
           />
 
-          {/* Fallback to Support */}
           {/* <ToggleSetting
             label="انتقال به پشتیبانی"
             description="اگر پاسخی نیافت، کاربر به پشتیبانی راهنمایی شود"
@@ -141,11 +138,9 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             className="w-full text-sm rounded-2xl p-4 border !bg-white text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
             maxLength={16}
           />
-          {/* <Input></Input> */}
         </div>
       </div>
     </div>
   );
 }
 
-// ✅ Reusable toggle switch component

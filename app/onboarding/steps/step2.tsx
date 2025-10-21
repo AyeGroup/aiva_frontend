@@ -5,9 +5,9 @@ import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
-import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { onboardingData } from "../onboarding.data";
+import { convertToPersian } from "@/utils/common";
 import { Info, Refresh, Tick } from "@/public/icons/AppIcons";
 import { BotConfig, KnowledgeItem } from "@/types/common";
 import { useEffect, useRef, useState } from "react";
@@ -23,7 +23,6 @@ import {
   AlertTriangle,
   Edit2,
 } from "lucide-react";
-import { convertToPersian } from "@/utils/common";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -512,7 +511,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             </h3>
             <Button
               variant="tertiary"
-              // size="small"
               size="sm"
               onClick={isEditing ? cancelEditing : cancelAdding}
             >
@@ -577,7 +575,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                               ...prev,
                               title: question,
                               content: "",
-                              // content: `سؤال: ${question}\nپاسخ: [پاسخ خود را اینجا بنویسید]`,
                             }));
                           }}
                           className="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-grey-200 hover:bg-brand-primary hover:text-white hover:border-brand-primary text-grey-700 text-body-small group"
@@ -689,7 +686,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               variant="primary"
               onClick={saveItem}
               disabled={!newItem.title}
-              // disabled={!newItem.title || (!newItem.content && !newItem.url)}
               className="px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
             >
               {isEditing ? "ذخیره تغییرات" : "ذخیره  "}
@@ -779,7 +775,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
           <div className="space-y-3">
             {botConfig.knowledge.map((item, index) => {
-              // console.log("item", item);
               const IconComponent = getIcon(item.type);
 
               return (
