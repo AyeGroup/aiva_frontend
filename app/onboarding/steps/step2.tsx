@@ -6,11 +6,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
-import { Info, Refresh, Tick } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { onboardingData } from "../onboarding.data";
-import { useEffect, useRef, useState } from "react";
+import { Info, Refresh, Tick } from "@/public/icons/AppIcons";
 import { BotConfig, KnowledgeItem } from "@/types/common";
+import { useEffect, useRef, useState } from "react";
 import {
   FileText,
   Link,

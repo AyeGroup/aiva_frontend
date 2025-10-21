@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 
 interface ColorSliderProps {
-  value: string; // HEX string (e.g., "#FF0000")
+  value: string; 
   onChange?: (color: string) => void;
 }
 

@@ -3,13 +3,18 @@
 export const onboardingData = {
   title: "بیایید آیوا را برای سایت شما راه‌اندازی کنیم",
   subtitle:
-    "در ۵ گام ساده، دستیار هوشمند خود را بسازید و به سایت‌تان اضافه کنید.",
+    "در ۶ گام ساده، دستیار هوشمند خود را بسازید و به سایت‌تان اضافه کنید.",
 
   steps: [
     {
       id: "setup",
       title: "تنظیمات اولیه",
-      description: "نام، زبان، شخصیت و ظاهر دستیار را تعیین کنید",
+      description: "نام، زبان، شخصیت دستیار را تعیین کنید",
+    },
+    {
+      id: "appearance",
+      title: "تنظیمات ظاهری",
+      description: "مشخصات ظاهری دستیار را تعیین کنید",
     },
     {
       id: "knowledge",
@@ -166,7 +171,4 @@ export const onboardingData = {
   ],
 };
 
-// class AnswerLength(str, Enum):
-//     short = "short"
-//     medium = "medium"
-//     long = "long"
+ 

@@ -15,6 +15,7 @@ import { WizardStep3 } from "./steps/step3";
 import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { ChatPreview } from "./chat-preview";
+import { WizardStep6 } from "./steps/step6";
 import { onboardingData } from "./onboarding.data";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
@@ -25,7 +26,6 @@ export default function OnboardingWizard() {
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
   const [currentStep, setCurrentStep] = useState(1);
-  // const [lastStep, setLastStep] = useState(0);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -144,26 +144,30 @@ export default function OnboardingWizard() {
     }
   };
 
-  const validateFields = () => {
-    // console.log("call validateFields ");
-
+  const validateFields = (step: number) => {
     const newErrors: { [key: string]: string } = {};
-    if (!botConfig.name?.trim()) newErrors.name = "نام دستیار الزامی است";
-    if (!botConfig.language) newErrors.language = "زبان الزامی است";
-    if (!botConfig.tone) newErrors.tone = "شخصیت الزامی است";
-    if (!botConfig.primary_color)
-      newErrors.primary_color = "رنگ اصلی الزامی است";
-    if (!botConfig.accent_color)
-      newErrors.accent_color = "رنگ پس زمینه الزامی است";
+    if (step === 1) {
+      if (!botConfig.name?.trim()) newErrors.name = "نام دستیار الزامی است";
+      if (!botConfig.language) newErrors.language = "زبان الزامی است";
+      if (!botConfig.description?.trim())
+        newErrors.description = "توضیحات الزامی است";
+      if (!botConfig.guidelines)
+        newErrors.guidelines = "دستورالعمل‌ها الزامی است";
+    } else if (step === 2) {
+      if (!botConfig.tone) newErrors.tone = "شخصیت الزامی است";
+      if (!botConfig.primary_color)
+        newErrors.primary_color = "رنگ اصلی الزامی است";
+      if (!botConfig.accent_color)
+        newErrors.accent_color = "رنگ پس زمینه الزامی است";
+    }
 
     return newErrors;
   };
 
-  //ذخیره استپ 4
+  //ذخیره استپ 5
   const saveBotBehavior = async () => {
     setIsSaving(true);
     try {
-      console.log("ali", botConfig);
       const formData = new FormData();
       formData.append("uuid", botConfig.uuid);
       formData.append("k", String(botConfig.behaviors?.k) || "5");
@@ -204,11 +208,66 @@ export default function OnboardingWizard() {
     }
   };
 
+  //ذخیره استپ 2
+  const saveBotAppearance = async () => {
+    const fieldErrors = validateFields(2);
+    setErrors(fieldErrors);
+
+    if (Object.keys(fieldErrors).length > 0) {
+      const errorMessages = Object.values(fieldErrors).join("\r\n");
+
+      toast.error(errorMessages, {
+        duration: 5000,
+        style: {
+          whiteSpace: "pre-line",
+          direction: "rtl",
+          textAlign: "right",
+        },
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const formData = new FormData();
+
+      formData.append("uuid", botConfig.uuid);
+      formData.append("tone", botConfig.tone);
+      formData.append("primary_color", botConfig.primary_color);
+      formData.append("accent_color", botConfig.accent_color);
+      formData.append("button_size", botConfig.button_size);
+      formData.append("widget_position", botConfig.widget_position);
+      if (logoFile) formData.append("logo", logoFile);
+
+      const res = await axiosInstance.put(
+        `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
+        formData
+      );
+      if (res.data.success) {
+        //"http://localhost:8000/api/public/69887282-c486-4302-ab96-7995ad0f0cc5/logo"
+        if (logoFile) {
+          const path =
+            process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+          botConfig.logo_url = `${path}/public/${botConfig.uuid}/logo`;
+        }
+        return true;
+      } else return false;
+    } catch (error: any) {
+      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || "خطایی در ذخیره تنظیمات رخ داده است.";
+
+      toast.info(errorMessage);
+
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   //ذخیره استپ 1
   const saveBotConfig = async () => {
-    const fieldErrors = validateFields();
-    // console.log("fieldErrors", fieldErrors);
-    // console.log("logofile", logoFile);
+    const fieldErrors = validateFields(1);
     setErrors(fieldErrors);
 
     if (Object.keys(fieldErrors).length > 0) {
@@ -218,23 +277,17 @@ export default function OnboardingWizard() {
         duration: 5000,
         style: { whiteSpace: "pre-line", direction: "rtl", textAlign: "right" },
       });
-      // toast.error("اطلاعات را کامل کنید ");
       return;
     }
 
     setIsSaving(true);
     try {
-      // console.log("botConfig", botConfig);
       const formData = new FormData();
       formData.append("uuid", botConfig.uuid);
       formData.append("name", botConfig.name);
       formData.append("language", botConfig.language);
-      formData.append("tone", botConfig.tone);
-      formData.append("primary_color", botConfig.primary_color);
-      formData.append("accent_color", botConfig.accent_color);
-      formData.append("button_size", botConfig.button_size);
-      formData.append("widget_position", botConfig.widget_position);
-      if (logoFile) formData.append("logo", logoFile);
+      formData.append("description", botConfig.description);
+      formData.append("guidelines", botConfig.guidelines);
 
       let res;
       if (botConfig.uuid) {
@@ -243,25 +296,20 @@ export default function OnboardingWizard() {
           `${API_ROUTES.BOTS.SAVE}${
             botConfig.uuid ? `/${botConfig.uuid}` : ""
           }`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
+          formData
         );
-        if (res.data.success) return res.data.data.uuid;
-        toast.error(res.data?.message || "خطا در ثبت اطلاعات");
+        if (res.data.success) {
+          return res.data.data.uuid;
+        } else {
+          toast.error(res.data?.message || "خطا در ثبت اطلاعات");
+          return false;
+        }
       } else {
         // ثبت چت بات
-        res = await axiosInstance.post(API_ROUTES.BOTS.SAVE, formData, {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
+        res = await axiosInstance.post(API_ROUTES.BOTS.SAVE, formData);
         if (res.data.success) {
           const newId = res.data.data?.uuid;
-          console.log("new id: ", newId);
+          // console.log("new id: ", newId);
 
           const updated = { ...botConfig, uuid: newId };
           setBotConfig(updated);
@@ -292,16 +340,16 @@ export default function OnboardingWizard() {
   };
 
   const nextStep = async () => {
-    // console.log("call nextStep ", currentStep);
     if (currentStep == 1) {
       const uuid = await saveBotConfig();
       if (!uuid) return;
-    } else if (currentStep == 4) {
+    } else if (currentStep == 2) {
+      const isSaved = await saveBotAppearance();
+      if (!isSaved) return;
+    } else if (currentStep == 5) {
       const isSaved = await saveBotBehavior();
-      // console.log("behavior saved:", isSaved);
       if (!isSaved) return;
     }
-    // loadOnboardingData();
     console.log("botConfig.uuid  :", botConfig.uuid);
 
     if (currentStep < totalSteps) {
@@ -331,32 +379,39 @@ export default function OnboardingWizard() {
             botConfig={botConfig}
             updateConfig={updateBotConfig}
             errors={errors}
-            logoFile={logoFile}
-            setLogoFile={setLogoFile}
           />
         );
       case 2:
         return (
-          <WizardStep2 botConfig={botConfig} updateConfig={updateBotConfig} />
+          <WizardStep6
+            botConfig={botConfig}
+            updateConfig={updateBotConfig}
+            errors={errors}
+            logoFile={logoFile}
+            setLogoFile={setLogoFile}
+          />
         );
+
       case 3:
         return (
-          <WizardStep4 botConfig={botConfig} updateConfig={updateBotConfig} />
+          <WizardStep2 botConfig={botConfig} updateConfig={updateBotConfig} />
         );
       case 4:
         return (
-          <WizardStep3 botConfig={botConfig} updateConfig={updateBotConfig} />
+          <WizardStep4 botConfig={botConfig} updateConfig={updateBotConfig} />
         );
       case 5:
+        return (
+          <WizardStep3 botConfig={botConfig} updateConfig={updateBotConfig} />
+        );
+      case 6:
         return <WizardStep5 botConfig={botConfig} />;
-      // return <WizardStep5 botConfig={botConfig} onNavigate={onNavigate} />;
       default:
         return (
           <WizardStep1
             botConfig={botConfig}
             updateConfig={updateBotConfig}
-            logoFile={logoFile}
-            setLogoFile={setLogoFile}
+            errors={errors}
           />
         );
     }
@@ -380,8 +435,12 @@ export default function OnboardingWizard() {
             <AivaWhite />
           </div>
 
-          <h1 className="text-grey-900 mb-4 font-bold text-[20px]">{title}</h1>
-          <p className="text-grey-700 max-w-lg mx-auto">{subtitle}</p>
+          <h1 className="text-grey-900 mb-4 font-bold text-[20px] text-center">
+            {title}
+          </h1>
+          <p className="text-grey-700 max-w-lg mx-auto text-center">
+            {subtitle}
+          </p>
         </div>
 
         {/* Ultra Clean Progress */}
