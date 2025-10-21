@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
 import axiosInstance from "@/lib/axiosInstance";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { BotConfig, FAQ } from "@/types/common";
 import { HelpCircle, Trash2, Edit3, Save, X } from "lucide-react";
-import { toast } from "sonner";
+import PageLoader from "@/components/pageLoader";
 
 interface WizardStep4Props {
   botConfig: BotConfig;
@@ -17,125 +18,18 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [newFaq, setNewFaq] = useState({ question: "", answer: "" });
   const [isloading, setIsLoading] = useState(false);
-  const { user, loading } = useAuth();
-
   const botId = botConfig.uuid;
 
-  //  دریافت FAQ‌ها از بک‌اند
+  //  گرفتن لیست سوالات  در ابتدای فرم
   useEffect(() => {
-    const fetchFaqs = async () => {
-      try {
-        setIsLoading(true);
-        const res = await axiosInstance.get(API_ROUTES.FAQ(botId), {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
-        setFaqs(res.data.data || []);
-      } catch (err) {
-        console.error("خطا در دریافت FAQها:", err);
-      } finally {
-        setIsLoading(false);
-      }
+    const loadFaqs = async () => {
+      await fetchFaqs();
     };
-    fetchFaqs();
-  }, [botId]);
+    loadFaqs();
+  }, []);
 
-  //   افزودن FAQ
-  const addFaq = async () => {
-    if (!newFaq.question.trim() || !newFaq.answer.trim()) return;
-    const payload = {
-      question: newFaq.question,
-      answer: newFaq.answer,
-    };
-
-    try {
-      const res = await axiosInstance.post(API_ROUTES.FAQ(botId), payload, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      if (res.status === 200) {
-        // setFaqs((prev) => [...prev, newFaq]);
-        setFaqs((prev) => [
-          ...prev,
-          { id: String(prev.length), ...newFaq } as FAQ,
-        ]);
-
-        // setFaqs([
-        //   ...(botConfig.faqs || []),
-
-        //   { id: botConfig.faqs?.length || 0, ...newFaq } as FAQ,
-        // ]);
-
-        setNewFaq({ question: "", answer: "" });
-      }
-    } catch (err) {
-      toast.error("خطا در افزودن FAQ:");
-      console.error("خطا در افزودن FAQ:", err);
-    }
-  };
-
-  //   شروع ویرایش
-  const startEdit = (id: string) => {
-    setFaqs((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, isEditing: true } : f))
-    );
-  };
-
-  //   ذخیره ویرایش
-  const saveEdit = async (id: string, question: string, answer: string) => {
-    try {
-      // const res = await axiosInstance.put(`/api/faqs/${id}`, { question, answer });
-      const res = await axiosInstance.put(
-        `${API_ROUTES.FAQ(botId)}/${id}`,
-        { question, answer },
-        {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
-      );
-
-      const updated = res.data;
-
-      setFaqs((prev) =>
-        prev.map((f) => (f.id === id ? { ...updated, isEditing: false } : f))
-      );
-    } catch (err) {
-      console.error("خطا در ویرایش FAQ:", err);
-    }
-  };
-
-  //   حذف FAQ
-  const deleteFaq = async (id: string) => {
-    try {
-      await axiosInstance.delete(`${API_ROUTES.FAQ(botId)}/${id}`, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-
-      setFaqs((prev) => prev.filter((f) => f.id !== id));
-    } catch (err) {
-      console.error("خطا در حذف FAQ:", err);
-    }
-  };
-
-  // 🔙 لغو ویرایش
-  const cancelEdit = (id: string) => {
-    setFaqs((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, isEditing: false } : f))
-    );
-  };
-
-  //   آپدیت botConfig در حالت محلی (اختیاری)
+  //   آپدیت botConfig
   useEffect(() => {
-    // console.log("faq", faqs);
     if (!faqs || faqs.length === 0) return;
 
     updateConfig({
@@ -146,6 +40,95 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
       })),
     });
   }, [faqs]);
+
+  const fetchFaqs = async () => {
+    if (!botId) return;
+    try {
+      setIsLoading(true);
+      const res = await axiosInstance.get(API_ROUTES.FAQ(botId));
+      setFaqs(res.data.data || []);
+    } catch (err) {
+      console.error("خطا در دریافت FAQها:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //   افزودن
+  const addFaq = async () => {
+    if (!newFaq.question.trim() || !newFaq.answer.trim()) return;
+    setIsLoading(true);
+
+    try {
+      const payload = {
+        question: newFaq.question,
+        answer: newFaq.answer,
+      };
+      const res = await axiosInstance.post(API_ROUTES.FAQ(botId), payload);
+
+      if (res.status === 200 || res.status === 201) {
+        await fetchFaqs();
+        setNewFaq({ question: "", answer: "" });
+        toast.success("پرسش و پاسخ با موفقیت افزوده شد.");
+      } else {
+        toast.error(`خطا در ثبت اطلاعات:  (${res.status})`);
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || err.message;
+      toast.error("خطا در ثبت اطلاعات: " + errorMessage);
+
+      console.error("خطا در افزودن FAQ:", err.response || err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //   شروع ویرایش
+  const startEdit = (id: string) => {
+    setFaqs((prev) =>
+      prev.map((f) => (f.id === id ? { ...f, isEditing: true } : f))
+    );
+  };
+
+  //   ویرایش
+  const saveEdit = async (id: string, question: string, answer: string) => {
+    setIsLoading(true);
+    try {
+      await axiosInstance.put(`${API_ROUTES.FAQ(botId)}/${id}`, {
+        question,
+        answer,
+      });
+      await fetchFaqs();
+      toast.success("ویرایش پرسش و پاسخ با موفقیت انجام شد.");
+    } catch (err: any) {
+      toast.error("خطا در ویرایش: تغییرات اعمال نشد.");
+      console.error("خطا در ویرایش FAQ:", err.response || err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //   حذف FAQ
+  const deleteFaq = async (id: string) => {
+    setIsLoading(true);
+
+    try {
+      await axiosInstance.delete(`${API_ROUTES.FAQ(botId)}/${id}`);
+      await fetchFaqs();
+      // setFaqs((prev) => prev.filter((f) => f.id !== id));
+    } catch (err) {
+      console.error("خطا در حذف FAQ:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //   لغو ویرایش
+  const cancelEdit = (id: string) => {
+    setFaqs((prev) =>
+      prev.map((f) => (f.id === id ? { ...f, isEditing: false } : f))
+    );
+  };
 
   //   سوالات پیشنهادی
   const suggestedQuestions = [
@@ -163,13 +146,14 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     setNewFaq({ ...newFaq, question });
   };
 
-  if (loading || isloading)
-    return (
-      <div className="p-8 text-center text-grey-600">در حال بارگذاری ...</div>
-    );
+  // if (loading || isloading)
+  //   return (
+  //     <div className="p-8 text-center text-grey-600">در حال بارگذاری ...</div>
+  //   );
 
   return (
     <div className="space-y-8 bg-bg-surface p-6 border-2 border-brand-primary/20 rounded-xl shadow-lg">
+      {isloading && <PageLoader />}
       <div className="flex items-start gap-4">
         <div className="w-16 h-16 bg-brand-secondary/10 rounded-xl flex items-center justify-center flex-shrink-0">
           <HelpCircle className="w-8 h-8 text-brand-secondary" />
@@ -179,7 +163,8 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
             سوالات متداول
           </h2>
           <p className="text-grey-600 text-right">
-            سوالات و پاسخ‌های رایج کسب‌وکارتان را اضافه کنید
+            پرسش‌های متداول مرتبط با کسب‌وکار خود را در این بخش درج نمایید. این
+            محتوا به‌صورت خودکار در پنل گفتگوی آنلاین کاربر نمایش داده خواهد شد.
           </p>
         </div>
       </div>

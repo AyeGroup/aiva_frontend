@@ -20,6 +20,10 @@ import { onboardingData } from "./onboarding.data";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { BehaviorSettings, BotConfig } from "@/types/common";
+import {
+  convertPersianToEnglishDigits,
+  convertToPersian,
+} from "@/utils/common";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -299,7 +303,7 @@ export default function OnboardingWizard() {
           formData
         );
         if (res.data.success) {
-          return res.data.data.uuid;
+          return true;
         } else {
           toast.error(res.data?.message || "خطا در ثبت اطلاعات");
           return false;
@@ -430,17 +434,19 @@ export default function OnboardingWizard() {
       <Header currentPage="onboarding" />
       <div className="container mx-auto px-6 py-12 relative z-10">
         {/* Clean Minimal Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
-            <AivaWhite />
+        <div className="flex flex-col justify-center items-center mb-16">
+          <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
+            <div className="text-white w-7 h-7">
+              <AivaWhite />
+            </div>
           </div>
 
-          <h1 className="text-grey-900 mb-4 font-bold text-[20px] text-center">
+          <div className="text-grey-900 mb-4 font-bold text-lg text-center">
             {title}
-          </h1>
-          <p className="text-grey-700 max-w-lg mx-auto text-center">
+          </div>
+          <div className="text-grey-700 max-w-lg mx-auto text-center">
             {subtitle}
-          </p>
+          </div>
         </div>
 
         {/* Ultra Clean Progress */}
@@ -536,10 +542,12 @@ export default function OnboardingWizard() {
                 <Button
                   variant="tertiary"
                   onClick={prevStep}
-                  disabled={currentStep === 1}
+                  // disabled={currentStep === 1}
                   icon="arrow-right"
                   iconPosition="right"
-                  className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`${
+                    currentStep == 1 ? "!invisible" : ""
+                  } px-6 disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   قبلی
                 </Button>
@@ -547,7 +555,8 @@ export default function OnboardingWizard() {
                 {/* Minimal Step Counter */}
                 <div className="bg-white border border-grey-200 px-4 py-2 rounded-lg shadow-sm">
                   <span className="text-sm text-grey-700 font-medium">
-                    {currentStep} از {totalSteps}
+                    {convertToPersian(String(currentStep))} از{" "}
+                    {convertToPersian(String(totalSteps))}
                   </span>
                 </div>
 
@@ -572,6 +581,7 @@ export default function OnboardingWizard() {
             {/* Preview Sidebar */}
             <div className="lg:col-span-1">
               <div className="sticky top-8">
+                {/* elham */}
                 <ChatPreview botConfig={botConfig} currentStep={currentStep} />
               </div>
             </div>
@@ -583,10 +593,11 @@ export default function OnboardingWizard() {
           <button
             onClick={() => {
               localStorage.removeItem("aiva-onboarding-data"); // Clear saved data on cancel
+              router.push("/");
               // onNavigate("landing");
               // elham
             }}
-            className="text-grey-600 hover:text-grey-900 text-sm underline transition-colors font-medium"
+            className="text-grey-600 hover:text-grey-900 text-sm underline transition-colors font-medium cursor-pointer"
           >
             انصراف و بازگشت به صفحه اصلی
           </button>

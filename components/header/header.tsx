@@ -79,26 +79,34 @@ export function Header({ currentPage }: HeaderProps) {
         </nav>
 
         {/* دکمه‌های احراز هویت */}
-        <div className="flex items-center gap-2 lg:gap-3">
-          <Button
-            variant={
-              authButtons.login.variant as "primary" | "secondary" | "tertiary"
-            }
-            size="md"
-            onClick={() => router.push("/dashboard")}
-          >
-            {authButtons.login.text}
-          </Button>                                                              
-          <Button
-            variant={
-              authButtons.signup.variant as "primary" | "secondary" | "tertiary"
-            }
-            size="md"
-            onClick={() => router.push("/onboarding")}
-          >
-            {authButtons.signup.text}
-          </Button>
-        </div>
+        {currentPage !== "onboarding" && (
+          <div className="flex items-center gap-2 lg:gap-3">
+            <Button
+              variant={
+                authButtons.login.variant as
+                  | "primary"
+                  | "secondary"
+                  | "tertiary"
+              }
+              size="md"
+              onClick={() => router.push("/dashboard")}
+            >
+              {authButtons.login.text}
+            </Button>
+            <Button
+              variant={
+                authButtons.signup.variant as
+                  | "primary"
+                  | "secondary"
+                  | "tertiary"
+              }
+              size="md"
+              onClick={() => router.push("/onboarding")}
+            >
+              {authButtons.signup.text}
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );

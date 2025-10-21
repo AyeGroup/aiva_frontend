@@ -22,6 +22,8 @@ import {
   StepUpload,
   StepUser,
 } from "@/public/icons/AppIcons";
+import ColorBlackSlider from "@/components/ColorBlackSlider";
+// import { ColorBlackSlider } from "@/components/ColorBlackSlider";
 
 interface WizardStep6Props {
   botConfig: BotConfig;
@@ -82,16 +84,12 @@ export function WizardStep6({
       setIsUploading(true);
 
       const formData = new FormData();
-      formData.append("file", file); // 👈 تغییر از "logo" به "file"
+      formData.append("file", file);  
 
       const res = await axiosInstance.post(
         API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
+        formData
+       
       );
 
       toast.success("فایل با موفقیت آپلود شد ✅");
@@ -727,7 +725,7 @@ export function WizardStep6({
             <div className="flex items-start gap-2">
               <StepStar />
               <p className="text-grey-600 text-xs">
-                لوگو در کنار دکمه چت نمایش داده می‌شود و اعتماد کاربران را
+                لوگو در سایت نمایش داده می‌شود و اعتماد کاربران را
                 افزایش می‌دهد
               </p>
             </div>

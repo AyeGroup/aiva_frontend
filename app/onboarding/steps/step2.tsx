@@ -23,6 +23,7 @@ import {
   AlertTriangle,
   Edit2,
 } from "lucide-react";
+import { convertToPersian } from "@/utils/common";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -104,7 +105,8 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       if (allowedTypes.includes(`.${fileExtension}`)) {
         setSelectedFile(file);
         // setNewItem()
-        setNewItem((prev) => ({ ...prev, title: file.name }));
+        if (!newItem.title)
+          setNewItem((prev) => ({ ...prev, title: file.name }));
 
         // console.log(`فایل انتخاب شد: ${file.name} (اندازه: ${file.size} بایت)`);
       } else {
@@ -295,11 +297,11 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const getStatusText = (status: string) => {
     switch (status) {
       case "processing":
-        return "در حال بررسی";
+        return "در حال پردازش";
       case "queued":
         return "در صف بررسی";
       case "done":
-        return "انجام شده";
+        return "اعمال شده";
       case "failed":
         return "خطا";
       default:
@@ -732,35 +734,57 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
             {/* Status Summary */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-brand-amber"></div>
-                <span className="text-xs text-grey-600">
-                  {
-                    botConfig.knowledge.filter((k) => k.status === "processing")
-                      .length
-                  }
-                  در حال پردازش
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-success"></div>
-                <span className="text-xs text-grey-600">
-                  {
-                    botConfig.knowledge.filter((k) => k.status === "applied")
-                      .length
-                  }{" "}
-                  اعمال شده
-                </span>
-              </div>
-              {botConfig.knowledge.filter((k) => k.status === "error").length >
+              {botConfig.knowledge.filter((k) => k.status === "processing")
+                .length > 0 && (
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-full bg-brand-amber"></div>
+                  <span className="text-xs text-grey-600">
+                    {convertToPersian(
+                      botConfig.knowledge.filter(
+                        (k) => k.status === "processing"
+                      ).length
+                    )}{" "}
+                    در حال پردازش
+                  </span>
+                </div>
+              )}
+              {botConfig.knowledge.filter((k) => k.status === "done").length >
+                0 && (
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-full bg-success"></div>
+                  <span className="text-xs text-grey-600">
+                    {convertToPersian(
+                      botConfig.knowledge.filter((k) => k.status === "done")
+                        .length
+                    )}{" "}
+                    اعمال شده
+                  </span>
+                </div>
+              )}
+
+              {botConfig.knowledge.filter((k) => k.status === "queued").length >
+                0 && (
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-full bg-amber"></div>
+                  <span className="text-xs text-grey-600">
+                    {convertToPersian(
+                      botConfig.knowledge.filter((k) => k.status === "queued")
+                        .length
+                    )}{" "}
+                    در صف بررسی
+                  </span>
+                </div>
+              )}
+
+              {botConfig.knowledge.filter((k) => k.status === "failed").length >
                 0 && (
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded-full bg-danger"></div>
                   <span className="text-xs text-grey-600">
-                    {
+                    {convertToPersian(
                       botConfig.knowledge.filter((k) => k.status === "error")
                         .length
-                    }{" "}
+                    )}{" "}
                     خطا
                   </span>
                 </div>

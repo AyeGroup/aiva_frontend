@@ -1,134 +1,119 @@
-"use client";
-
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface ColorSliderProps {
-  value: string;
+  value?: string; // Hex value, like "#ff0000"
   onChange?: (color: string) => void;
 }
 
-export const ColorBlackSlider: React.FC<ColorSliderProps> = ({
-  value,
+const ColorBlackSlider: React.FC<ColorSliderProps> = ({
+  value = "#000000",
   onChange,
 }) => {
-  const sliderRef = useRef<HTMLDivElement | null>(null);
-  const [position, setPosition] = useState(0);
-  const isDragging = useRef(false);
+  const [color, setColor] = useState(value);
+  const [hue, setHue] = useState(hexToHue(value));
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  // 🎨 تبدیل HSL → HEX
-  function hslToHex(h: number, s: number, l: number): string {
-    s /= 100;
-    l /= 100;
-    const k = (n: number) => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-    const f = (n: number) =>
-      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-    const toHex = (x: number) =>
-      Math.round(x * 255)
-        .toString(16)
-        .padStart(2, "0");
-    return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
-  }
+  // وقتی value از بیرون تغییر کنه، رنگ و hue رو آپدیت می‌کنه
+  useEffect(() => {
+    setColor(value);
+    setHue(hexToHue(value));
+  }, [value]);
 
-  // 🎯 HEX → RGB
-  function hexToRgb(hex: string) {
-    const clean = hex.replace("#", "");
-    const r = parseInt(clean.substring(0, 2), 16);
-    const g = parseInt(clean.substring(2, 4), 16);
-    const b = parseInt(clean.substring(4, 6), 16);
-    return { r, g, b };
-  }
-
-  // 🎯 RGB → Lightness & Saturation check
-  function isGray(r: number, g: number, b: number) {
-    return Math.abs(r - g) < 10 && Math.abs(g - b) < 10 && Math.abs(r - b) < 10;
-  }
-
-  // 🎨 مقدار رنگ جاری بر اساس موقعیت (۰ تا ۱۰۰٪)
-  const getColorByPosition = (pos: number): string => {
-    if (pos < 10) {
-      // 0–10% → از سیاه تا طوسی
-      const gray = Math.round((pos / 10) * 128);
-      return `rgb(${gray}, ${gray}, ${gray})`;
-    } else if (pos < 20) {
-      // 10–20% → از طوسی تا سفید
-      const gray = Math.round(128 + ((pos - 10) / 10) * 127);
-      return `rgb(${gray}, ${gray}, ${gray})`;
-    } else {
-      // 20–100% → رنگی‌ها (Hue از 0 تا 360)
-      const hue = ((pos - 20) / 80) * 360;
-      return `hsl(${hue}, 100%, 50%)`;
-    }
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!sliderRef.current) return;
+    const rect = sliderRef.current.getBoundingClientRect();
+    const x = Math.min(Math.max(0, e.clientX - rect.left), rect.width);
+    const newHue = Math.round((x / rect.width) * 360);
+    const newColor = hueToHex(newHue);
+    setHue(newHue);
+    setColor(newColor);
+    onChange?.(newColor);
   };
-
-  const handleMove = useCallback(
-    (clientX: number) => {
-      const rect = sliderRef.current?.getBoundingClientRect();
-      if (!rect || !isDragging.current) return;
-
-      const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-      const newPos = (x / rect.width) * 100;
-      setPosition(newPos);
-
-      const color = getColorByPosition(newPos);
-      onChange?.(rgbToHex(color));
-    },
-    [onChange]
-  );
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    isDragging.current = true;
-    handleMove(e.clientX);
-
-    const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX);
-    const handleMouseUp = () => {
-      isDragging.current = false;
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  };
-
-  // 🎨 کمک: RGB string → HEX
-  function rgbToHex(rgb: string): string {
-    const match = rgb.match(/\d+/g);
-    if (!match) return "#000000";
-    const [r, g, b] = match.map((v) => parseInt(v));
-    return (
-      "#" +
-      [r, g, b]
-        .map((x) => x.toString(16).padStart(2, "0"))
-        .join("")
-        .toUpperCase()
-    );
-  }
-
-  // محاسبه رنگ فعلی
-  const currentColor = getColorByPosition(position);
-
-  // 📏 موقعیت نشانگر
-  const leftPosition = `calc(${position}% - 8px)`;
 
   return (
-    <div className="w-full select-none">
+    <div className="w-full flex flex-col gap-2">
       <div
         ref={sliderRef}
-        onMouseDown={handleMouseDown}
-        className="relative h-4 rounded-full cursor-pointer"
+        onMouseDown={handleMove}
+        onMouseMove={(e) => e.buttons === 1 && handleMove(e)}
+        className="relative w-full h-6 rounded-md cursor-pointer"
         style={{
           background:
-            "linear-gradient(to right, black, gray, white, red, yellow, lime, cyan, blue, magenta, red, black)",
+            "linear-gradient(to right, #000000, #808080, #ffffff, red, yellow, lime, cyan, blue, magenta, red)",
         }}
       >
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white shadow-md transition-all duration-75 ease-linear"
+          className="absolute top-1/2 w-3 h-3 rounded-full border border-white shadow -translate-y-1/2"
           style={{
-            left: leftPosition,
-            backgroundColor: currentColor,
+            left: `${(hue / 360) * 100}%`,
+            background: color,
           }}
-        />
+        ></div>
+      </div>
+      <div className="text-sm text-gray-300">
+        {color.toUpperCase()} (Hue: {Math.round(hue)})
       </div>
     </div>
   );
 };
+
+export default ColorBlackSlider;
+
+function hueToHex(hue: number): string {
+  const c = 1;
+  const x = 1 - Math.abs(((hue / 60) % 2) - 1);
+  let [r, g, b] = [0, 0, 0];
+
+  if (hue < 60) [r, g, b] = [c, x, 0];
+  else if (hue < 120) [r, g, b] = [x, c, 0];
+  else if (hue < 180) [r, g, b] = [0, c, x];
+  else if (hue < 240) [r, g, b] = [0, x, c];
+  else if (hue < 300) [r, g, b] = [x, 0, c];
+  else [r, g, b] = [c, 0, x];
+
+  // در بخش خاکستری، بر اساس hue رنگ بین سیاه و سفید می‌سازیم
+  if (hue <= 60) {
+    const gray = (hue / 60) * 255;
+    return rgbToHex(gray, gray, gray);
+  }
+
+  return rgbToHex(r * 255, g * 255, b * 255);
+}
+
+function hexToHue(hex: string): number {
+  const clean = hex.replace("#", "");
+  const r = parseInt(clean.substring(0, 2), 16) / 255;
+  const g = parseInt(clean.substring(2, 4), 16) / 255;
+  const b = parseInt(clean.substring(4, 6), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+
+  if (delta === 0) {
+    // رنگ‌های سیاه، سفید یا خاکستری
+    const grayLevel = r * 255;
+    return (grayLevel / 255) * 60; // نگاشت خاکستری‌ها بین 0 تا 60
+  }
+
+  let hue = 0;
+  if (max === r) hue = ((g - b) / delta) % 6;
+  else if (max === g) hue = (b - r) / delta + 2;
+  else hue = (r - g) / delta + 4;
+
+  hue *= 60;
+  if (hue < 0) hue += 360;
+  return hue;
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  return (
+    "#" +
+    [r, g, b]
+      .map((v) => {
+        const h = Math.round(v).toString(16);
+        return h.length === 1 ? "0" + h : h;
+      })
+      .join("")
+  );
+}

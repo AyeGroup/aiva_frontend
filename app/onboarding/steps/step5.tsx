@@ -100,7 +100,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   className="size-2 ml-2 rounded-full"
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
-                <span className="text-[16px] font-medium text-grey-900">
+                <span className="text-base font-medium text-grey-900">
                   {botConfig.name}
                 </span>
               </div>
@@ -112,7 +112,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   className="size-2 ml-2 rounded-full"
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
-                <span className="text-[16px] font-medium text-grey-900">
+                <span className="text-base font-medium text-grey-900">
                   {botConfig.language}
                 </span>
               </div>
@@ -124,7 +124,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   className="size-2 ml-2 rounded-full"
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
-                <span className="text-[16px] font-medium text-grey-900">
+                <span className="text-base font-medium text-grey-900">
                   {botConfig.knowledge?.length || 0}
                 </span>
               </div>
@@ -140,10 +140,10 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
             <div className="bg-white border-2 border-brand-primary rounded-[20px] h-[120px] relative flex items-center justify-center">
               <div className="flex flex-col items-center text-center">
                 <Globe className="w-[24px] h-[24px] text-brand-primary mb-[6px]" />
-                <p className="text-[16px] text-grey-900 mb-[4px]">
+                <p className="text-base text-grey-900 mb-[4px]">
                   HTML/JavaScript
                 </p>
-                <p className="text-[16px] text-grey-600">برای اکثر سایت‌ها</p>
+                <p className="text-base text-grey-600">برای اکثر سایت‌ها</p>
               </div>
             </div>
           </div>
@@ -178,7 +178,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
 
             {/* Installation Guide */}
             <div className="space-y-[12px]">
-              <p className="text-[16px] text-grey-900 text-right">
+              <p className="text-base text-grey-900 text-right">
                 راهنمای نصب - HTML/JavaScript
               </p>
 
@@ -203,7 +203,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
               </ol>
 
               <div className="bg-brand-tertiary/10 border border-brand-tertiary/20 rounded-[20px] p-[17px] h-[82px]">
-                <p className="text-[16px] text-brand-tertiary leading-[24px] text-right">
+                <p className="text-base text-brand-tertiary leading-[24px] text-right">
                   💡 نکته: پس از نصب، ممکن است تا چند دقیقه طول بکشد تا دستیار
                   در سایت شما فعال شود.
                 </p>
@@ -214,17 +214,17 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
         {/* Next Steps Cards */}
         <div className="grid grid-cols-2 gap-6">
           {/* Dashboard Card */}
-          <div className="bg-white rounded-[20px] border-2 border-grey-300 p-[24px] flex flex-col gap-[16px] items-center justify-start">
-            <div className="flex items-center gap-[12px]">
-              <BarChart3 className="w-[20px] h-[20px] text-brand-primary" />
-              <span className="text-[16px] text-grey-900">مرحله بعد</span>
+          <div className="bg-white rounded-[20px] border-2 border-grey-300 p-6 flex flex-col gap-[16px] items-center justify-start">
+            <div className="flex items-center gap-3">
+              <BarChart3 className="w-5 h-5 text-brand-primary" />
+              <span className="text-base text-grey-900">مرحله بعد</span>
             </div>
-            <p className="text-[16px] text-grey-600 text-center leading-[24px]">
+            <p className="text-base text-grey-600 text-center leading-[24px]">
               مدیریت و بهبود عملکرد دستیار از طریق داشبورد
             </p>
             <button
               onClick={() => router.push("dashboard")}
-              className="bg-brand-primary rounded-[12px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)] h-[48px] w-full flex items-center justify-center text-white text-[16px]"
+              className="bg-brand-primary rounded-sm shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)] h-12 w-full flex items-center justify-center text-white text-base"
               title="رفتن به داشبورد"
             >
               رفتن به داشبورد
@@ -232,22 +232,29 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
           </div>
 
           {/* Support Card */}
-          <div className="bg-white rounded-[20px] border-2 border-grey-300 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] p-[24px] flex flex-col gap-[16px]">
-            <div className="flex items-center gap-[12px]">
-              <HelpCircle className="w-[20px] h-[20px] text-brand-tertiary" />
-              <span className="text-[16px] text-grey-900">پشتیبانی</span>
+          <div className="bg-white rounded-[20px] border-2 border-grey-300 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] p-6 flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <HelpCircle className="w-5 h-5 text-brand-tertiary" />
+              <span className="text-base text-grey-900">پشتیبانی</span>
             </div>
             <div className="flex-1">
-              <p className="text-[16px] text-grey-600 text-right leading-[24px]">
+              <p className="text-base text-grey-600 text-right leading-[24px]">
                 تیم پشتیبانی آیوا آماده کمک به شماست
               </p>
             </div>
-            <button
-              className="bg-white border-2 border-brand-primary rounded-[12px] h-[52px] w-full flex items-center justify-center text-brand-primary text-[16px]"
+            <a
+              href="tel:09903202903"
+              className="bg-white border-2 border-brand-primary rounded-sm h-12 w-full flex items-center justify-center text-brand-primary text-base "
               title="تماس با پشتیبانی"
             >
-              تماس با پشتیبانی
-            </button>
+              ۰۹۹۰۳۲۰۲۹۰۳
+            </a>
+            {/* <button
+              className="bg-white border-2 border-brand-primary rounded-[12px] h-[52px] w-full flex items-center justify-center text-brand-primary text-base"
+              title="تماس با پشتیبانی"
+            >
+              ۰۹۹۰۳۲۰۲۹۰۳
+            </button> */}
           </div>
         </div>
       </div>

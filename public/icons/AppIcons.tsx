@@ -281,7 +281,7 @@ export const RegisterTopLeft = () => {
 
 export const AivaWhite = () => {
   return (
-    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+    <svg fill="currentColor" viewBox="0 0 24 24">
       <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 3.04 1.05 4.36L2 22l5.64-1.05C9.96 21.64 11.46 22 13 22h6c1.1 0 2-.9 2-2V12c0-5.52-4.48-10-10-10z" />
     </svg>
   );
