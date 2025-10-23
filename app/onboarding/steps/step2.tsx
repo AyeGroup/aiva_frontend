@@ -121,11 +121,10 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
 
   function isValidUrl(url: string): boolean {
     try {
-      return true;
       const isValidUrl = /^https?:\/\/[^\s$.?#].[^\s]*$/i.test(url);
       if (!isValidUrl) return false;
 
-      new URL(url);
+      // new URL(url);
       return true;
     } catch {
       return false;

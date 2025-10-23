@@ -16,6 +16,7 @@ import {
   BarChart3,
   HelpCircle,
 } from "lucide-react";
+import { convertToPersian } from "@/utils/common";
 
 interface WizardStep5Props {
   botConfig: BotConfig;
@@ -52,6 +53,27 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
   }, [botConfig.uuid]);
 
   const copyToClipboard = async () => {
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(installCode);
+      } else {
+        // fallback: create hidden textarea
+        const textArea = document.createElement("textarea");
+        textArea.value = installCode;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+
+  const copyToClipboard1 = async () => {
     try {
       await navigator.clipboard.writeText(installCode);
       setCopied(true);
@@ -122,7 +144,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
                 <span className="text-base font-medium text-grey-900">
-                  {botConfig.knowledge?.length || 0}
+                  {convertToPersian(botConfig.knowledge?.length || 0)}
                 </span>
               </div>
             </div>

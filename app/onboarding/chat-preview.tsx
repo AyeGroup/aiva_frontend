@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
-// import { BotConfig } from "./page";
-import { onboardingData } from "./onboarding.data";
-import aivaLogo from "@/public/logo.png";
 import Image from "next/image";
 import { BotConfig } from "@/types/common";
+import { onboardingData } from "./onboarding.data";
+import { useState, useEffect } from "react";
 
 interface ChatPreviewProps {
   botConfig: BotConfig;
@@ -15,11 +13,14 @@ interface Message {
   text: string;
   isBot: boolean;
   timestamp: Date;
+  type?: string;
 }
 
 export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [showFaqs, setShowFaqs] = useState(true);
+
   const [selectedKnowledgeItem, setSelectedKnowledgeItem] = useState<
     string | null
   >(null);
@@ -66,6 +67,31 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
     return responses[tone as keyof typeof responses] || responses.friendly;
   };
+  const handleFaqClick = (faq: any) => {
+    // پنهان کردن دکمه‌ها
+    setShowFaqs(false);
+
+    // افزودن پیام کاربر
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      text: faq.question,
+      isBot: false,
+      timestamp: new Date(),
+    };
+
+    // افزودن پاسخ بات
+    const botResponse: Message = {
+      id: `bot-${Date.now()}`,
+      text: faq.answer || "پاسخی برای این سؤال ثبت نشده است.",
+      isBot: true,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage, botResponse]);
+
+    // بازگرداندن دکمه‌ها بعد از چند ثانیه
+    setTimeout(() => setShowFaqs(true), 3000);
+  };
 
   // Handle knowledge item click
   const handleKnowledgeClick = (item: any) => {
@@ -111,16 +137,20 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
         timestamp: new Date(),
       },
     ];
+    console.log("aaaaa", botConfig);
+    if (botConfig?.faqs) {
+      botConfig.faqs.forEach((faq: any, index) => {
+        base.push({
+          id: "200" + index.toString(),
+          text: faq.question,
+          isBot: false,
+          timestamp: new Date(),
+          type:"faq"
+        });
+      });
+    }
 
     if (step >= 2 && botConfig.llm_model.length > 0) {
-      // if (step >= 2 && botConfig.knowledge.length > 0) {
-      base.push({
-        id: "2",
-        text: "سوال‌های متداول را می‌بینم!",
-        isBot: false,
-        timestamp: new Date(),
-      });
-
       base.push({
         id: "3",
         text: "بله! از دکمه‌های زیر می‌توانید سوال‌های رایج را انتخاب کنید.",
@@ -218,11 +248,11 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
       {/* Enhanced Preview Header with Live Indicator */}
       <div className="mb-4">
         <div className="flex items-center gap-3 mb-2">
-          <h3 className="text-grey-900">پیش‌نمایش زنده</h3>
-          <div className="flex items-center gap-2">
+          <h3 className="text-grey-900">پیش‌نمایش </h3>
+          {/* <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-sharp-emerald rounded-full animate-pulse"></div>
             <span className="text-sharp-emerald text-sm font-medium">فعال</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Current Settings Display */}
@@ -280,7 +310,8 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                 {/* Bot Avatar */}
                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-white/30">
                   <Image
-                    src="/logo.png"
+                    src={botConfig.logo_url || "/logo.png"}
+                    // src="/logo.png"
                     height={64}
                     width={64}
                     alt="آیوا"
@@ -360,6 +391,10 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                           : {}
                       }
                       dir="rtl"
+                    //  {message.type==="faq" &&
+
+                      onClick={() => handleFaqClick(message.text)}
+                    //  }
                     >
                       {message.isBot
                         ? currentTone?.example || message.text
@@ -447,34 +482,35 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                   <div className="mb-3">
                     <div className="flex flex-wrap gap-2">
                       {/* elham */}
-                      {/* {botConfig.knowledge.slice(0, 3).map((item) => {
-                        const icon =
-                          item.type === "faq"
-                            ? "❓"
-                            : item.type === "document"
-                            ? "📄"
-                            : item.type === "url"
-                            ? "🔗"
-                            : "📝";
+                      {botConfig.knowledge &&
+                        botConfig.knowledge.map((item) => {
+                          const icon =
+                            item.type === "qa_pair"
+                              ? "❓"
+                              : item.type === "file"
+                              ? "📄"
+                              : item.type === "website"
+                              ? "🔗"
+                              : "📝";
 
-                        return (
-                          <button
-                            key={item.id}
-                            onClick={() => handleKnowledgeClick(item)}
-                            className={`text-xs px-3 py-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary rounded-full max-w-[200px] truncate ${toneStyles.messageClass}`}
-                            title={item.title}
-                          >
-                            {icon} {item.title}
-                          </button>
-                        );
-                      })} */}
+                          return (
+                            <button
+                              key={item.id}
+                              onClick={() => handleKnowledgeClick(item)}
+                              className={`text-xs px-3 py-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary rounded-full max-w-[200px] truncate ${toneStyles.messageClass}`}
+                              title={item.title}
+                            >
+                              {icon} {item.title}
+                            </button>
+                          );
+                        })}
 
-                      {/* {Number(botConfig.behaviors.maxResponseLength) > 3 && (
+                      {Number(botConfig.behaviors?.maxResponseLength) > 3 && (
                         <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
                           +{Number(botConfig.behaviors.maxResponseLength) - 3}{" "}
                           بیشتر
                         </button>
-                      )} */}
+                      )}
                     </div>
                   </div>
                 )}
@@ -482,7 +518,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                 {/* Default Quick Actions - Only show if no knowledge base */}
                 {/* {(botConfig.knowledge.length === 0 || currentStep < 2) && ( */}
                 {(!botConfig.behaviors?.maxResponseLength ||
-                  botConfig.behaviors.maxResponseLength === "small" ||
+                  botConfig.behaviors?.maxResponseLength === "small" ||
                   currentStep < 2) && (
                   <div className="flex items-center gap-2 mb-3">
                     {botConfig.tone === "friendly" && (
@@ -541,7 +577,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                 )}
 
                 <div className="flex items-center gap-3">
-                  {/* <button className="w-10 h-10 text-grey-400 hover:text-grey-600 rounded-xl hover:bg-grey-100 flex items-center justify-center">
+                  <button className="w-10 h-10 text-grey-400 hover:text-grey-600 rounded-xl hover:bg-grey-100 flex items-center justify-center">
                     <svg
                       className="w-5 h-5"
                       fill="none"
@@ -555,7 +591,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                         d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                       />
                     </svg>
-                  </button> */}
+                  </button>
 
                   <input
                     type="text"
@@ -585,8 +621,6 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                   </button>
                 </div>
               </div>
-
-              {/* Powered by */}
             </div>
           </div>
         </div>

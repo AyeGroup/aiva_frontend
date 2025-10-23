@@ -17,6 +17,16 @@ import {
   StepStar,
   StepUpload,
 } from "@/public/icons/AppIcons";
+import ColorPicker from "@/components/color-picker";
+const colorPalette1 = [
+  "#ec4899",
+  "#8b5cf6",
+  "#22c55e",
+  "#3b82f6",
+  "#f5a623",
+  "#4ca7a5",
+  "#eb6e5b",
+];
 
 interface WizardStep6Props {
   botConfig: BotConfig;
@@ -63,8 +73,11 @@ export function WizardStep6({
       e.target.value = "";
       return;
     }
-    setLogoFile(file);
+    const previewUrl = URL.createObjectURL(file);
 
+    // به‌روزرسانی لوگو در state
+    updateConfig({ logo_url: previewUrl });
+    setLogoFile(file);
     //   نمایش پیش‌نمایش
     const reader = new FileReader();
     reader.onloadend = () => setPreview(reader.result as string);
@@ -113,31 +126,19 @@ export function WizardStep6({
         "file",
         new Blob([], { type: "application/octet-stream" })
       );
+      formData.append("logo_path", "");
 
       const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
+        formData
       );
-      // const res = await axiosInstance.post(
-      //   API_ROUTES.BOTS.LOGO_UPLOAD(botConfig.uuid),
-      //   formData,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${user?.token}`,
-      //     },
-      //   }
-      // );
 
       if (res.status !== 200 || !res.data.success) {
         toast.error("خطا در حذف فایل");
         return;
       }
 
+      updateConfig({ logo_url: "" });
       toast.success("لوگو با موفقیت حذف شد");
     } catch (err) {
       console.error(err);
@@ -262,7 +263,7 @@ export function WizardStep6({
                     style={{ backgroundColor: botConfig.primary_color }}
                   ></div>
                 </div>
-                <div>
+                {/* <div>
                   {colorPalette.map((color) => (
                     <button
                       key={color.value}
@@ -280,7 +281,7 @@ export function WizardStep6({
                       />
                     </button>
                   ))}
-                </div>
+                </div> */}
               </div>
 
               <div className="w-full p-1 space-y-4">
@@ -288,6 +289,12 @@ export function WizardStep6({
                   value={botConfig.primary_color}
                   onChange={handlePrimaryColor}
                 />
+                {/* <ColorPicker
+                  value={botConfig.primary_color}
+                  onChange={handlePrimaryColor}
+                  showAlpha={false}
+                  presets={colorPalette1}
+                /> */}
               </div>
               <div className="flex justify-between items-center my-4">
                 <div>کد رنگ دلخواه</div>

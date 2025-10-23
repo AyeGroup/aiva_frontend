@@ -6,7 +6,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-
+  images: {
+    domains: ["localhost"],
+    unoptimized: true, 
+  },
   async rewrites() {
     return [
       // { source: "/signup", destination: "/auth/signup" },

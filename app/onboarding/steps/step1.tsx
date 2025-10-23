@@ -71,7 +71,7 @@ export function WizardStep1({
               <Select
                 value={botConfig.language}
                 onValueChange={(value) => updateConfig({ language: value })}
-                className={`w-full ${
+                className={`w-full text-gray-800 ${
                   !botConfig.language ? "!border-red-400" : ""
                 }`}
                 placeholder="زبان را انتخاب کنید"

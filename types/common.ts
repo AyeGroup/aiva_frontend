@@ -6,7 +6,7 @@ export interface BaseComponentProps {
   children?: React.ReactNode;
   id?: string;
 }
-
+ 
 export const colorPalette = [
   { name: "صورتی", value: "#ec4899" },
   { name: "بنفش", value: "#8b5cf6" },

@@ -22,6 +22,7 @@ import { useState, useEffect, useMemo } from "react";
 import { BehaviorSettings, BotConfig } from "@/types/common";
 import Script from "next/script";
 import { API_BASE_URL } from "@/config";
+import { ChatPreview } from "./chat-preview";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -32,8 +33,8 @@ export default function OnboardingWizard() {
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const initialBehaviorSettings: BehaviorSettings = {
-    k: 5,
-    maxResponseLength: "short",
+    k: 10,
+    maxResponseLength: "medium",
     useGreeting: true,
     useEmojis: false,
     phone: "",
@@ -61,33 +62,33 @@ export default function OnboardingWizard() {
   });
   const totalSteps = steps.length;
 
-   const scriptSrc = useMemo(() => {
-     const encodedFaqs = encodeURIComponent(JSON.stringify(botConfig.faqs));
-     return (
-       `/chatbot-widget.js?` +
-       `apiEndpoint=${encodeURIComponent(API_BASE_URL)}` +
-       `&botUUID=${encodeURIComponent(botConfig.uuid)}` +
-       `&botName=${encodeURIComponent(botConfig.name)}` +
-       `&primaryColor=${encodeURIComponent(botConfig.primary_color)}` +
-       `&accentColor=${encodeURIComponent(botConfig.accent_color)}` +
-       `&buttonSize=${encodeURIComponent(botConfig.button_size)}` +
-       `&widgetPosition=${encodeURIComponent(botConfig.widget_position)}` +
-       `&greetings=${encodeURIComponent("")}` +
-       `&logoUrl=${encodeURIComponent(botConfig.logo_url)}` +
-       `&faqs=${encodedFaqs}`
-     );
-   }, [
-     API_BASE_URL,
-     botConfig.uuid,
-     botConfig.name,
-     botConfig.primary_color,
-     botConfig.accent_color,
-     botConfig.button_size,
-     botConfig.widget_position,
-     "",
-     botConfig.logo_url,
-     botConfig.faqs,
-   ]);
+  const scriptSrc = useMemo(() => {
+    const encodedFaqs = encodeURIComponent(JSON.stringify(botConfig.faqs));
+    return (
+      `/chatbot-widget.js?` +
+      `apiEndpoint=${encodeURIComponent(API_BASE_URL)}` +
+      `&botUUID=${encodeURIComponent(botConfig.uuid)}` +
+      `&botName=${encodeURIComponent(botConfig.name)}` +
+      `&primaryColor=${encodeURIComponent(botConfig.primary_color)}` +
+      `&accentColor=${encodeURIComponent(botConfig.accent_color)}` +
+      `&buttonSize=${encodeURIComponent(botConfig.button_size)}` +
+      `&widgetPosition=${encodeURIComponent(botConfig.widget_position)}` +
+      `&greetings=${encodeURIComponent("")}` +
+      `&logoUrl=${encodeURIComponent(botConfig.logo_url)}` +
+      `&faqs=${encodedFaqs}`
+    );
+  }, [
+    API_BASE_URL,
+    botConfig.uuid,
+    botConfig.name,
+    botConfig.primary_color,
+    botConfig.accent_color,
+    botConfig.button_size,
+    botConfig.widget_position,
+    "",
+    botConfig.logo_url,
+    botConfig.faqs,
+  ]);
 
   useEffect(() => {
     // 🧹 حذف نسخه قبلی چت‌بات (دکمه یا iframe)
@@ -101,8 +102,7 @@ export default function OnboardingWizard() {
     if (oldScript) oldScript.remove();
   }, [scriptSrc]);
 
-  console.log("new bot:", botConfig);
-  //   چک ورود کاربر
+   //   چک ورود کاربر
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
@@ -275,11 +275,11 @@ export default function OnboardingWizard() {
       );
       if (res.data.success) {
         //"http://localhost:8000/api/public/69887282-c486-4302-ab96-7995ad0f0cc5/logo"
-        if (logoFile) {
-          const path =
-            process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
-          botConfig.logo_url = `${path}/public/${botConfig.uuid}/logo`;
-        }
+        // if (logoFile) {
+          // const path =
+            // process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+          // botConfig.logo_url = `${path}/public/${botConfig.uuid}/logo`;
+        // }
         return true;
       } else return false;
     } catch (error: any) {
@@ -597,7 +597,8 @@ export default function OnboardingWizard() {
             {/* Preview Sidebar */}
             <div className="lg:col-span-1">
               <div className="top-8  w-full h-[700px]">
-                <div
+                <ChatPreview currentStep={currentStep} botConfig={botConfig} />
+                {/* <div
                   id="chatbot-preview"
                   className="p-3 shadow w-full h-full relative"
                 ></div>
@@ -606,7 +607,7 @@ export default function OnboardingWizard() {
                   key={scriptSrc}
                   src={scriptSrc}
                   strategy="afterInteractive"
-                />
+                /> */}
 
                 {/* <Script
                   src="/chatbot-widget.js?apiEndpoint=http://localhost:8000/api/public&botUUID=aaf16c28-c88a-4499-b7ad-983b4aa3012a&botName=آیا&primaryColor=%233b82f6&accentColor=%233b82f6&buttonSize=ButtonSize.medium&widgetPosition=WidgetPosition.bottom_right&greetings=False&logoUrl=http://localhost:8000/api/public/aaf16c28-c88a-4499-b7ad-983b4aa3012a/logo&faqs=%5B%7B%22q%22%3A%20%22%D9%85%D8%AD%D8%B5%D9%88%D9%84%D8%A7%D8%AA%20%D8%B4%D9%85%D8%A7%20%DA%86%D9%87%20%D9%87%D8%B3%D8%AA%D9%86%D8%AF%D8%9F%22%7D%2C%20%7B%22q%22%3A%20%22%D9%87%D8%B2%DB%8C%D9%86%D9%87%20%D8%A7%D8%B1%D8%B3%D8%A7%D9%84%20%DA%86%D9%82%D8%AF%D8%B1%20%D8%A7%D8%B3%D8%AA%D8%9F%22%7D%2C%20%7B%22q%22%3A%20%22%D8%A2%DB%8C%D8%A7%20%DA%AF%D8%A7%D8%B1%D8%A7%D9%86%D8%AA%DB%8C%20%D8%AF%D8%A7%D8%B1%DB%8C%D8%AF%D8%9F%22%7D%5D"

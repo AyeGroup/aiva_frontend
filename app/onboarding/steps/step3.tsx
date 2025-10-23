@@ -16,8 +16,8 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
   const [behaviors, setBehaviors] = useState<BehaviorSettings>({
     k: 10,
     maxResponseLength: "medium",
-    useGreeting: false,
-    useEmojis: true,
+    useGreeting: true,
+    useEmojis: false,
     phone: "",
   });
 
