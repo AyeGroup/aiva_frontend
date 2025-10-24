@@ -576,6 +576,7 @@ export function WizardStep6({
                 <div className="w-16 h-16 mx-auto bg-grey-100 rounded-lg flex items-center justify-center overflow-hidden">
                   <Image
                     src={preview}
+                    // src="image.jpg?t=${new Date().getTime()}"
                     alt="لوگوی انتخاب شده"
                     className="w-full h-full object-contain"
                     width={64}
@@ -639,7 +640,8 @@ export function WizardStep6({
             <div className="flex items-start gap-2">
               <StepStar />
               <p className="text-grey-600 text-xs">
-                لوگو در سایت نمایش داده می‌شود و اعتماد کاربران را افزایش می‌دهد
+                لوگو در کنار دکمه چت نمایش داده می‌شود و اعتماد کاربران را
+                افزایش می‌دهد
               </p>
             </div>
           </div>

@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { BotConfig } from "@/types/common";
+import { API_BASE_URL } from "@/config";
 import { onboardingData } from "./onboarding.data";
-import { useState, useEffect } from "react";
+import { Delete, SendMessage } from "@/public/icons/AppIcons";
+import { useState, useEffect, useRef } from "react";
 
 interface ChatPreviewProps {
   botConfig: BotConfig;
@@ -18,14 +20,15 @@ interface Message {
 
 export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState<string>("");
   const [isTyping, setIsTyping] = useState(false);
   const [showFaqs, setShowFaqs] = useState(true);
+  const [currentResponse, setCurrentResponse] = useState("");
 
   const [selectedKnowledgeItem, setSelectedKnowledgeItem] = useState<
     string | null
   >(null);
 
-  // Get tone-based responses
   const getToneBasedResponses = (tone: string) => {
     const responses = {
       friendly: {
@@ -67,6 +70,21 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
     return responses[tone as keyof typeof responses] || responses.friendly;
   };
+
+  const handleClear = () => {
+    // پاک کردن تمام پیام‌ها
+    setMessages([]);
+
+    // بازگرداندن FAQها به حالت اولیه
+    setShowFaqs(true);
+
+    // بازنشانی متن ورودی
+    setInputText("");
+
+    // اگر آیتم دانش انتخاب شده بود، بازنشانی شود
+    setSelectedKnowledgeItem(null);
+  };
+
   const handleFaqClick = (faq: any) => {
     // پنهان کردن دکمه‌ها
     setShowFaqs(false);
@@ -88,9 +106,6 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
     };
 
     setMessages((prev) => [...prev, userMessage, botResponse]);
-
-    // بازگرداندن دکمه‌ها بعد از چند ثانیه
-    setTimeout(() => setShowFaqs(true), 3000);
   };
 
   // Handle knowledge item click
@@ -137,41 +152,6 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
         timestamp: new Date(),
       },
     ];
-    console.log("aaaaa", botConfig);
-    if (botConfig?.faqs) {
-      botConfig.faqs.forEach((faq: any, index) => {
-        base.push({
-          id: "200" + index.toString(),
-          text: faq.question,
-          isBot: false,
-          timestamp: new Date(),
-          type:"faq"
-        });
-      });
-    }
-
-    if (step >= 2 && botConfig.llm_model.length > 0) {
-      base.push({
-        id: "3",
-        text: "بله! از دکمه‌های زیر می‌توانید سوال‌های رایج را انتخاب کنید.",
-        isBot: true,
-        timestamp: new Date(),
-      });
-    } else if (step >= 2) {
-      base.push({
-        id: "2",
-        text: "محصولات شما چه هستند؟",
-        isBot: false,
-        timestamp: new Date(),
-      });
-
-      base.push({
-        id: "3",
-        text: toneResponses.noKnowledge,
-        isBot: true,
-        timestamp: new Date(),
-      });
-    }
 
     return base;
   };
@@ -181,24 +161,23 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
     setMessages(newMessages);
     setSelectedKnowledgeItem(null); // Reset selection when step changes
   }, [currentStep, botConfig.llm_model.length]);
-  // }, [currentStep, botConfig.greetings, botConfig.knowledge.length]);
 
   // Get current tone example
   const currentTone = onboardingData.tones.find((t) => t.id === botConfig.tone);
 
   // Simulate typing when bot sends message
-  const simulateTyping = () => {
-    setIsTyping(true);
-    setTimeout(() => {
-      setIsTyping(false);
-    }, 1500);
-  };
+  // const simulateTyping = () => {
+  //   setIsTyping(true);
+  //   setTimeout(() => {
+  //     setIsTyping(false);
+  //   }, 1500);
+  // };
 
-  useEffect(() => {
-    if (messages.length > 0) {
-      simulateTyping();
-    }
-  }, [messages]);
+  // useEffect(() => {
+  //   if (messages.length > 0) {
+  //     simulateTyping();
+  //   }
+  // }, [messages]);
 
   const chatButtonSize =
     botConfig.button_size === "small"
@@ -212,6 +191,257 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
       : botConfig.button_size === "large"
       ? "24px"
       : "20px";
+
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputText(e.target.value);
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto"; // بازنشانی ارتفاع
+      textarea.style.height = Math.min(textarea.scrollHeight, 80) + "px"; // حداکثر حدود ۲ خط
+    }
+  };
+  const handleSend = async () => {
+    if (!inputText.trim()) return;
+
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      text: inputText,
+      isBot: false,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMessage]);
+
+    setInputText("");
+    setIsTyping(true); // شروع تایپ بات
+
+    await callChatbotAPIWithSSE(inputText);
+
+    setIsTyping(false); // پایان تایپ بعد از دریافت کامل پاسخ
+  };
+
+  const handleSend1 = async () => {
+    console.log("send", inputText);
+    if (!inputText.trim()) return;
+
+    // افزودن پیام کاربر
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      text: inputText,
+      isBot: false,
+      timestamp: new Date(),
+    };
+    console.log("send", userMessage);
+
+    setMessages((prev) => [...prev, userMessage]);
+
+    console.log("message", messages);
+    // پاک کردن input و شروع پاسخ
+    const messageToSend = inputText;
+    setInputText("");
+
+    await callChatbotAPIWithSSE(messageToSend);
+  };
+
+  async function callChatbotAPIWithSSE(message: string) {
+    const apiUrl = `${API_BASE_URL}/public/${botConfig.uuid}/chat`;
+
+    const requestData = {
+      username: "user_g8vy8p_1761286442729_t5356acc3",
+      display_name: "user_g8vy8p_1761286442729_t5356acc3",
+      message,
+      session_id: "sess-1761286450408-user_g8vy8p_1761286442729_t5356acc3",
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const contentType = response.headers.get("content-type");
+
+      if (contentType && contentType.includes("text/event-stream")) {
+        const receivedData = await handleSSEStream(response);
+        // اگر هیچ داده‌ای دریافت نشد
+        if (!receivedData) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: crypto.randomUUID(),
+              text: "پاسخ مناسبی از سرور دریافت نشد.",
+              isBot: true,
+              timestamp: new Date(),
+            },
+          ]);
+        }
+      } else {
+        const data = await response.json();
+        const botMessage =
+          data.answer ||
+          data.response ||
+          data.message ||
+          "متأسفانه نتوانستم درخواست شما را پردازش کنم.";
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: crypto.randomUUID(),
+            text: botMessage,
+            isBot: true,
+            timestamp: new Date(),
+          },
+        ]);
+        setShowFaqs(false); // مهم: بعد از اولین پاسخ بات FAQها حذف شوند
+      }
+    } catch (error: any) {
+      console.error("Chatbot API error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          text: "پاسخی از سرور دریافت نشد.",
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ]);
+    }
+  }
+  async function handleSSEStream(response: Response) {
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    if (!reader) return false;
+
+    let accumulatedText = "";
+    let receivedAnyData = false;
+    let botMessageId: string | null = null;
+
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (!line.startsWith("data:")) continue;
+
+          const raw = line.replace("data:", "").trim();
+          if (!raw) continue;
+
+          try {
+            const parsed = JSON.parse(raw);
+
+            if (parsed.type === "token" && parsed.data) {
+              receivedAnyData = true;
+              accumulatedText += parsed.data;
+
+              if (!botMessageId) {
+                botMessageId = `bot-${Date.now()}`;
+                 setMessages((prev) => [
+                  ...prev,
+                  {
+                    id: botMessageId!,
+                    text: accumulatedText,
+                    isBot: true,
+                    timestamp: new Date(),
+                  },
+                ]);
+              } else {
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === botMessageId ? { ...m, text: accumulatedText } : m
+                  )
+                );
+              }
+            } else if (parsed.type === "done") {
+              setIsTyping(false); // پایان تایپ وقتی SSE تمام شد
+              return receivedAnyData;
+            }
+          } catch {
+            continue;
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Stream read error:", err);
+      setIsTyping(false); // در صورت خطا هم تایپ را خاموش کن
+    }
+
+    setIsTyping(false);
+    return receivedAnyData;
+  }
+
+  async function handleSSEStream1(response: Response) {
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    if (!reader) return false;
+
+    let accumulatedText = "";
+    let receivedAnyData = false;
+    let botMessageId: string | null = null;
+
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (!line.startsWith("data:")) continue;
+
+          const raw = line.replace("data:", "").trim();
+          if (!raw) continue;
+
+          try {
+            const parsed = JSON.parse(raw);
+
+            if (parsed.type === "token" && parsed.data) {
+              receivedAnyData = true;
+              accumulatedText += parsed.data;
+
+              // فقط وقتی داده داریم پیام ایجاد یا آپدیت می‌شود
+              if (!botMessageId) {
+                botMessageId = `bot-${Date.now()}`;
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    id: botMessageId!,
+                    text: accumulatedText,
+                    isBot: true,
+                    timestamp: new Date(),
+                  },
+                ]);
+              } else {
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === botMessageId ? { ...m, text: accumulatedText } : m
+                  )
+                );
+              }
+            } else if (parsed.type === "done") {
+              return receivedAnyData;
+            }
+          } catch {
+            continue;
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Stream read error:", err);
+    }
+
+    return receivedAnyData;
+  }
 
   // Get tone-based styling
   const getToneStyles = (tone: string) => {
@@ -331,11 +561,27 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                     <p className="text-sm opacity-90">آنلاین و آماده پاسخ</p>
                   </div>
                 </div>
+                <div className="w-5 g-5 text-white" onClick={handleClear}>
+                  <Delete />
+                </div>
               </div>
-
+              {/* FAQ Buttons */}
+              {showFaqs && botConfig.faqs && botConfig.faqs.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-2 mt-4">
+                  {botConfig.faqs.map((faq) => (
+                    <button
+                      key={faq.id}
+                      onClick={() => handleFaqClick(faq)}
+                      className="text-xs px-3 py-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary rounded-full max-w-[200px] truncate"
+                    >
+                      {faq.question}
+                    </button>
+                  ))}
+                </div>
+              )}
               {/* Messages Area */}
               <div className="flex-1 p-6 space-y-4 overflow-y-auto bg-grey-50">
-                {messages.map((message, index) => (
+                {messages.map((message) => (
                   <div
                     key={message.id}
                     className={`flex items-end gap-3 ${
@@ -351,7 +597,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                         }}
                       >
                         <Image
-                          src="/logo.png"
+                          src={botConfig.logo_url || "/logo.png"}
                           height={64}
                           width={64}
                           alt="آیوا"
@@ -363,26 +609,25 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                     {/* Message Bubble */}
                     <div
                       className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm text-right
-                        ${
-                          message.isBot
-                            ? `bg-white border border-grey-100 text-grey-800 ${
-                                toneStyles.messageClass
-                              } ${
-                                toneStyles.messageClass === "rounded-2xl"
-                                  ? "rounded-bl-md"
-                                  : toneStyles.messageClass === "rounded-3xl"
-                                  ? "rounded-bl-xl"
-                                  : "rounded-bl-sm"
-                              }`
-                            : `text-white ${toneStyles.messageClass} ${
-                                toneStyles.messageClass === "rounded-2xl"
-                                  ? "rounded-br-md"
-                                  : toneStyles.messageClass === "rounded-3xl"
-                                  ? "rounded-br-xl"
-                                  : "rounded-br-sm"
-                              }`
-                        }
-                      `}
+          ${
+            message.isBot
+              ? `bg-white border border-grey-100 text-grey-800 ${
+                  toneStyles.messageClass
+                } ${
+                  toneStyles.messageClass === "rounded-2xl"
+                    ? "rounded-bl-md"
+                    : toneStyles.messageClass === "rounded-3xl"
+                    ? "rounded-bl-xl"
+                    : "rounded-bl-sm"
+                }`
+              : `text-white ${toneStyles.messageClass} ${
+                  toneStyles.messageClass === "rounded-2xl"
+                    ? "rounded-br-md"
+                    : toneStyles.messageClass === "rounded-3xl"
+                    ? "rounded-br-xl"
+                    : "rounded-br-sm"
+                }`
+          }`}
                       style={
                         !message.isBot
                           ? {
@@ -391,25 +636,20 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                           : {}
                       }
                       dir="rtl"
-                    //  {message.type==="faq" &&
-
-                      onClick={() => handleFaqClick(message.text)}
-                    //  }
                     >
-                      {message.isBot
-                        ? currentTone?.example || message.text
-                        : message.text}
-
-                      {/* Message Time */}
+                      {message.text}
                       <div
                         className={`text-xs mt-1 opacity-70 text-right ${
                           message.isBot ? "text-grey-500" : "text-white/70"
                         }`}
                       >
-                        {new Date().toLocaleTimeString("fa-IR", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        {new Date(message.timestamp).toLocaleTimeString(
+                          "fa-IR",
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
                       </div>
                     </div>
                   </div>
@@ -425,7 +665,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                       }}
                     >
                       <Image
-                        src="/logo.png"
+                        src={botConfig.logo_url ||"/logo.png"}
                         height={64}
                         width={64}
                         alt="آیوا"
@@ -474,7 +714,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
               </div>
 
               {/* Input Area */}
-              <div className="p-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
+              <div className="px-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
                 {/* Knowledge Base Quick Actions */}
                 {botConfig.llm_model.length > 0 && currentStep >= 2 && (
                   // elham
@@ -576,48 +816,34 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                   </div>
                 )}
 
-                <div className="flex items-center gap-3">
-                  <button className="w-10 h-10 text-grey-400 hover:text-grey-600 rounded-xl hover:bg-grey-100 flex items-center justify-center">
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                      />
-                    </svg>
-                  </button>
-
-                  <input
-                    type="text"
+                <div className="flex items-center pb-4 gap-3">
+                  <textarea
+                    ref={textareaRef}
+                    value={inputText}
+                    disabled={currentStep == 1}
+                    onChange={handleInputChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSend();
+                      }
+                    }}
+                    rows={1}
                     placeholder="پیام خود را بنویسید..."
-                    className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:border-transparent"
-                    disabled
+                    className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm resize-none max-h-[80px] overflow-y-auto outline-none focus:outline-none focus:ring-0 focus:border-grey-300 scrollbar-none"
+                    style={{
+                      scrollbarWidth: "none", // برای مرورگرهای فایرفاکس
+                      msOverflowStyle: "none", // برای IE و Edge قدیمی
+                    }}
                   />
 
                   <button
                     className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md disabled:opacity-50"
                     style={{ backgroundColor: botConfig.primary_color }}
-                    disabled
+                    disabled={currentStep == 1}
+                    onClick={handleSend}
                   >
-                    <svg
-                      className="w-5 h-5 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                      />
-                    </svg>
+                    <SendMessage />
                   </button>
                 </div>
               </div>

@@ -25,7 +25,8 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
+  const [warning, setWarning] = useState("");
+
 
   const isValidEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,7 +37,17 @@ function Login() {
     const phoneRegex = /^(\+98|0)?9\d{9}$/; // شماره موبایل ایران
     return phoneRegex.test(value);
   };
+ const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const value = e.target.value;
+   setPassword(value);
 
+   // بررسی وجود کاراکتر فارسی
+   if (/[آ-ی]/.test(value)) {
+     setWarning("رمز عبور نباید شامل کاراکتر فارسی باشد!");
+   } else {
+     setWarning("");
+   }
+ };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const identity = phone.trim();
@@ -214,17 +225,13 @@ function Login() {
               {/* Password Field */}
               <div>
                 <div className="relative">
-                  {/* {!password && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-grey-400 pointer-events-none z-10 text-sm">
-                      <span className="text-grey-400">رمز عبور</span>
-                    </div>
-                  )} */}
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     placeholder="رمز عبور"
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handlePasswordChange}
+                    // onChange={(e) => setPassword(e.target.value)}
                     className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 !bg-white text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none !text-center !placeholder:text-center "
                   />
                   {/* Password toggle button */}
@@ -240,6 +247,9 @@ function Login() {
                     )}
                   </button>
                 </div>
+                {warning && (
+                  <p className="text-red-400 mt-2 text-xs">{warning}</p>
+                )}
               </div>
 
               {/* Terms and conditions info */}

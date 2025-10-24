@@ -130,14 +130,14 @@ export function WizardStep1({
               }`}
             />
             
-            <div className="bg-bg-soft-mint p-3 rounded-lg">
+            {/* <div className="bg-bg-soft-mint p-3 rounded-lg">
               <div className="flex items-start gap-2">
                 <StepStar />
                 <p className="text-grey-600 text-xs">
                   این متن در صفحه لاگین برای کاربران قابل مشاهده است
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

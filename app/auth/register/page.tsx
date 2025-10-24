@@ -27,7 +27,8 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [otpTimer, setOtpTimer] = useState(otpTime); // 2 minutes
+  const [warning, setWarning] = useState("");
+  const [otpTimer, setOtpTimer] = useState(otpTime);
   const [errors, setErrors] = useState<{
     email?: string;
     phone?: string;
@@ -51,6 +52,11 @@ export default function Register() {
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
+    if (/[آ-ی]/.test(value)) {
+      setWarning("رمز عبور نباید شامل کاراکتر فارسی باشد!");
+    } else {
+      setWarning("");
+    }
     // Clear errors on valid input
     if (errors[field]) {
       const newErrors = { ...errors };
@@ -420,7 +426,10 @@ export default function Register() {
                     <Eye className="w-5 h-5" />
                   )}
                 </button>
-              </div>
+              </div>{" "}
+              {warning && (
+                <p className="text-red-500 mt-2 text-sm">{warning}</p>
+              )}
               {errors.password && (
                 <p className="text-danger text-body-small mt-1">
                   {errors.password}
