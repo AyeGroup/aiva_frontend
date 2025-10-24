@@ -5,6 +5,8 @@ import Image from "next/image";
 import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
 import "@/styles/header.css";
+import { User } from "@/public/icons/AppIcons";
+import { useAuth } from "@/providers/AuthProvider";
 
 interface HeaderProps {
   currentPage: PageType;
@@ -13,6 +15,7 @@ interface HeaderProps {
 export function Header({ currentPage }: HeaderProps) {
   const { logo, navigation, authButtons } = headerData;
   const router = useRouter();
+  const { user, loading } = useAuth();
 
   return (
     <header
@@ -79,7 +82,7 @@ export function Header({ currentPage }: HeaderProps) {
         </nav>
 
         {/* دکمه‌های احراز هویت */}
-        {currentPage !== "onboarding" && (
+        {currentPage !== "onboarding" ? (
           <div className="flex items-center gap-2 lg:gap-3">
             <Button
               variant={
@@ -105,6 +108,13 @@ export function Header({ currentPage }: HeaderProps) {
             >
               {authButtons.signup.text}
             </Button>
+          </div>
+        ) : (
+          <div className="flex items-center">
+            <div className="w-6 h-6 text-primary">
+              <User />
+            </div>
+            <div className="text-sm mr-2">{user?.phone || "کاربر جدید"} </div> 
           </div>
         )}
       </div>
