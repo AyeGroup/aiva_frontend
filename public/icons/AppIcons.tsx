@@ -408,3 +408,24 @@ export const User = () => {
     </svg>
   );
 };
+
+export const Plus = () => {
+  return (
+    <svg viewBox="0 0 18 18" fill="none">
+      <path
+        d="M3.75 9H14.25"
+        stroke="currentColot"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 3.75V14.25"
+        stroke="currentColot"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};

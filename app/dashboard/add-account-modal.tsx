@@ -75,7 +75,7 @@ export function AddAccountModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-100"
       dir="rtl"
     >
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">

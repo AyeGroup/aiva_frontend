@@ -16,11 +16,10 @@ import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { WizardStep6 } from "./steps/step6";
 import { ChatPreview } from "./chat-preview";
-import { API_BASE_URL } from "@/config";
 import { onboardingData } from "./onboarding.data";
 import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, } from "react";
 import { BehaviorSettings, BotConfig } from "@/types/common";
 
 export default function OnboardingWizard() {

@@ -25,8 +25,7 @@ export const convertPersianToEnglishDigits = (str:string) => {
   return output;
 };
 
-// Function to convert English numbers to Persian
-export const convertToPersian = (text: string | number): string => {
+ export const convertToPersian = (text: string | number): string => {
   const englishDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
 
@@ -39,6 +38,7 @@ export const convertToPersian = (text: string | number): string => {
   }
   return result;
 };
+
 export const normalizeFileUrl = (path: string) => {
   if (!path) return "";
   return (
@@ -49,3 +49,4 @@ export const normalizeFileUrl = (path: string) => {
       .replace(/^(\.\/)?data\//, "") // حذف ./data/
   );
 };
+

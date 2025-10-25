@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
-import { ChevronDown, User, LogOut, ArrowLeft } from "lucide-react";
+import PageLoader from "@/components/pageLoader";
+import { useAuth } from "@/providers/AuthProvider";
+import { PageType } from "@/types/common";
+import { useRouter } from "next/navigation";
 import { AddChatbotModal } from "./add-chatbot-modal";
 import { AddAccountModal } from "./add-account-modal";
-import { PageType } from "@/types/common";
-import { useAuth } from "@/providers/AuthProvider";
-import { useRouter } from "next/navigation";
-// import { AppRouterInstance } from "next/navigation";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import {  User, LogOut, ArrowLeft } from "lucide-react";
+import { useBot } from "@/providers/BotProvider";
 
 interface QAPair {
   id: string;
@@ -47,7 +48,7 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
       {active && (
         <div className="absolute left-6 top-1/2 transform -translate-y-1/2 w-3 h-3 rounded-full bg-brand-secondary"></div>
       )}
-      <span className={`text-lg mr-6 ${active ? "font-bold" : "font-normal"}`}>
+      <span className={`text-lg   ${active ? "font-bold" : "font-normal"}`}>
         {label}
       </span>
     </button>
@@ -59,21 +60,14 @@ interface SidebarProps {
   router: ReturnType<typeof useRouter>;
 }
 
+
 export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
-  const { logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Temporary handler for adding a website (replace with real logic)
-  const handleAddWebsite = (newWebsite: Omit<Website, "id">) => {
-    const website: Website = {
-      ...newWebsite,
-      id: Date.now().toString(),
-    };
-    console.log("New website added:", website);
-  };
-
+  const { bots, currentBot, setCurrentBot } = useBot(); // ← دسترسی به بات‌ها
   const handleLogout = async () => {
     try {
       setIsLoading(true);
@@ -85,12 +79,10 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
     }
   };
 
-  const handleAddAccount = (newAccount: Omit<Account, "id">) => {
-    const account: Account = {
-      ...newAccount,
-      id: Date.now().toString(),
-    };
-    console.log("New account added:", account);
+  const handleBotChange = (botId: string) => {
+    console.log("botId", botId);
+    const selected = bots.find((b) => b.uuid === botId);
+    if (selected) setCurrentBot(selected);
   };
 
   return (
@@ -107,30 +99,50 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
             style={{ backgroundColor: "#FFA18E" }}
-          ></div>
+          >
+            <User />
+          </div>
           <div className="text-center">
-            <p className="text-grey-900 font-semibold">علی احمدی</p>
+            <p className="text-grey-900 font-semibold">
+              {user?.name || user?.phone || "کاربر"}
+            </p>
           </div>
         </button>
+      </div>
+
+      {loading && <PageLoader />}
+
+      {/* Bot Selector Dropdown */}
+      <div className="px-4 mb-4 text-lg font-bold flex justify-center items-center">
+        <label className="block   font-medium text-gray-700 m-1">
+            چت‌بات
+        </label>
+        <select
+          className="w-full p-2 rounded-lg border  "
+          value={currentBot?.uuid || ""}
+          onChange={(e) => handleBotChange(e.target.value)}
+        >
+          {bots.length === 0 && <option>در حال بارگذاری...</option>}
+          {bots.map((bot:any) => (
+            <option key={bot.uuid} value={bot.uuid}>
+              {bot.name}
+              {bot.isDefault ? " (پیش‌فرض)" : ""}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Navigation Menu */}
       <nav className="flex-1 py-4">
         <SidebarItem
-          label="میزکار"
-          active={currentPage === "dashboard"}
-          onClick={() => router.push("/dashboard")}
-        />
-        <SidebarItem
-          label="مدیریت چت بات"
+          label="مدیریت چت‌بات"
           active={currentPage === "chatbot-management"}
-          // onClick={() => router.push("/dashboard/chatbot-management")}
           onClick={() => router.push("/dashboard?tab=chatbot-management")}
         />
         <SidebarItem
-          label="تیکت"
+          label="تیکت‌ها"
           active={currentPage === "tickets"}
-          onClick={() => router.push("/dashboard/tickets")}
+          onClick={() => router.push("/dashboard?tab=tickets")}
         />
         <SidebarItem label="پروفایل" />
         <SidebarItem label="مالی" />
@@ -156,12 +168,12 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
         </button>
       </div>
 
-      {/* Footer - Logo & Brand */}
+      {/* Footer */}
       <div className="px-6 py-6 border-t border-white/30">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
             <ImageWithFallback
-              src=""
+              src="logo.png"
               alt="آیوا - دستیار هوشمند"
               className="w-8 h-8 object-cover"
             />
@@ -171,21 +183,21 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
             <p className="text-grey-500 text-xs">دستیار هوشمند</p>
           </div>
         </div>
-          <div className="text-xs text-gray-500 mt-2 mr-12">
-            نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
-          </div>
+        <div className="text-xs text-gray-500 mt-2 mr-12">
+          نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
+        </div>
       </div>
 
       {/* Modals */}
       <AddChatbotModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddWebsite}
+        onAdd={() => {}}
       />
       <AddAccountModal
         isOpen={isAddAccountModalOpen}
         onClose={() => setIsAddAccountModalOpen(false)}
-        onAdd={handleAddAccount}
+        onAdd={() => {}}
       />
     </aside>
   );

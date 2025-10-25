@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
+import axiosInstance from "@/lib/axiosInstance";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { ToggleSmall } from "@/components/toggleSmall";
 import {
   Edit3,
   Trash2,
@@ -18,44 +19,50 @@ import {
   X,
   Plus,
 } from "lucide-react";
-import { Toggle } from "@/components/toggle";
-import { ToggleSmall } from "@/components/toggleSmall";
+import { toast } from "sonner";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 export function ChatbotManagement() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [chatbots, setChatbots] = useState<BotConfig[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedChatbot, setSelectedChatbot] = useState<string | null>(null);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    id: string | null;
+  }>({
+    isOpen: false,
+    id: null,
+  });
 
   useEffect(() => {
     if (!user?.token) return;
-    const loadOnboardingData = async () => {
-      setIsLoading(true);
 
-      try {
-        const response = await axiosInstance.get(API_ROUTES.BOTS.LIST, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
-        setChatbots(response.data.data);
-        console.log("bot list: ", response.data);
-      } catch (apiError: any) {
-        // if (apiError.response?.status === 401) {
-        //   console.warn("Unauthorized - redirecting to login...");
-        //   router.push("/auth/login");
-        //   return;
-        // }
-        console.warn("API fetch failed, using local data:", apiError);
-      } finally {
-        setIsLoading(false);
-      }
+    const fetchChatbots = async () => {
+      await loadChatbots();
     };
 
-    loadOnboardingData();
+    fetchChatbots();
   }, [user?.token]);
+
+  const loadChatbots = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await axiosInstance.get(API_ROUTES.BOTS.LIST, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      setChatbots(response.data.data);
+      console.log("bot list: ", response.data);
+    } catch (apiError: any) {
+      console.warn("API fetch failed, using local data:", apiError);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const toggleStatus = (id: string) => {
     setChatbots((prev) =>
@@ -63,13 +70,41 @@ export function ChatbotManagement() {
         bot.uuid === id ? { ...bot, status: !bot.status } : bot
       )
     );
-
-    // Optionally, make an API call to save the new status
-    // axiosInstance.put(`${API_ROUTES.BOTS.UPDATE_STATUS}/${id}`, { status: !currentStatus }, { headers: { Authorization: `Bearer ${user?.token}` } })
   };
 
-  const deleteChatbot = (id: string) => {
-    setChatbots((prev) => prev.filter((bot) => bot.uuid !== id));
+  const handleDelete = async (id: string) => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.delete(API_ROUTES.BOTS.EDIT(id));
+
+      if (res.data.success) {
+        await loadChatbots();
+        toast.success("چت بات با موفقیت حذف شد");
+      } else {
+        toast.error("خطا در حذف چت بات");
+        console.warn("⚠️ Unexpected response while removing item:", res.data);
+      }
+    } catch (error: any) {
+      toast.error("خطا در حذف چت بات");
+      console.error("Failed to remove item:", error);
+    } finally {
+      setIsLoading(false);
+      setConfirmModal({ isOpen: false, id: null });
+    }
+  };
+
+  const openConfirmModal = (id: string) => {
+    setConfirmModal({ isOpen: true, id });
+  };
+
+  const closeConfirmModal = () => {
+    setConfirmModal({ isOpen: false, id: null });
+  };
+
+  const handleConfirmDelete = () => {
+    if (confirmModal.id) {
+      handleDelete(confirmModal.id);
+    }
   };
 
   return (
@@ -80,33 +115,50 @@ export function ChatbotManagement() {
           {isLoading || (loading && <PageLoader />)}{" "}
           <div className="max-w-7xl mx-auto pb-8">
             {/* Page Header */}
-            <header className="mb-8">
+            <header className="flex items-center justify-between mb-8">
               <div className="text-right">
-                <h1 className="text-grey-900 mb-2">مدیریت چت بات‌ها</h1>
+                <h1 className="text-grey-900 mb-2">مدیریت چت‌بات‌ها</h1>
                 <p className="text-grey-600">
-                  مدیریت و ویرایش تمام چت بات‌های آیوا
+                  مدیریت و ویرایش تمام چت‌بات‌های آیوا
                 </p>
+              </div>
+              <div>
+                <button
+                  className="flex bg-primary rounded-sm white px-4 py-3"
+                  onClick={() => router.push("/onboarding?uuid=new")}
+                >
+                  <span className="text-white">افزودن چت‌بات جدید</span>
+                  <div className="w-4 h-4 mr-2 text-white">
+                    <Plus />
+                  </div>
+                </button>
               </div>
             </header>
 
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-2xl p-6 border border-grey-100 shadow-card">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
-                    <Settings className="w-6 h-6 text-brand-primary" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card relative overflow-hidden">
+                <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-primary/10"></div>
+                <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-primary/5"></div>
+
+                <div className="flex items-center justify-between mb-4 relative ">
+                  <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center">
+                    <MessageSquare className="w-5 h-5 text-white" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
+                <h3 className="text-2xl font-bold text-grey-900 mb-1 relative  ">
                   {chatbots.length}
                 </h3>
-                <p className="text-grey-600 text-sm text-left">کل چت بات‌ها</p>
+                <p className="text-grey-600 text-sm text-left relative  ">
+                  کل چت بات‌ها
+                </p>
               </div>
-
-              <div className="bg-white rounded-2xl p-6 border border-grey-100 shadow-card">
+              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card relative overflow-hidden">
+                <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-success/10"></div>
+                <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-success/5"></div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
-                    <Eye className="w-6 h-6 text-success" />
+                  <div className="w-12 h-12 bg-success rounded-xl flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-white" />
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
@@ -115,10 +167,14 @@ export function ChatbotManagement() {
                 <p className="text-grey-600 text-sm text-left">چت بات فعال</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-grey-100 shadow-card">
+              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card relative overflow-hidden">
+                <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-secondary/10"></div>
+                <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-secondary/5"></div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-brand-secondary/10 rounded-xl flex items-center justify-center">
-                    <span className="font-bold text-brand-secondary">💬</span>
+                  <div className="w-12 h-12 bg-brand-secondary rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
+                      <MessageSquare className="w-5 h-5 text-white" />
+                    </div>
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
@@ -132,22 +188,6 @@ export function ChatbotManagement() {
                   گفتگوهای امروز
                 </p>
               </div>
-
-              {/* <div className="bg-white rounded-2xl p-6 border border-grey-100 shadow-card">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-brand-accent/10 rounded-xl flex items-center justify-center">
-                    <span className="font-bold text-brand-accent">📊</span>
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-grey-900 mb-1">
-                  {Math.round(
-                    chatbots.reduce((sum, bot) => sum + bot.responseRate, 0) /
-                      chatbots.length
-                  )}
-                  %
-                </h3>
-                <p className="text-grey-600 text-sm">میانگین پاسخگویی</p>
-              </div> */}
             </div>
 
             {/* Chatbots List */}
@@ -200,7 +240,10 @@ export function ChatbotManagement() {
 
                         <div className="text-center">
                           <p className="text-sm font-medium text-grey-700">
-                            {chatbot.lastUpdated}
+                           
+                            {new Date(
+                              chatbot?.updated_at ?? ""
+                            ).toLocaleDateString("fa-IR")}
                           </p>
                           <p className="text-xs text-grey-500">
                             آخرین بروزرسانی
@@ -226,7 +269,8 @@ export function ChatbotManagement() {
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => deleteChatbot(chatbot.uuid)}
+                            onClick={() => openConfirmModal(chatbot.uuid)}
+                            // onClick={() => confirmAction(chatbot.uuid)}
                             className="p-2 text-grey-600 hover:text-danger hover:bg-danger/10 rounded-lg transition-all"
                             title="حذف"
                           >
@@ -238,20 +282,18 @@ export function ChatbotManagement() {
                   </div>
                 ))}
               </div>
-
-              {/* Add New Chatbot Button */}
-              <div className="p-6 border-t border-grey-100 bg-grey-50/30">
-                <button className="w-full p-4 border-2 border-dashed border-brand-primary/30 rounded-xl text-brand-primary hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all flex items-center justify-center gap-3">
-                  <div className="w-8 h-8 bg-brand-primary/10 rounded-full flex items-center justify-center">
-                    <span className="text-brand-primary font-bold text-lg">
-                      +
-                    </span>
-                  </div>
-                  <span className="font-medium">افزودن چت بات جدید</span>
-                </button>
-              </div>
             </div>
           </div>
+          <ConfirmModal
+            isOpen={confirmModal.isOpen}
+            onClose={closeConfirmModal}
+            onConfirm={handleConfirmDelete}
+            title="حذف چت بات"
+            message="آیا از حذف این چت بات اطمینان دارید؟ این عمل قابل بازگشت نیست."
+            confirmText="بله، حذف کن"
+            cancelText="لغو"
+            type="danger"
+          />
         </main>
       </div>
     </div>

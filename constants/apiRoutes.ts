@@ -13,7 +13,7 @@ export const API_ROUTES = {
 
   STATISTIC: {
     GET_COVER: (bot_uuid: string) =>
-      `${API_BASE_URL}/dashboard/stats/${bot_uuid}/`,
+      `${API_BASE_URL}/dashboard/overview/${bot_uuid}/`,
   },
 
   BOTS: {

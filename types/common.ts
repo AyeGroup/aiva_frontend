@@ -52,10 +52,10 @@ export interface BotConfig {
   behaviors: BehaviorSettings;
 
   // -------------------برای آمار
-  lastUpdated?: string;
+  updated_at?: string;
   status: boolean;
   conversationsToday?: string;
-  url?:string;
+  url?: string;
 }
 
 export interface FAQ {
