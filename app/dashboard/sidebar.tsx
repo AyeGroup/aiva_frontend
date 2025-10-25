@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { AddChatbotModal } from "./add-chatbot-modal";
 import { AddAccountModal } from "./add-account-modal";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
-import {  User, LogOut, ArrowLeft } from "lucide-react";
+import { User, LogOut, ArrowLeft } from "lucide-react";
 import { useBot } from "@/providers/BotProvider";
 
 interface QAPair {
@@ -59,7 +59,6 @@ interface SidebarProps {
   currentPage?: PageType;
   router: ReturnType<typeof useRouter>;
 }
-
 
 export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -114,22 +113,26 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
 
       {/* Bot Selector Dropdown */}
       <div className="px-4 mb-4 text-lg font-bold flex justify-center items-center">
-        <label className="block   font-medium text-gray-700 m-1">
-            چت‌بات
-        </label>
-        <select
-          className="w-full p-2 rounded-lg border  "
-          value={currentBot?.uuid || ""}
-          onChange={(e) => handleBotChange(e.target.value)}
-        >
-          {bots.length === 0 && <option>در حال بارگذاری...</option>}
-          {bots.map((bot:any) => (
-            <option key={bot.uuid} value={bot.uuid}>
-              {bot.name}
-              {bot.isDefault ? " (پیش‌فرض)" : ""}
-            </option>
-          ))}
-        </select>
+        {bots && bots.length > 0 && (
+          <>
+            <label className="block   font-medium text-gray-700 m-1">
+              چت‌بات
+            </label>
+            <select
+              className="w-full p-2 rounded-lg border  "
+              value={currentBot?.uuid || ""}
+              onChange={(e) => handleBotChange(e.target.value)}
+            >
+              {bots.length === 0 && <option>در حال بارگذاری...</option>}
+              {bots.map((bot: any) => (
+                <option key={bot.uuid} value={bot.uuid}>
+                  {bot.name}
+                  {bot.isDefault ? " (پیش‌فرض)" : ""}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
       </div>
 
       {/* Navigation Menu */}

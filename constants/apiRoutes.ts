@@ -14,13 +14,20 @@ export const API_ROUTES = {
   STATISTIC: {
     GET_COVER: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/overview/${bot_uuid}/`,
+    HEATMAP: (bot_uuid: string) =>
+      `${API_BASE_URL}/dashboard/message-heatmap/${bot_uuid}/`,
+    ACTIVE_USERS: (bot_uuid: string) =>
+      `${API_BASE_URL}/dashboard/active-users/${bot_uuid}/`, 
+    USERS: (bot_uuid: string) =>
+      `${API_BASE_URL}/dashboard/users-trend/${bot_uuid}/`, //days
+    SESSION: (bot_uuid: string) =>
+      `${API_BASE_URL}/dashboard/sessions-trend/${bot_uuid}/`, //days
   },
 
   BOTS: {
     LOGO_UPLOAD: (bot_uuid: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/logo`,
-    EDIT: (bot_uuid: string) =>
-      `${API_BASE_URL}/chatbots/${bot_uuid}`,
+    EDIT: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}`,
     SAVE: `${API_BASE_URL}/chatbots`,
     LIST: `${API_BASE_URL}/chatbots`,
     GET: `${API_BASE_URL}/chatbots/`, //bot_uuid

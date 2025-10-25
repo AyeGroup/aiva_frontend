@@ -12,17 +12,25 @@ import { ColorShowcase } from "@/components/color-showcase";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import {
+  DashChats,
+  DashMints,
+  DashMsg,
+  DashRate,
+  DashTime,
+  DashUser,
+} from "@/public/icons/AppIcons";
 
 export default function Dashboard() {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, loading } = useAuth();
   const [isNew, setIsNew] = useState(true);
-  const [statisticCover, setStatisticCover] = useState(null);
+  const [statisticCover, setStatisticCover] = useState<any>(null);
   const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [timeRange, setTimeRange] = useState("30d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
-  const pathname = usePathname();
   const usersData = [
     { name: "شنبه", value: 45 },
     { name: "یکشنبه", value: 52 },
@@ -55,7 +63,7 @@ export default function Dashboard() {
     }
   }, [loading, user]);
 
-  //statistic
+  //statistic cover
   useEffect(() => {
     if (!user) return;
     if (!currentBot?.uuid) return;
@@ -64,18 +72,10 @@ export default function Dashboard() {
       try {
         setIsLoading(true);
         const response = await axiosInstance.get(
-          API_ROUTES.STATISTIC.GET_COVER(currentBot?.uuid),
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
+          API_ROUTES.STATISTIC.GET_COVER(currentBot?.uuid)
         );
-        // console.log("res",response.data);
         if (response.status == 200 && response.data) {
-          setStatisticCover(response.data);
-          console.log("setStatisticCover", response.data);
+          setStatisticCover(response.data.data);
         }
       } catch (error) {
         console.error("Error fetching bots:", error);
@@ -86,6 +86,7 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
+ 
   //کاربر بات ثبت شده دارد؟
   useEffect(() => {
     if (!user) return;
@@ -124,7 +125,7 @@ export default function Dashboard() {
         <main className="flex-1 p-6 overflow-y-auto h-screen">
           {loading || (isLoading && <PageLoader />)}
           <div className="max-w-7xl mx-auto pb-8">
-             <div className="mb-8">
+            <div className="mb-8">
               {/* Page Header */}
               <header className="mb-6">
                 <div className="text-right">
@@ -167,23 +168,13 @@ export default function Dashboard() {
                     <div className="relative z-10 text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-primary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-primary/30 transition-all duration-300 group-hover:scale-110">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                          </svg>
+                          <div className="w-4 h-4 text-white">
+                            <DashUser />
+                          </div>
                         </div>
                       </div>
                       <div className="text-[24px] font-black text-grey-900 mb-1 group-hover:text-brand-primary transition-colors text-center">
-                        {convertToPersian("245K")}
+                        {convertToPersian(statisticCover?.active_users || "0")}
                       </div>
                       <div
                         className="text-[14px] font-medium text-center leading-tight"
@@ -202,22 +193,15 @@ export default function Dashboard() {
                     <div className="relative z-10 text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-secondary/30 transition-all duration-300 group-hover:scale-110">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                          </svg>
+                          <div className="w-4 h-4 text-white">
+                            <DashChats />
+                          </div>
                         </div>
                       </div>
                       <div className="text-[24px] font-black text-grey-900 mb-1 group-hover:text-brand-secondary transition-colors text-center">
-                        {convertToPersian("12.8K")}
+                        {convertToPersian(
+                          statisticCover?.conversations_today || "0"
+                        )}
                       </div>
                       <div
                         className="text-[14px] font-medium text-center leading-tight"
@@ -236,23 +220,15 @@ export default function Dashboard() {
                     <div className="relative z-10 text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-accent rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-accent/30 transition-all duration-300 group-hover:scale-110">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12,6 12,12 16,14" />
-                          </svg>
+                          <div className="w-4 h-4 text-white">
+                            <DashMints />
+                          </div>
                         </div>
                       </div>
                       <div className="text-[24px] font-black text-grey-900 mb-1 group-hover:text-brand-accent transition-colors text-center">
-                        {convertToPersian("4.2")}
+                        {convertToPersian(
+                          statisticCover?.avg_duration_minutes || "0"
+                        )}
                       </div>
                       <div
                         className="text-[14px] font-medium text-center leading-tight"
@@ -271,22 +247,15 @@ export default function Dashboard() {
                     <div className="relative z-10 text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-emerald rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-emerald/30 transition-all duration-300 group-hover:scale-110">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                          </svg>
+                          <div className="w-4 h-4 text-white">
+                            <DashTime />
+                          </div>
                         </div>
                       </div>
                       <div className="text-[24px] font-black text-grey-900 mb-1 group-hover:text-brand-emerald transition-colors text-center">
-                        {convertToPersian("1.2s")}
+                        {convertToPersian(
+                          statisticCover?.avg_response_time_seconds || "0"
+                        )}
                       </div>
                       <div
                         className="text-[14px] font-medium text-center leading-tight"
@@ -305,22 +274,15 @@ export default function Dashboard() {
                     <div className="relative z-10 text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-success rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-success/30 transition-all duration-300 group-hover:scale-110">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M20 6L9 17l-5-5" />
-                          </svg>
+                          <div className="w-4 h-4 text-white">
+                            <DashRate />
+                          </div>
                         </div>
                       </div>
                       <div className="text-[24px] font-black text-grey-900 mb-1 group-hover:text-success transition-colors text-center">
-                        {convertToPersian("94%")}
+                        {convertToPersian(
+                          statisticCover?.satisfaction_rate || "0"
+                        )}
                       </div>
                       <div
                         className="text-[14px] font-medium text-center leading-tight"
@@ -339,24 +301,15 @@ export default function Dashboard() {
                     <div className="relative z-10 text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-violet rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-purple/30 transition-all duration-300 group-hover:scale-110">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M8 12h8" />
-                            <path d="M12 8v8" />
-                            <rect x="3" y="4" width="18" height="16" rx="2" />
-                          </svg>
+                          <div className="w-4 h-4 text-white">
+                            <DashMsg />
+                          </div>
                         </div>
                       </div>
                       <div className="text-[24px] font-black text-grey-900 mb-1 group-hover:text-brand-purple transition-colors text-center">
-                        {convertToPersian("18")}
+                        {convertToPersian(
+                          statisticCover?.messages_per_conversation || "0"
+                        )}
                       </div>
                       <div
                         className="text-[14px] font-medium text-center leading-tight"
@@ -448,6 +401,7 @@ export default function Dashboard() {
                 {/* Heatmap Chart - 50% */}
                 <div>
                   <HeatmapChart
+                    botId={currentBot?.uuid || ""}
                     title="ساعات فعالیت چت‌بات"
                     subtitle="نمودار حرارتی استفاده در طول هفته"
                   />

@@ -65,9 +65,11 @@ export function ChatbotManagement() {
   };
 
   const toggleStatus = (id: string) => {
+
+    
     setChatbots((prev) =>
       prev.map((bot) =>
-        bot.uuid === id ? { ...bot, status: !bot.status } : bot
+        bot.uuid === id ? { ...bot, status: !bot.active } : bot
       )
     );
   };
@@ -112,7 +114,7 @@ export function ChatbotManagement() {
       <div className="flex h-screen">
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto h-screen">
-          {isLoading || (loading && <PageLoader />)}{" "}
+          {(isLoading || loading) && <PageLoader />}
           <div className="max-w-7xl mx-auto pb-8">
             {/* Page Header */}
             <header className="flex items-center justify-between mb-8">
@@ -122,17 +124,20 @@ export function ChatbotManagement() {
                   مدیریت و ویرایش تمام چت‌بات‌های آیوا
                 </p>
               </div>
-              <div>
-                <button
-                  className="flex bg-primary rounded-sm white px-4 py-3"
-                  onClick={() => router.push("/onboarding?uuid=new")}
-                >
-                  <span className="text-white">افزودن چت‌بات جدید</span>
-                  <div className="w-4 h-4 mr-2 text-white">
-                    <Plus />
-                  </div>
-                </button>
-              </div>
+
+              <button
+                className="flex bg-primary rounded-sm white px-4 py-3 cursor-pointer"
+                // onClick={() => router.push("/onboarding")}
+                onClick={() => {
+                  console.log("clicked");
+                  router.push("/onboarding");
+                }}
+              >
+                <span className="text-white">افزودن چت‌بات جدید</span>
+                <div className="w-4 h-4 mr-2 text-white">
+                  <Plus />
+                </div>
+              </button>
             </header>
 
             {/* Stats Overview */}
@@ -162,7 +167,7 @@ export function ChatbotManagement() {
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
-                  {chatbots.filter((bot) => bot.status === true).length}
+                  {chatbots.filter((bot) => bot.active === true).length}
                 </h3>
                 <p className="text-grey-600 text-sm text-left">چت بات فعال</p>
               </div>
@@ -240,7 +245,6 @@ export function ChatbotManagement() {
 
                         <div className="text-center">
                           <p className="text-sm font-medium text-grey-700">
-                           
                             {new Date(
                               chatbot?.updated_at ?? ""
                             ).toLocaleDateString("fa-IR")}
@@ -255,9 +259,9 @@ export function ChatbotManagement() {
                           <div className="rounded-3xl border text-sm p-2 border-gray-200">
                             <ToggleSmall
                               label={
-                                chatbot.status ? "غیرفعال کردن" : "فعال کردن"
+                                chatbot.active ? "غیرفعال کردن" : "فعال کردن"
                               }
-                              checked={chatbot.status}
+                              checked={chatbot.active}
                               onChange={() => toggleStatus(chatbot.uuid)}
                             />
                           </div>

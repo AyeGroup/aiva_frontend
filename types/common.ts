@@ -53,7 +53,7 @@ export interface BotConfig {
 
   // -------------------برای آمار
   updated_at?: string;
-  status: boolean;
+  active: boolean;
   conversationsToday?: string;
   url?: string;
 }

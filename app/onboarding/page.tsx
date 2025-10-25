@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
-import { useRouter } from "next/navigation";
 import { AivaWhite } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WizardStep1 } from "./steps/step1";
@@ -19,11 +18,15 @@ import { ChatPreview } from "./chat-preview";
 import { onboardingData } from "./onboarding.data";
 import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
-import { useState, useEffect, } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { BehaviorSettings, BotConfig } from "@/types/common";
 
 export default function OnboardingWizard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  console.log("mina",id)
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
   const [currentStep, setCurrentStep] = useState(1);
@@ -59,7 +62,7 @@ export default function OnboardingWizard() {
     behaviors: initialBehaviorSettings,
   });
   const totalSteps = steps.length;
- 
+
   //   چک ورود کاربر
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");
@@ -100,19 +103,19 @@ export default function OnboardingWizard() {
             response.data?.currentStep || parsedData.currentStep || 1
           );
 
-          console.log("1",response.data.data);
+          console.log("1", response.data.data);
           const response2 = await axiosInstance.get(
             API_ROUTES.FAQ(parsedData.botConfig.uuid)
           );
           const faqs = response2.data?.success && response2.data?.data;
           console.log("2", response2.data.data);
-        const updatedBotConfig = {
-          ...(hasApiData ? response.data.data : parsedData.botConfig),
-          faqs: faqs,
-        };
+          const updatedBotConfig = {
+            ...(hasApiData ? response.data.data : parsedData.botConfig),
+            faqs: faqs,
+          };
 
-        setBotConfig(updatedBotConfig);
-        console.log("3", updatedBotConfig);
+          setBotConfig(updatedBotConfig);
+          console.log("3", updatedBotConfig);
 
           // ذخیره فقط اگر داده جدید اومده
           if (hasApiData) {
