@@ -7,7 +7,7 @@ export const DAYS = [
   "پنج‌شنبه",
   "جمعه",
 ];
-
+ 
 export function paersianDay(day: string): string {
   const daysMap: Record<string, string> = {
     saturday: "شنبه",

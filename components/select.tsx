@@ -100,7 +100,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>((
           {children}
         </select>
         
-        <div className="select-icons">
+        <div className="select-icons not-first-of-type:flex justify-end w-5/6">
           {showCheck && hasValue && (
             <div className="select-check-icon">
               <Check className="w-4 h-4" />

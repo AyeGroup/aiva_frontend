@@ -12,7 +12,7 @@ interface HeatmapChartProps {
   subtitle?: string;
 }
 
-const HOURS = Array.from({ length: 15 }, (_, i) => i + 7); // 7 تا 21
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 export function HeatmapChart({
   botId,
@@ -108,21 +108,20 @@ export function HeatmapChart({
         style={{ gap: "3px", fontSize: "11px" }}
       >
         {/* ردیف ساعت‌ها */}
-        <div className="flex items-center mb-1" style={{ gap: "2px" }}>
-          <div style={{ width: "70px", height: "22px" }}></div>
+        <div className="flex items-center mb-1" style={{ gap: "3px" }}>
+          <div style={{ width: "55px", height: "22px" }}></div>
           {HOURS.map((hour) => (
             <div
               key={hour}
-              className="flex items-center justify-center text-grey-500"
+              className="flex w-[11px]   items-center justify-center text-grey-500"
               style={{
-                width: "22px",
                 height: "22px",
                 fontSize: "10px",
                 fontWeight: "500",
               }}
               title={`ساعت ${hour}:00`}
             >
-              {hour % 3 === 1 ? convertToPersian(hour) : ""}
+              {hour % 2 === 1 ? convertToPersian(hour) : ""}
             </div>
           ))}
         </div>
@@ -149,7 +148,7 @@ export function HeatmapChart({
               >
                 {dayFa}
               </div>
-              <div className="flex" style={{ gap: "2px" }}>
+              <div className="flex" style={{ gap: "3px" }}>
                 {HOURS.map((hour) => {
                   const value = hoursData[hour] ?? 0;
                   const color = getColorForValue(value);
@@ -159,15 +158,15 @@ export function HeatmapChart({
                       key={`${dayEn}-${hour}`}
                       className="cursor-pointer transition-all duration-150"
                       style={{
-                        width: "22px",
+                        width: "11px",
                         height: "22px",
                         backgroundColor: color.bg,
                         border: `1px solid ${color.border}`,
                         borderRadius: "3px",
                       }}
-                      title={`${dayFa} - ${convertToPersian(
+                      title={`ساعت ${convertToPersian(
                         hour
-                      )}:00 - ${convertToPersian(value)} گفتگو`}
+                      )} | ${convertToPersian(value)} گفتگو`}
                     />
                   );
                 })}

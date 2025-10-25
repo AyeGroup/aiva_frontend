@@ -29,30 +29,23 @@ export default function Dashboard() {
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [timeRange, setTimeRange] = useState("30d");
+  const [isChartLoading, setIsChartLoading] = useState(false);
+  const [usersData, setUsersData] = useState<any[]>([]);
+  const [chatsData, setChatsData] = useState<any[]>([]);
+  const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
-  const usersData = [
-    { name: "شنبه", value: 45 },
-    { name: "یکشنبه", value: 52 },
-    { name: "دوشنبه", value: 38 },
-    { name: "سه‌شنبه", value: 67 },
-    { name: "چهارشنبه", value: 49 },
-    { name: "پنج‌شنبه", value: 73 },
-    { name: "جمعه", value: 41 },
+  const TIME_RANGES = [
+    // { value: "1d", label: "امروز" },
+    { value: "7d", label: "۷ روز اخیر" },
+    { value: "30d", label: "۳۰ روز اخیر" },
+    { value: "90d", label: "۹۰ روز اخیر" },
   ];
-  const chatsData = [
-    { name: "شنبه", value: 123 },
-    { name: "یکشنبه", value: 145 },
-    { name: "دوشنبه", value: 98 },
-    { name: "سه‌شنبه", value: 189 },
-    { name: "چهارشنبه", value: 156 },
-    { name: "پنج‌شنبه", value: 234 },
-    { name: "جمعه", value: 167 },
-  ];
+
   const currentData = chartType === "users" ? usersData : chatsData;
-  const chartTitle = chartType === "users" ? "تحلیل کاربران" : "تحلیل گفتگوها";
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
+
+  const chartTitle = chartType === "users" ? "تحلیل کاربران" : "تحلیل گفتگوها";
   const currentPage = pathname.split("/").pop();
 
   //Authentication
@@ -86,7 +79,62 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
- 
+  useEffect(() => {
+    if (!user || !currentBot) return;
+
+    fetchUserTrend(timeRange);
+    fetchSessionTrend(timeRange);
+  }, [user, currentBot, timeRange]);
+
+  const fetchUserTrend = async (days: string) => {
+    if (!currentBot) return;
+    try {
+      const response = await axiosInstance.get(
+        API_ROUTES.STATISTIC.USERS(currentBot?.uuid),
+        { params: { days: days.replace("d", "") } }
+      );
+      const formattedData = response.data.data.map((d: any) => ({
+        name: new Date(d.time ?? "").toLocaleDateString("fa-IR"),
+        value: d.value + 3,
+      }));
+
+      console.log("✅ formattedData:", formattedData);
+      setUsersData(formattedData);
+
+      // console.log("user", response.data.data);
+      // setUsersData(response.data.data);
+    } catch (error) {
+      console.error("❌ خطا در دریافت داده کاربران:", error);
+    }
+  };
+
+  const fetchSessionTrend = async (days:string) => {
+    if (!currentBot) return;
+    try {
+      const response = await axiosInstance.get(
+        API_ROUTES.STATISTIC.USERS(currentBot?.uuid),
+        { params: { days: days.replace("d", "") } }
+      );
+      const formattedData = response.data.data.map((d: any) => ({
+        name: new Date(d.time ?? "").toLocaleDateString("fa-IR"),
+        value: d.value + 3,
+      }));
+
+      setChatsData(formattedData);
+      console.log("chats", formattedData);
+      // setUserTrend(response.data);
+    } catch (error) {
+      console.error("❌ خطا در دریافت داده کاربران:", error);
+    }
+  };
+
+  const handleTimeRangeChange = async (value:string) => {
+    setIsChartLoading(true);
+    await fetchSessionTrend(value);
+    await fetchUserTrend(value);
+    setIsChartLoading(false);
+  };
+
   //کاربر بات ثبت شده دارد؟
   useEffect(() => {
     if (!user) return;
@@ -370,15 +418,20 @@ export default function Dashboard() {
 
                       <Select
                         value={timeRange}
-                        onValueChange={setTimeRange}
+                        onValueChange={(value) => {
+                           setTimeRange(value);
+                          handleTimeRangeChange(value);
+                        }}
                         placeholder="انتخاب بازه زمانی"
-                        // size="small"
+                        size="small"
+                        disabled={isChartLoading}
                         className="min-w-[120px]"
                       >
-                        <option value="1d">امروز</option>
-                        <option value="7d">۷ روز اخیر</option>
-                        <option value="30d">۳۰ روز اخیر</option>
-                        <option value="90d">۹۰ روز اخیر</option>
+                        {TIME_RANGES.map((range) => (
+                          <option key={range.value} value={range.value}>
+                            {range.label}
+                          </option>
+                        ))}
                       </Select>
                     </div>
                     <div className="mb-4">
