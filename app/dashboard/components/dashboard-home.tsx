@@ -25,6 +25,7 @@ import {
 import { RecentChats } from "../recent-chats";
 import { UpgradeBanner } from "../upgrade-banner";
 import { ActiveUsers } from "../active-users";
+import { useBot } from "@/providers/BotProvider";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function Dashboard() {
   const { user, loading } = useAuth();
   const [isNew, setIsNew] = useState(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
-  const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
+  // const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [usersData, setUsersData] = useState<any[]>([]);
@@ -54,6 +55,7 @@ export default function Dashboard() {
 
   const chartTitle = chartType === "users" ? "تحلیل کاربران" : "تحلیل گفتگوها";
   const currentPage = pathname.split("/").pop();
+  const { currentBot, setCurrentBot, bots } = useBot();
 
   //Authentication
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function Dashboard() {
           response.data.data.length > 0
         ) {
           setIsNew(false);
-          setCurrentBot(response.data.data[0]);
+          // setCurrentBot(response.data.data[0]);
           console.log("curret bot :", response.data.data[0]);
         } else setIsNew(true);
       } catch (error) {
