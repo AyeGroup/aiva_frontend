@@ -13,7 +13,8 @@ export function Features() {
   return (
     <section
       className="relative overflow-hidden"
-      id="features"
+      // id="features"
+      id="case-study"
       aria-labelledby="features-title"
     >
       <div className="max-w-7xl mx-auto px-6">

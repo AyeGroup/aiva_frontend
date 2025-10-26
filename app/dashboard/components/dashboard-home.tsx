@@ -217,7 +217,11 @@ export default function Dashboard() {
   const handleChatClick = async () => {};
 
   return (
-    <div className="h-screen overflow-hidden bg-white">
+    <div
+      className="h-screen  bg-white !z-0"
+      style={{ zIndex: 0 }}
+    >
+      {/* overflow-hidden */}
       <div className="flex h-screen">
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto h-screen">
@@ -247,7 +251,7 @@ export default function Dashboard() {
 
             {/* آمار کلیدی امروز */}
             {!isNew && (
-              <div className="stats-hero-section bg-[#E3F4F1] p-8 rounded-3xl border-2 border-white/50 shadow-xl backdrop-blur-sm mb-8">
+              <div className=" !z-0 stats-hero-section bg-[#E3F4F1] p-8 rounded-3xl border-2 border-white/50 shadow-xl backdrop-blur-sm mb-8">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-2xl font-bold text-grey-900 text-[20px]">
                     📊 آمار کلیدی امروز
@@ -258,12 +262,12 @@ export default function Dashboard() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                  {/* Primary Stat - Enhanced */}
-                  <div className="group relative overflow-hidden bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:rotate-1">
+                  {/* Primary Stat - Enhanced overflow-hidden*/}
+                  <div className="group relative  bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:rotate-1">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand-primary/10 rounded-full -translate-y-2 translate-x-2"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-brand-primary/5 rounded-full translate-y-2 -translate-x-2"></div>
 
-                    <div className="relative z-10 text-center">
+                    <div className="relative text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-primary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-primary/30 transition-all duration-300 group-hover:scale-110">
                           <div className="w-4 h-4 text-white">
@@ -284,11 +288,11 @@ export default function Dashboard() {
                   </div>
 
                   {/* Conversations Stat */}
-                  <div className="group relative overflow-hidden bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-rotate-1">
+                  <div className="group relative  bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-rotate-1">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand-secondary/10 rounded-full -translate-y-2 translate-x-2"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-brand-secondary/5 rounded-full translate-y-2 -translate-x-2"></div>
 
-                    <div className="relative z-10 text-center">
+                    <div className="relative  text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-secondary/30 transition-all duration-300 group-hover:scale-110">
                           <div className="w-4 h-4 text-white">
@@ -310,12 +314,12 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Duration Stat */}
-                  <div className="group relative overflow-hidden bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:rotate-1">
+                  {/* Duration Stat overflow-hidden*/}
+                  <div className="group relative  bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:rotate-1">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand-accent/10 rounded-full -translate-y-2 translate-x-2"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-brand-accent/5 rounded-full translate-y-2 -translate-x-2"></div>
 
-                    <div className="relative z-10 text-center">
+                    <div className="relative  text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-accent rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-accent/30 transition-all duration-300 group-hover:scale-110">
                           <div className="w-4 h-4 text-white">
@@ -337,12 +341,12 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Response Time */}
-                  <div className="group relative overflow-hidden bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-rotate-1">
+                  {/* Response Time overflow-hidden*/}
+                  <div className="group relative  bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-rotate-1">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand-emerald/10 rounded-full -translate-y-2 translate-x-2"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-brand-emerald/5 rounded-full translate-y-2 -translate-x-2"></div>
 
-                    <div className="relative z-10 text-center">
+                    <div className="relative  text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-emerald rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-emerald/30 transition-all duration-300 group-hover:scale-110">
                           <div className="w-4 h-4 text-white">
@@ -364,12 +368,12 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Success Rate */}
-                  <div className="group relative overflow-hidden bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:rotate-1">
+                  {/* Success Rate overflow-hidden*/}
+                  <div className="group relative  bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:rotate-1">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-success/10 rounded-full -translate-y-2 translate-x-2"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-success/5 rounded-full translate-y-2 -translate-x-2"></div>
 
-                    <div className="relative z-10 text-center">
+                    <div className="relative  text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-success rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-success/30 transition-all duration-300 group-hover:scale-110">
                           <div className="w-4 h-4 text-white">
@@ -391,12 +395,12 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Messages Count */}
-                  <div className="group relative overflow-hidden bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-rotate-1">
+                  {/* Messages Count overflow-hidden*/}
+                  <div className="group relative  bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-rotate-1">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand-purple/10 rounded-full -translate-y-2 translate-x-2"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-brand-purple/5 rounded-full translate-y-2 -translate-x-2"></div>
 
-                    <div className="relative z-10 text-center">
+                    <div className="relative text-center">
                       <div className="flex justify-center mb-3">
                         <div className="w-10 h-10 bg-sharp-violet rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-purple/30 transition-all duration-300 group-hover:scale-110">
                           <div className="w-4 h-4 text-white">

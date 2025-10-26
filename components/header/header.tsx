@@ -82,6 +82,7 @@ export function Header({
             </div>
           )}
 
+
           {/* منوی ناوبری اصلی - فقط در دسکتاپ */}
           {!isEditingChatbot && !isOnboarding && (
             <nav

@@ -1,23 +1,19 @@
 "use client";
 
 import React from "react";
-import { Hero } from "./hero";
-import { ErrorBoundary } from "@/components/error-boundary";
-import { HowItWorks } from "./how-it-works";
-import { Features } from "./features";
-import { Comparison } from "./comparison";
-import { CaseStudy } from "./case-study";
-import { Pricing } from "./pricing";
-import { Trust } from "./trust";
 import { FAQ } from "./faq";
-import { FinalCTA } from "./final-cta";
+import { Hero } from "./hero";
+import { Trust } from "./trust";
 import { Footer } from "./footer";
+import { Pricing } from "./pricing";
+import { FinalCTA } from "./final-cta";
+import { Features } from "./features";
+import { CaseStudy } from "./case-study";
+import { HowItWorks } from "./how-it-works";
+import { Comparison } from "./comparison";
+import { ErrorBoundary } from "@/components/error-boundary";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
-
-interface LandingPageProps {
-  onNavigate: (page: PageType) => void;
-}
+ 
 
 // Loading fallback component
 const LoadingSection = () => (

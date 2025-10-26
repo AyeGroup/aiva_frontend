@@ -75,10 +75,11 @@ export function AddAccountModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-100"
+      className="fixed  inset-0 bg-black/50 flex items-center justify-center z-[9999] "
       dir="rtl"
+      
     >
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4  ">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-grey-200">
           <div className="flex items-center gap-3">
@@ -176,7 +177,6 @@ export function AddAccountModal({
           <div className="flex gap-3 pt-4">
             <Button
               type="button"
-            
               variant="secondary"
               onClick={onClose}
               disabled={isSubmitting}

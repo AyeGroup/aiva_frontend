@@ -17,6 +17,7 @@ export function FinalCTA() {
     <section
       className="py-20 md:py-32 relative overflow-hidden"
       aria-labelledby="final-cta-title"
+      id="final-cta"
     >
       {/* Background Solid */}
       <div
@@ -28,7 +29,7 @@ export function FinalCTA() {
       <div className="absolute top-10 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-10 left-10 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-6 relative">
         <div className="max-w-4xl mx-auto text-center">
           {/* Header */}
           <header className="mb-12">
