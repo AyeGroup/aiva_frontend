@@ -22,7 +22,7 @@ export default function DashboardPage() {
       <div className="flex min-h-screen">
         <Sidebar currentPage={currentPage} router={router} />
 
-        <main className="flex-1 p-6 bg-gray-50">
+        <main className="flex-1 bg-gray-50">
           {currentPage === "chatbot-management" ? (
             <ChatbotManagement />
           ) : currentPage === "tickets" ? (

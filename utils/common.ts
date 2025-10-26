@@ -39,6 +39,15 @@ export const convertPersianToEnglishDigits = (str:string) => {
   return result;
 };
 
+export const convertNumbersToPersian = (text: string | number): string => {
+  const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+
+  return text
+    .toString()
+    .replace(/\d/g, (digit) => persianDigits[parseInt(digit, 10)]);
+};
+
+
 export const normalizeFileUrl = (path: string) => {
   if (!path) return "";
   return (

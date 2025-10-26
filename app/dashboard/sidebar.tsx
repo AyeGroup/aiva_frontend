@@ -43,7 +43,7 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full cursor-pointer text-center px-6 py-4 text-grey-900 hover:bg-white/30 transition-colors duration-200 relative"
+      className="w-full cursor-pointer text-center px-4 py-3 text-grey-900 hover:bg-white/30 transition-colors duration-200 relative"
     >
       {active && (
         <div className="absolute left-6 top-1/2 transform -translate-y-1/2 w-3 h-3 rounded-full bg-brand-secondary"></div>
@@ -112,7 +112,7 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
       {loading && <PageLoader />}
 
       {/* Bot Selector Dropdown */}
-      <div className="px-4 mb-4 text-lg font-bold flex justify-center items-center">
+      <div className="px-4   text-lg font-bold flex justify-center items-center">
         {bots && bots.length > 0 && (
           <>
             <label className="block   font-medium text-gray-700 m-1">
@@ -136,7 +136,7 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
       </div>
 
       {/* Navigation Menu */}
-      <nav className="flex-1 py-4">
+      <nav className="flex-1 py-1">
         <SidebarItem
           label="میزکار"
           active={currentPage === "dashboard"}
@@ -177,8 +177,8 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-6 border-t border-white/30">
-        <div className="flex items-center gap-3">
+      <div className="px-6 py-2 border-t border-white/30">
+        <div className="flex items-center gap-2">
           <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
             <ImageWithFallback
               src="logo.png"
@@ -191,7 +191,7 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
             <p className="text-grey-500 text-xs">دستیار هوشمند</p>
           </div>
         </div>
-        <div className="text-xs text-gray-500 mt-2 mr-12">
+        <div className="text-xs text-gray-500 mt-1 mr-12">
           نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
         </div>
       </div>

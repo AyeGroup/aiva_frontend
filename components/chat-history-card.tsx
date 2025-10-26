@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Bot, Clock, MessageSquare, ChevronLeft, Circle } from 'lucide-react';
 import "@/styles/components.css";
+import { convertToPersian } from '@/utils/common';
 
 
 interface Message {
@@ -43,9 +44,9 @@ export function ChatHistoryCard({
     const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
     
     if (diffMinutes < 1) return 'همین حالا';
-    if (diffMinutes < 60) return `${diffMinutes} دقیقه پیش`;
-    if (diffMinutes < 1440) return `${Math.floor(diffMinutes / 60)} ساعت پیش`;
-    return `${Math.floor(diffMinutes / 1440)} روز پیش`;
+    if (diffMinutes < 60) return `${convertToPersian(diffMinutes)} دقیقه پیش`;
+    if (diffMinutes < 1440) return `${convertToPersian(Math.floor(diffMinutes / 60))} ساعت پیش`;
+    return `${convertToPersian(Math.floor(diffMinutes / 1440))} روز پیش`;
   };
 
   return (
@@ -115,7 +116,7 @@ export function ChatHistoryCard({
       <div className="chat-history-footer">
         <div className="chat-stats">
           <MessageSquare className="w-4 h-4" />
-          <span>{messages.length} پیام</span>
+          <span>{convertToPersian(messages.length)} پیام</span>
           {unreadCount > 0 && (
             <>
               <span>•</span>

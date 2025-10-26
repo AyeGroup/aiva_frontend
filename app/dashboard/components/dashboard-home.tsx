@@ -24,6 +24,7 @@ import {
 } from "@/public/icons/AppIcons";
 import { RecentChats } from "../recent-chats";
 import { UpgradeBanner } from "../upgrade-banner";
+import { ActiveUsers } from "../active-users";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -176,19 +177,19 @@ export default function Dashboard() {
     }
   };
 
-    const fetchFaqList = async () => {
-      if (!currentBot) return;
-      try {
-        const response = await axiosInstance.get(
-          API_ROUTES.STATISTIC.FAQ_LIST(currentBot?.uuid)
-        );
-        setFaqList(response.data.data);
+  const fetchFaqList = async () => {
+    if (!currentBot) return;
+    try {
+      const response = await axiosInstance.get(
+        API_ROUTES.STATISTIC.FAQ_LIST(currentBot?.uuid)
+      );
+      setFaqList(response.data.data);
 
-        console.log("setFaqList", response.data.data);
-      } catch (error) {
-        console.error("  خطا در دریافت داده کاربران:", error);
-      }
-    };
+      // console.log("setFaqList", response.data.data);
+    } catch (error) {
+      console.error("  خطا در دریافت داده کاربران:", error);
+    }
+  };
 
   const fetchRecentSession = async () => {
     if (!currentBot) return;
@@ -211,6 +212,8 @@ export default function Dashboard() {
     setIsChartLoading(false);
   };
 
+  const handleChatClick = async () => {};
+
   return (
     <div className="h-screen overflow-hidden bg-white">
       <div className="flex h-screen">
@@ -228,8 +231,6 @@ export default function Dashboard() {
                 </div>
               </header>
 
-              {/* Quick Stats */}
-              {/* Enhanced Stats Hero Section */}
               {isNew && (
                 <div className="flex w-full items-center justify-center m-7">
                   <button
@@ -241,6 +242,8 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
+
+            {/* آمار کلیدی امروز */}
             {!isNew && (
               <div className="stats-hero-section bg-[#E3F4F1] p-8 rounded-3xl border-2 border-white/50 shadow-xl backdrop-blur-sm mb-8">
                 <div className="flex items-center justify-between mb-8">
@@ -418,14 +421,11 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Main Content Row - 50-50 Layout */}
+            {/* نمودار تعداد کاربران و گفتگوها  */}
             {!isNew && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
-                {/* Activity Chart - 50% */}
-
                 <div>
                   <div className="flex m-4 mt-7 items-center justify-between ">
-                    {/* Toggle Switch as Title */}
                     <div className="flex items-center gap-2 bg-grey-100 rounded-lg p-1">
                       <button
                         onClick={() => setChartType("users")}
@@ -492,8 +492,7 @@ export default function Dashboard() {
                     color={chartColor}
                   />
                 </div>
-
-                {/* Heatmap Chart - 50% */}
+                {/* نمودار حرارتی */}
                 <div>
                   <HeatmapChart
                     botId={currentBot?.uuid || ""}
@@ -504,7 +503,7 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Channels Row */}
+            {/* فعال‌ترین کاربران*/}
             {!isNew && (
               <div className="relative mb-8">
                 {/* Header Text */}
@@ -589,17 +588,16 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Active Users Section */}
-            {!isNew && <div className="mb-8">{/* <ActiveUsers /> */}</div>}
-            {!isNew && (
-              <div className="mb-8">
-                <ColorShowcase />
-              </div>
-            )}
-
-            {!isNew && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <RecentChats />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* مکالمات اخیر  */}
+              {!isNew && (
+                <RecentChats
+                  data={recentSession}
+                  onChatClick={handleChatClick}
+                />
+              )}
+              {/*  سوالات متداول */}
+              {!isNew && (
                 <div className="flex flex-col gap-6">
                   {/* Placeholder for removed card */}
                   <div className="bg-white rounded-lg p-6 shadow-card">
@@ -611,6 +609,7 @@ export default function Dashboard() {
                         </div>
                       </div>
                     </div>
+
                     <div className="space-y-3">
                       {faqList.map((faq, index) => (
                         <div
@@ -619,33 +618,21 @@ export default function Dashboard() {
                         >
                           <span className="text-grey-600">{faq.question}</span>
                           <span className="text-brand-primary font-medium">
-                            {convertToPersian(faq?.count.toString() || "0")} کلیک 
+                            {convertToPersian(faq?.count.toString() || "0")}{" "}
+                            کلیک
                           </span>
                         </div>
                       ))}
                     </div>
                   </div>
+                  {/* تماس با ما  */}
                   <UpgradeBanner />
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </main>
       </div>
-
-      {/* Toast Notifications */}
-      {/* <Toaster
-        position="top-center"
-        richColors
-        dir="rtl"
-        toastOptions={{
-          style: {
-            fontFamily: "Vazirmatn, sans-serif",
-            direction: "rtl",
-            textAlign: "right",
-          },
-        }}
-      /> */}
     </div>
   );
 }
