@@ -217,6 +217,7 @@ export default function Dashboard() {
   const handleChatClick = async () => {};
 
   return (
+    
     <div
       className="h-screen  bg-white !z-0"
       style={{ zIndex: 0 }}

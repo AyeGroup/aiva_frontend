@@ -148,12 +148,16 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
           onClick={() => router.push("/dashboard?tab=chatbot-management")}
         />
         <SidebarItem
-          label="تیکت‌ها"
+          label="پشتیبانی"
           active={currentPage === "tickets"}
           onClick={() => router.push("/dashboard?tab=tickets")}
         />
-        <SidebarItem label="پروفایل" />
-        <SidebarItem label="مالی" />
+        {/* <SidebarItem label="پروفایل" /> */}
+        <SidebarItem
+          label="مالی"
+          active={currentPage === "billing"}
+          onClick={() => router.push("/dashboard?tab=billing")}
+        />
       </nav>
 
       {/* Bottom Actions */}

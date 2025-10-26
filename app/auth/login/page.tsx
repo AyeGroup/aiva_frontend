@@ -13,10 +13,8 @@ import {
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
-import {
-  convertPersianToEnglishDigits,
-
-} from "@/utils/common";
+import { convertPersianToEnglishDigits } from "@/utils/common";
+import Link from "next/link";
 
 function Login() {
   const router = useRouter();
@@ -27,7 +25,6 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [warning, setWarning] = useState("");
 
-
   const isValidEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(value);
@@ -37,17 +34,17 @@ function Login() {
     const phoneRegex = /^(\+98|0)?9\d{9}$/; // شماره موبایل ایران
     return phoneRegex.test(value);
   };
- const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-   const value = e.target.value;
-   setPassword(value);
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
 
-   // بررسی وجود کاراکتر فارسی
-   if (/[آ-ی]/.test(value)) {
-     setWarning("رمز عبور نباید شامل کاراکتر فارسی باشد!");
-   } else {
-     setWarning("");
-   }
- };
+    // بررسی وجود کاراکتر فارسی
+    if (/[آ-ی]/.test(value)) {
+      setWarning("رمز عبور نباید شامل کاراکتر فارسی باشد!");
+    } else {
+      setWarning("");
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const identity = phone.trim();
@@ -57,7 +54,7 @@ function Login() {
       return;
     }
     // if (!isValidPhone(identity)) {
-      // identity = user?.phone || "";
+    // identity = user?.phone || "";
     // }
     try {
       setIsLoading(true);
@@ -86,25 +83,26 @@ function Login() {
       <div className="relative z-50 w-full p-2 pb-0">
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
-            {/* Logo - Right Side */}
-            <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="flex items-center gap-3 hover:opacity-90 transition"
+            >
               <Image
                 src="/logo.png"
                 alt="آیوا"
                 width={80}
                 height={80}
-                // className=" object-cover"
-                priority={true}
+                priority
               />
               <div className="flex flex-col">
-                <span className="text-grey-900 font-semibold text-xl text-right   text-[24px]">
+                <span className="text-grey-900 font-semibold text-xl text-right text-[24px]">
                   آیوا
                 </span>
                 <p className="text-grey-500 text-sm">
                   دستیار هوشمند کسب و کار تو
                 </p>
               </div>
-            </div>
+            </Link>
 
             <div className="flex items-center gap-3"></div>
           </div>

@@ -1,22 +1,30 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
 import DashboardHome from "./components/dashboard-home";
-// import ChatbotManagement from "./components/chatbot-management";
-import { ChatbotManagement } from "./components/chatbot-management";
+import { JSX } from "react";
 import { Sidebar } from "./sidebar";
+import { Tickets } from "./components/tickets";
+import { Billing } from "./components/billing";
 import { BotProvider } from "@/providers/BotProvider";
-import Tickets from "./components/tickets";
+import { ChatbotManagement } from "./components/chatbot-management";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // currentPage از query مشخص میشه
   const currentPage = (searchParams.get("tab") ?? "dashboard") as
     | "dashboard"
     | "chatbot-management"
-    | "tickets";
+    | "tickets"
+    | "billing";
+
+  const pages: Record<string, JSX.Element> = {
+    "chatbot-management": <ChatbotManagement />,
+    tickets: <Tickets />,
+    billing: <Billing />,
+    dashboard: <DashboardHome />,
+  };
 
   return (
     <BotProvider>
@@ -24,13 +32,7 @@ export default function DashboardPage() {
         <Sidebar currentPage={currentPage} router={router} />
 
         <main className="flex-1 bg-gray-50">
-          {currentPage === "chatbot-management" ? (
-            <ChatbotManagement />
-          ) : currentPage === "tickets" ? (
-            <div><Tickets/></div>
-          ) : (
-            <DashboardHome />
-          )}
+          {pages[currentPage] || <DashboardHome />}
         </main>
       </div>
     </BotProvider>

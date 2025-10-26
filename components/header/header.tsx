@@ -1,16 +1,13 @@
-import { NavItem, PageType } from "../../types/common";
-import { headerData } from "./header.data";
-import { ArrowLeft } from "lucide-react";
- 
-import { Button } from "../button";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-
- 
+import { Button } from "../button";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { headerData } from "./header.data";
+import { NavItem, PageType } from "../../types/common";
+import { useAuth } from "@/providers/AuthProvider";
 
 interface HeaderProps {
   currentPage: PageType;
-  // onNavigate: (page: PageType) => void;
   isOnboarding?: boolean;
   isEditingChatbot?: boolean;
   onBackFromEdit?: () => void;
@@ -18,13 +15,13 @@ interface HeaderProps {
 
 export function Header({
   currentPage,
-  // onNavigate,
   isOnboarding = false,
   isEditingChatbot = false,
   onBackFromEdit,
 }: HeaderProps) {
   const { logo, navigation, authButtons } = headerData;
   const router = useRouter();
+  const { user } = useAuth();
 
   return (
     <header
@@ -44,7 +41,7 @@ export function Header({
       <div className="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
         <div className="flex items-center justify-between">
           {/* لوگو - فقط در حالت عادی نمایش داده می‌شود */}
-          {!isEditingChatbot && !isOnboarding && (
+          {/* {!isEditingChatbot && !isOnboarding && ( */}
             <div className="flex items-center">
               <button
                 onClick={() => router.push("/landing")}
@@ -80,8 +77,7 @@ export function Header({
                 </div>
               </button>
             </div>
-          )}
-
+           {/* )} */}
 
           {/* منوی ناوبری اصلی - فقط در دسکتاپ */}
           {!isEditingChatbot && !isOnboarding && (
@@ -185,7 +181,24 @@ export function Header({
               isEditingChatbot || isOnboarding ? "w-full" : ""
             }`}
           >
-            {isEditingChatbot ? (
+            {user?.token ? (
+              <Button
+                variant={
+                  authButtons.signup.variant as
+                    | "primary"
+                    | "secondary"
+                    | "tertiary"
+                }
+                size="md"
+                title={authButtons.signup.title}
+                onClick={() => router.push("/dashboard")}
+                icon="arrow-right"
+                iconPosition="right"
+                className="hidden sm:inline-flex text-sm lg:text-base px-4 lg:px-6 py-2 "
+              >
+                حساب کاربری
+              </Button>
+            ) : isEditingChatbot ? (
               // فقط دکمه بازگشت برای ویرایش چت‌بات
               <Button
                 variant="secondary"

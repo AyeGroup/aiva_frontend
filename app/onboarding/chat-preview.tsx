@@ -344,7 +344,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
               if (!botMessageId) {
                 botMessageId = `bot-${Date.now()}`;
-                 setMessages((prev) => [
+                setMessages((prev) => [
                   ...prev,
                   {
                     id: botMessageId!,
@@ -538,10 +538,9 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                 }}
               >
                 {/* Bot Avatar */}
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-white/30">
+                <div className=" bg-white/20  rounded-full flex items-center justify-center p-1  overflow-hidden">
                   <Image
                     src={botConfig.logo_url || "/logo.png"}
-                    // src="/logo.png"
                     height={64}
                     width={64}
                     alt="آیوا"
@@ -565,20 +564,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                   <Delete />
                 </div>
               </div>
-              {/* FAQ Buttons */}
-              {showFaqs && botConfig.faqs && botConfig.faqs.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                  {botConfig.faqs.map((faq) => (
-                    <button
-                      key={faq.id}
-                      onClick={() => handleFaqClick(faq)}
-                      className="text-xs px-3 py-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary rounded-full max-w-[200px] truncate"
-                    >
-                      {faq.question}
-                    </button>
-                  ))}
-                </div>
-              )}
+
               {/* Messages Area */}
               <div className="flex-1 p-6 space-y-4 overflow-y-auto bg-grey-50">
                 {messages.map((message) => (
@@ -608,26 +594,25 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm text-right
-          ${
-            message.isBot
-              ? `bg-white border border-grey-100 text-grey-800 ${
-                  toneStyles.messageClass
-                } ${
-                  toneStyles.messageClass === "rounded-2xl"
-                    ? "rounded-bl-md"
-                    : toneStyles.messageClass === "rounded-3xl"
-                    ? "rounded-bl-xl"
-                    : "rounded-bl-sm"
-                }`
-              : `text-white ${toneStyles.messageClass} ${
-                  toneStyles.messageClass === "rounded-2xl"
-                    ? "rounded-br-md"
-                    : toneStyles.messageClass === "rounded-3xl"
-                    ? "rounded-br-xl"
-                    : "rounded-br-sm"
-                }`
-          }`}
+                      className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm text-right ${
+                        message.isBot
+                          ? `bg-white border border-grey-100 text-grey-800 ${
+                              toneStyles.messageClass
+                            } ${
+                              toneStyles.messageClass === "rounded-2xl"
+                                ? "rounded-bl-md"
+                                : toneStyles.messageClass === "rounded-3xl"
+                                ? "rounded-bl-xl"
+                                : "rounded-bl-sm"
+                            }`
+                          : `text-white ${toneStyles.messageClass} ${
+                              toneStyles.messageClass === "rounded-2xl"
+                                ? "rounded-br-md"
+                                : toneStyles.messageClass === "rounded-3xl"
+                                ? "rounded-br-xl"
+                                : "rounded-br-sm"
+                            }`
+                      }`}
                       style={
                         !message.isBot
                           ? {
@@ -665,7 +650,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                       }}
                     >
                       <Image
-                        src={botConfig.logo_url ||"/logo.png"}
+                        src={botConfig.logo_url || "/logo.png"}
                         height={64}
                         width={64}
                         alt="آیوا"
@@ -712,7 +697,20 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                   </div>
                 )}
               </div>
-
+              {/* FAQ Buttons */}
+              {showFaqs && botConfig.faqs && botConfig.faqs.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-2 my-4">
+                  {botConfig.faqs.map((faq) => (
+                    <button
+                      key={faq.id}
+                      onClick={() => handleFaqClick(faq)}
+                      className="text-xs px-3 py-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary rounded-full max-w-[200px] truncate"
+                    >
+                      {faq.question}
+                    </button>
+                  ))}
+                </div>
+              )}
               {/* Input Area */}
               <div className="px-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
                 {/* {botConfig.llm_model.length > 0 && currentStep >= 2 && (
@@ -828,8 +826,8 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                     placeholder="پیام خود را بنویسید..."
                     className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm resize-none max-h-[80px] overflow-y-auto outline-none focus:outline-none focus:ring-0 focus:border-grey-300 scrollbar-none"
                     style={{
-                      scrollbarWidth: "none", 
-                      msOverflowStyle: "none", 
+                      scrollbarWidth: "none",
+                      msOverflowStyle: "none",
                     }}
                   />
 

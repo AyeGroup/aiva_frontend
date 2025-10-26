@@ -18,7 +18,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
     maxResponseLength: "medium",
     useGreeting: true,
     useEmojis: false,
-    phone: "",
+    support_phone: "",
   });
 
   const [sliderValue, setSliderValue] = useState(10);
@@ -132,8 +132,10 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             type="text"
             numeric={true}
             inputMode="numeric"
-            value={behaviors.phone}
-            onChange={(e) => handleBehaviorChange("phone", e.target.value)}
+            value={behaviors.support_phone}
+            onChange={(e) =>
+              handleBehaviorChange("support_phone", e.target.value)
+            }
             placeholder="شماره پشتیبانی را وارد کنید"
             className="w-full text-sm rounded-2xl p-4 border !bg-white text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
             maxLength={16}

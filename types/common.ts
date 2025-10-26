@@ -1,12 +1,9 @@
-// تایپ‌های مشترک پروژه
-
-// تایپ‌های عمومی UI
 export interface BaseComponentProps {
   className?: string;
   children?: React.ReactNode;
   id?: string;
 }
- 
+
 export const colorPalette = [
   { name: "صورتی", value: "#ec4899" },
   { name: "بنفش", value: "#8b5cf6" },
@@ -28,7 +25,7 @@ export type PageType =
   | "demo"
   | "chatbot-management"
   | "tickets"
-  // | "otp-verification"
+  | "billing"
   | "components";
 
 export interface BotConfig {
@@ -79,39 +76,17 @@ export interface KnowledgeItem {
 export interface BehaviorSettings {
   k: number;
   maxResponseLength: string;
-  phone: string;
+  support_phone: string;
   useGreeting: boolean;
   useEmojis: boolean;
-  // useSupport: boolean;
 }
 
-// interface behaviors {
-//   responseStyle: "concise" | "detailed" | "helpful";
-//   maxResponseLength: number;
-//   useEmojis: boolean;
-//   escalationTriggers: string[];
-//   autoGreeting: boolean;
-//   contextMemory: boolean;
-//   privacyMode: boolean;
-//   responseDelay: number;
-// };
-
-// ----------
-// welcomeMessage: string;
-// fallbackMessage: string;
-//
-// branding: {
-//   logo?: string;
-//   position: "bottom-right" | "bottom-left";
-//   size: "small" | "medium" | "large";
-// };
-// تایپ‌های دکمه
 export interface ButtonProps extends BaseComponentProps {
   variant?: "primary" | "secondary" | "tertiary";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
   disabled?: boolean;
-  title?: string; // الزامی برای accessibility
+  title?: string;
   type?: "button" | "submit" | "reset";
   icon?:
     | "arrow-right"
@@ -123,12 +98,11 @@ export interface ButtonProps extends BaseComponentProps {
     | "x"
     | "play"
     | "null";
-  // | "layers"
+
   iconPosition?: "right" | "left";
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-// تایپ‌های ورودی
 export interface InputProps extends BaseComponentProps {
   type: "text" | "email" | "password" | "tel" | "url" | "search";
   placeholder?: string;
@@ -143,7 +117,6 @@ export interface InputProps extends BaseComponentProps {
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
-// تایپ‌های لینک و ناوبری
 export interface NavItem {
   id: string;
   title: string;
@@ -156,13 +129,12 @@ export interface NavItem {
 
 export interface LinkProps extends BaseComponentProps {
   href: string;
-  title: string; // الزامی برای accessibility
+  title: string;
   target?: "_blank" | "_self" | "_parent" | "_top";
   rel?: string;
   "aria-current"?: "page" | "step" | "location" | "date" | "time";
 }
 
-// تایپ‌های کارت و محتوا
 export interface CardProps extends BaseComponentProps {
   title?: string;
   description?: string;
@@ -174,7 +146,6 @@ export interface CardProps extends BaseComponentProps {
   variant?: "default" | "outlined" | "elevated";
 }
 
-// تایپ‌های فرم
 export interface FormState {
   isSubmitting: boolean;
   errors: Record<string, string>;
@@ -204,7 +175,6 @@ export interface FormField {
   };
 }
 
-// تایپ‌های حالت‌های مختلف
 export type LoadingState = "idle" | "loading" | "success" | "error";
 
 export interface AsyncState<T> {
@@ -213,7 +183,6 @@ export interface AsyncState<T> {
   error: string | null;
 }
 
-// تایپ‌های responsive
 export type Breakpoint = "sm" | "md" | "lg" | "xl" | "2xl";
 
 export interface ResponsiveProps {
@@ -224,7 +193,6 @@ export interface ResponsiveProps {
   "2xl"?: string;
 }
 
-// تایپ‌های سئو
 export interface SEOProps {
   title: string;
   description: string;

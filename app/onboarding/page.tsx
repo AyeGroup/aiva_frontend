@@ -23,11 +23,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { BehaviorSettings, BotConfig } from "@/types/common";
 
 export default function OnboardingWizard() {
-  
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  console.log("mina",id)
+  // console.log("mina",id)
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
   const [currentStep, setCurrentStep] = useState(1);
@@ -39,7 +38,7 @@ export default function OnboardingWizard() {
     maxResponseLength: "medium",
     useGreeting: true,
     useEmojis: false,
-    phone: "",
+    support_phone: "",
   };
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
@@ -104,19 +103,19 @@ export default function OnboardingWizard() {
             response.data?.currentStep || parsedData.currentStep || 1
           );
 
-          console.log("1", response.data.data);
+          // console.log("1", response.data.data);
           const response2 = await axiosInstance.get(
             API_ROUTES.FAQ(parsedData.botConfig.uuid)
           );
           const faqs = response2.data?.success && response2.data?.data;
-          console.log("2", response2.data.data);
+          // console.log("2", response2.data.data);
           const updatedBotConfig = {
             ...(hasApiData ? response.data.data : parsedData.botConfig),
             faqs: faqs,
           };
 
           setBotConfig(updatedBotConfig);
-          console.log("3", updatedBotConfig);
+          // console.log("3", updatedBotConfig);
 
           // ذخیره فقط اگر داده جدید اومده
           if (hasApiData) {
@@ -182,7 +181,10 @@ export default function OnboardingWizard() {
         "use_emoji",
         String(botConfig.behaviors?.useEmojis) || "true"
       );
-      formData.append("support_phone", botConfig.behaviors?.phone || "");
+      formData.append(
+        "support_phone",
+        botConfig.behaviors?.support_phone || ""
+      );
       const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
         formData,
@@ -418,7 +420,7 @@ export default function OnboardingWizard() {
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app" dir="rtl">
-      <Header currentPage="onboarding" />
+      <Header currentPage="onboarding" isOnboarding={true} />
       <div className="container mx-auto px-6 py-12 relative z-10">
         {/* Clean Minimal Header */}
         <div className="flex flex-col justify-center items-center mb-16">

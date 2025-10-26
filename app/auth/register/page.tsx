@@ -11,6 +11,8 @@ import { Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
 import { LoginTopLeft, RegisterTopLeft } from "@/public/icons/AppIcons";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
 import { convertPersianToEnglishDigits } from "@/utils/common";
+import Link from "next/link";
+import Image from "next/image";
 
 type RegisterStep = "signup" | "otp" | "success" | "password";
 
@@ -99,7 +101,7 @@ export default function Register() {
       );
 
       if (status !== 200) {
-        console.log("1");
+        // console.log("1");
         setMessage(data?.message || "در ثبت اطلاعات خطایی رخ داد.");
         setIsLoading(false);
         return;
@@ -113,7 +115,7 @@ export default function Register() {
       setMessage("یک خطای ناشناخته رخ داد.");
       // }
       setIsLoading(false);
-      console.log("2");
+      // console.log("2");
       return;
     }
 
@@ -625,27 +627,26 @@ export default function Register() {
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
             {/* Logo - Right Side */}
-            <div className="flex items-center gap-3">
-              <ImageWithFallback
+            <Link
+              href="/"
+              className="flex items-center gap-3 hover:opacity-90 transition"
+            >
+              <Image
                 src="/logo.png"
                 alt="آیوا"
-                className="w-20 h-20 object-cover"
+                width={80}
+                height={80}
+                priority
               />
               <div className="flex flex-col">
-                <span className="text-grey-900   text-xl text-right font-bold text-[24px]">
+                <span className="text-grey-900 font-semibold text-xl text-right text-[24px]">
                   آیوا
                 </span>
-                <p
-                  className="text-grey-500"
-                  style={{
-                    fontSize: "var(--text-body-small)",
-                    lineHeight: "var(--text-body-small-lh)",
-                  }}
-                >
+                <p className="text-grey-500 text-sm">
                   دستیار هوشمند کسب و کار تو
                 </p>
               </div>
-            </div>
+            </Link>
 
             {/* Header Actions - Left Side */}
             <div className="flex items-center gap-3">
