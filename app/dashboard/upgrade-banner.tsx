@@ -41,13 +41,16 @@ export function UpgradeBanner() {
         </div>
 
         <Button
-          // variant="primary"
-          // size="small"
+          variant="primary"
+          size="sm"
+          onClick={() => (window.location.href = "tel:09903202903")}
           className="w-full hover:shadow-md transition-all"
-          // style={{ background: "var(--sharp-accent)" }}
         >
+          <div className="flex">
+
           <ArrowUp className="w-4 h-4 ml-2" />
           تماس با ما
+          </div>
         </Button>
       </div>
     </Card>

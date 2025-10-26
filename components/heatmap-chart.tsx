@@ -138,9 +138,9 @@ export function HeatmapChart({
               style={{ gap: "2px" }}
             >
               <div
-                className="flex items-center justify-end text-grey-700 flex-shrink-0 pr-2 text-right"
+                className="flex items-center justify-end text-grey-700 flex-shrink-0 pl-1 text-right"
                 style={{
-                  width: "55px",
+                  width: "46px",
                   height: "22px",
                   fontSize: "11px",
                   fontWeight: "500",

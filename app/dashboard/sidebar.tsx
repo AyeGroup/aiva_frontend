@@ -138,6 +138,11 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
       {/* Navigation Menu */}
       <nav className="flex-1 py-4">
         <SidebarItem
+          label="میزکار"
+          active={currentPage === "dashboard"}
+          onClick={() => router.push("/dashboard?tab=dashboard-home")}
+        />
+        <SidebarItem
           label="مدیریت چت‌بات"
           active={currentPage === "chatbot-management"}
           onClick={() => router.push("/dashboard?tab=chatbot-management")}

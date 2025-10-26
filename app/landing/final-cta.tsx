@@ -1,73 +1,85 @@
-import { Button } from "@/components/button";
+// import { Button } from '../_components/Button/button';
+import { useRouter } from "next/navigation";
 import { ctaData } from "./landing.data";
 
-import { PageType } from "@/types/common";
+type PageType = "landing" | "signup" | "dashboard" | "consultation";
 
 interface FinalCTAProps {
   onNavigate: (page: PageType) => void;
 }
 
-// export function FinalCTA({ onNavigate }: FinalCTAProps) {
-export default function FinalCTA() {
+export function FinalCTA() {
   const { title, subtitle, cta, features } = ctaData;
-
+  const router = useRouter();
   return (
     <section
-      className="py-16 md:py-24 text-white relative overflow-hidden"
+      className="py-20 md:py-32 relative overflow-hidden"
       aria-labelledby="final-cta-title"
-      style={{ background: "var(--brand-secondary)" }}
     >
-      <div className="container mx-auto px-4">
+      {/* Background Solid */}
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: "#65bcb6" }}
+      ></div>
+
+      {/* Decorative Circles */}
+      <div className="absolute top-10 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
+          {/* Header */}
           <header className="mb-12">
             <h2
               id="final-cta-title"
-              className="text-3xl md:text-4xl lg:text-5xl mb-6"
+              className="text-white mb-4"
+              style={{
+                fontSize: "var(--text-h1)",
+                lineHeight: "var(--text-h1-lh)",
+                fontWeight: "var(--font-weight-display)",
+              }}
             >
               {title}
             </h2>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
+            <p
+              className="text-white/95 max-w-2xl mx-auto"
+              style={{
+                fontSize: "var(--text-body-large)",
+                lineHeight: "var(--text-body-large-lh)",
+              }}
+            >
               {subtitle}
             </p>
           </header>
 
-          {/* دکمه‌های اقدام */}
+          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button
-              variant="secondary"
-              size="lg"
+            <button
+              type="button"
               title={cta.primary.title}
-              // onClick={() => onNavigate("signup")}
-              // elham
-              icon="arrow-right"
-              iconPosition="right"
-              className="bg-white text-brand-primary hover:bg-white/90 w-full sm:w-auto"
+              onClick={() => router.push("signup")}
+              className="btn animate-soft focus:outline-none inline-flex items-center justify-center gap-2 min-h-[44px] whitespace-nowrap px-6 py-4 rounded-[12px] bg-white text-[#2D3748] hover:bg-white/90 focus:ring-4 focus:ring-white/25 shadow-lg transition-all hover:scale-105"
+              style={{
+                transition: "all var(--transition-default)",
+                borderRadius: "var(--radius-sm)",
+              }}
             >
               {cta.primary.text}
-            </Button>
+            </button>
 
-            <Button
-              variant="tertiary"
-              size="lg"
+            <button
+              type="button"
               title={cta.secondary.title}
+              onClick={() => router.push("consultation")}
               // onClick={() => onNavigate("consultation")}
-              // elham
-              icon="external"
-              iconPosition="right"
-              className="text-white border-white hover:bg-white/10 w-full sm:w-auto"
+              className="btn animate-soft focus:outline-none inline-flex items-center justify-center gap-2 min-h-[44px] whitespace-nowrap px-6 py-4 rounded-[12px] bg-white/10 text-white border-2 border-white/30 hover:bg-white/20 focus:ring-4 focus:ring-white/25 transition-all"
+              style={{
+                transition: "all var(--transition-default)",
+                borderRadius: "var(--radius-sm)",
+              }}
             >
               {cta.secondary.text}
-            </Button>
-          </div>
-
-          {/* ویژگی‌های کلیدی */}
-          <div className="flex flex-wrap justify-center items-center gap-6 text-white/80">
-            {features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-white/60 rounded-full"></div>
-                <span className="text-sm">{feature}</span>
-              </div>
-            ))}
+            </button>
           </div>
         </div>
       </div>

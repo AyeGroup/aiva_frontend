@@ -19,7 +19,10 @@ import {
   DashRate,
   DashTime,
   DashUser,
+  User,
 } from "@/public/icons/AppIcons";
+import { RecentChats } from "../recent-chats";
+import { UpgradeBanner } from "../upgrade-banner";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -32,15 +35,16 @@ export default function Dashboard() {
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [usersData, setUsersData] = useState<any[]>([]);
   const [chatsData, setChatsData] = useState<any[]>([]);
+  const [activeUsers, setActiveUsers] = useState<any[]>([]);
+  const [recentSession, setRecentSession] = useState<any[]>([]);
   const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
   const TIME_RANGES = [
-    // { value: "1d", label: "امروز" },
     { value: "7d", label: "۷ روز اخیر" },
     { value: "30d", label: "۳۰ روز اخیر" },
     { value: "90d", label: "۹۰ روز اخیر" },
   ];
-
+  const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
   const currentData = chartType === "users" ? usersData : chatsData;
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
@@ -56,86 +60,7 @@ export default function Dashboard() {
     }
   }, [loading, user]);
 
-  //statistic cover
-  useEffect(() => {
-    if (!user) return;
-    if (!currentBot?.uuid) return;
-
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axiosInstance.get(
-          API_ROUTES.STATISTIC.GET_COVER(currentBot?.uuid)
-        );
-        if (response.status == 200 && response.data) {
-          setStatisticCover(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching bots:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [user, currentBot]);
-
-  useEffect(() => {
-    if (!user || !currentBot) return;
-
-    fetchUserTrend(timeRange);
-    fetchSessionTrend(timeRange);
-  }, [user, currentBot, timeRange]);
-
-  const fetchUserTrend = async (days: string) => {
-    if (!currentBot) return;
-    try {
-      const response = await axiosInstance.get(
-        API_ROUTES.STATISTIC.USERS(currentBot?.uuid),
-        { params: { days: days.replace("d", "") } }
-      );
-      const formattedData = response.data.data.map((d: any) => ({
-        name: new Date(d.time ?? "").toLocaleDateString("fa-IR"),
-        value: d.value + 3,
-      }));
-
-      console.log("✅ formattedData:", formattedData);
-      setUsersData(formattedData);
-
-      // console.log("user", response.data.data);
-      // setUsersData(response.data.data);
-    } catch (error) {
-      console.error("❌ خطا در دریافت داده کاربران:", error);
-    }
-  };
-
-  const fetchSessionTrend = async (days:string) => {
-    if (!currentBot) return;
-    try {
-      const response = await axiosInstance.get(
-        API_ROUTES.STATISTIC.USERS(currentBot?.uuid),
-        { params: { days: days.replace("d", "") } }
-      );
-      const formattedData = response.data.data.map((d: any) => ({
-        name: new Date(d.time ?? "").toLocaleDateString("fa-IR"),
-        value: d.value + 3,
-      }));
-
-      setChatsData(formattedData);
-      console.log("chats", formattedData);
-      // setUserTrend(response.data);
-    } catch (error) {
-      console.error("❌ خطا در دریافت داده کاربران:", error);
-    }
-  };
-
-  const handleTimeRangeChange = async (value:string) => {
-    setIsChartLoading(true);
-    await fetchSessionTrend(value);
-    await fetchUserTrend(value);
-    setIsChartLoading(false);
-  };
-
-  //کاربر بات ثبت شده دارد؟
+  // user has a bot
   useEffect(() => {
     if (!user) return;
 
@@ -165,6 +90,109 @@ export default function Dashboard() {
     };
     fetchData();
   }, []);
+
+  //statistic cover
+  useEffect(() => {
+    if (!user) return;
+    if (!currentBot?.uuid) return;
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axiosInstance.get(
+          API_ROUTES.STATISTIC.GET_COVER(currentBot?.uuid)
+        );
+        if (response.status == 200 && response.data) {
+          setStatisticCover(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching bots:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [user, currentBot]);
+
+  //call statistics api
+  useEffect(() => {
+    if (!user || !currentBot) return;
+
+    fetchUserTrend(timeRange);
+    fetchSessionTrend(timeRange);
+    fetchActiveUsers();
+    fetchRecentSession();
+  }, [user, currentBot, timeRange]);
+
+  const fetchUserTrend = async (days: string) => {
+    if (!currentBot) return;
+    try {
+      const response = await axiosInstance.get(
+        API_ROUTES.STATISTIC.USERS(currentBot?.uuid),
+        { params: { days: days.replace("d", "") } }
+      );
+      const formattedData = response.data.data.map((d: any) => ({
+        name: new Date(d.time ?? "").toLocaleDateString("fa-IR"),
+        value: d.value + 3,
+      }));
+
+      setUsersData(formattedData);
+    } catch (error) {
+      console.error("  خطا در دریافت داده کاربران:", error);
+    }
+  };
+
+  const fetchSessionTrend = async (days: string) => {
+    if (!currentBot) return;
+    try {
+      const response = await axiosInstance.get(
+        API_ROUTES.STATISTIC.USERS(currentBot?.uuid),
+        { params: { days: days.replace("d", "") } }
+      );
+      const formattedData = response.data.data.map((d: any) => ({
+        name: new Date(d.time ?? "").toLocaleDateString("fa-IR"),
+        value: d.value + 3,
+      }));
+
+      setChatsData(formattedData);
+    } catch (error) {
+      console.error("  خطا در دریافت داده کاربران:", error);
+    }
+  };
+
+  const fetchActiveUsers = async () => {
+    if (!currentBot) return;
+    try {
+      const response = await axiosInstance.get(
+        API_ROUTES.STATISTIC.ACTIVE_USERS(currentBot?.uuid)
+      );
+      setActiveUsers(response.data.data);
+      // console.log("user", response.data.data);
+    } catch (error) {
+      console.error("  خطا در دریافت داده کاربران:", error);
+    }
+  };
+
+  const fetchRecentSession = async () => {
+    if (!currentBot) return;
+    try {
+      const response = await axiosInstance.get(
+        API_ROUTES.STATISTIC.RECCENT_SESSION(currentBot?.uuid)
+      );
+      setRecentSession(response.data.data);
+
+      console.log("RecentSession", response.data.data);
+    } catch (error) {
+      console.error("  خطا در دریافت داده کاربران:", error);
+    }
+  };
+
+  const handleTimeRangeChange = async (value: string) => {
+    setIsChartLoading(true);
+    await fetchSessionTrend(value);
+    await fetchUserTrend(value);
+    setIsChartLoading(false);
+  };
 
   return (
     <div className="h-screen overflow-hidden bg-white">
@@ -375,80 +403,77 @@ export default function Dashboard() {
 
             {/* Main Content Row - 50-50 Layout */}
             {!isNew && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
                 {/* Activity Chart - 50% */}
-                <div>
-                  <DashboardCard size="xl" variant="borderless">
-                    <div className="flex items-center justify-between mt-[0px] mr-[0px] mb-[16px] ml-[0px]">
-                      {/* Toggle Switch as Title */}
-                      <div className="flex items-center gap-2 bg-grey-100 rounded-lg p-1">
-                        <button
-                          onClick={() => setChartType("users")}
-                          className={`px-3 py-1.5 rounded-md transition-all duration-200 ${
-                            chartType === "users"
-                              ? "bg-white text-brand-primary shadow-sm"
-                              : "hover:text-grey-900"
-                          }`}
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: "normal",
-                            color:
-                              chartType === "users" ? undefined : "#BFBFBF",
-                          }}
-                        >
-                          تعداد کاربران
-                        </button>
-                        <button
-                          onClick={() => setChartType("chats")}
-                          className={`px-3 py-1.5 rounded-md transition-all duration-200 ${
-                            chartType === "chats"
-                              ? "bg-white text-brand-secondary shadow-sm"
-                              : "hover:text-grey-900"
-                          }`}
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: "normal",
-                            color:
-                              chartType === "chats" ? undefined : "#BFBFBF",
-                          }}
-                        >
-                          تعداد گفتگوها
-                        </button>
-                      </div>
 
-                      <Select
-                        value={timeRange}
-                        onValueChange={(value) => {
-                           setTimeRange(value);
-                          handleTimeRangeChange(value);
+                <div>
+                  <div className="flex m-4 mt-7 items-center justify-between ">
+                    {/* Toggle Switch as Title */}
+                    <div className="flex items-center gap-2 bg-grey-100 rounded-lg p-1">
+                      <button
+                        onClick={() => setChartType("users")}
+                        className={`px-2 py-1 rounded-md transition-all duration-200 ${
+                          chartType === "users"
+                            ? "bg-white text-brand-primary shadow-sm"
+                            : "hover:text-grey-900"
+                        }`}
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "normal",
+                          color: chartType === "users" ? undefined : "#BFBFBF",
                         }}
-                        placeholder="انتخاب بازه زمانی"
-                        size="small"
-                        disabled={isChartLoading}
-                        className="min-w-[120px]"
                       >
-                        {TIME_RANGES.map((range) => (
-                          <option key={range.value} value={range.value}>
-                            {range.label}
-                          </option>
-                        ))}
-                      </Select>
+                        تعداد کاربران
+                      </button>
+                      <button
+                        onClick={() => setChartType("chats")}
+                        className={`px-2 py-1 rounded-md transition-all duration-200 ${
+                          chartType === "chats"
+                            ? "bg-white text-brand-secondary shadow-sm"
+                            : "hover:text-grey-900"
+                        }`}
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "normal",
+                          color: chartType === "chats" ? undefined : "#BFBFBF",
+                        }}
+                      >
+                        تعداد گفتگوها
+                      </button>
                     </div>
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between mb-2 px-[12px] py-[0px]">
-                        <p className="text-body-small text-[rgba(166,166,166,1)] text-[14px]">
-                          {chartType === "users"
-                            ? "تعداد کاربران فعال در هر روز"
-                            : "تعداد گفتگوهای انجام شده در هر روز"}
-                        </p>
-                      </div>
+
+                    <Select
+                      value={timeRange}
+                      onValueChange={(value) => {
+                        setTimeRange(value);
+                        handleTimeRangeChange(value);
+                      }}
+                      placeholder="انتخاب بازه زمانی"
+                      size="small"
+                      disabled={isChartLoading}
+                      className="min-w-[120px]"
+                    >
+                      {TIME_RANGES.map((range) => (
+                        <option key={range.value} value={range.value}>
+                          {range.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2 px-[12px] py-[0px]">
+                      <p className="text-body-small text-[rgba(166,166,166,1)] text-[14px]">
+                        {chartType === "users"
+                          ? "تعداد کاربران فعال در هر روز"
+                          : "تعداد گفتگوهای انجام شده در هر روز"}
+                      </p>
                     </div>
-                    <ActivityChart
-                      data={currentData}
-                      height={200}
-                      color={chartColor}
-                    />
-                  </DashboardCard>
+                  </div>
+                  <ActivityChart
+                    data={currentData}
+                    height={200}
+                    color={chartColor}
+                  />
                 </div>
 
                 {/* Heatmap Chart - 50% */}
@@ -469,114 +494,79 @@ export default function Dashboard() {
                 <div className="flex justify-end mb-4 ml-auto w-fit">
                   <div className="text-right">
                     <h3 className="font-bold text-grey-900 mb-1">
-                      فعال ترین کاربران
+                      فعال‌ترین کاربران
                     </h3>
                   </div>
                 </div>
 
                 {/* Active Users Container */}
                 <div
-                  className="glass-effect rounded-[var(--radius-card)] p-6 mt-"
+                  className="glass-effect rounded-[var(--radius-card)] p-6"
                   style={{
                     background: "#FEF9F6",
                     border: "2px solid transparent",
                     backgroundClip: "padding-box",
                   }}
                 >
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-[0px] mt-[12px] mr-[0px] mb-[0px] ml-[0px]">
-                    {/* User 1 */}
-                    <div className="relative bg-white rounded-lg p-4 pt-8 text-center shadow-sm hover-lift">
-                      <div
-                        className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white font-bold"
-                        style={{
-                          background: "#e19f87",
-                        }}
-                      >
-                        م
-                      </div>
-                      <h4 className="font-bold text-grey-900 mb-2 mt-2">
-                        محمد احمدی
-                      </h4>
-                      <p className="text-2xl font-semibold text-grey-900">
-                        ۱۲۳
-                      </p>
-                      <p className="text-body-small text-grey-500">گفتگو</p>
-                    </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-4 gap-4">
+                    {activeUsers.map((user, index) => {
+                      const color = colors[index % colors.length]; // انتخاب رنگ به ترتیب
+                      return (
+                        <div
+                          key={index}
+                          className="relative bg-white rounded-lg p-4 pt-8 text-center shadow-sm hover-lift"
+                        >
+                          <div
+                            className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white font-bold"
+                            style={{ background: color }}
+                          >
+                            {/* {user.name.charAt(0)} */}
+                            <div className="w-4 h-4">
+                              <User />
+                            </div>
+                          </div>
 
-                    {/* User 2 */}
-                    <div className="relative bg-white rounded-lg p-4 pt-8 text-center shadow-sm hover-lift">
-                      <div
-                        className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white font-bold"
-                        style={{
-                          background: "#65bcb6",
-                        }}
-                      >
-                        ز
-                      </div>
-                      <h4 className="font-bold text-grey-900 mb-2 mt-2">
-                        زهرا کریمی
-                      </h4>
-                      <p className="text-2xl font-semibold text-grey-900">۹۸</p>
-                      <p className="text-body-small text-grey-500">گفتگو</p>
-                    </div>
+                          <h4
+                            className="font-bold text-grey-900 mb-2 mt-2 truncate"
+                            // title={user.name}
+                          >
+                            {/* {user.name} */}
+                            کاربر شماره {convertToPersian(index + 1)}
+                          </h4>
 
-                    {/* User 3 */}
-                    <div className="relative bg-white rounded-lg p-4 pt-8 text-center shadow-sm hover-lift">
-                      <div
-                        className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white font-bold"
-                        style={{
-                          background: "#52d4a0",
-                        }}
-                      >
-                        ع
-                      </div>
-                      <h4 className="font-bold text-grey-900 mb-2 mt-2">
-                        علی رضایی
-                      </h4>
-                      <p className="text-2xl font-semibold text-grey-900">۸۷</p>
-                      <p className="text-body-small text-grey-500">گفتگو</p>
-                    </div>
-
-                    {/* User 4 - Enhanced Card */}
-                    <div className="relative bg-white rounded-lg p-4 pt-8 text-center shadow-sm hover-lift">
-                      <div
-                        className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white font-bold"
-                        style={{
-                          background: "#b07cc6",
-                        }}
-                      >
-                        ف
-                      </div>
-                      <h4 className="font-bold text-grey-900 mb-2 mt-2">
-                        فاطمه حسینی
-                      </h4>
-                      <p className="text-2xl font-semibold text-grey-900">۷۲</p>
-                      <p className="text-body-small text-grey-500">گفتگو</p>
-                    </div>
+                          <p className="text-2xl font-semibold text-grey-900">
+                            {convertToPersian(user.session_count)}
+                          </p>
+                          <p className="text-body-small text-grey-500">گفتگو</p>
+                        </div>
+                      );
+                    })}
 
                     {/* More Users Button */}
-                    <div
-                      className="relative rounded-lg p-4 shadow-sm hover-lift cursor-pointer flex items-center justify-center"
-                      style={{
-                        background: "#FF8970",
-                        border: "1px solid #FF8970",
-                      }}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <h4 className="font-bold text-[14px] text-[rgba(255,255,255,1)]">
-                          مشاهده همه
-                        </h4>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="text-white"
-                        >
-                          <path d="M8 6l6 6-6 6V6z" />
-                        </svg>
+                    {activeUsers && activeUsers.length > 4 && (
+                      <div
+                        className="relative rounded-lg p-4 shadow-sm hover-lift cursor-pointer flex items-center justify-center"
+                        style={{
+                          background: "#FF8970",
+                          border: "1px solid #FF8970",
+                        }}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <h4 className="font-bold text-[14px] text-white">
+                            مشاهده همه
+                          </h4>
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="text-white"
+                          >
+                            <path d="M8 6l6 6-6 6V6z" />
+                          </svg>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -592,7 +582,7 @@ export default function Dashboard() {
 
             {!isNew && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* <RecentChats /> */}
+                <RecentChats />
                 <div className="flex flex-col gap-6">
                   {/* Placeholder for removed card */}
                   <div className="bg-white rounded-lg p-6 shadow-card">
@@ -637,7 +627,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                   </div>
-                  {/* <UpgradeBanner /> */}
+                  <UpgradeBanner />
                 </div>
               </div>
             )}

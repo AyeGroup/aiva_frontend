@@ -1,85 +1,116 @@
 import React from 'react';
+import { Lock, ShieldCheck, Key, Database } from 'lucide-react';
 import { trustData } from './landing.data';
 
-const iconMap: Record<string, string> = {
-  lock: '🔒',
-  'shield-check': '✅',
-  key: '🔑',
-  database: '💾'
+const getIcon = (iconName: string, color: string) => {
+  const iconProps = {
+    className: "w-8 h-8",
+    strokeWidth: 2.5,
+    style: { color }
+  };
+  
+  switch (iconName) {
+    case 'lock':
+      return <Lock {...iconProps} />;
+    case 'shield-check':
+      return <ShieldCheck {...iconProps} />;
+    case 'key':
+      return <Key {...iconProps} />;
+    case 'database':
+      return <Database {...iconProps} />;
+    default:
+      return <Lock {...iconProps} />;
+  }
 };
 
 export function Trust() {
   const { title, subtitle, features } = trustData;
 
   return (
-    <section className="py-16 md:py-24" id="security" aria-labelledby="trust-title">
-      <div className="container mx-auto px-4">
+    <section id="security" aria-labelledby="trust-title">
+      <div className="max-w-7xl mx-auto px-6">
         <header className="text-center mb-16">
-          <h2 id="trust-title" className="text-3xl md:text-4xl mb-4">
+          <h2 
+            id="trust-title" 
+            className="text-[#111827] mb-6"
+            style={{
+              fontSize: 'clamp(32px, 4vw, 48px)',
+              fontWeight: '800',
+              lineHeight: '1.2',
+              letterSpacing: '-0.02em'
+            }}
+          >
             {title}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p 
+            className="text-[#4B5563] max-w-2xl mx-auto"
+            style={{
+              fontSize: '18px',
+              lineHeight: '1.6',
+              fontWeight: '400'
+            }}
+          >
             {subtitle}
           </p>
         </header>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => {
-            // تعریف رنگ‌های مختلف برای هر آیکون
             const colors = ['#FF8970', '#78E2E2', '#FFCE4D', '#4460F7'];
-            const backgroundColor = colors[index % colors.length];
+            const iconColor = colors[index % colors.length];
+            const bgColor = `${iconColor}15`;
             
             return (
               <article 
                 key={index}
-                className="text-center p-6 rounded-lg border border-border bg-[rgba(255,255,255,1)] hover:shadow-lg transition-all duration-300 hover:border-primary/20"
+                className="group relative p-8 rounded-3xl bg-white border-2 border-transparent hover:border-[rgba(101,188,182,0.2)] transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] hover:-translate-y-1 text-right"
                 aria-labelledby={`trust-feature-${index}-title`}
               >
+                {/* دایره پس‌زمینه با افکت blur */}
+                <div 
+                  className="absolute top-6 right-6 w-20 h-20 rounded-full opacity-10 blur-2xl transition-all duration-500 group-hover:opacity-20 group-hover:scale-110"
+                  style={{ backgroundColor: iconColor }}
+                  aria-hidden="true"
+                ></div>
+
                 {/* آیکون */}
-                <div className="mb-4 bg-[rgba(0,0,0,0)]">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto" style={{ backgroundColor, opacity: 0.15 }}>
-                    <span className="text-2xl" aria-hidden="true">
-                      {iconMap[feature.icon] || '🛡️'}
+                <div className="relative mb-6">
+                  <div 
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
+                    style={{ backgroundColor: bgColor }}
+                  >
+                    <span aria-hidden="true" style={{ color: iconColor }}>
+                      {getIcon(feature.icon, iconColor)}
                     </span>
                   </div>
                 </div>
 
                 {/* محتوا */}
-                <h3 id={`trust-feature-${index}-title`} className="mb-3" style={{ color: backgroundColor }}>
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {feature.description}
-                </p>
+                <div className="relative">
+                  <h3 
+                    id={`trust-feature-${index}-title`} 
+                    className="mb-3 transition-colors duration-300"
+                    style={{ color: iconColor }}
+                  >
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+
+                {/* خط تزئینی */}
+                <div 
+                  className="absolute bottom-0 right-0 h-1 w-0 rounded-full transition-all duration-500 group-hover:w-full"
+                  style={{ backgroundColor: iconColor }}
+                  aria-hidden="true"
+                ></div>
               </article>
             );
           })}
         </div>
 
-        {/* گواهینامه‌ها و استانداردها */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-8 p-6 bg-muted/50 rounded-lg border border-border">
-            <div className="text-center">
-              <div className="text-lg font-medium">ISO 27001</div>
-              <div className="text-xs text-muted-foreground">گواهی امنیت</div>
-            </div>
-            <div className="w-px h-8 bg-border" aria-hidden="true"></div>
-            <div className="text-center">
-              <div className="text-lg font-medium">GDPR</div>
-              <div className="text-xs text-muted-foreground">حریم خصوصی</div>
-            </div>
-            <div className="w-px h-8 bg-border" aria-hidden="true"></div>
-            <div className="text-center">
-              <div className="text-lg font-medium">SOC 2</div>
-              <div className="text-xs text-muted-foreground">ممیزی امنیتی</div>
-            </div>
-          </div>
-          
-          <p className="text-sm text-muted-foreground mt-4 max-w-lg mx-auto">
-            آیوا با بالاترین استانداردهای امنیتی و حریم خصوصی جهان مطابقت دارد.
-            داده‌های شما هرگز با اشخاص ثالث به اشتراک گذاشته نمی‌شود.
-          </p>
-        </div>
+
       </div>
     </section>
   );

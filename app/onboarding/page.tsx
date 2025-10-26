@@ -23,6 +23,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { BehaviorSettings, BotConfig } from "@/types/common";
 
 export default function OnboardingWizard() {
+  
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");

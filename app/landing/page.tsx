@@ -1,15 +1,18 @@
-"use client"
-import React from "react";
+import React from 'react';
+// import { ErrorBoundary } from '../_components/ErrorBoundary/error-boundary';
+import { Hero } from './hero';
 import { ErrorBoundary } from "@/components/error-boundary";
-import  Hero  from "./hero";
 import { HowItWorks } from "./how-it-works";
-import { Features } from "./features";
-import  Pricing  from "./pricing";
-import { Trust } from "./trust";
-import { FAQ } from "./faq";
-import  FinalCTA  from "./final-cta";
-import { Footer } from "./footer";
-import { PageType } from "@/types/common";
+import { Features } from './features';
+import { Comparison } from './comparison';
+import { CaseStudy } from './case-study';
+import { Pricing } from './pricing';
+import { Trust } from './trust';
+import { FAQ } from './faq';
+import { FinalCTA } from './final-cta';
+import { Footer } from './footer';
+
+type PageType = 'landing' | 'signup' | 'dashboard' | 'consultation';
 
 interface LandingPageProps {
   onNavigate: (page: PageType) => void;
@@ -32,46 +35,67 @@ const LoadingSection = () => (
   </div>
 );
 
-// export default function Landing({ onNavigate }: LandingPageProps) {
-export default function Landing( ) {
+// export function LandingPage({ onNavigate }: LandingPageProps) {
+export default function Landing() {
   return (
-    <main className="landing-page min-h-screen bg-gradient-to-br from-bg-app via-bg-shell to-bg-soft-mint">
+    <main className="landing-page min-h-screen bg-white">
       {/* Hero Section */}
       <ErrorBoundary>
-        {/* <Hero onNavigate={onNavigate} /> */}
-        <Hero />
+        <Hero   />
       </ErrorBoundary>
 
       {/* چطور کار می‌کند */}
       <ErrorBoundary>
-        <HowItWorks />
+        <section className="py-24 bg-[#F9FAFB]">
+          <HowItWorks />
+        </section>
       </ErrorBoundary>
 
       {/* ویژگی‌ها */}
       <ErrorBoundary>
-        <Features />
+        <section className="py-24 bg-white">
+          <Features />
+        </section>
+      </ErrorBoundary>
+
+      {/* مقایسه پشتیبانی */}
+      <ErrorBoundary>
+        <section className="py-24 bg-[#F9FAFB]">
+          <Comparison />
+        </section>
+      </ErrorBoundary>
+
+      {/* داستان موفقیت */}
+      <ErrorBoundary>
+        <section className="py-24 bg-white">
+          <CaseStudy />
+        </section>
       </ErrorBoundary>
 
       {/* قیمت‌گذاری */}
       <ErrorBoundary>
-        {/* <Pricing onNavigate={onNavigate} /> */}
-        <Pricing />
+        <section className="py-24 bg-[#F9FAFB]">
+          <Pricing  />
+        </section>
       </ErrorBoundary>
 
       {/* امنیت و اعتماد */}
       <ErrorBoundary>
-        <Trust />
+        <section className="py-20 bg-white">
+          <Trust />
+        </section>
       </ErrorBoundary>
 
       {/* سؤالات متداول */}
       <ErrorBoundary>
-        <FAQ />
+        <section className="py-24 bg-[#F9FAFB]">
+          <FAQ />
+        </section>
       </ErrorBoundary>
 
       {/* دعوت نهایی به اقدام */}
       <ErrorBoundary>
-        <FinalCTA  />
-        {/* <FinalCTA onNavigate={onNavigate} /> */}
+        <FinalCTA   />
       </ErrorBoundary>
 
       {/* فوتر */}

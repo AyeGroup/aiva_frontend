@@ -17,7 +17,9 @@ export const API_ROUTES = {
     HEATMAP: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/message-heatmap/${bot_uuid}/`,
     ACTIVE_USERS: (bot_uuid: string) =>
-      `${API_BASE_URL}/dashboard/active-users/${bot_uuid}/`, 
+      `${API_BASE_URL}/dashboard/active-users/${bot_uuid}/`,
+    RECCENT_SESSION: (bot_uuid: string) =>
+      `${API_BASE_URL}/dashboard/recent-sessions/${bot_uuid}/`,
     USERS: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/users-trend/${bot_uuid}/`, //days
     SESSION: (bot_uuid: string) =>

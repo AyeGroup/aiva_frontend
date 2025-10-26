@@ -80,7 +80,7 @@ export function DashboardCard({
       )}
 
       {children && (
-        <div className="dashboard-card__content px-[12px] px-[0px] py-[18px]">
+        <div className="dashboard-card__content px-2 py-4">
           {children}
         </div>
       )}
