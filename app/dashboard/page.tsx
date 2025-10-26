@@ -6,6 +6,7 @@ import DashboardHome from "./components/dashboard-home";
 import { ChatbotManagement } from "./components/chatbot-management";
 import { Sidebar } from "./sidebar";
 import { BotProvider } from "@/providers/BotProvider";
+import Tickets from "./components/tickets";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -26,7 +27,7 @@ export default function DashboardPage() {
           {currentPage === "chatbot-management" ? (
             <ChatbotManagement />
           ) : currentPage === "tickets" ? (
-            <div>Tickets Component</div>
+            <div><Tickets/></div>
           ) : (
             <DashboardHome />
           )}

@@ -715,13 +715,9 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
               {/* Input Area */}
               <div className="px-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
-                {/* Knowledge Base Quick Actions */}
-                {botConfig.llm_model.length > 0 && currentStep >= 2 && (
-                  // elham
-                  // {botConfig.knowledge.length > 0 && currentStep >= 2 && (
+                {/* {botConfig.llm_model.length > 0 && currentStep >= 2 && (
                   <div className="mb-3">
                     <div className="flex flex-wrap gap-2">
-                      {/* elham */}
                       {botConfig.knowledge &&
                         botConfig.knowledge.map((item) => {
                           const icon =
@@ -753,7 +749,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                       )}
                     </div>
                   </div>
-                )}
+                )} */}
 
                 {/* Default Quick Actions - Only show if no knowledge base */}
                 {/* {(botConfig.knowledge.length === 0 || currentStep < 2) && ( */}
@@ -832,8 +828,8 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
                     placeholder="پیام خود را بنویسید..."
                     className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm resize-none max-h-[80px] overflow-y-auto outline-none focus:outline-none focus:ring-0 focus:border-grey-300 scrollbar-none"
                     style={{
-                      scrollbarWidth: "none", // برای مرورگرهای فایرفاکس
-                      msOverflowStyle: "none", // برای IE و Edge قدیمی
+                      scrollbarWidth: "none", 
+                      msOverflowStyle: "none", 
                     }}
                   />
 

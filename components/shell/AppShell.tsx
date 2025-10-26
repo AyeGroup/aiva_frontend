@@ -12,7 +12,7 @@ const Dashboard = lazy(() => import("@/app/dashboard/page"));
 // const ChatbotManagement = lazy(
 //   () => import("@/app/dashboard/components/chatbot-management")
 // );
-const Tickets = lazy(() => import("@/app/dashboard/tickets"));
+const Tickets = lazy(() => import("@/app/dashboard/components/tickets"));
 const Login = lazy(() => import("@/app/auth/login/page"));
 const Register = lazy(() => import("@/app/auth/register/page"));
 const OTPVerification = lazy(() => import("@/app/auth/verification/page"));
@@ -56,7 +56,7 @@ export default function AppShell({ page }: AppShellProps) {
       case "dashboard":
         return <Dashboard />;
       // case "chatbot-management":
-        // return <ChatbotManagement />;
+      // return <ChatbotManagement />;
       case "tickets":
         return <Tickets />;
       case "login":
@@ -75,7 +75,7 @@ export default function AppShell({ page }: AppShellProps) {
     "chatbot-management",
     "tickets",
     "login",
-    "verification",  
+    "verification",
     "register",
   ].includes(page);
 
