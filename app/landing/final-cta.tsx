@@ -1,4 +1,6 @@
 // import { Button } from '../_components/Button/button';
+"use client";
+
 import { useRouter } from "next/navigation";
 import { ctaData } from "./landing.data";
 

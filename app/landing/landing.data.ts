@@ -200,7 +200,7 @@ export const successStoriesData = {
     { id: 'hamiiyar', name: 'حامیار', category: 'پوشاک' },
     { id: 'aiwa', name: 'آیوا', category: 'تکنولوژی' },
     { id: 'steelbar', name: 'استیل بار', category: 'گردشگری' },
-    { id: 'darya', name: 'د��یا', category: 'خدمات' },
+    { id: 'darya', name: 'دریا', category: 'خدمات' },
     { id: 'classic', name: 'کلاسیک', category: 'پوشاک' },
     { id: 'rayansabt', name: 'رایان ثبت', category: 'فناوری' },
     { id: 'artankala', name: 'آرتان کالا', category: 'املاک' }
@@ -425,7 +425,7 @@ export const caseStudyData = {
   story: 'فروشگاه آنلاین‌کالا قبلاً مشکل داشت که مشتریان شبانه پاسخ نمی‌گرفتند و سفارش‌ها از دست می‌رفت. بعد از راه‌اندازی چت‌بات RagBuilder، حتی ساعت ۳ صبح هم مشتری‌ها می‌تونند سایز، رنگ و موجودی رو چک کنند.',
   stat: {
     value: '+۵۰٪',
-    label: 'رشد تعامل شبان��',
+    label: 'رشد تعامل شبانه',
     description: 'در ۳ ماه اول، تعامل شبانه ۵۰٪ افزایش پیدا کرد و رضایت مشتری به ۹۷٪ رسید.'
   },
   cta: {
@@ -629,7 +629,7 @@ export const pricingData = {
   
   faq: [
     {
-      question: 'معیار شمارش گفت���وگو چیست؟',
+      question: 'معیار شمارش گفت‌وگو چیست؟',
       answer: 'هر گفت‌وگو یک جلسه ۳۰ دقیقه‌ای با کاربر محسوب می‌شود که شامل چندین پیام می‌تواند باشد.'
     },
     {
@@ -716,7 +716,7 @@ export const faqData = {
 };
 
 export const ctaData = {
-  title: 'آماده شر��ع هستید؟',
+  title: 'آماده شروع هستید؟',
   subtitle: 'آیوا را رایگان امتحان کنید و تفاوت را در همان روز اول احساس کنید',
   
   cta: {

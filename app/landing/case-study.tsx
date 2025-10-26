@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { caseStudyData } from "./landing.data";
 import {

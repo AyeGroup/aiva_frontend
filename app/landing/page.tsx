@@ -1,18 +1,19 @@
-import React from 'react';
-// import { ErrorBoundary } from '../_components/ErrorBoundary/error-boundary';
-import { Hero } from './hero';
+"use client";
+
+import React from "react";
+import { Hero } from "./hero";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { HowItWorks } from "./how-it-works";
-import { Features } from './features';
-import { Comparison } from './comparison';
-import { CaseStudy } from './case-study';
-import { Pricing } from './pricing';
-import { Trust } from './trust';
-import { FAQ } from './faq';
-import { FinalCTA } from './final-cta';
-import { Footer } from './footer';
+import { Features } from "./features";
+import { Comparison } from "./comparison";
+import { CaseStudy } from "./case-study";
+import { Pricing } from "./pricing";
+import { Trust } from "./trust";
+import { FAQ } from "./faq";
+import { FinalCTA } from "./final-cta";
+import { Footer } from "./footer";
 
-type PageType = 'landing' | 'signup' | 'dashboard' | 'consultation';
+type PageType = "landing" | "signup" | "dashboard" | "consultation";
 
 interface LandingPageProps {
   onNavigate: (page: PageType) => void;
@@ -41,7 +42,7 @@ export default function Landing() {
     <main className="landing-page min-h-screen bg-white">
       {/* Hero Section */}
       <ErrorBoundary>
-        <Hero   />
+        <Hero />
       </ErrorBoundary>
 
       {/* چطور کار می‌کند */}
@@ -75,7 +76,7 @@ export default function Landing() {
       {/* قیمت‌گذاری */}
       <ErrorBoundary>
         <section className="py-24 bg-[#F9FAFB]">
-          <Pricing  />
+          <Pricing />
         </section>
       </ErrorBoundary>
 
@@ -95,7 +96,7 @@ export default function Landing() {
 
       {/* دعوت نهایی به اقدام */}
       <ErrorBoundary>
-        <FinalCTA   />
+        <FinalCTA />
       </ErrorBoundary>
 
       {/* فوتر */}

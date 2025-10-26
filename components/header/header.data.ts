@@ -1,6 +1,6 @@
 import { NavItem } from "../../types/common";
 import aivaLogo from "@/public/logo.png";
-
+ 
 // اطلاعات هدر آیوا
 export const headerData = {
   logo: {
@@ -12,34 +12,61 @@ export const headerData = {
 
   navigation: [
     {
+      id: "home",
+      title: "خانه",
+      href: "/",
+      icon: "home",
+      description: "بازگشت به صفحه اصلی",
+    },
+    {
       id: "features",
       title: "ویژگی‌ها",
       href: "#features",
       icon: "star",
+      description: "قابلیت‌ها و امکانات پیشرفته آیوا",
+      badge: "جدید",
+    },
+    {
+      id: "how-it-works",
+      title: "نحوه کار",
+      href: "#how-it-works",
+      icon: "zap",
+      description: "آیوا چگونه کسب‌وکار شما را تقویت می‌کند",
+    },
+    {
+      id: "case-study",
+      title: "نمونه کارها",
+      href: "#case-study",
+      icon: "briefcase",
+      description: "داستان‌های موفقیت مشتریان ما",
     },
     {
       id: "pricing",
       title: "قیمت‌گذاری",
       href: "#pricing",
       icon: "dollar-sign",
+      description: "پلن‌های مناسب برای هر کسب‌وکاری",
     },
     {
-      id: "docs",
-      title: "مستندات",
-      href: "/docs",
+      id: "faq",
+      title: "سوالات متداول",
+      href: "#faq",
+      icon: "help-circle",
+      description: "پاسخ سوالات رایج",
+    },
+    {
+      id: "blog",
+      title: "بلاگ",
+      href: "#footer",
       icon: "book-open",
+      description: "مقالات و آموزش‌های کاربردی",
     },
     {
-      id: "security",
-      title: "امنیت",
-      href: "#security",
-      icon: "shield",
-    },
-    {
-      id: "components",
-      title: "کامپوننت‌ها",
-      href: "/components",
-      icon: "layers",
+      id: "contact",
+      title: "تماس با ما",
+      href: "#final-cta",
+      icon: "mail",
+      description: "ارتباط با تیم پشتیبانی",
     },
   ] as NavItem[],
 

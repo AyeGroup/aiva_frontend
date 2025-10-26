@@ -75,7 +75,7 @@ export default function AppShell({ page }: AppShellProps) {
     "chatbot-management",
     "tickets",
     "login",
-    "verification", // Fixed typo: was "otp-verification"
+    "verification",  
     "register",
   ].includes(page);
 

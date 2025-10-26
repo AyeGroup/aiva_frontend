@@ -148,6 +148,7 @@ export interface NavItem {
   id: string;
   title: string;
   href: string;
+  description?: string;
   icon?: string;
   badge?: string | number;
   children?: NavItem[];

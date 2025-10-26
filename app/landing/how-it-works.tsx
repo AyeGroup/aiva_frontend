@@ -1,3 +1,5 @@
+
+"use client";
 import { useState } from 'react';
 import { howItWorksData } from './landing.data';
 // import { Button } from '../_components/Button/button';
