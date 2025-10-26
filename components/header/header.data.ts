@@ -1,6 +1,6 @@
 import { NavItem } from "../../types/common";
 import aivaLogo from "@/public/logo.png";
- 
+
 // اطلاعات هدر آیوا
 export const headerData = {
   logo: {
@@ -73,13 +73,13 @@ export const headerData = {
   authButtons: {
     login: {
       text: "ورود",
-      href: "/login",
+      href: "/dashboard",
       title: "ورود به حساب کاربری",
       variant: "tertiary",
     },
     signup: {
       text: "شروع رایگان",
-      href: "/signup",
+      href: "/onboarding",
       title: "ثبت‌نام رایگان و شروع استفاده از آیوا",
       variant: "primary",
     },

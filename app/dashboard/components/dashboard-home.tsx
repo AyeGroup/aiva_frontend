@@ -19,6 +19,7 @@ import {
   DashRate,
   DashTime,
   DashUser,
+  Faqs,
   User,
 } from "@/public/icons/AppIcons";
 import { RecentChats } from "../recent-chats";
@@ -37,6 +38,7 @@ export default function Dashboard() {
   const [chatsData, setChatsData] = useState<any[]>([]);
   const [activeUsers, setActiveUsers] = useState<any[]>([]);
   const [recentSession, setRecentSession] = useState<any[]>([]);
+  const [faqList, setFaqList] = useState<any[]>([]);
   const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
   const TIME_RANGES = [
@@ -122,6 +124,7 @@ export default function Dashboard() {
     fetchSessionTrend(timeRange);
     fetchActiveUsers();
     fetchRecentSession();
+    fetchFaqList();
   }, [user, currentBot, timeRange]);
 
   const fetchUserTrend = async (days: string) => {
@@ -172,6 +175,20 @@ export default function Dashboard() {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
   };
+
+    const fetchFaqList = async () => {
+      if (!currentBot) return;
+      try {
+        const response = await axiosInstance.get(
+          API_ROUTES.STATISTIC.FAQ_LIST(currentBot?.uuid)
+        );
+        setFaqList(response.data.data);
+
+        console.log("setFaqList", response.data.data);
+      } catch (error) {
+        console.error("  خطا در دریافت داده کاربران:", error);
+      }
+    };
 
   const fetchRecentSession = async () => {
     if (!currentBot) return;
@@ -589,42 +606,23 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-bold text-grey-900">سوالات متداول</h3>
                       <div className="w-8 h-8 bg-bg-soft-mint rounded-full flex items-center justify-center">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="text-brand-primary"
-                        >
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" />
-                        </svg>
+                        <div className="w-4 h-4 text-white">
+                          <Faqs />
+                        </div>
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-grey-600">سوالات فنی</span>
-                        <span className="text-brand-primary font-medium">
-                          {convertToPersian("245")} کلیک
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-grey-600">راهنمای خرید</span>
-                        <span className="text-brand-primary font-medium">
-                          {convertToPersian("184")} کلیک
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-grey-600">پشتیبانی</span>
-                        <span className="text-brand-primary font-medium">
-                          {convertToPersian("142")} کلیک
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-grey-600">قیمت گذاری</span>
-                        <span className="text-brand-primary font-medium">
-                          {convertToPersian("98")} کلیک
-                        </span>
-                      </div>
+                      {faqList.map((faq, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between text-sm"
+                        >
+                          <span className="text-grey-600">{faq.question}</span>
+                          <span className="text-brand-primary font-medium">
+                            {convertToPersian(faq?.count.toString() || "0")} کلیک 
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                   <UpgradeBanner />

@@ -55,9 +55,11 @@ export function Header({
                 {/* تصویر لوگو */}
                 {logo.image ? (
                   <Image
-                    src="logo.png"
-                    alt={logo.alt}
-                    className="h-10 lg:h-12 w-auto"
+                    src="/logo.png"
+                    width={50}
+                    height={40}
+                    alt="Logo"
+                    style={{ width: "auto", height: "40px" }}
                   />
                 ) : (
                   <div className="h-8 w-8 lg:h-10 lg:w-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
@@ -222,7 +224,8 @@ export function Header({
                   }
                   size="md"
                   title={authButtons.login.title}
-                  onClick={() => router.push("/login")}
+                  onClick={() => router.push("/dashboard")}
+                  // onClick={() => router.push("/auth/login")}
                   className="hidden sm:inline-flex text-sm lg:text-base px-3 lg:px-4 py-2"
                 >
                   {authButtons.login.text}
@@ -237,7 +240,7 @@ export function Header({
                   }
                   size="md"
                   title={authButtons.signup.title}
-                  onClick={() => router.push("/register")}
+                  onClick={() => router.push("/onboarding")}
                   icon="arrow-right"
                   iconPosition="right"
                   className="hidden sm:inline-flex text-sm lg:text-base px-4 lg:px-6 py-2 "
@@ -250,7 +253,7 @@ export function Header({
                   variant="primary"
                   size="sm"
                   title={authButtons.signup.title}
-                  onClick={() => router.push("/register")}
+                  onClick={() => router.push("/auth/register")}
                   icon="arrow-right"
                   iconPosition="right"
                   className="sm:hidden text-xs px-3 py-2 "
@@ -362,14 +365,14 @@ export function Header({
             })}
             <li className="pt-4 space-y-3 border-t border-border-soft/30 mt-4">
               <button
-                onClick={() => router.push("/login")}
+                onClick={() => router.push("/auth/login")}
                 title={authButtons.login.title}
                 className="block w-full text-center py-3 px-4 border-2 border-brand-primary/20 rounded-xl hover:bg-white/60 transition-all duration-200 text-grey-700 hover:text-brand-primary"
               >
                 {authButtons.login.text}
               </button>
               <button
-                onClick={() => router.push("/register")}
+                onClick={() => router.push("/auth/register")}
                 title={authButtons.signup.title}
                 className="block w-full text-center py-3 px-4 rounded-xl hover:opacity-90 transition-all duration-200 text-white shadow-md hover:shadow-lg"
                 style={{ backgroundColor: "var(--brand-primary)" }}

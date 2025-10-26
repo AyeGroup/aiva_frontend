@@ -24,6 +24,9 @@ export const API_ROUTES = {
       `${API_BASE_URL}/dashboard/users-trend/${bot_uuid}/`, //days
     SESSION: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/sessions-trend/${bot_uuid}/`, //days
+
+    FAQ_LIST: (bot_uuid: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/faqs`, //days
   },
 
   BOTS: {
