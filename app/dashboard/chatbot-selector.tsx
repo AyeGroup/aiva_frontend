@@ -1,28 +1,49 @@
-import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-
-interface Chatbot {
-  id: string;
-  name: string;
-  color: string;
-}
-
-const chatbots: Chatbot[] = [
-  { id: '1', name: '@goldenshop', color: '#FFD700' },
-  { id: '2', name: '@techstore', color: '#4A90E2' },
-  { id: '3', name: '@fashionhub', color: '#E94B8A' },
-  { id: '4', name: '@foodcorner', color: '#F97316' },
-  { id: '5', name: '@bookshop', color: '#8B5CF6' },
-];
+"use client";
+import React, { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import { useBot } from "@/providers/BotProvider";
+import { BotConfig } from "@/types/common";
 
 export function ChatbotSelector() {
-  const [selectedChatbot, setSelectedChatbot] = useState<Chatbot>(chatbots[0]);
+  const { bots, currentBot, setCurrentBot, refreshBots } = useBot();
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSelect = (chatbot: Chatbot) => {
+  // اگر می‌خواهیم local state جدا داشته باشیم
+  const [selectedChatbot, setSelectedChatbot] = useState<BotConfig | null>(
+    null
+  );
+
+  // Load bots on mount (برای مواقعی که تازه Context لود شده)
+  useEffect(() => {
+    if (!bots || bots.length === 0) return;
+    setSelectedChatbot(currentBot);
+  }, [bots, currentBot]);
+
+  const handleSelect = (chatbot: BotConfig) => {
     setSelectedChatbot(chatbot);
+    setCurrentBot(chatbot); // آپدیت currentBot در Context
     setIsOpen(false);
   };
+
+  const loadBots = async () => {
+    setLoading(true);
+    try {
+      await refreshBots();
+    } catch (error) {
+      console.error("Failed to load bots:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!bots || bots.length === 0) {
+      loadBots();
+    }
+  }, []);
+
+  if (!selectedChatbot) return null;
 
   return (
     <div className="chatbot-selector-container">
@@ -33,13 +54,13 @@ export function ChatbotSelector() {
         type="button"
         title="انتخاب چت‌بات"
       >
-        <span 
+        <span
           className="chatbot-indicator"
-          style={{ backgroundColor: selectedChatbot.color }}
+          style={{ backgroundColor: selectedChatbot.primary_color }}
         />
         <span className="chatbot-name">{selectedChatbot.name}</span>
-        <ChevronDown 
-          className={`chatbot-icon ${isOpen ? 'rotate' : ''}`}
+        <ChevronDown
+          className={`chatbot-icon ${isOpen ? "rotate" : ""}`}
           size={18}
         />
       </button>
@@ -48,48 +69,30 @@ export function ChatbotSelector() {
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div 
-            className="chatbot-backdrop"
-            onClick={() => setIsOpen(false)}
-          />
-          
+          <div className="chatbot-backdrop" onClick={() => setIsOpen(false)} />
+
           {/* Dropdown */}
           <div className="chatbot-dropdown">
             <div className="chatbot-dropdown-header">
               <span className="text-grey-600 text-sm">چت‌بات‌های من</span>
             </div>
-            
+
             <div className="chatbot-list">
-              {chatbots.map((chatbot) => (
+              {bots.map((chatbot) => (
                 <button
-                  key={chatbot.id}
+                  key={chatbot.uuid}
                   onClick={() => handleSelect(chatbot)}
                   className={`chatbot-item ${
-                    selectedChatbot.id === chatbot.id ? 'active' : ''
+                    selectedChatbot.uuid === chatbot.uuid ? "active" : ""
                   }`}
                   type="button"
                   title={`انتخاب ${chatbot.name}`}
                 >
-                  <span 
+                  <span
                     className="chatbot-indicator"
-                    style={{ backgroundColor: chatbot.color }}
+                    style={{ backgroundColor: chatbot.primary_color }}
                   />
                   <span className="chatbot-name">{chatbot.name}</span>
-                  {selectedChatbot.id === chatbot.id && (
-                    <svg 
-                      className="check-icon" 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2.5" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20 6L9 17l-5-5"/>
-                    </svg>
-                  )}
                 </button>
               ))}
             </div>
@@ -99,20 +102,11 @@ export function ChatbotSelector() {
                 className="add-chatbot-button"
                 type="button"
                 title="افزودن چت‌بات جدید"
+                onClick={() => {
+                  // مثلا می‌توانید به صفحه onboarding بروید
+                  window.location.href = "/dashboard?tab=onboarding&id=new";
+                }}
               >
-                <svg 
-                  width="16" 
-                  height="16" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <line x1="12" y1="5" x2="12" y2="19"/>
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
                 <span>افزودن چت‌بات جدید</span>
               </button>
             </div>

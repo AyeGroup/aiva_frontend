@@ -4,6 +4,7 @@ import PageLoader from "@/components/pageLoader";
 import { Select } from "@/components/select";
 import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
+import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { RecentChats } from "../recent-chats";
 import { HeatmapChart } from "@/components/heatmap-chart";
@@ -11,7 +12,6 @@ import { UpgradeBanner } from "../upgrade-banner";
 import { ActivityChart } from "@/components/activity-chart";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import {
   DashChats,
   DashMints,
@@ -25,7 +25,7 @@ import {
 
 export default function Dashboard() {
   const router = useRouter();
-  const pathname = usePathname();
+  const { currentBot } = useBot();
   const { user, loading } = useAuth();
   const [isNew, setIsNew] = useState(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
@@ -38,19 +38,15 @@ export default function Dashboard() {
   const [faqList, setFaqList] = useState<any[]>([]);
   const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
+  const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
+  const currentData = chartType === "users" ? usersData : chatsData;
+  const chartColor =
+    chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
   const TIME_RANGES = [
     { value: "7d", label: "۷ روز اخیر" },
     { value: "30d", label: "۳۰ روز اخیر" },
     { value: "90d", label: "۹۰ روز اخیر" },
   ];
-  const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
-  const currentData = chartType === "users" ? usersData : chatsData;
-  const chartColor =
-    chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
-
-  const chartTitle = chartType === "users" ? "تحلیل کاربران" : "تحلیل گفتگوها";
-  const currentPage = pathname.split("/").pop();
-  const { currentBot, setCurrentBot, bots } = useBot();
 
   //Authentication
   useEffect(() => {
@@ -79,7 +75,6 @@ export default function Dashboard() {
           response.data.data.length > 0
         ) {
           setIsNew(false);
-          // setCurrentBot(response.data.data[0]);
           console.log("curret bot :", response.data.data[0]);
         } else setIsNew(true);
       } catch (error) {
@@ -196,7 +191,7 @@ export default function Dashboard() {
       );
       setRecentSession(response.data.data);
 
-      console.log("RecentSession", response.data.data);
+      // console.log("RecentSession", response.data.data);
     } catch (error) {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
@@ -211,13 +206,16 @@ export default function Dashboard() {
 
   const handleChatClick = async () => {};
 
+  if (loading) return <PageLoader />;
+  if (!user) return null;
+
   return (
     <div className="h-screen  bg-white !z-0" style={{ zIndex: 0 }}>
       {/* overflow-hidden */}
       <div className="flex h-screen">
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto h-screen">
-          {loading || (isLoading && <PageLoader />)}
+          {(loading || isLoading) && <PageLoader />}
           <div className="max-w-7xl mx-auto pb-8">
             <div className="mb-8">
               {/* Page Header */}
@@ -254,7 +252,6 @@ export default function Dashboard() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                  {/* Primary Stat - Enhanced overflow-hidden*/}
                   <div className="group relative  bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:rotate-1">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand-primary/10 rounded-full -translate-y-2 translate-x-2"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-brand-primary/5 rounded-full translate-y-2 -translate-x-2"></div>

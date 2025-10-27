@@ -1,33 +1,21 @@
 "use client";
 
-import React, { Suspense, lazy, useEffect } from "react";
+import React, { Suspense, lazy } from "react";
 import { Header } from "@/components/header/header";
 import { PageType } from "@/types/common";
-// import NProgress from "nprogress";
 
-// Lazy load صفحات
 const LandingPage = lazy(() => import("@/app/landing/page"));
 const OnboardingWizard = lazy(() => import("@/app/onboarding/page"));
 const Dashboard = lazy(() => import("@/app/dashboard/page"));
-// const ChatbotManagement = lazy(
-//   () => import("@/app/dashboard/components/chatbot-management")
-// );
-const Tickets = lazy(() => import("@/app/dashboard/components/tickets"));
+// const Tickets = lazy(() => import("@/app/dashboard/components/tickets"));
 const Login = lazy(() => import("@/app/auth/login/page"));
 const Register = lazy(() => import("@/app/auth/register/page"));
 const OTPVerification = lazy(() => import("@/app/auth/verification/page"));
 const ChatHistoryDemo = lazy(
   () => import("@/app/onboarding/demo/chat-history-demo")
 );
-// version:1
-// Enhanced Loader with NProgress
+
 const PageLoader = () => {
-  // useEffect(() => {
-  //   NProgress.start();
-  //   return () => {
-  //     NProgress.done();
-  //   };
-  // }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -55,10 +43,8 @@ export default function AppShell({ page }: AppShellProps) {
         return <Register />;
       case "dashboard":
         return <Dashboard />;
-      // case "chatbot-management":
-      // return <ChatbotManagement />;
-      case "tickets":
-        return <Tickets />;
+      // case "tickets":
+        // return <Tickets />;
       case "login":
         return <Login />;
       case "verification":

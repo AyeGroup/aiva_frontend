@@ -9,7 +9,7 @@ interface ConfirmModalProps {
   message?: string;
   confirmText?: string;
   cancelText?: string;
-  type?: "danger" | "warning" | "info";
+  type?: "danger" | "warning" | "info" | "success";
 }
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -43,6 +43,12 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           bg: "bg-blue-100",
           icon: "text-blue-600",
           button: "bg-blue-500 hover:bg-blue-600",
+        };
+      case "success":
+        return {
+          bg: "bg-green-100",
+          icon: "text-grren-600",
+          button: "bg-green-500 hover:bg-green-600",
         };
       default:
         return {

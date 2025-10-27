@@ -1,4 +1,3 @@
-// providers/BotProvider.tsx
 "use client";
 
 import {
@@ -8,31 +7,24 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import { useAuth } from "./AuthProvider"; // فرض می‌کنیم AuthProvider چنین هوکی دارد
-import axiosInstance from "@/lib/axiosInstance";
+import { useAuth } from "./AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { BotConfig } from "@/types/common";
+import axiosInstance from "@/lib/axiosInstance";
 
-// تعریف نوع بات
-export interface Bot {
-  uuid: string;
-  name: string;
-  isDefault: boolean;
-}
-
-// نوع Context
 interface BotContextType {
-  bots: Bot[];
-  currentBot: Bot | null;
-  setCurrentBot: (bot: Bot) => void;
+  bots: BotConfig[];
+  currentBot: BotConfig | null;
+  setCurrentBot: (bot: BotConfig) => void;
+  refreshBots: () => Promise<void>;
 }
 
 const BotContext = createContext<BotContextType | undefined>(undefined);
 
-// Provider
 export const BotProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth(); // گرفتن اطلاعات کاربر از AuthProvider
-  const [bots, setBots] = useState<Bot[]>([]);
-  const [currentBot, setCurrentBot] = useState<Bot | null>(null);
+  const { user } = useAuth();
+  const [bots, setBots] = useState<BotConfig[]>([]);
+  const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -48,15 +40,12 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
           return;
         }
 
-        const userBots: Bot[] = response.data.data;
-
+        const userBots: BotConfig[] = response.data.data;
         if (!isMounted) return;
-
         setBots(userBots);
 
         // انتخاب بات پیش‌فرض
-        const defaultBot =
-          userBots.find((b) => b.isDefault) ?? userBots[0] ?? null;
+        const defaultBot = userBots[0] ?? null;
         setCurrentBot(defaultBot);
       } catch (error) {
         console.error("Failed to fetch bots:", error);
@@ -71,8 +60,27 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [user]);
 
+  const refreshBots = async () => {
+    if (!user) return;
+    try {
+      const response = await axiosInstance.get(API_ROUTES.BOTS.GET);
+      if (response.status === 200 && response.data?.data) {
+        const userBots: BotConfig[] = response.data.data;
+        setBots(userBots);
+        if (!currentBot || !userBots.find((b) => b.uuid === currentBot.uuid)) {
+          const defaultBot = userBots[0] ?? null;
+          setCurrentBot(defaultBot);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to refresh bots:", error);
+    }
+  };
+
   return (
-    <BotContext.Provider value={{ bots, currentBot, setCurrentBot }}>
+    <BotContext.Provider
+      value={{ bots, currentBot, setCurrentBot, refreshBots }}
+    >
       {children}
     </BotContext.Provider>
   );

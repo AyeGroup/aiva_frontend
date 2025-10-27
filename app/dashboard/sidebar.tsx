@@ -10,6 +10,7 @@ import { AddAccountModal } from "./add-account-modal";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { User, LogOut, ArrowLeft } from "lucide-react";
 import { useBot } from "@/providers/BotProvider";
+import { ChatbotSelector } from "./chatbot-selector";
 
 interface QAPair {
   id: string;
@@ -118,8 +119,9 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
             <label className="block   font-medium text-gray-700 m-1">
               چت‌بات
             </label>
-            <select
-              className="w-full p-2 rounded-lg border  "
+          <ChatbotSelector/>
+            {/* <select
+              className="w-full p-2 rounded-lg border text-center "
               value={currentBot?.uuid || ""}
               onChange={(e) => handleBotChange(e.target.value)}
             >
@@ -130,7 +132,7 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
                   {bot.isDefault ? " (پیش‌فرض)" : ""}
                 </option>
               ))}
-            </select>
+            </select> */}
           </>
         )}
       </div>

@@ -3,6 +3,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
+import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
 import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
@@ -26,7 +27,7 @@ export default function OnboardingWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  // console.log("mina",id)
+  const { refreshBots, setCurrentBot } = useBot();
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
   const [currentStep, setCurrentStep] = useState(1);
@@ -62,73 +63,75 @@ export default function OnboardingWizard() {
     behaviors: initialBehaviorSettings,
   });
   const totalSteps = steps.length;
+  console.log("mina", id);
 
-
-   useEffect(() => { // authentication
+  useEffect(() => {
+    // authentication
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
-useEffect(() => {
-  if (!user?.token) return;
+  useEffect(() => {
+    if (!user?.token) return;
 
-  const fetchBotData = async () => {
-    try {
-      // ✅ اگر id وجود دارد و مقدار آن new نیست، از API بگیر
-      if (id && id !== "new" && id.length > 3) {
-        const response = await axiosInstance.get(`${API_ROUTES.BOTS.GET}${id}`);
-        const hasApiData = response.data?.success && response.data?.data;
-
-        if (hasApiData) {
-          const botData = response.data.data;
-
-          // لود سوالات متداول (FAQ)
-          const response2 = await axiosInstance.get(API_ROUTES.FAQ(id));
-          const faqs =
-            response2.data?.success && Array.isArray(response2.data?.data)
-              ? response2.data.data
-              : [];
-
-          const updatedBotConfig = { ...botData, faqs };
-
-          setBotConfig(updatedBotConfig);
-          setCurrentStep(response.data?.currentStep || 1);
-
-          // ذخیره در localStorage برای دفعات بعد
-          localStorage.setItem(
-            "aiva-onboarding-data",
-            JSON.stringify({
-              botConfig: updatedBotConfig,
-              currentStep: response.data?.currentStep || 1,
-              timestamp: new Date().toISOString(),
-            })
+    const fetchBotData = async () => {
+      try {
+        // ✅ اگر id وجود دارد و مقدار آن new نیست، از API بگیر
+        if (id && id !== "new" && id.length > 3) {
+          const response = await axiosInstance.get(
+            `${API_ROUTES.BOTS.GET}${id}`
           );
-          return; // خروج بعد از دریافت داده از API
+          const hasApiData = response.data?.success && response.data?.data;
+
+          if (hasApiData) {
+            const botData = response.data.data;
+
+            // لود سوالات متداول (FAQ)
+            const response2 = await axiosInstance.get(API_ROUTES.FAQ(id));
+            const faqs =
+              response2.data?.success && Array.isArray(response2.data?.data)
+                ? response2.data.data
+                : [];
+
+            const updatedBotConfig = { ...botData, faqs };
+
+            setBotConfig(updatedBotConfig);
+            setCurrentStep(response.data?.currentStep || 1);
+
+            // ذخیره در localStorage برای دفعات بعد
+            localStorage.setItem(
+              "aiva-onboarding-data",
+              JSON.stringify({
+                botConfig: updatedBotConfig,
+                currentStep: response.data?.currentStep || 1,
+                timestamp: new Date().toISOString(),
+              })
+            );
+            return; // خروج بعد از دریافت داده از API
+          }
+        } else if (!id) {
+          const savedData = localStorage.getItem("aiva-onboarding-data");
+          if (savedData) {
+            const parsed = JSON.parse(savedData);
+            setBotConfig(parsed.botConfig || botConfig);
+            setCurrentStep(parsed.currentStep || 1);
+          }
+        } else {
+          setCurrentStep(1);
+        }
+      } catch (error) {
+        console.warn("خطا در دریافت داده‌های بات:", error);
+        // اگر خطا رخ دهد، از localStorage استفاده کن
+        const savedData = localStorage.getItem("aiva-onboarding-data");
+        if (savedData) {
+          const parsed = JSON.parse(savedData);
+          setBotConfig(parsed.botConfig || botConfig);
+          setCurrentStep(parsed.currentStep || 1);
         }
       }
+    };
 
-      // ✅ اگر id برابر new یا خالی است → داده از localStorage لود شود
-      const savedData = localStorage.getItem("aiva-onboarding-data");
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        setBotConfig(parsed.botConfig || botConfig);
-        setCurrentStep(parsed.currentStep || 1);
-      } else {
-        setCurrentStep(1);
-      }
-    } catch (error) {
-      console.warn("خطا در دریافت داده‌های بات:", error);
-      // اگر خطا رخ دهد، از localStorage استفاده کن
-      const savedData = localStorage.getItem("aiva-onboarding-data");
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        setBotConfig(parsed.botConfig || botConfig);
-        setCurrentStep(parsed.currentStep || 1);
-      }
-    }
-  };
-
-  fetchBotData();
-}, [user?.token, id]);
+    fetchBotData();
+  }, [user?.token, id]);
 
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
@@ -357,6 +360,8 @@ useEffect(() => {
           formData
         );
         if (res.data.success) {
+          await refreshBots();
+
           return true;
         } else {
           toast.error(res.data?.message || "خطا در ثبت اطلاعات");
@@ -372,6 +377,8 @@ useEffect(() => {
           const updated = { ...botConfig, uuid: newId };
           setBotConfig(updated);
           localStorage.setItem("aiva-onboarding-data", JSON.stringify(updated));
+          await refreshBots();
+          setCurrentBot(updated);
 
           return newId;
         } else {
@@ -600,20 +607,21 @@ useEffect(() => {
                     {convertToPersian(String(totalSteps))}
                   </span>
                 </div>
-
-                <Button
-                  variant="primary"
-                  onClick={nextStep}
-                  icon={currentStep < totalSteps ? "arrow-left" : "check"}
-                  iconPosition="left"
-                  className="px-6 shadow-md"
-                >
-                  {isSaving
-                    ? "در حال ذخیره..."
-                    : currentStep === totalSteps
-                    ? "اتمام و شروع"
-                    : "بعدی"}
-                </Button>
+                {(!id || id === "new") && (
+                  <Button
+                    variant="primary"
+                    onClick={nextStep}
+                    icon={currentStep < totalSteps ? "arrow-left" : "check"}
+                    iconPosition="left"
+                    className="px-6 shadow-md"
+                  >
+                    {isSaving
+                      ? "در حال ذخیره..."
+                      : currentStep === totalSteps
+                      ? "اتمام و شروع"
+                      : "بعدی"}
+                  </Button>
+                )}
               </div>
             </div>
 

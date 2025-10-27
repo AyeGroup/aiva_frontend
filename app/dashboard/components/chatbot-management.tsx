@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
+import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ToggleSmall } from "@/components/toggleSmall";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import {
   Edit3,
   Trash2,
@@ -19,8 +21,6 @@ import {
   X,
   Plus,
 } from "lucide-react";
-import { toast } from "sonner";
-import { ConfirmModal } from "@/components/ConfirmModal";
 
 export function ChatbotManagement() {
   const router = useRouter();
@@ -34,6 +34,11 @@ export function ChatbotManagement() {
     isOpen: false,
     id: null,
   });
+  const [confirmActiveModal, setConfirmActiveModal] = useState<{
+    isOpen: boolean;
+    id: string | null;
+    newStatus: boolean | null;
+  }>({ isOpen: false, id: null, newStatus: null });
 
   useEffect(() => {
     if (!user?.token) return;
@@ -49,14 +54,9 @@ export function ChatbotManagement() {
     setIsLoading(true);
 
     try {
-      const response = await axiosInstance.get(API_ROUTES.BOTS.LIST, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
+      const response = await axiosInstance.get(API_ROUTES.BOTS.LIST);
       setChatbots(response.data.data);
-      console.log("bot list: ", response.data);
+      // console.log("bot list: ", response.data);
     } catch (apiError: any) {
       console.warn("API fetch failed, using local data:", apiError);
     } finally {
@@ -64,12 +64,35 @@ export function ChatbotManagement() {
     }
   };
 
-  const toggleStatus = (id: string) => {
-    setChatbots((prev) =>
-      prev.map((bot) =>
-        bot.uuid === id ? { ...bot, status: !bot.active } : bot
-      )
-    );
+  const handleActive = async (id: string, active: boolean) => {
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      // formData.append("uuid", id);
+      formData.append("active", String(active));
+
+      const res = await axiosInstance.put(API_ROUTES.BOTS.EDIT(id), formData);
+
+      if (res.data.success) {
+        await loadChatbots();
+        toast.success("وضعیت جدید چت بات با موفقیت ثبت شد");
+      } else {
+        toast.error("خطا در تغییر وضعیت چت بات");
+        console.warn("⚠️ Unexpected response while removing item:", res.data);
+      }
+    } catch (error: any) {
+      toast.error("خطا در تغییر وضعیت چت بات");
+      console.error("Failed to remove item:", error);
+    } finally {
+      setIsLoading(false);
+      setConfirmModal({ isOpen: false, id: null });
+    }
+  };
+  const handleConfirmActive = async () => {
+    if (confirmActiveModal.id && confirmActiveModal.newStatus !== null) {
+      await handleActive(confirmActiveModal.id, confirmActiveModal.newStatus);
+      closeConfirmActiveModal();
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -99,6 +122,14 @@ export function ChatbotManagement() {
 
   const closeConfirmModal = () => {
     setConfirmModal({ isOpen: false, id: null });
+  };
+
+  const openConfirmActiveModal = (id: string, newStatus: boolean) => {
+    setConfirmActiveModal({ isOpen: true, id, newStatus });
+  };
+
+  const closeConfirmActiveModal = () => {
+    setConfirmActiveModal({ isOpen: false, id: null, newStatus: null });
   };
 
   const handleConfirmDelete = () => {
@@ -138,23 +169,23 @@ export function ChatbotManagement() {
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card relative overflow-hidden">
+              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card  ">
                 <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-primary/10"></div>
                 <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-primary/5"></div>
 
-                <div className="flex items-center justify-between mb-4 relative ">
+                <div className="flex items-center justify-between mb-4   ">
                   <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center">
                     <MessageSquare className="w-5 h-5 text-white" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-grey-900 mb-1 relative  ">
+                <h3 className="text-2xl font-bold text-grey-900 mb-1    ">
                   {chatbots.length}
                 </h3>
-                <p className="text-grey-600 text-sm text-left relative  ">
+                <p className="text-grey-600 text-sm text-left    ">
                   کل چت بات‌ها
                 </p>
               </div>
-              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card relative overflow-hidden">
+              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
                 <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-success/10"></div>
                 <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-success/5"></div>
                 <div className="flex items-center justify-between mb-4">
@@ -168,7 +199,7 @@ export function ChatbotManagement() {
                 <p className="text-grey-600 text-sm text-left">چت بات فعال</p>
               </div>
 
-              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card relative overflow-hidden">
+              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
                 <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-secondary/10"></div>
                 <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-secondary/5"></div>
                 <div className="flex items-center justify-between mb-4">
@@ -183,7 +214,6 @@ export function ChatbotManagement() {
                     (sum, bot) => sum + bot.conversationsToday,
                     0
                   )} */}
-                  0
                 </h3>
                 <p className="text-grey-600 text-sm text-left">
                   گفتگوهای امروز
@@ -258,11 +288,20 @@ export function ChatbotManagement() {
                                 chatbot.active ? "غیرفعال کردن" : "فعال کردن"
                               }
                               checked={chatbot.active}
-                              onChange={() => toggleStatus(chatbot.uuid)}
+                              onChange={() =>
+                                openConfirmActiveModal(
+                                  chatbot.uuid,
+                                  !chatbot.active
+                                )
+                              }
                             />
                           </div>
                           <button
-                            onClick={() => router.push("/onboarding")}
+                            onClick={() =>
+                              router.push(
+                                `/dashboard?tab=onboarding&id=${chatbot.uuid}`
+                              )
+                            }
                             className="p-2 text-grey-600 hover:text-brand-primary hover:bg-brand-primary/10 rounded-lg transition-all"
                             title="ویرایش"
                           >
@@ -270,7 +309,6 @@ export function ChatbotManagement() {
                           </button>
                           <button
                             onClick={() => openConfirmModal(chatbot.uuid)}
-                            // onClick={() => confirmAction(chatbot.uuid)}
                             className="p-2 text-grey-600 hover:text-danger hover:bg-danger/10 rounded-lg transition-all"
                             title="حذف"
                           >
@@ -284,6 +322,23 @@ export function ChatbotManagement() {
               </div>
             </div>
           </div>
+          <ConfirmModal
+            isOpen={confirmActiveModal.isOpen}
+            onClose={closeConfirmActiveModal}
+            onConfirm={handleConfirmActive}
+            title={
+              confirmActiveModal.newStatus
+                ? "فعال کردن چت بات"
+                : "غیرفعال کردن چت بات"
+            }
+            message={`آیا مطمئن هستید که می‌خواهید این چت بات را ${
+              confirmActiveModal.newStatus ? "فعال" : "غیرفعال"
+            } کنید؟`}
+            confirmText="بله، تایید"
+            cancelText="لغو"
+            type={confirmActiveModal.newStatus ? "success" : "warning"}
+          />
+
           <ConfirmModal
             isOpen={confirmModal.isOpen}
             onClose={closeConfirmModal}

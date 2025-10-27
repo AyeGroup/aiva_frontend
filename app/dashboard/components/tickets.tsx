@@ -33,7 +33,7 @@ interface TicketReply {
 
 type ViewType = "list" | "create" | "view";
 
-export function Tickets() {
+export   function Tickets() {
   const [view, setView] = useState<ViewType>("list");
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([
