@@ -1,6 +1,6 @@
 import { Input } from "@/components/input";
 import { useState } from "react";
-import { BehaviorSettings, BotConfig } from "@/types/common";
+import {  BotConfig } from "@/types/common";
 import { Settings, MessageSquare, Shield } from "lucide-react";
 import ToggleSetting from "@/components/toggle-setting";
 import ThreeLevelSlider from "@/components/ThreeLevelSlider";
@@ -13,21 +13,21 @@ const AnswerLength=[ "short","medium","long"]
   
 
 export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
-  const [behaviors, setBehaviors] = useState<BehaviorSettings>({
-    k: 10,
-    maxResponseLength: "medium",
-    useGreeting: true,
-    useEmojis: false,
-    support_phone: "",
-  });
+  // const [behaviors, setBehaviors] = useState<BehaviorSettings>({
+  //   k: 10,
+  //   maxResponseLength: "medium",
+  //   useGreeting: true,
+  //   useEmojis: false,
+  //   support_phone: "",
+  // });
 
   const [sliderValue, setSliderValue] = useState(10);
 
-  const handleBehaviorChange = (key: keyof BehaviorSettings, value: any) => {
-    const updated = { ...behaviors, [key]: value };
-    setBehaviors(updated);
-    updateConfig({ behaviors: updated });
-  };
+  // const handleBehaviorChange = (key: keyof BehaviorSettings, value: any) => {
+  //   const updated = { ...behaviors, [key]: value };
+  //   setBehaviors(updated);
+  //   updateConfig({ behaviors: updated });
+  // };
 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg">
@@ -66,9 +66,11 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           {AnswerLength.map((length) => (
             <button
               key={length}
-              onClick={() => handleBehaviorChange("maxResponseLength", length)}
+              onClick={() => updateConfig({ answer_length: length })}
+              // onChange={(e) => updateConfig({ answer_length: e.target.value })}
+              // onClick={() => handleBehaviorChange("maxResponseLength", length)}
               className={`p-4 rounded-lg border-2 transition-all ${
-                behaviors.maxResponseLength === String(length)
+                botConfig.answer_length === String(length)
                   ? "border-brand-primary bg-brand-primary/5"
                   : "border-border-soft hover:border-brand-primary/50"
               }`}
@@ -97,9 +99,10 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           <ToggleSetting
             label="خوشامدگویی خودکار"
             description="پیام خوشامد به صورت خودکار نمایش یابد"
-            value={behaviors.useGreeting}
-            onToggle={() =>
-              handleBehaviorChange("useGreeting", !behaviors.useGreeting)
+            value={botConfig.greetings}
+            onToggle={
+              () => updateConfig({ greetings: !botConfig.greetings })
+              // handleBehaviorChange("useGreeting", !behaviors.useGreeting)
             }
           />
 
@@ -107,9 +110,10 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           <ToggleSetting
             label="استفاده از ایموجی"
             description="ایموجی در پاسخ‌ها استفاده شود"
-            value={behaviors.useEmojis}
-            onToggle={() =>
-              handleBehaviorChange("useEmojis", !behaviors.useEmojis)
+            value={botConfig.use_emoji}
+            onToggle={
+              () => updateConfig({ use_emoji: !botConfig.use_emoji })
+              // handleBehaviorChange("useEmojis", !behaviors.useEmojis)
             }
           />
 
@@ -132,9 +136,10 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             type="text"
             numeric={true}
             inputMode="numeric"
-            value={behaviors.support_phone}
-            onChange={(e) =>
-              handleBehaviorChange("support_phone", e.target.value)
+            value={botConfig.support_phone}
+            onChange={
+              (e) => updateConfig({ support_phone: e.target.value })
+              // handleBehaviorChange("support_phone", e.target.value)
             }
             placeholder="شماره پشتیبانی را وارد کنید"
             className="w-full text-sm rounded-2xl p-4 border !bg-white text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"

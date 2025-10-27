@@ -40,8 +40,7 @@ export function Header({
     >
       <div className="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
         <div className="flex items-center justify-between">
-          {/* لوگو - فقط در حالت عادی نمایش داده می‌شود */}
-          {/* {!isEditingChatbot && !isOnboarding && ( */}
+           {/* {!isEditingChatbot && !isOnboarding && ( */}
             <div className="flex items-center">
               <button
                 onClick={() => router.push("/landing")}

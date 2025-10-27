@@ -7,6 +7,7 @@ import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
 import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
+import { BotConfig } from "@/types/common";
 import { AivaWhite } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WizardStep1 } from "./steps/step1";
@@ -21,7 +22,6 @@ import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { BehaviorSettings, BotConfig } from "@/types/common";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -34,13 +34,7 @@ export default function OnboardingWizard() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const initialBehaviorSettings: BehaviorSettings = {
-    k: 10,
-    maxResponseLength: "medium",
-    useGreeting: true,
-    useEmojis: false,
-    support_phone: "",
-  };
+
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
     name: "",
@@ -60,13 +54,16 @@ export default function OnboardingWizard() {
     faqs: [],
     logo_url: "",
     active: true,
-    behaviors: initialBehaviorSettings,
+    k: 10,
+    answer_length: "medium",
+    greetings: true,
+    use_emoji: false,
+    support_phone: "",
   });
   const totalSteps = steps.length;
-  console.log("mina", id);
 
+  // authentication
   useEffect(() => {
-    // authentication
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
@@ -75,7 +72,6 @@ export default function OnboardingWizard() {
 
     const fetchBotData = async () => {
       try {
-        // ✅ اگر id وجود دارد و مقدار آن new نیست، از API بگیر
         if (id && id !== "new" && id.length > 3) {
           const response = await axiosInstance.get(
             `${API_ROUTES.BOTS.GET}${id}`
@@ -144,64 +140,6 @@ export default function OnboardingWizard() {
     localStorage.setItem("aiva-onboarding-data", JSON.stringify(dataToSave));
   }, [botConfig, currentStep]);
 
-  const loadOnboardingData = async () => {
-    try {
-      const savedData = localStorage.getItem("aiva-onboarding-data");
-      if (!savedData) return;
-
-      const parsedData = JSON.parse(savedData);
-
-      if (parsedData.botConfig?.uuid) {
-        try {
-          const response = await axiosInstance.get(
-            `${API_ROUTES.BOTS.GET}${parsedData.botConfig.uuid}`
-          );
-          const hasApiData = response.data?.success && response.data?.data;
-
-          setBotConfig(hasApiData ? response.data.data : parsedData.botConfig);
-          setCurrentStep(
-            response.data?.currentStep || parsedData.currentStep || 1
-          );
-
-          // console.log("1", response.data.data);
-          const response2 = await axiosInstance.get(
-            API_ROUTES.FAQ(parsedData.botConfig.uuid)
-          );
-          const faqs = response2.data?.success && response2.data?.data;
-          // console.log("2", response2.data.data);
-          const updatedBotConfig = {
-            ...(hasApiData ? response.data.data : parsedData.botConfig),
-            faqs: faqs,
-          };
-
-          setBotConfig(updatedBotConfig);
-          // console.log("3", updatedBotConfig);
-
-          // ذخیره فقط اگر داده جدید اومده
-          if (hasApiData) {
-            localStorage.setItem(
-              "aiva-onboarding-data",
-              JSON.stringify({
-                botConfig: response.data.data,
-                currentStep:
-                  response.data?.currentStep || parsedData.currentStep || 1,
-              })
-            );
-          }
-        } catch (apiError: any) {
-          console.warn("API fetch failed, using local data:", apiError);
-          setBotConfig(parsedData.botConfig);
-          setCurrentStep(parsedData.currentStep || 1);
-        }
-      } else {
-        setBotConfig(parsedData.botConfig);
-        setCurrentStep(1);
-      }
-    } catch (error) {
-      console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
-    }
-  };
-
   const validateFields = (step: number) => {
     const newErrors: { [key: string]: string } = {};
     if (step === 1) {
@@ -226,33 +164,20 @@ export default function OnboardingWizard() {
   const saveBotBehavior = async () => {
     setIsSaving(true);
     try {
+      console.log("step5 save: ", botConfig);
       const formData = new FormData();
       formData.append("uuid", botConfig.uuid);
-      formData.append("k", String(botConfig.behaviors?.k) || "5");
+      formData.append("k", String(botConfig?.k) || "5");
       formData.append(
         "answer_length",
-        String(botConfig.behaviors?.maxResponseLength) || "short"
+        String(botConfig?.answer_length) || "short"
       );
-      formData.append(
-        "greetings",
-        String(botConfig.behaviors?.useGreeting) || "false"
-      );
-      formData.append(
-        "use_emoji",
-        String(botConfig.behaviors?.useEmojis) || "true"
-      );
-      formData.append(
-        "support_phone",
-        botConfig.behaviors?.support_phone || ""
-      );
+      formData.append("greetings", String(botConfig?.greetings) || "false");
+      formData.append("use_emoji", botConfig?.use_emoji ? "true" : "false");
+      formData.append("support_phone", botConfig?.support_phone || "");
       const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
+        formData
       );
       if (res.data.success) return true;
       else return false;
@@ -473,9 +398,25 @@ export default function OnboardingWizard() {
         );
     }
   };
-  console.log("q id: ", id);
+
   if (loading) return <PageLoader />;
   if (!user) return null;
+
+  const showButton = !id || id === "new" || currentStep < totalSteps;
+
+  const saveCaption = () => {
+    if (isSaving) return "در حال ذخیره...";
+
+    if (!id || id === "new") {
+      // console.log("is new");
+      return currentStep === totalSteps ? "اتمام و شروع" : "بعدی";
+    } else {
+      // console.log("is edit", currentStep);
+      if (currentStep === 1 || currentStep === 2 || currentStep === 5)
+        return "ثبت";
+      else return "بعدی";
+    }
+  };
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app" dir="rtl">
@@ -599,7 +540,6 @@ export default function OnboardingWizard() {
                 >
                   قبلی
                 </Button>
-
                 {/* Minimal Step Counter */}
                 <div className="bg-white border border-grey-200 px-4 py-2 rounded-lg shadow-sm">
                   <span className="text-sm text-grey-700 font-medium">
@@ -607,7 +547,7 @@ export default function OnboardingWizard() {
                     {convertToPersian(String(totalSteps))}
                   </span>
                 </div>
-                {(!id || id === "new") && (
+                {showButton && (
                   <Button
                     variant="primary"
                     onClick={nextStep}
@@ -615,11 +555,7 @@ export default function OnboardingWizard() {
                     iconPosition="left"
                     className="px-6 shadow-md"
                   >
-                    {isSaving
-                      ? "در حال ذخیره..."
-                      : currentStep === totalSteps
-                      ? "اتمام و شروع"
-                      : "بعدی"}
+                    {saveCaption()}
                   </Button>
                 )}
               </div>
@@ -635,17 +571,19 @@ export default function OnboardingWizard() {
         </div>
 
         {/* Clean Exit Link */}
-        <div className="text-center mt-16">
-          <button
-            onClick={() => {
-              localStorage.removeItem("aiva-onboarding-data");
-              router.push("/");
-            }}
-            className="text-grey-600 hover:text-grey-900 text-sm underline transition-colors font-medium cursor-pointer"
-          >
-            انصراف و بازگشت به صفحه اصلی
-          </button>
-        </div>
+        {!id && (
+          <div className="text-center mt-16">
+            <button
+              onClick={() => {
+                localStorage.removeItem("aiva-onboarding-data");
+                router.push("/");
+              }}
+              className="text-grey-600 hover:text-grey-900 text-sm underline transition-colors font-medium cursor-pointer"
+            >
+              انصراف و بازگشت به صفحه اصلی
+            </button>
+          </div>
+        )}
       </div>
     </main>
   );

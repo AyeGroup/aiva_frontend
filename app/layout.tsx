@@ -4,6 +4,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import "@/styles/globals.css";
 import "@/styles/login.css";
 import { Toaster } from "sonner";
+import { BotProvider } from "@/providers/BotProvider";
 // import "nprogress/nprogress.css";
 
 export const metadata: Metadata = {
@@ -25,7 +26,9 @@ export default function RootLayout({
         {/* <NProgressHandler /> */}
         <div className="app-shell">
           <div className="app-content">
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              <BotProvider>{children}</BotProvider>
+            </AuthProvider>
             {/* <Toaster position="top-center" dir="rtl" richColors closeButton /> */}
             <Toaster
               position="top-center"

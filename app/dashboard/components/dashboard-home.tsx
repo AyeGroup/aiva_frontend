@@ -129,7 +129,7 @@ export default function Dashboard() {
       );
       const formattedData = response.data.data.map((d: any) => ({
         name: new Date(d.time ?? "").toLocaleDateString("fa-IR"),
-        value: d.value + 3,
+        value: d.value ,
       }));
 
       setUsersData(formattedData);
@@ -142,12 +142,12 @@ export default function Dashboard() {
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
-        API_ROUTES.STATISTIC.USERS(currentBot?.uuid),
+        API_ROUTES.STATISTIC.SESSION(currentBot?.uuid),
         { params: { days: days.replace("d", "") } }
       );
       const formattedData = response.data.data.map((d: any) => ({
         name: new Date(d.time ?? "").toLocaleDateString("fa-IR"),
-        value: d.value + 3,
+        value: d.value  ,
       }));
 
       setChatsData(formattedData);

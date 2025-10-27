@@ -46,11 +46,15 @@ export interface BotConfig {
   knowledge: Array<KnowledgeItem>;
   faqs: Array<FAQ>;
   logo_url: string;
-  behaviors: BehaviorSettings;
+  k: number;
+  answer_length: string;
+  support_phone: string;
+  greetings: boolean;
+  use_emoji: boolean;
+  active: boolean;
 
   // -------------------برای آمار
   updated_at?: string;
-  active: boolean;
   conversationsToday?: string;
   url?: string;
 }
@@ -73,13 +77,13 @@ export interface KnowledgeItem {
   qa_id?: string;
   upload_id?: string;
 }
-export interface BehaviorSettings {
-  k: number;
-  maxResponseLength: string;
-  support_phone: string;
-  useGreeting: boolean;
-  useEmojis: boolean;
-}
+// export interface BehaviorSettings {
+//   k: number;
+//   maxResponseLength: string;
+//   support_phone: string;
+//   useGreeting: boolean;
+//   useEmojis: boolean;
+// }
 
 export interface ButtonProps extends BaseComponentProps {
   variant?: "primary" | "secondary" | "tertiary";

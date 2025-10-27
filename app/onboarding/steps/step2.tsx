@@ -72,7 +72,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         );
 
         botConfig.knowledge = response.data.data;
-        console.log("botConfig.knowledge: ", botConfig.knowledge);
+        // console.log("botConfig.knowledge: ", botConfig.knowledge);
       } catch (apiError: any) {
         console.warn("API fetch failed, using local data:", apiError);
       }
