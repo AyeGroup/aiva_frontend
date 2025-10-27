@@ -2,13 +2,13 @@
 import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
 import { Select } from "@/components/select";
+import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
-import { BotConfig } from "@/types/common";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { RecentChats } from "../recent-chats";
 import { HeatmapChart } from "@/components/heatmap-chart";
-import { DashboardCard } from "@/components/dashboard-card";
+import { UpgradeBanner } from "../upgrade-banner";
 import { ActivityChart } from "@/components/activity-chart";
-import { ColorShowcase } from "@/components/color-showcase";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -22,10 +22,6 @@ import {
   Faqs,
   User,
 } from "@/public/icons/AppIcons";
-import { RecentChats } from "../recent-chats";
-import { UpgradeBanner } from "../upgrade-banner";
-import { ActiveUsers } from "../active-users";
-import { useBot } from "@/providers/BotProvider";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -33,7 +29,6 @@ export default function Dashboard() {
   const { user, loading } = useAuth();
   const [isNew, setIsNew] = useState(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
-  // const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [usersData, setUsersData] = useState<any[]>([]);
@@ -217,11 +212,7 @@ export default function Dashboard() {
   const handleChatClick = async () => {};
 
   return (
-    
-    <div
-      className="h-screen  bg-white !z-0"
-      style={{ zIndex: 0 }}
-    >
+    <div className="h-screen  bg-white !z-0" style={{ zIndex: 0 }}>
       {/* overflow-hidden */}
       <div className="flex h-screen">
         {/* Main Content */}

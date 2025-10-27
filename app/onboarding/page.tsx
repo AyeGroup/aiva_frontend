@@ -63,15 +63,72 @@ export default function OnboardingWizard() {
   });
   const totalSteps = steps.length;
 
-  //   چک ورود کاربر
-  useEffect(() => {
+
+   useEffect(() => { // authentication
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
-  //  بارگذاری اطلاعات ذخیره‌شده
-  useEffect(() => {
-    if (user?.token) loadOnboardingData();
-  }, [user?.token]);
+useEffect(() => {
+  if (!user?.token) return;
+
+  const fetchBotData = async () => {
+    try {
+      // ✅ اگر id وجود دارد و مقدار آن new نیست، از API بگیر
+      if (id && id !== "new" && id.length > 3) {
+        const response = await axiosInstance.get(`${API_ROUTES.BOTS.GET}${id}`);
+        const hasApiData = response.data?.success && response.data?.data;
+
+        if (hasApiData) {
+          const botData = response.data.data;
+
+          // لود سوالات متداول (FAQ)
+          const response2 = await axiosInstance.get(API_ROUTES.FAQ(id));
+          const faqs =
+            response2.data?.success && Array.isArray(response2.data?.data)
+              ? response2.data.data
+              : [];
+
+          const updatedBotConfig = { ...botData, faqs };
+
+          setBotConfig(updatedBotConfig);
+          setCurrentStep(response.data?.currentStep || 1);
+
+          // ذخیره در localStorage برای دفعات بعد
+          localStorage.setItem(
+            "aiva-onboarding-data",
+            JSON.stringify({
+              botConfig: updatedBotConfig,
+              currentStep: response.data?.currentStep || 1,
+              timestamp: new Date().toISOString(),
+            })
+          );
+          return; // خروج بعد از دریافت داده از API
+        }
+      }
+
+      // ✅ اگر id برابر new یا خالی است → داده از localStorage لود شود
+      const savedData = localStorage.getItem("aiva-onboarding-data");
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        setBotConfig(parsed.botConfig || botConfig);
+        setCurrentStep(parsed.currentStep || 1);
+      } else {
+        setCurrentStep(1);
+      }
+    } catch (error) {
+      console.warn("خطا در دریافت داده‌های بات:", error);
+      // اگر خطا رخ دهد، از localStorage استفاده کن
+      const savedData = localStorage.getItem("aiva-onboarding-data");
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        setBotConfig(parsed.botConfig || botConfig);
+        setCurrentStep(parsed.currentStep || 1);
+      }
+    }
+  };
+
+  fetchBotData();
+}, [user?.token, id]);
 
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
@@ -409,18 +466,13 @@ export default function OnboardingWizard() {
         );
     }
   };
-
-  if (loading)
-    return (
-      <div>
-        <PageLoader />
-      </div>
-    );
+  console.log("q id: ", id);
+  if (loading) return <PageLoader />;
   if (!user) return null;
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app" dir="rtl">
-      <Header currentPage="onboarding" isOnboarding={true} />
+      {!id && <Header currentPage="onboarding" isOnboarding={true} />}
       <div className="container mx-auto px-6 py-12 relative z-10">
         {/* Clean Minimal Header */}
         <div className="flex flex-col justify-center items-center mb-16">

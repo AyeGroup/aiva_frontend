@@ -181,24 +181,7 @@ export function Header({
               isEditingChatbot || isOnboarding ? "w-full" : ""
             }`}
           >
-            {user?.token ? (
-              <Button
-                variant={
-                  authButtons.signup.variant as
-                    | "primary"
-                    | "secondary"
-                    | "tertiary"
-                }
-                size="md"
-                title={authButtons.signup.title}
-                onClick={() => router.push("/dashboard")}
-                icon="arrow-right"
-                iconPosition="right"
-                className="hidden sm:inline-flex text-sm lg:text-base px-4 lg:px-6 py-2 "
-              >
-                حساب کاربری
-              </Button>
-            ) : isEditingChatbot ? (
+            {isEditingChatbot ? (
               // فقط دکمه بازگشت برای ویرایش چت‌بات
               <Button
                 variant="secondary"
@@ -215,17 +198,17 @@ export function Header({
                 <span>برگشت</span>
               </Button>
             ) : isOnboarding ? (
-              // دکم�� بازگشت برای onboarding
-              <Button
-                variant="secondary"
-                size="md"
-                title="برگشت به مدیریت چت‌بات‌ها"
-                onClick={() => router.push("/chatbot-management")}
-                className="text-sm lg:text-base px-4 lg:px-6 py-2"
-              >
-                <ArrowLeft className="w-5 h-5 ml-2" />
-                <span>برگشت</span>
-              </Button>
+              <></>
+              //  <Button
+              //   variant="secondary"
+              //   size="md"
+              //   title="برگشت به مدیریت چت‌بات‌ها"
+              //   onClick={() => router.push("/chatbot-management")}
+              //   className="text-sm lg:text-base px-4 lg:px-6 py-2"
+              // >
+              //   <ArrowLeft className="w-5 h-5 ml-2" />
+              //   <span>برگشت</span>
+              // </Button>
             ) : (
               // دکمه‌های ورود و ثبت‌نام برای صفحات عادی
               <>

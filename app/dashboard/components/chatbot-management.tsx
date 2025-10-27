@@ -65,8 +65,6 @@ export function ChatbotManagement() {
   };
 
   const toggleStatus = (id: string) => {
-
-    
     setChatbots((prev) =>
       prev.map((bot) =>
         bot.uuid === id ? { ...bot, status: !bot.active } : bot
@@ -127,10 +125,8 @@ export function ChatbotManagement() {
 
               <button
                 className="flex bg-primary rounded-sm white px-4 py-3 cursor-pointer"
-                // onClick={() => router.push("/onboarding")}
                 onClick={() => {
-                  console.log("clicked");
-                  router.push("/onboarding");
+                  router.push("/dashboard?tab=onboarding&id=new");
                 }}
               >
                 <span className="text-white">افزودن چت‌بات جدید</span>
