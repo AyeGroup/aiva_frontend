@@ -4,11 +4,7 @@
 import { useRouter } from "next/navigation";
 import { ctaData } from "./landing.data";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
 
-interface FinalCTAProps {
-  onNavigate: (page: PageType) => void;
-}
 
 export function FinalCTA() {
   const { title, subtitle, cta, features } = ctaData;

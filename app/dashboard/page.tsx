@@ -17,8 +17,8 @@ export default function DashboardPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  const currentPage = (searchParams.get("tab") ?? "dashboard") as
-    | "dashboard"
+  const currentPage = (searchParams.get("tab") ?? "dashboard-home") as
+    | "dashboard-home"
     | "chatbot-management"
     | "tickets"
     | "onboarding"

@@ -2,12 +2,7 @@
 import { heroData } from "./landing.data";
 import { AnimatedChatDemo } from "./animated-chat-demo";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
-
-interface HeroProps {
-  onNavigate: (page: PageType) => void;
-}
-
+ 
 export function Hero() {
   const { headline, subheadline, cta, socialProof } = heroData;
 

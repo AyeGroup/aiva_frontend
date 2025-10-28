@@ -61,13 +61,13 @@ interface SidebarProps {
   router: ReturnType<typeof useRouter>;
 }
 
-export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
+export function Sidebar({ currentPage = "dashboard-home", router }: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { bots, currentBot, setCurrentBot } = useBot(); // ← دسترسی به بات‌ها
+  // const { bots, currentBot, setCurrentBot } = useBot(); // ← دسترسی به بات‌ها
   const handleLogout = async () => {
     try {
       setIsLoading(true);
@@ -77,12 +77,6 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleBotChange = (botId: string) => {
-    console.log("botId", botId);
-    const selected = bots.find((b) => b.uuid === botId);
-    if (selected) setCurrentBot(selected);
   };
 
   return (
@@ -114,34 +108,22 @@ export function Sidebar({ currentPage = "dashboard", router }: SidebarProps) {
 
       {/* Bot Selector Dropdown */}
       <div className="px-4   text-lg font-bold flex justify-center items-center">
-        {bots && bots.length > 0 && (
+        {/* {bots && bots.length > 0 && (
           <>
             <label className="block   font-medium text-gray-700 m-1">
               چت‌بات
             </label>
           <ChatbotSelector/>
-            {/* <select
-              className="w-full p-2 rounded-lg border text-center "
-              value={currentBot?.uuid || ""}
-              onChange={(e) => handleBotChange(e.target.value)}
-            >
-              {bots.length === 0 && <option>در حال بارگذاری...</option>}
-              {bots.map((bot: any) => (
-                <option key={bot.uuid} value={bot.uuid}>
-                  {bot.name}
-                  {bot.isDefault ? " (پیش‌فرض)" : ""}
-                </option>
-              ))}
-            </select> */}
+            
           </>
-        )}
+        )} */}
       </div>
 
       {/* Navigation Menu */}
       <nav className="flex-1 py-1">
         <SidebarItem
           label="میزکار"
-          active={currentPage === "dashboard"}
+          active={currentPage === "dashboard-home"}
           onClick={() => router.push("/dashboard?tab=dashboard-home")}
         />
         <SidebarItem

@@ -20,7 +20,7 @@ export type PageType =
   | "login"
   | "onboarding"
   | "verification"
-  | "dashboard"
+  | "dashboard-home"
   | "consultation"
   | "demo"
   | "chatbot-management"

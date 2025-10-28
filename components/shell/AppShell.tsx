@@ -41,7 +41,7 @@ export default function AppShell({ page }: AppShellProps) {
         return <OnboardingWizard />;
       case "register":
         return <Register />;
-      case "dashboard":
+      case "dashboard-home":
         return <Dashboard />;
       // case "tickets":
         // return <Tickets />;
@@ -57,7 +57,7 @@ export default function AppShell({ page }: AppShellProps) {
   };
 
   const showHeader = ![
-    "dashboard",
+    "dashboard-home",
     "chatbot-management",
     "tickets",
     "login",

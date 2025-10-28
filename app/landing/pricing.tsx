@@ -6,11 +6,7 @@ import { Check, Sparkles, Zap, Rocket, Crown, Building2 } from "lucide-react";
 import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
 
-type PageType = "landing" | "signup" | "dashboard" | "consultation";
 
-interface PricingProps {
-  onNavigate: (page: PageType) => void;
-}
 
 // آیکون‌ها و رنگ‌های هر پلن
 const planThemes = {
