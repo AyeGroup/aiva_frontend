@@ -44,7 +44,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     if (!botId) return;
     try {
       setIsLoading(true);
-      const res = await axiosInstance.get(API_ROUTES.FAQ(botId));
+      const res = await axiosInstance.get(API_ROUTES.BOTS.FAQ(botId));
       setFaqs(res.data.data || []);
     } catch (err) {
       console.error("خطا در دریافت FAQها:", err);
@@ -63,7 +63,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
         question: newFaq.question,
         answer: newFaq.answer,
       };
-      const res = await axiosInstance.post(API_ROUTES.FAQ(botId), payload);
+      const res = await axiosInstance.post(API_ROUTES.BOTS.FAQ(botId), payload);
 
       if (res.status === 200 || res.status === 201) {
         await fetchFaqs();
@@ -93,7 +93,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   const saveEdit = async (id: string, question: string, answer: string) => {
     setIsLoading(true);
     try {
-      await axiosInstance.put(`${API_ROUTES.FAQ(botId)}/${id}`, {
+      await axiosInstance.put(`${API_ROUTES.BOTS.FAQ(botId)}/${id}`, {
         question,
         answer,
       });
@@ -112,7 +112,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     setIsLoading(true);
 
     try {
-      await axiosInstance.delete(`${API_ROUTES.FAQ(botId)}/${id}`);
+      await axiosInstance.delete(`${API_ROUTES.BOTS.FAQ(botId)}/${id}`);
       await fetchFaqs();
       // setFaqs((prev) => prev.filter((f) => f.id !== id));
     } catch (err) {

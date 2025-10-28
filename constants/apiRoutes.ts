@@ -41,7 +41,9 @@ export const API_ROUTES = {
     SESSION_COUNT_COVER: `${API_BASE_URL}/dashboard/user-chatbots-sessions`,
     SESSION_COUNT: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/chatbots-conversations/${bot_uuid}`,
+    FAQ: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/faqs`,
   },
+
   KNOWLEDGE: {
     DOCUMENT: (bot_uuid: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents`,
@@ -58,7 +60,14 @@ export const API_ROUTES = {
     URL: (bot_uuid: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents/url`,
   },
-  FAQ: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/faqs`,
+
+  TICKETS: {
+    CREATE: `${API_BASE_URL}/tickets/`,
+    GET: (ticket_id: string) => `${API_BASE_URL}/tickets/${ticket_id}`,
+    LIST: `${API_BASE_URL}/tickets`,
+    ADD_MESSAGE: (ticket_id: string) =>
+      `${API_BASE_URL}/tickets/${ticket_id}/messages`,
+  },
 
   USER: {
     PROFILE: `${API_BASE_URL}/user/profile`,

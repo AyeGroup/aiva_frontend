@@ -77,6 +77,24 @@ export interface KnowledgeItem {
   qa_id?: string;
   upload_id?: string;
 }
+export type TicketCategory = "technical" | "billing" | "general";
+export type TicketPriority = "low" | "medium" | "high" | "urgent";
+
+
+export interface Ticket {
+  id: string;
+  title: string;
+  description: string;
+  status: "open" | "pending" | "closed";
+  priority: TicketPriority;
+  category: TicketCategory;
+  createdAt: string;
+  updatedAt: string;
+  assignee?: string;
+  tags?: string[];
+  replies?: any[];
+}
+
 // export interface BehaviorSettings {
 //   k: number;
 //   maxResponseLength: string;
