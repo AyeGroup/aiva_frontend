@@ -37,7 +37,7 @@ export function TicketList({
           >
             <h4 className="font-bold">{ticket.title}</h4>
             <p className="text-sm text-gray-500 truncate">
-              {ticket.description}
+              {ticket.content}
             </p>
             <p className="text-xs text-gray-400">اولویت: {ticket.priority}</p>
           </Card>

@@ -79,12 +79,14 @@ export interface KnowledgeItem {
 }
 export type TicketCategory = "technical" | "billing" | "general";
 export type TicketPriority = "low" | "medium" | "high" | "urgent";
+ 
+export type ViewType = "list" | "create" | "view";
 
 
 export interface Ticket {
   id: string;
   title: string;
-  description: string;
+  content: string;
   status: "open" | "pending" | "closed";
   priority: TicketPriority;
   category: TicketCategory;

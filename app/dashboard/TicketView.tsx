@@ -20,7 +20,7 @@ export function TicketView({ ticket, onBack }: Props) {
 
       <Card className="p-6">
         <h2 className="text-xl font-bold mb-2">{ticket.title}</h2>
-        <p className="mb-2">{ticket.description}</p>
+        <p className="mb-2">{ticket.content}</p>
         <p className="text-sm text-gray-500">دسته‌بندی: {ticket.category}</p>
         <p className="text-sm text-gray-500">اولویت: {ticket.priority}</p>
         <p className="text-sm text-gray-500">وضعیت: {ticket.status}</p>

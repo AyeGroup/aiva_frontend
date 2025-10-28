@@ -18,7 +18,7 @@ interface Props {
 export function CreateTicketForm({ onSubmit }: Props) {
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
+    content: "",
     category: "general" as TicketCategory,
     priority: "medium" as TicketPriority,
   });
@@ -26,7 +26,7 @@ export function CreateTicketForm({ onSubmit }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.description) {
+    if (!formData.title || !formData.content) {
       toast.error("لطفاً تمام فیلدهای الزامی را پر کنید");
       return;
     }
@@ -40,7 +40,7 @@ export function CreateTicketForm({ onSubmit }: Props) {
       onSubmit(response.data.data);
       setFormData({
         title: "",
-        description: "",
+        content: "",
         category: "general",
         priority: "medium",
       });
@@ -66,9 +66,9 @@ export function CreateTicketForm({ onSubmit }: Props) {
           <label className="block mb-1 font-medium">توضیحات</label>
           <textarea
             className="w-full p-2 border rounded-md min-h-[100px]"
-            value={formData.description}
+            value={formData.content}
             onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
+              setFormData({ ...formData, content: e.target.value })
             }
             required
           />
