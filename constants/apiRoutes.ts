@@ -25,8 +25,7 @@ export const API_ROUTES = {
     SESSION: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/sessions-trend/${bot_uuid}/`, //days
 
-    FAQ_LIST: (bot_uuid: string) =>
-      `${API_BASE_URL}/chatbots/${bot_uuid}/faqs`, //days
+    FAQ_LIST: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/faqs`, //days
   },
 
   BOTS: {
@@ -39,6 +38,9 @@ export const API_ROUTES = {
 
     GET_EMBED: (bot_uuid: string) =>
       `${API_BASE_URL}/widget/embed-script/${bot_uuid}`,
+    SESSION_COUNT_COVER: `${API_BASE_URL}/dashboard/user-chatbots-sessions`,
+    SESSION_COUNT: (bot_uuid: string) =>
+      `${API_BASE_URL}/dashboard/chatbots-conversations/${bot_uuid}`,
   },
   KNOWLEDGE: {
     DOCUMENT: (bot_uuid: string) =>

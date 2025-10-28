@@ -26,6 +26,7 @@ export function ChatbotManagement() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [chatbots, setChatbots] = useState<BotConfig[]>([]);
+  const [sessions, setSessions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
@@ -57,6 +58,12 @@ export function ChatbotManagement() {
       const response = await axiosInstance.get(API_ROUTES.BOTS.LIST);
       setChatbots(response.data.data);
       // console.log("bot list: ", response.data);
+
+      const response1 = await axiosInstance.get(
+        API_ROUTES.BOTS.SESSION_COUNT_COVER
+      );
+      setSessions(response1.data.data.chatbots);
+      console.log("SESSION_COUNT_COVER: ", response1.data.data.chatbots);
     } catch (apiError: any) {
       console.warn("API fetch failed, using local data:", apiError);
     } finally {
@@ -88,6 +95,7 @@ export function ChatbotManagement() {
       setConfirmModal({ isOpen: false, id: null });
     }
   };
+
   const handleConfirmActive = async () => {
     if (confirmActiveModal.id && confirmActiveModal.newStatus !== null) {
       await handleActive(confirmActiveModal.id, confirmActiveModal.newStatus);
@@ -169,7 +177,7 @@ export function ChatbotManagement() {
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card  ">
+              <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card  ">
                 <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-primary/10"></div>
                 <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-primary/5"></div>
 
@@ -185,7 +193,7 @@ export function ChatbotManagement() {
                   کل چت بات‌ها
                 </p>
               </div>
-              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
+              <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
                 <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-success/10"></div>
                 <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-success/5"></div>
                 <div className="flex items-center justify-between mb-4">
@@ -199,7 +207,7 @@ export function ChatbotManagement() {
                 <p className="text-grey-600 text-sm text-left">چت بات فعال</p>
               </div>
 
-              <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
+              <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
                 <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-secondary/10"></div>
                 <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-secondary/5"></div>
                 <div className="flex items-center justify-between mb-4">
@@ -210,10 +218,10 @@ export function ChatbotManagement() {
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
-                  {/* {chatbots.reduce(
-                    (sum, bot) => sum + bot.conversationsToday,
+                  {Object.values(sessions).reduce(
+                    (sum, count) => sum + count,
                     0
-                  )} */}
+                  )}
                 </h3>
                 <p className="text-grey-600 text-sm text-left">
                   گفتگوهای امروز
@@ -264,7 +272,8 @@ export function ChatbotManagement() {
                         {/* Stats */}
                         <div className="text-center">
                           <p className="text-lg font-bold text-grey-900">
-                            {chatbot.conversationsToday}
+                            {/* {chatbot.conversationsToday} */}
+                            {sessions?.[chatbot?.uuid as any] || "0"}
                           </p>
                           <p className="text-xs text-grey-500">گفتگو امروز</p>
                         </div>
