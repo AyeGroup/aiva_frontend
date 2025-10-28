@@ -25,9 +25,10 @@ const config: Config = {
         primary: "#65BCB6",
         secondary: "#FFA18E",
         accent: "#f59e0b",
+        accentGreen: "#52d4a0",
         accentOrange: "#f59e0b",
         text: "#4b5563",
-        // --brandSecondary
+    
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"], // فونت پیش‌فرض

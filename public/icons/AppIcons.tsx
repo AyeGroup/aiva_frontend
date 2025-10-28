@@ -414,14 +414,14 @@ export const Plus = () => {
     <svg viewBox="0 0 18 18" fill="none">
       <path
         d="M3.75 9H14.25"
-        stroke="currentColot"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M9 3.75V14.25"
-        stroke="currentColot"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -531,3 +531,120 @@ export const Faqs = () => {
     </svg>
   );
 };
+
+export const TicketTitle = () => {
+  return (
+    <svg
+      className="w-6 h-6 text-brand-purple"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+    </svg>
+  );
+};
+
+export const Back = () => {
+  return (
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M15 19l-7-7 7-7"
+      />
+    </svg>
+  );
+};
+
+export const TicketAll = () => {
+  return (
+    <svg fill="none" viewBox="0 0 28 28">
+      <path
+        d="M10.5 14H17.5M10.5 18.6667H17.5M19.8333 24.5H8.16667C7.54783 24.5 6.95434 24.2542 6.51675 23.8166C6.07917 23.379 5.83333 22.7855 5.83333 22.1667V5.83333C5.83333 5.2145 6.07917 4.621 6.51675 4.18342C6.95434 3.74583 7.54783 3.5 8.16667 3.5H14.6837C14.9931 3.50007 15.2898 3.62303 15.5085 3.84183L21.8248 10.1582C22.0436 10.3769 22.1666 10.6736 22.1667 10.983V22.1667C22.1667 22.7855 21.9208 23.379 21.4832 23.8166C21.0457 24.2542 20.4522 24.5 19.8333 24.5Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.33333"
+      />
+    </svg>
+  );
+};
+
+export const TicketOpen = () => {
+  return (
+    <svg fill="none" viewBox="0 0 28 28">
+      <path
+        d="M14 9.33333V14M14 18.6667H14.0117M24.5 14C24.5 15.3789 24.2284 16.7443 23.7007 18.0182C23.1731 19.2921 22.3996 20.4496 21.4246 21.4246C20.4496 22.3996 19.2921 23.1731 18.0182 23.7007C16.7443 24.2284 15.3789 24.5 14 24.5C12.6211 24.5 11.2557 24.2284 9.98182 23.7007C8.70791 23.1731 7.55039 22.3996 6.57538 21.4246C5.60036 20.4496 4.82694 19.2921 4.29927 18.0182C3.77159 16.7443 3.5 15.3789 3.5 14C3.5 11.2152 4.60625 8.54451 6.57538 6.57538C8.54451 4.60625 11.2152 3.5 14 3.5C16.7848 3.5 19.4555 4.60625 21.4246 6.57538C23.3938 8.54451 24.5 11.2152 24.5 14Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.33333"
+      />
+    </svg>
+  );
+};
+
+export const TicketPend = () => {
+  return (
+    <svg fill="none" viewBox="0 0 28 28">
+      <path
+        d="M14 9.33333V14L17.5 17.5M24.5 14C24.5 15.3789 24.2284 16.7443 23.7007 18.0182C23.1731 19.2921 22.3996 20.4496 21.4246 21.4246C20.4496 22.3996 19.2921 23.1731 18.0182 23.7007C16.7443 24.2284 15.3789 24.5 14 24.5C12.6211 24.5 11.2557 24.2284 9.98182 23.7007C8.70791 23.1731 7.55039 22.3996 6.57538 21.4246C5.60036 20.4496 4.82694 19.2921 4.29927 18.0182C3.77159 16.7443 3.5 15.3789 3.5 14C3.5 11.2152 4.60625 8.54451 6.57538 6.57538C8.54451 4.60625 11.2152 3.5 14 3.5C16.7848 3.5 19.4555 4.60625 21.4246 6.57538C23.3938 8.54451 24.5 11.2152 24.5 14Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.33333"
+      />
+    </svg>
+  );
+};
+
+export const TicketClose = () => {
+  return (
+    <svg className="size-7" fill="none" viewBox="0 0 28 28">
+      <path
+        d="M10.5 14L12.8333 16.3333L17.5 11.6667M24.5 14C24.5 15.3789 24.2284 16.7443 23.7007 18.0182C23.1731 19.2921 22.3996 20.4496 21.4246 21.4246C20.4496 22.3996 19.2921 23.1731 18.0182 23.7007C16.7443 24.2284 15.3789 24.5 14 24.5C12.6211 24.5 11.2557 24.2284 9.98182 23.7007C8.70791 23.1731 7.55039 22.3996 6.57538 21.4246C5.60036 20.4496 4.82694 19.2921 4.29927 18.0182C3.77159 16.7443 3.5 15.3789 3.5 14C3.5 11.2152 4.60625 8.54451 6.57538 6.57538C8.54451 4.60625 11.2152 3.5 14 3.5C16.7848 3.5 19.4555 4.60625 21.4246 6.57538C23.3938 8.54451 24.5 11.2152 24.5 14Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.33333"
+      />
+    </svg>
+  );
+};
+
+// export const pppp = () => {
+//   return (
+
+//   );
+// };
+
+// export const pppp = () => {
+//   return (
+
+//   );
+// };
+
+// export const pppp = () => {
+//   return (
+
+//   );
+// };
+
+// export const pppp = () => {
+//   return (
+
+//   );
+// };
+
+// export const pppp = () => {
+//   return (
+
+//   );
+// };
+
+// export const pppp = () => {
+//   return (
+
+//   );
+// };

@@ -90,20 +90,13 @@ export interface Ticket {
   status: "open" | "pending" | "closed";
   priority: TicketPriority;
   category: TicketCategory;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
   assignee?: string;
   tags?: string[];
-  replies?: any[];
+  messages?: any[];
 }
 
-// export interface BehaviorSettings {
-//   k: number;
-//   maxResponseLength: string;
-//   support_phone: string;
-//   useGreeting: boolean;
-//   useEmojis: boolean;
-// }
 
 export interface ButtonProps extends BaseComponentProps {
   variant?: "primary" | "secondary" | "tertiary";
