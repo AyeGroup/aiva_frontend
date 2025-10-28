@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    env_file: .env.local
+    ports:
+      - "3000:3000"
+    networks:
+      - builder-network
+    restart: unless-stopped
+
+networks:
+  builder-network:
+    name: builder-network
+    external: true
