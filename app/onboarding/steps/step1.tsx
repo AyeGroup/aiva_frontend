@@ -2,7 +2,7 @@ import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { BotConfig } from "@/types/common";
 import { onboardingData } from "../onboarding.data";
-import { StepBigStar, StepStar, StepUser } from "@/public/icons/AppIcons";
+import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -130,7 +130,7 @@ export function WizardStep1({
               }`}
             />
             
-           
+            
           </div>
         </div>
       </div>

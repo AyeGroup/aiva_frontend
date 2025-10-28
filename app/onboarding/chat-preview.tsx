@@ -8,6 +8,7 @@ import { useState, useEffect, useRef } from "react";
 interface ChatPreviewProps {
   botConfig: BotConfig;
   currentStep: number;
+  isNew:boolean;
 }
 
 interface Message {
@@ -18,19 +19,37 @@ interface Message {
   type?: string;
 }
 
-export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
+export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isTyping, setIsTyping] = useState(false);
   const [showFaqs, setShowFaqs] = useState(true);
 
+  useEffect(() => {
+    const newMessages = getGreetingMessages();
+    if (botConfig.greetings) setMessages(newMessages);
+  }, []);
+
+ useEffect(() => {
+   if (botConfig.greetings) {
+     setMessages(getGreetingMessages());
+     setShowFaqs(true);
+   } else {
+     setMessages((prev) =>
+       prev.filter((msg) => !msg.id.startsWith("greeting"))
+     );
+   }
+ }, [botConfig.greetings, botConfig.tone]);
+
+
   const handleClear = () => {
     setMessages([]);
     setShowFaqs(true);
     setInputText("");
-   if (botConfig.greetings) setMessages(getGreetingMessages());
-
+    if (botConfig.greetings) setMessages(getGreetingMessages());
   };
+
+  // console.log("pre bot",botConfig)
 
   const handleFaqClick = (faq: any) => {
     setShowFaqs(false);
@@ -57,7 +76,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
   const getGreetingMessages = (): Message[] => {
     const base: Message[] = [
       {
-        id: "1",
+        id: "greeting",
         text:
           botConfig?.greetings && currentTone?.example
             ? currentTone?.example
@@ -69,11 +88,6 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
 
     return base;
   };
-
-  useEffect(() => {
-    const newMessages = getGreetingMessages();
-   if(botConfig.greetings) setMessages(newMessages);
-  }, []);
 
   const currentTone = onboardingData.tones.find((t) => t.id === botConfig.tone);
 
@@ -274,7 +288,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
       </div>
 
       {/* Single Column Layout: Live Chat Only */}
-      <div className="max-w-md mx-auto relative">
+      <div className="max-w-md mx-auto ">
         <div
           key={`${botConfig.primary_color}-${botConfig.name}-${botConfig.widget_position}-${botConfig.button_size}`}
           className="absolute inset-0 bg-brand-primary/10 rounded-2xl opacity-0 pointer-events-none z-50"
@@ -291,7 +305,7 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
             >
               {/* Chat Header */}
               <div
-                className="relative p-4 text-white flex items-center gap-4 backdrop-blur-sm "
+                className=" p-4 text-white flex items-center gap-4 backdrop-blur-sm "
                 style={{
                   background: `linear-gradient(135deg, ${botConfig.primary_color} 0%, ${botConfig.primary_color}ee 100%)`,
                   height: "80px",
@@ -414,70 +428,13 @@ export function ChatPreview({ botConfig, currentStep }: ChatPreviewProps) {
               )}
               {/* Input Area */}
               <div className="px-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
-                {(!botConfig?.answer_length ||
-                  botConfig?.answer_length === "small" ||
-                  currentStep < 2) && (
-                  <div className="flex items-center gap-2 my-3">
-                    {botConfig.tone === "friendly" && (
-                      <>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
-                          👋 سلام
-                        </button>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
-                          😊 کمک
-                        </button>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-full text-grey-600">
-                          💬 چت
-                        </button>
-                      </>
-                    )}
-                    {botConfig.tone === "professional" && (
-                      <>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
-                          📋 خدمات
-                        </button>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
-                          📞 تماس
-                        </button>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
-                          💼 مشاوره
-                        </button>
-                      </>
-                    )}
-                    {botConfig.tone === "casual" && (
-                      <>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-2xl text-grey-600">
-                          🤙 هـــی
-                        </button>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-2xl text-grey-600">
-                          🤔 چیکار کنم؟
-                        </button>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-2xl text-grey-600">
-                          🔥 باحاله!
-                        </button>
-                      </>
-                    )}
-                    {botConfig.tone === "expert" && (
-                      <>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
-                          🎓 تحلیل
-                        </button>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
-                          📊 داده‌ها
-                        </button>
-                        <button className="text-xs px-3 py-1.5 bg-grey-100 hover:bg-grey-200 rounded-lg text-grey-600">
-                          🔬 بررسی
-                        </button>
-                      </>
-                    )}
-                  </div>
-                )}
+               
 
                 <div className="flex items-center py-4 gap-3">
                   <textarea
                     ref={textareaRef}
                     value={inputText}
-                    disabled={currentStep == 1}
+                    disabled={currentStep == 1 && isNew}
                     onChange={handleInputChange}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {

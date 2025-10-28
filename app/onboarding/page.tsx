@@ -1,6 +1,6 @@
 "use client";
-import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
+import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
@@ -31,6 +31,7 @@ export default function OnboardingWizard() {
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
   const [currentStep, setCurrentStep] = useState(1);
+  const [maxReachedStep, setMaxReachedStep] = useState(1);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -67,6 +68,69 @@ export default function OnboardingWizard() {
     if (!loading && !user) router.push("/auth/login");
   }, [user, loading, router]);
 
+  // get data
+  // useEffect(() => {
+  //   if (!user?.token) return;
+
+  //   const fetchBotData = async () => {
+  //     try {
+  //       if (id && id !== "new" && id.length > 3) {
+  //         const response = await axiosInstance.get(
+  //           `${API_ROUTES.BOTS.GET}${id}`
+  //         );
+  //         const hasApiData = response.data?.success && response.data?.data;
+
+  //         if (hasApiData) {
+  //           const botData = response.data.data;
+
+  //           // لود سوالات متداول (FAQ)
+  //           const response2 = await axiosInstance.get(API_ROUTES.FAQ(id));
+  //           const faqs =
+  //             response2.data?.success && Array.isArray(response2.data?.data)
+  //               ? response2.data.data
+  //               : [];
+
+  //           const updatedBotConfig = { ...botData, faqs };
+
+  //           setBotConfig(updatedBotConfig);
+  //           setCurrentStep(response.data?.currentStep || 1);
+
+  //           // ذخیره در localStorage برای دفعات بعد
+  //           localStorage.setItem(
+  //             "aiva-onboarding-data",
+  //             JSON.stringify({
+  //               botConfig: updatedBotConfig,
+  //               currentStep: response.data?.currentStep || 1,
+  //               timestamp: new Date().toISOString(),
+  //             })
+  //           );
+  //           return; // خروج بعد از دریافت داده از API
+  //         }
+  //       } else if (!id) {
+  //         const savedData = localStorage.getItem("aiva-onboarding-data");
+  //         if (savedData) {
+  //           const parsed = JSON.parse(savedData);
+  //           setBotConfig(parsed.botConfig || botConfig);
+  //           setCurrentStep(parsed.currentStep || 1);
+  //         }
+  //       } else {
+  //         setCurrentStep(1);
+  //       }
+  //     } catch (error) {
+  //       console.warn("خطا در دریافت داده‌های بات:", error);
+  //       // اگر خطا رخ دهد، از localStorage استفاده کن
+  //       const savedData = localStorage.getItem("aiva-onboarding-data");
+  //       if (savedData) {
+  //         const parsed = JSON.parse(savedData);
+  //         setBotConfig(parsed.botConfig || botConfig);
+  //         setCurrentStep(parsed.currentStep || 1);
+  //       }
+  //     }
+  //   };
+
+  //   fetchBotData();
+  // }, [user?.token, id]);
+
   useEffect(() => {
     if (!user?.token) return;
 
@@ -80,8 +144,6 @@ export default function OnboardingWizard() {
 
           if (hasApiData) {
             const botData = response.data.data;
-
-            // لود سوالات متداول (FAQ)
             const response2 = await axiosInstance.get(API_ROUTES.FAQ(id));
             const faqs =
               response2.data?.success && Array.isArray(response2.data?.data)
@@ -91,44 +153,48 @@ export default function OnboardingWizard() {
             const updatedBotConfig = { ...botData, faqs };
 
             setBotConfig(updatedBotConfig);
-            setCurrentStep(response.data?.currentStep || 1);
+            const apiCurrent = response.data?.currentStep || 1;
+            setCurrentStep(apiCurrent);
+            setMaxReachedStep(apiCurrent); // <-- مقدار از API
 
-            // ذخیره در localStorage برای دفعات بعد
             localStorage.setItem(
               "aiva-onboarding-data",
               JSON.stringify({
                 botConfig: updatedBotConfig,
-                currentStep: response.data?.currentStep || 1,
+                currentStep: apiCurrent,
                 timestamp: new Date().toISOString(),
               })
             );
-            return; // خروج بعد از دریافت داده از API
+            return;
           }
         } else if (!id) {
           const savedData = localStorage.getItem("aiva-onboarding-data");
           if (savedData) {
             const parsed = JSON.parse(savedData);
             setBotConfig(parsed.botConfig || botConfig);
-            setCurrentStep(parsed.currentStep || 1);
+            const savedCurrent = parsed.currentStep || 1;
+            setCurrentStep(savedCurrent);
+            setMaxReachedStep(savedCurrent); // <-- از localStorage
           }
         } else {
           setCurrentStep(1);
+          setMaxReachedStep(1);
         }
       } catch (error) {
         console.warn("خطا در دریافت داده‌های بات:", error);
-        // اگر خطا رخ دهد، از localStorage استفاده کن
         const savedData = localStorage.getItem("aiva-onboarding-data");
         if (savedData) {
           const parsed = JSON.parse(savedData);
           setBotConfig(parsed.botConfig || botConfig);
-          setCurrentStep(parsed.currentStep || 1);
+          const savedCurrent = parsed.currentStep || 1;
+          setCurrentStep(savedCurrent);
+          setMaxReachedStep(savedCurrent);
         }
       }
     };
 
     fetchBotData();
   }, [user?.token, id]);
-
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
     if (!botConfig) return;
@@ -328,11 +394,11 @@ export default function OnboardingWizard() {
       ...updates,
     }));
   };
-
   const nextStep = async () => {
     if (currentStep == 1) {
       const uuid = await saveBotConfig();
       if (!uuid) return;
+      // اگر uuid برگشت یعنی بات ذخیره شد؛ اما حتی اگر برنگشته هم ادامه بد
     } else if (currentStep == 2) {
       const isSaved = await saveBotAppearance();
       if (!isSaved) return;
@@ -340,17 +406,18 @@ export default function OnboardingWizard() {
       const isSaved = await saveBotBehavior();
       if (!isSaved) return;
     }
-    console.log("botConfig.uuid  :", botConfig.uuid);
 
+    // Advance: مقدار جدید را محاسبه کن و maxReachedStep را ارتقا بده
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
+      const newStep = currentStep + 1;
+      setCurrentStep(newStep);
+      setMaxReachedStep((prev) => Math.max(prev, newStep)); // <-- مهم
     } else {
       // اتمام و رفتن به داشبورد
       localStorage.removeItem("aiva-onboarding-data");
       router.push("/dashboard");
     }
   };
-
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
@@ -358,7 +425,18 @@ export default function OnboardingWizard() {
   };
 
   const goToStep = (step: number) => {
-    if (botConfig.uuid) setCurrentStep(step);
+    // اگر بات uuid دارد => ویرایش، اجازه رفتن به هر استپی داده می‌شود
+    // اگر بات جدید است => فقط تا maxReachedStep اجازه بده (یعنی جاهایی که کاربر قبلاً رسیده)
+    if (botConfig.uuid) {
+      setCurrentStep(step);
+    } else {
+      if (step <= maxReachedStep) {
+        setCurrentStep(step);
+      } else {
+        // اختیاری: می‌تونی یک toast نمایش بدی که هنوز به آن استپ نرسیده‌اند
+        // toast.info("ابتدا باید تا این مرحله پیش بروید.");
+      }
+    }
   };
 
   const renderCurrentStep = () => {
@@ -419,7 +497,7 @@ export default function OnboardingWizard() {
   };
 
   return (
-    <main className="onboarding-wizard min-h-screen bg-bg-app" dir="rtl">
+    <main className="onboarding-wizard min-h-screen bg-bg-app">
       {!id && <Header currentPage="onboarding" isOnboarding={true} />}
       <div className="container mx-auto px-6 py-12 relative z-10">
         {/* Clean Minimal Header */}
@@ -458,6 +536,70 @@ export default function OnboardingWizard() {
               {steps.map((step, index) => {
                 const stepNumber = index + 1;
                 const isActive = stepNumber === currentStep;
+                const isReached = stepNumber <= maxReachedStep; // <-- تغییر: reached به جای فقط completed
+
+                return (
+                  <div
+                    key={step.id}
+                    className="flex flex-col items-center min-w-[120px] flex-1"
+                  >
+                    <button
+                      onClick={() => goToStep(stepNumber)}
+                      className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 text-sm font-medium shadow-sm
+          ${
+            isActive
+              ? "text-white shadow-lg border-2"
+              : isReached
+              ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
+              : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
+          }
+        `}
+                      style={
+                        isActive ? { background: "var(--sharp-primary)" } : {}
+                      }
+                      disabled={
+                        // اجازه کلیک اگر:
+                        // - بات در حالت ویرایش (uuid) => همه فعال
+                        // - یا استپ مورد نظر <= maxReachedStep => فعال
+                        // در غیر این صورت غیرفعال
+                        botConfig.uuid ? false : !(stepNumber <= maxReachedStep)
+                      }
+                    >
+                      {isReached && !isActive ? (
+                        // اگر رسیدگی شده و فعال نیست => تیک یا شماره به شکل متفاوت
+                        <svg
+                          className="w-5 h-5"
+                          fill="white"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        englishToPersian(String(stepNumber))
+                      )}
+                    </button>
+
+                    <p
+                      className={`mt-3 text-sm text-center font-medium whitespace-nowrap ${
+                        isActive
+                          ? "text-brand-primary"
+                          : isReached
+                          ? "text-secondary"
+                          : "text-grey-600"
+                      }`}
+                    >
+                      {step.title}
+                    </p>
+                  </div>
+                );
+              })}
+              {/* {steps.map((step, index) => {
+                const stepNumber = index + 1;
+                const isActive = stepNumber === currentStep;
                 const isCompleted = stepNumber < currentStep;
 
                 return (
@@ -467,20 +609,23 @@ export default function OnboardingWizard() {
                   >
                     <button
                       onClick={() => goToStep(stepNumber)}
-                      className={`
-                        flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 text-sm font-medium  shadow-sm
-                        ${
-                          isActive
-                            ? "text-white shadow-lg border-2"
-                            : isCompleted
-                            ? "bg-secondary text-secondary  cursor-pointer hover:scale-105 shadow-md"
-                            : "bg-white border-grey-400 text-grey-600  hover:text-brand-primary"
-                        }
-                      `}
+                      className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 text-sm font-medium shadow-sm
+                                ${
+                                  isActive
+                                    ? "text-white shadow-lg border-2"
+                                    : isCompleted
+                                    ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
+                                    : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
+                                }
+                              `}
                       style={
                         isActive ? { background: "var(--sharp-primary)" } : {}
                       }
-                      disabled={stepNumber > currentStep + 1}
+                      disabled={
+                        !id || id === "new" // اگر بات جدید است
+                          ? stepNumber > currentStep // فقط استپ‌های قبلی فعال
+                          : false // در حالت ویرایش همه فعال
+                      }
                     >
                       {isCompleted ? (
                         <svg
@@ -512,7 +657,7 @@ export default function OnboardingWizard() {
                     </p>
                   </div>
                 );
-              })}
+              })} */}
             </div>
           </div>
         </div>
@@ -564,7 +709,11 @@ export default function OnboardingWizard() {
             {/* Preview Sidebar */}
             <div className="lg:col-span-1">
               <div className="top-8  w-full h-[700px]">
-                <ChatPreview currentStep={currentStep} botConfig={botConfig} />
+                <ChatPreview
+                  currentStep={currentStep}
+                  botConfig={botConfig}
+                  isNew={!id || id === "new"}
+                />
               </div>
             </div>
           </div>
