@@ -145,7 +145,7 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                       status={
                         thisTicket.status === "open"
                           ? "error"
-                          : thisTicket.status === "pending"
+                          : thisTicket.status === "in_progress"
                           ? "pending"
                           : "success"
                       }
@@ -227,7 +227,7 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                     <span className="px-3 py-1 rounded-lg text-xs bg-grey-100 text-grey-700">
                       {thisTicket.category === "technical"
                         ? "فنی"
-                        : thisTicket.category === "billing"
+                        : thisTicket.category === "financial"
                         ? "مالی"
                         : "عمومی"}
                     </span>

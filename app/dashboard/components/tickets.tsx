@@ -38,7 +38,7 @@ export function Tickets() {
   const stats = {
     total: tickets.length,
     open: tickets.filter((t) => t.status === "open").length,
-    pending: tickets.filter((t) => t.status === "pending").length,
+    pending: tickets.filter((t) => t.status === "in_progress").length,
     closed: tickets.filter((t) => t.status === "closed").length,
     high: tickets.filter((t) => t.priority === "high").length,
   };
@@ -330,7 +330,7 @@ export function Tickets() {
                         const badgeStatus =
                           ticket.status === "open"
                             ? "error"
-                            : ticket.status === "pending"
+                            : ticket.status === "in_progress"
                             ? "pending"
                             : "success";
 
@@ -440,7 +440,7 @@ export function Tickets() {
                                   <span className="px-3 py-1 rounded-lg text-xs bg-grey-100 text-grey-700">
                                     {ticket.category === "technical"
                                       ? "فنی"
-                                      : ticket.category === "billing"
+                                      : ticket.category === "financial"
                                       ? "مالی"
                                       : "عمومی"}
                                   </span>

@@ -77,7 +77,7 @@ export interface KnowledgeItem {
   qa_id?: string;
   upload_id?: string;
 }
-export type TicketCategory = "technical" | "billing" | "general";
+export type TicketCategory = "technical" | "financial" | "general" | "others";
 export type TicketPriority = "low" | "medium" | "high" | "urgent";
  
 export type ViewType = "list" | "create" | "view";
@@ -87,7 +87,7 @@ export interface Ticket {
   id: string;
   title: string;
   content: string;
-  status: "open" | "pending" | "closed";
+  status: "open" | "in_progress" | "resolved" | "closed";
   priority: TicketPriority;
   category: TicketCategory;
   created_at: string;

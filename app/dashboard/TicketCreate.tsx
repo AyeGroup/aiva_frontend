@@ -105,7 +105,8 @@ export function CreateTicketView({ onSubmit }: Props) {
                   >
                     <option value="general">عمومی</option>
                     <option value="technical">فنی</option>
-                    <option value="billing">مالی</option>
+                    <option value="financial">مالی</option>
+                    <option value="others">سایر</option>
                   </select>
                 </div>
 
