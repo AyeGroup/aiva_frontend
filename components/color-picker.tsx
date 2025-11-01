@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 function clamp(v: number, a = 0, b = 1) {
   return Math.min(b, Math.max(a, v));
@@ -169,7 +169,7 @@ export default function ColorPicker({
 
   return (
     <div
-      className={`w-[320px] p-3 rounded-2xl bg-white shadow-lg text-sm ${
+      className={`w-[320px] p-3 rounded-2xl bg-white shadow-2xl text-sm ${
         className || ""
       }`}
     >
@@ -224,6 +224,34 @@ export default function ColorPicker({
       </div> */}
 
       <div className="mb-3">
+        {presets.length > 0 && (
+          <div className="mb-2">
+            {/* <div className="text-xs text-gray-600 mb-1">Presets</div> */}
+            <div className="flex gap-2 flex-wrap">
+              {presets.map((c, i) => (
+                <div
+                  key={c + i}
+                  // onClick={() => setColor(c)} // 👈 با کلیک، رنگ انتخابی تنظیم می‌شود
+                  onClick={() => {
+                    const parsed = hexToRgb(c);
+                    if (parsed) {
+                      const hsv = rgbToHsv(parsed.r, parsed.g, parsed.b);
+                      setHue(hsv.h);
+                      setSat(hsv.s);
+                      setVal(hsv.v);
+                      setAlpha(1);
+                      commitChange(hsv.h, hsv.s, hsv.v, 1);
+                    }
+                  }}
+                  className={`w-8 h-8 rounded-full border cursor-pointer transition-transform 
+            ${value === c ? "scale-110 border-black" : "hover:scale-105"}`}
+                  aria-label={`Preset ${c}`}
+                  style={{ background: c }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
         <div
           role="application"
           aria-label="saturation value"
@@ -280,35 +308,6 @@ export default function ColorPicker({
             onChange={handleAlphaChange}
             className="w-full h-2"
           />
-        </div>
-      )}
-
-      {presets.length > 0 && (
-        <div className="mb-2">
-          <div className="text-xs text-gray-600 mb-1">Presets</div>
-          <div className="flex gap-2 flex-wrap">
-            {presets.map((c, i) => (
-              <div
-                key={c + i}
-                // onClick={() => setColor(c)} // 👈 با کلیک، رنگ انتخابی تنظیم می‌شود
-                onClick={() => {
-                  const parsed = hexToRgb(c);
-                  if (parsed) {
-                    const hsv = rgbToHsv(parsed.r, parsed.g, parsed.b);
-                    setHue(hsv.h);
-                    setSat(hsv.s);
-                    setVal(hsv.v);
-                    setAlpha(1);
-                    commitChange(hsv.h, hsv.s, hsv.v, 1);
-                  }
-                }}
-                className={`w-8 h-8 rounded border cursor-pointer transition-transform 
-            ${value === c ? "scale-110 border-black" : "hover:scale-105"}`}
-                aria-label={`Preset ${c}`}
-                style={{ background: c }}
-              />
-            ))}
-          </div>
         </div>
       )}
     </div>

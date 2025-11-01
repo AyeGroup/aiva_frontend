@@ -243,74 +243,18 @@ export function WizardStep6({
           </div>
 
           {/* primary Color  */}
-          <div className="mt-6">
-            <div className="flex items-center gap-2 mb-3">
+          <div className="mt-6 flex-col">
+            <div className="flex items-center gap-2 mb-3 ">
               <div className="w-6 h-6 bg-brand-primary/10 rounded-lg flex items-center justify-center">
                 <StepColor />
               </div>
-              <h4 className="text-grey-900 text-sm font-bold">
-                رنگ‌های چت‌بات
-              </h4>
+              <h4 className="text-grey-900 text-sm font-bold">رنگ‌ چت‌بات</h4>
             </div>
 
-            <div className="flex flex-col">
-              <div className="my-2">انتخاب از طیف رنگ:</div>
-              <div className="flex w-full  my-3 justify-between">
-                <div className="flex">
-                  <div>رنگ انتخابی</div>
-                  <div
-                    className="mx-2 size-7 rounded-full"
-                    style={{ backgroundColor: botConfig.primary_color }}
-                  ></div>
-                </div>
-                {/* <div>
-                  {colorPalette.map((color) => (
-                    <button
-                      key={color.value}
-                      onClick={() => {
-                        handlePrimaryColor(color.value);
-                        // setSelectedColorPrimary(color.value);
-                      }}
-                      className="  rounded-full  size-8 mx-1 border-2 border-white shadow cursor-pointer"
-                      style={{ backgroundColor: color.value }}
-                      title={color.name}
-                    >
-                      <div
-                        aria-hidden="true"
-                        className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-2 shadow "
-                      />
-                    </button>
-                  ))}
-                </div> */}
-              </div>
-
-              <div className="w-full p-1 space-y-4">
-                <ColorSlider
-                  value={botConfig.primary_color}
-                  onChange={handlePrimaryColor}
-                />
-                {/* <ColorPicker
-                  value={botConfig.primary_color}
-                  onChange={handlePrimaryColor}
-                  showAlpha={false}
-                  presets={colorPalette1}
-                /> */}
-              </div>
-              <div className="flex justify-between items-center my-4">
-                <div>کد رنگ دلخواه</div>
+            <div className="flex   w-full  my-3 justify-between">
+              <div className="flex flex-col gap-2 p-2">
+                <div>رنگ انتخابی</div>
                 <div className="flex items-center">
-                  <input
-                    type="text"
-                    value={botConfig.primary_color}
-                    onChange={(e) => handlePrimaryColor(e.target.value)}
-                    placeholder="فرمت قابل قبول کد رنگ 6رقمی"
-                    dir="ltr"
-                    className={`w-64 p-2 mx-2 border-2 rounded-2xl  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400 ${
-                      errors?.primary_color
-                        ? " border-red-500"
-                        : " border-primary "
-                    }`}
-                  />
                   <div
                     className="relative rounded-full size-8"
                     style={{ backgroundColor: botConfig.primary_color }}
@@ -320,7 +264,27 @@ export function WizardStep6({
                       className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-full shadow"
                     />
                   </div>
+                  <input
+                    type="text"
+                    value={botConfig.primary_color}
+                    onChange={(e) => handlePrimaryColor(e.target.value)}
+                    placeholder="فرمت قابل قبول کد رنگ 6رقمی"
+                    dir="ltr"
+                    className={`w-32 p-2 mx-2 border-2 rounded-2xl  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400 ${
+                      errors?.primary_color
+                        ? " border-red-500"
+                        : " border-primary "
+                    }`}
+                  />
                 </div>
+              </div>
+              <div>
+                <ColorPicker
+                  value={botConfig.primary_color}
+                  onChange={handlePrimaryColor}
+                  showAlpha={false}
+                  presets={colorPalette1}
+                />
               </div>
             </div>
           </div>
