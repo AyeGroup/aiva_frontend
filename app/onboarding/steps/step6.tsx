@@ -290,7 +290,56 @@ export function WizardStep6({
           </div>
 
           {/* accent Color  */}
-          <div className="mt-6">
+          <div className="mt-6 flex-col">
+            <div className="flex items-center gap-2 mb-3 ">
+              <div className="w-6 h-6 bg-brand-primary/10 rounded-lg flex items-center justify-center">
+                <StepColor />
+              </div>
+              <h4 className="text-grey-900 text-sm font-bold">
+                رنگ پس‌زمینه چت
+              </h4>
+            </div>
+
+            <div className="flex   w-full  my-3 justify-between">
+              <div className="flex flex-col gap-2 p-2">
+                <div>رنگ انتخابی</div>
+                <div className="flex items-center">
+                  <div
+                    className="relative rounded-full size-8"
+                    style={{ backgroundColor: botConfig.accent_color }}
+                  >
+                    <div
+                      aria-hidden="true"
+                      className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-full shadow"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    value={botConfig.accent_color}
+                    onChange={(e) => handlePrimaryColor(e.target.value)}
+                    placeholder="فرمت قابل قبول کد رنگ 6رقمی"
+                    dir="ltr"
+                    className={`w-32 p-2 mx-2 border-2 rounded-2xl  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400 ${
+                      errors?.accent_color
+                        ? " border-red-500"
+                        : " border-primary "
+                    }`}
+                  />
+                </div>
+              </div>
+              <div>
+                <ColorPicker
+                  value={botConfig.accent_color}
+                  onChange={handleAccentColor}
+                  showAlpha={false}
+                  presets={colorPalette1}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* accent Color old */}
+          {/* <div className="mt-6">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-6 h-6 bg-brand-primary/10 rounded-lg flex items-center justify-center">
                 <StepColor />
@@ -364,7 +413,7 @@ export function WizardStep6({
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Chat Button Settings */}

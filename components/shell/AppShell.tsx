@@ -7,7 +7,7 @@ import { PageType } from "@/types/common";
 const LandingPage = lazy(() => import("@/app/landing/page"));
 const OnboardingWizard = lazy(() => import("@/app/onboarding/page"));
 const Dashboard = lazy(() => import("@/app/dashboard/page"));
-// const Tickets = lazy(() => import("@/app/dashboard/components/tickets"));
+const Checkout = lazy(() => import("@/app/pay/checkout/page"));
 const Login = lazy(() => import("@/app/auth/login/page"));
 const Register = lazy(() => import("@/app/auth/register/page"));
 const OTPVerification = lazy(() => import("@/app/auth/verification/page"));
@@ -16,7 +16,6 @@ const ChatHistoryDemo = lazy(
 );
 
 const PageLoader = () => {
-
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="space-y-4">
@@ -43,8 +42,8 @@ export default function AppShell({ page }: AppShellProps) {
         return <Register />;
       case "dashboard-home":
         return <Dashboard />;
-      // case "tickets":
-        // return <Tickets />;
+      case "checkout":
+        return <Checkout />;
       case "login":
         return <Login />;
       case "verification":

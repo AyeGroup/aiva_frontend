@@ -119,30 +119,37 @@ export default function ColorPicker({
     ? `rgba(${previewRgb.r},${previewRgb.g},${previewRgb.b},${alpha})`
     : previewHex;
 
-  function handleSaturationPointer(e: React.PointerEvent) {
-    const el = e.currentTarget as HTMLDivElement;
-    el.setPointerCapture(e.pointerId);
-    const onMove = (ev: PointerEvent) => {
-      const rect = el.getBoundingClientRect();
-      const x = clamp((ev.clientX - rect.left) / rect.width, 0, 1);
-      const y = clamp((ev.clientY - rect.top) / rect.height, 0, 1);
-      setSat(x);
-      setVal(1 - y);
-    };
-    const onUp = () => {
-      el.releasePointerCapture(e.pointerId);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
-      commitChange();
-    };
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
+function handleSaturationPointer(e: React.PointerEvent) {
+  const el = e.currentTarget as HTMLDivElement;
+  el.setPointerCapture(e.pointerId);
+
+  const updateColor = (clientX: number, clientY: number) => {
     const rect = el.getBoundingClientRect();
-    const xInit = clamp((e.clientX - rect.left) / rect.width, 0, 1);
-    const yInit = clamp((e.clientY - rect.top) / rect.height, 0, 1);
-    setSat(xInit);
-    setVal(1 - yInit);
-  }
+    const x = clamp((clientX - rect.left) / rect.width, 0, 1);
+    const y = clamp((clientY - rect.top) / rect.height, 0, 1);
+    setSat(x);
+    setVal(1 - y);
+    commitChange(hue, x, 1 - y, alpha); // 🔥 در هر حرکت مقدار جدید اعمال می‌شود
+  };
+
+  const onMove = (ev: PointerEvent) => {
+    updateColor(ev.clientX, ev.clientY);
+  };
+
+  const onUp = (ev: PointerEvent) => {
+    el.releasePointerCapture(e.pointerId);
+    window.removeEventListener("pointermove", onMove);
+    window.removeEventListener("pointerup", onUp);
+    updateColor(ev.clientX, ev.clientY); // 🔥 اطمینان از ثبت آخرین نقطه
+  };
+
+  window.addEventListener("pointermove", onMove);
+  window.addEventListener("pointerup", onUp);
+
+  // اولین کلیک را هم بلافاصله به‌روزرسانی کن
+  updateColor(e.clientX, e.clientY);
+}
+
 
   function handleHueChange(e: React.ChangeEvent<HTMLInputElement>) {
     const h = Number(e.target.value);

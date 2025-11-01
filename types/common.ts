@@ -26,6 +26,10 @@ export type PageType =
   | "chatbot-management"
   | "tickets"
   | "billing"
+  | "checkout"
+  | "payment-gateway"
+  | "payment-success"
+  | "payment-failed"
   | "components";
 
 export interface BotConfig {

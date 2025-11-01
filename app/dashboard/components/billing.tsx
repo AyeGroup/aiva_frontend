@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/card';
 import { toast } from 'sonner';
-import { PageType } from '@/types/common';
 import { useRouter } from 'next/navigation';
 import { Check, Download, CreditCard } from 'lucide-react';
 
@@ -143,7 +142,7 @@ export function Billing( ) {
       // Navigate to checkout page
       const plan = plans.find(p => p.id === planId);
       if (plan) {
-        router.push('checkout' as PageType);
+        router.push('/pay/checkout' );
         // Store selected plan in localStorage for checkout page
         localStorage.setItem('selectedPlan', JSON.stringify({
           ...plan,
