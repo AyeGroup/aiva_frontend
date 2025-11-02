@@ -20,7 +20,7 @@
   font-size: 1rem;
   line-height: 1.5rem;
   --tw-text-opacity: 1;
-  color:white
+  color: white;
   /* color: rgb(20 36 126 / var(--tw-text-opacity)); */
 }
 
@@ -44,7 +44,6 @@
   background-repeat: no-repeat;
   /* content: url("/public/logo.png") !important; */
 }
- 
 
 .swal2-actions {
   margin: 0px;
@@ -68,7 +67,8 @@
   color: rgb(20 36 126 / var(--tw-text-opacity)) !important;
   --tw-shadow: 0 0 #0000 !important;
   --tw-shadow-colored: 0 0 #0000 !important;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
   /* border: 3px solid #14247e !important; */
 }
 
@@ -174,7 +174,7 @@
 }
 
 .checkbox-input:checked ~ .checkbox-custom::after {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
   left: 6px;
@@ -3887,7 +3887,7 @@ html[dir="rtl"] .code-actions {
   gap: 0.75rem;
   padding: 0.625rem 1rem;
   background: white;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3895,8 +3895,8 @@ html[dir="rtl"] .code-actions {
 }
 
 .chatbot-selector-button:hover {
-  background: #F9FAFB;
-  border-color: #65BCB6;
+  background: #f9fafb;
+  border-color: #65bcb6;
   box-shadow: 0 2px 8px rgba(101, 188, 182, 0.1);
 }
 
@@ -3911,13 +3911,13 @@ html[dir="rtl"] .code-actions {
   flex: 1;
   text-align: right;
   font-weight: 500;
-  color: #1F2937;
+  color: #1f2937;
   font-size: 0.875rem;
 }
 
 .chatbot-icon {
   flex-shrink: 0;
-  color: #6B7280;
+  color: #6b7280;
   transition: transform 0.2s ease;
 }
 
@@ -3936,7 +3936,7 @@ html[dir="rtl"] .code-actions {
   top: calc(100% + 0.5rem);
   right: 0;
   background: white;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #e5e7eb;
   border-radius: 0.875rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   min-width: 240px;
@@ -3957,7 +3957,7 @@ html[dir="rtl"] .code-actions {
 
 .chatbot-dropdown-header {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #F3F4F6;
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .chatbot-list {
@@ -3981,7 +3981,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .chatbot-item:hover {
-  background: #F9FAFB;
+  background: #f9fafb;
 }
 
 .chatbot-item.active {
@@ -3994,12 +3994,12 @@ html[dir="rtl"] .code-actions {
 
 .check-icon {
   flex-shrink: 0;
-  color: #65BCB6;
+  color: #65bcb6;
 }
 
 .chatbot-dropdown-footer {
   padding: 0.5rem;
-  border-top: 1px solid #F3F4F6;
+  border-top: 1px solid #f3f4f6;
 }
 
 .add-chatbot-button {
@@ -4010,16 +4010,29 @@ html[dir="rtl"] .code-actions {
   width: 100%;
   padding: 0.625rem;
   background: transparent;
-  border: 1px dashed #D1D5DB;
+  border: 1px dashed #d1d5db;
   border-radius: 0.5rem;
-  color: #6B7280;
+  color: #6b7280;
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .add-chatbot-button:hover {
-  background: #F9FAFB;
-  border-color: #65BCB6;
-  color: #65BCB6;
+  background: #f9fafb;
+  border-color: #65bcb6;
+  color: #65bcb6;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  .invoice-content {
+    box-shadow: none !important;
+    border: none !important;
+  }
 }

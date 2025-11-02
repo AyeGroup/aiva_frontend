@@ -2,7 +2,7 @@
 import React from "react";
 import { Card } from "@/components/card";
 import { Button } from "@/components/button";
-import { PageType } from "@/types/common";
+import { useRouter } from "next/navigation";
 import {
   XCircle,
   ArrowRight,
@@ -10,22 +10,20 @@ import {
   Phone,
   AlertTriangle,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-
 
 export default function PaymentFailed() {
-    const router = useRouter();
-  
+  const router = useRouter();
+
   const handleTryAgain = () => {
-    router.push("payment-gateway");
+    router.push("/pay/gateway");
   };
 
   const handleBackToCheckout = () => {
-    router.push("checkout");
+    router.push("/pay/checkout");
   };
 
   const handleBackToBilling = () => {
-    router.push("billing");
+    router.push("/dashboard?tab=billing");
   };
 
   const commonReasons = [

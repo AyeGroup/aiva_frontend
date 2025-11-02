@@ -31,9 +31,9 @@ export default function PaymentGateway() {
           );
         }
 
-        router.push("payment-success");
+        router.push("/pay/success");
       } else {
-        router.push("payment-failed");
+        router.push("/pay/failed");
       }
       setLoading(false);
     }, 1500);
@@ -107,7 +107,7 @@ export default function PaymentGateway() {
 
           {/* Back Button */}
           <button
-            onClick={() => router.push("checkout")}
+            onClick={() => router.push("/pay/checkout")}
             disabled={loading}
             className="mt-8 w-full py-3 rounded-xl text-grey-600 hover:text-grey-900 hover:bg-grey-50 transition-colors disabled:opacity-50"
             type="button"

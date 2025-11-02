@@ -73,4 +73,24 @@ export const API_ROUTES = {
     PROFILE: `${API_BASE_URL}/user/profile`,
     UPDATE: `${API_BASE_URL}/user/update`,
   },
+
+  FINANCIAL: {
+    SUBSCRIPTION: (bot_uuid: string) =>
+      `${API_BASE_URL}/financial/chatbots/${bot_uuid}/subscription`,
+    BALANCE: (bot_uuid: string) =>
+      `${API_BASE_URL}/financial/chatbots/${bot_uuid}/balance`,
+    TRANSACTION: (bot_uuid: string) =>
+      `${API_BASE_URL}/financial/chatbots/${bot_uuid}/transaction`,
+    STATISTICS: (bot_uuid: string) =>
+      `${API_BASE_URL}/financial/chatbots/${bot_uuid}/usage-stat`,
+  },
+
+  PAYMENT: {
+    INITIATE: `${API_BASE_URL}/financial/initiate`,
+    CALLBACK: `${API_BASE_URL}/financial/callback`,
+    VERIFY: (payment_id: string) =>
+      `${API_BASE_URL}/financial/verify/${payment_id}`,
+    HISTORY: `${API_BASE_URL}/financial/history`,
+    PRICING: `${API_BASE_URL}/financial/pricing`,
+  },
 };

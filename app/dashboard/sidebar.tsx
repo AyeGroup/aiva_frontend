@@ -136,7 +136,6 @@ export function Sidebar({ currentPage = "dashboard-home", router }: SidebarProps
           active={currentPage === "tickets"}
           onClick={() => router.push("/dashboard?tab=tickets")}
         />
-        {/* <SidebarItem label="پروفایل" /> */}
         <SidebarItem
           label="مالی"
           active={currentPage === "billing"}

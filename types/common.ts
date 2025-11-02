@@ -81,6 +81,14 @@ export interface KnowledgeItem {
   qa_id?: string;
   upload_id?: string;
 }
+export interface PurchaseHistory {
+  id: string;
+  date: string;
+  plan: string;
+  amount: string;
+  status: "success" | "failed" | "pending";
+  invoiceUrl?: string;
+}
 export type TicketCategory = "technical" | "financial" | "general" | "others";
 export type TicketPriority = "low" | "medium" | "high" | "urgent";
  

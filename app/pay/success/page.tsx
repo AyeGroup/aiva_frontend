@@ -14,7 +14,7 @@ export default function PaymentSuccess() {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          router.push("billing");
+          router.push("/dashboard?tab=billing");
           return 0;
         }
         return prev - 1;
@@ -25,11 +25,11 @@ export default function PaymentSuccess() {
   }, []);
 
   const handleViewInvoice = () => {
-    router.push("invoice");
+    router.push("/pay/invoice");
   };
 
   const handleBackToBilling = () => {
-    router.push("billing");
+    router.push("/dashboard?tab=billing");
   };
 
   return (

@@ -32,7 +32,7 @@ export default function Checkout() {
     if (planData) {
       setSelectedPlan(JSON.parse(planData));
     } else {
-      router.push("billing");
+      router.push("/dashboard?tab=billing");
     }
   }, []);
 
@@ -106,8 +106,8 @@ export default function Checkout() {
     console.log("Invoice Data:", invoiceData);
     localStorage.setItem("invoiceData", JSON.stringify(invoiceData));
 
-    console.log("Navigating to payment-gateway");
-    router.push("payment-gateway");
+    console.log("Navigating to gateway");
+    router.push("/pay/gateway");
   };
 
   const formatNumber = (num: number) => {
@@ -120,7 +120,7 @@ export default function Checkout() {
         {/* Header */}
         <header className="mb-8">
           <button
-            onClick={() => router.push("billing")}
+            onClick={() => router.push("/dashboard?tab=billing")}
             className="flex items-center gap-2 text-grey-600 hover:text-grey-900 transition-colors mb-4"
             title="بازگشت به صفحه مالی"
           >
