@@ -1,28 +1,39 @@
 import { API_BASE_URL } from "@/config";
 
-export const convertPersianToEnglishDigits = (str:string) => {
+export const convertToEnglish = (str: string) => {
   if (!str) return str;
 
-  // نگاشت ارقام فارسی و عربی به انگلیسی
-  const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-  const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-  let output = str;
-  
-  // تبدیل ارقام فارسی
-  for (let i = 0; i < persianDigits.length; i++) {
-    const regex = new RegExp(persianDigits[i], 'g');
-    output = output.replace(regex, englishDigits[i]);
+  // Add type checking at runtime
+  if (typeof str !== "string") {
+    // Convert to string or return empty string
+    if (str === null || str === undefined) return "";
+    return String(str);
   }
 
-  // تبدیل ارقام عربی (برای پوشش همه موارد)
-  for (let i = 0; i < arabicDigits.length; i++) {
-    const regex = new RegExp(arabicDigits[i], 'g');
-    output = output.replace(regex, englishDigits[i]);
-  }
+  const numberMap: { [key: string]: string } = {
+    "۰": "0",
+    "۱": "1",
+    "۲": "2",
+    "۳": "3",
+    "۴": "4",
+    "۵": "5",
+    "۶": "6",
+    "۷": "7",
+    "۸": "8",
+    "۹": "9",
+    "٠": "0",
+    "١": "1",
+    "٢": "2",
+    "٣": "3",
+    "٤": "4",
+    "٥": "5",
+    "٦": "6",
+    "٧": "7",
+    "٨": "8",
+    "٩": "9",
+  };
 
-  return output;
+  return str.replace(/[۰-۹٠-٩]/g, (d) => numberMap[d] || d).replace(/,/g, "");
 };
 
  export const convertToPersian = (text: string | number): string => {
@@ -37,6 +48,31 @@ export const convertPersianToEnglishDigits = (str:string) => {
     );
   }
   return result;
+};
+
+export const convertPersianToEnglishDigits = (str: string) => {
+  if (!str) return str;
+
+  // نگاشت ارقام فارسی و عربی به انگلیسی
+  const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  const englishDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  let output = str;
+
+  // تبدیل ارقام فارسی
+  for (let i = 0; i < persianDigits.length; i++) {
+    const regex = new RegExp(persianDigits[i], "g");
+    output = output.replace(regex, englishDigits[i]);
+  }
+
+  // تبدیل ارقام عربی (برای پوشش همه موارد)
+  for (let i = 0; i < arabicDigits.length; i++) {
+    const regex = new RegExp(arabicDigits[i], "g");
+    output = output.replace(regex, englishDigits[i]);
+  }
+
+  return output;
 };
 
 export const convertNumbersToPersian = (text: string | number): string => {
@@ -58,10 +94,4 @@ export const normalizeFileUrl = (path: string) => {
       .replace(/^(\.\/)?data\//, "") // حذف ./data/
   );
 };
-
-// const toPersianNumber = (num: number | string): string => {
-//   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-//   return num
-//     .toString()
-//     .replace(/\d/g, (digit) => persianDigits[parseInt(digit)]);
-// };
+ 

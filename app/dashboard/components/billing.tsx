@@ -1,111 +1,139 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import PageLoader from "@/components/pageLoader";
+import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
+import { useBot } from "@/providers/BotProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import { ChatbotSelector } from "../chatbot-selector";
-import { Check, Download, CreditCard } from "lucide-react";
 import { purchaseHistory } from "../billing.data";
-import { PurchaseHistory } from "@/types/common";
-interface Plan {
-  id: string;
-  name: string;
-  price: string;
-  priceMonthly?: string;
-  description: string;
-  features: string[];
-  recommended?: boolean;
-  color: string;
-  current?: boolean;
-}
-
-// const { purchaseHistory } = purchaseHistory;
+import { convertToEnglish } from "@/utils/common";
+import { Check, Download, CreditCard } from "lucide-react";
+import {
+  billingPeriod,
+  colorPalette,
+  Plan,
+  PurchaseHistory,
+} from "@/types/common";
+import {
+  PLAN_COLORS,
+  PLAN_TYPES,
+  PLAN_TYPES_NAME,
+  SUBSCRIPTION_TYPES,
+} from "@/constants/plans";
 
 export function Billing() {
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
-    "monthly"
-  );
+  const [billingPeriod, setBillingPeriod] = useState<billingPeriod>("monthly");
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [subscription, setSubscription] = useState<any>();
+  const [isLoading, setIsLoading] = useState(false);
+  const { user, loading } = useAuth();
+  const { currentBot } = useBot();
   const router = useRouter();
-  const plans: Plan[] = [
-    {
-      id: "free",
-      name: "رایگان",
-      price: "۰",
-      description: "برای شروع و آزمایش",
-      color: "#9B59B6",
-      features: [
-        "تا ۱۰۰ پیام در ماه",
-        "یک چت‌بات",
-        "پشتیبانی ایمیلی",
-        "گزارش‌های پایه",
-      ],
-    },
-    {
-      id: "starter",
-      name: "استارتر",
-      price: billingPeriod === "monthly" ? "۲۹۹,۰۰۰" : "۲,۸۷۰,۰۰۰",
-      priceMonthly: billingPeriod === "yearly" ? "۲۳۹,۰۰۰" : undefined,
-      description: "برای کسب‌وکارهای کوچک",
-      color: "#3498DB",
-      features: [
-        "تا ۵,۰۰۰ پیام در ماه",
-        "تا ۳ چت‌بات",
-        "پشتیبانی ایمیلی و چت",
-        "گزارش‌های پیشرفته",
-        "قابلیت سفارشی‌سازی ظاهر",
-        "یکپارچگی با ابزارهای محبوب",
-      ],
-    },
-    {
-      id: "pro",
-      name: "حرفه‌ای",
-      price: billingPeriod === "monthly" ? "۷۹۹,۰۰۰" : "۷,۶۷۰,۰۰۰",
-      priceMonthly: billingPeriod === "yearly" ? "۶۳۹,۰۰۰" : undefined,
-      description: "برای کسب‌وکارهای در حال رشد",
-      color: "#65bcb6",
-      recommended: true,
-      current: true,
-      features: [
-        "تا ۲۰,۰۰۰ پیام در ماه",
-        "تا ۱۰ چت‌بات",
-        "پشتیبانی ۲۴/۷",
-        "گزارش‌های تحلیلی پیشرفته",
-        "سفارشی‌سازی کامل",
-        "API دسترسی",
-        "آموزش هوش مصنوعی اختصاصی",
-        "ادغام با CRM",
-      ],
-    },
-    {
-      id: "enterprise",
-      name: "سازمانی",
-      price: "تماس بگیرید",
-      description: "برای سازمان‌های بزرگ",
-      color: "#FFA18E",
-      features: [
-        "پیام نامحدود",
-        "چت‌بات نامحدود",
-        "مدیر اختصاصی",
-        "پشتیبانی اولویت‌دار",
-        "سفارشی‌سازی کامل",
-        "قرارداد SLA",
-        "آموزش تیم",
-        "استقرار اختصاصی",
-      ],
-    },
-  ];
 
-  const handlePlanPurchase = (planId: string, planName: string) => {
-    if (planId === "enterprise") {
+  const startDate = new Date(subscription?.start_date || "").toLocaleDateString(
+    "fa-IR"
+  );
+  const endDate = new Date(subscription?.end_date || "").toLocaleDateString(
+    "fa-IR"
+  );
+  const planType = SUBSCRIPTION_TYPES[subscription?.type];
+  const planName = PLAN_TYPES[subscription?.plan];
+
+  // 🔹 محاسبه پیام‌های مصرف‌شده (اگر داده واقعی داشتی)
+  const usedMessages = 20000 - subscription?.remaining_upload_chars;
+  const totalMessages = 20000;
+
+  useEffect(() => {
+    if (!user?.token) return;
+    if (!currentBot?.uuid) return;
+
+    const fetchAllData = async () => {
+      setIsLoading(true);
+
+      try {
+        // انجام دو درخواست به صورت موازی
+        const [pricingRes, subscriptionRes] = await Promise.all([
+          axiosInstance.get(API_ROUTES.PAYMENT.PRICING),
+          axiosInstance.get(
+            API_ROUTES.FINANCIAL.SUBSCRIPTION(currentBot?.uuid)
+          ),
+        ]);
+
+        setPlans(pricingRes.data?.data?.subscription_plans ?? []);
+        setSubscription(subscriptionRes.data?.data ?? []);
+        console.log("plans :", pricingRes.data?.data?.subscription_plans);
+        console.log("subscription :", subscriptionRes.data?.data);
+      } catch (apiError: any) {
+        console.warn("API fetch failed:", apiError);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, [user?.token, currentBot?.uuid]);
+
+  const translateFeature = (key: string): string => {
+    const dict: Record<string, string> = {
+      base_stats: "آمار پایه",
+      choosing_llm: "انتخاب مدل هوش مصنوعی",
+      usage_reports: "گزارش مصرف",
+      upload_docs: "آپلود فایل",
+      chatbot_logo: "لوگوی چت‌بات اختصاصی",
+      advanced_stats: "آمار پیشرفته",
+      website_crawling: "خزش وب‌سایت",
+      qa_as_file: "سوال و پاسخ از فایل",
+      chatbot_greetings: "پیام خوش‌آمدگویی",
+      chatbot_k: "حافظه چت‌بات",
+      chatbot_emoji: "استفاده از ایموجی",
+      chatbot_support_phone: "پشتیبانی تلفنی",
+      chatbot_answer_length: "کنترل طول پاسخ",
+    };
+    return dict[key] || key;
+  };
+
+  const normalizedPlans = plans.map((p, index) => ({
+    id: index.toString(),
+    plan: p.plan,
+    name: PLAN_TYPES_NAME[p.plan],
+    description:
+      p.plan === "FREE"
+        ? "پلن رایگان برای شروع"
+        : "امکانات و ظرفیت بیشتر برای استفاده پیشرفته‌تر",
+    color: PLAN_COLORS[p.plan] || "#ccc",
+    price:
+      p.plan === "FREE"
+        ? "۰"
+        : Number(p.price_yearly_irr).toLocaleString("fa-IR"),
+    priceMonthly:
+      p.plan === "FREE"
+        ? "۰"
+        : Number(p.price_monthly_irr).toLocaleString("fa-IR"),
+    features: p.features.map((f) => translateFeature(f)),
+    recommended: p.plan === "MEDIUM",
+    current: subscription.plan === p.plan,
+  }));
+
+  // console.log("normalizedPlans", normalizedPlans);
+
+  const handlePlanPurchase = (planName: string) => {
+    // console.log("planName", planName);
+    if (planName.toLowerCase() === "enterprise".toLowerCase()) {
       toast.info("لطفاً با تیم فروش ما تماس بگیرید");
-    } else if (planId === "free") {
+    } else if (planName.toLowerCase() === "free".toLowerCase()) {
       toast.info("شما در حال حاضر از پلن رایگان استفاده می‌کنید");
     } else {
       // Navigate to checkout page
-      const plan = plans.find((p) => p.id === planId);
+      const plan = plans.find(
+        (p) => p.plan.toLowerCase() === planName.toLowerCase()
+      );
+      console.log("plans:", plans);
       if (plan) {
         router.push("/pay/checkout");
-        // Store selected plan in localStorage for checkout page
         localStorage.setItem(
           "selectedPlan",
           JSON.stringify({
@@ -142,7 +170,7 @@ export function Billing() {
   return (
     <div className="min-h-screen flex bg-grey-50" dir="rtl">
       {/* <Sidebar onNavigate={onNavigate} currentPage="billing" /> */}
-
+      {(isLoading || loading) && <PageLoader />}
       <main className="flex-1 p-8" role="main">
         <div className="mb-8 flex items-center justify-between">
           <header className="mb-8">
@@ -164,13 +192,8 @@ export function Billing() {
           >
             پلن فعلی
           </h2>
-          <Card
-            className="p-6"
-            // style={{
-            //   background: 'linear-gradient(135deg, rgba(101, 188, 182, 0.1) 0%, rgba(101, 188, 182, 0.05) 100%)',
-            //   borderColor: '#65bcb6'
-            // }}
-          >
+
+          <Card className="p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div
@@ -179,18 +202,25 @@ export function Billing() {
                 >
                   <CreditCard className="w-8 h-8 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-grey-900 mb-1 text-right">پلن حرفه‌ای</h3>
-                  <p className="text-grey-600">اشتراک سالانه - تا ۱۴۰۴/۰۹/۱۵</p>
+
+                <div className="text-right">
+                  <h3 className="text-grey-900 mb-1">{planName}</h3>
+                  <p className="text-grey-600">
+                    {planType} - تا {endDate}
+                  </p>
                   <p className="text-grey-500 text-sm mt-1">
-                    ۱۵,۲۳۰ پیام از ۲۰,۰۰۰ استفاده شده
+                    {usedMessages.toLocaleString("fa-IR")} پیام از{" "}
+                    {totalMessages.toLocaleString("fa-IR")} استفاده شده
                   </p>
                 </div>
               </div>
+
               <div className="text-left">
-                <p className="text-grey-900 mb-1">۶۳۹,۰۰۰ تومان / ماه</p>
+                <p className="text-grey-900 mb-1">
+                  {subscription?.balance.toLocaleString("fa-IR")} تومان / ماه
+                </p>
                 <p className="text-grey-500 text-sm">
-                  صورتحساب بعدی: ۱۴۰۴/۰۹/۱۵
+                  صورتحساب بعدی: {endDate}
                 </p>
               </div>
             </div>
@@ -238,7 +268,7 @@ export function Billing() {
 
           {/* Plans Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {plans.map((plan) => (
+            {normalizedPlans.map((plan) => (
               <div
                 key={plan.id}
                 className={`relative group ${
@@ -286,10 +316,10 @@ export function Billing() {
                       }}
                     >
                       <div className="text-white">
-                        {plan.id === "free" && "🎁"}
-                        {plan.id === "starter" && "🚀"}
-                        {plan.id === "pro" && "💎"}
-                        {plan.id === "enterprise" && "👑"}
+                        {plan.id === "0" && "🎁"}
+                        {plan.id === "1" && "🚀"}
+                        {plan.id === "2" && "💎"}
+                        {plan.id === "3" && "👑"}
                       </div>
                     </div>
                   </div>
@@ -302,13 +332,13 @@ export function Billing() {
 
                   {/* Pricing */}
                   <div className="text-center mb-8 pb-6 border-b border-grey-200">
-                    {plan.id !== "enterprise" ? (
+                    {plan.id !== "3" ? (
                       <>
                         <div className="flex items-baseline justify-center gap-2 mb-2">
                           <span
                             className="text-grey-900"
                             style={{
-                              fontSize: plan.id === "free" ? "2.5rem" : "3rem",
+                              fontSize: "2rem",
                               fontWeight: "700",
                               background: plan.recommended
                                 ? `linear-gradient(135deg, ${plan.color} 0%, ${plan.color}aa 100%)`
@@ -321,13 +351,16 @@ export function Billing() {
                                 : undefined,
                             }}
                           >
-                            {plan.price}
+                            {/* {plan.price} */}
+                            {billingPeriod === "monthly"
+                              ? plan.priceMonthly
+                              : plan.price}
                           </span>
-                          {plan.id !== "free" && (
+                          {plan.id !== "0" && (
                             <span className="text-grey-500">تومان</span>
                           )}
                         </div>
-                        {plan.id !== "free" && (
+                        {plan.id !== "0" && (
                           <p className="text-grey-500 text-sm">
                             {billingPeriod === "monthly" ? "هر ماه" : "هر سال"}
                           </p>
@@ -335,9 +368,17 @@ export function Billing() {
                         {plan.priceMonthly && (
                           <p className="text-brand-primary text-sm mt-2">
                             💰 صرفه‌جویی:{" "}
-                            {parseInt(plan.price.replace(/,/g, "")) -
-                              parseInt(plan.priceMonthly.replace(/,/g, "")) *
-                                12}{" "}
+                            {(
+                              parseInt(
+                                convertToEnglish(
+                                  plan.priceMonthly.replace(/٬/g, "")
+                                )
+                              ) *
+                                12 -
+                              parseInt(
+                                convertToEnglish(plan.price.replace(/٬/g, ""))
+                              )
+                            ).toLocaleString("fa-IR")}{" "}
                             تومان
                           </p>
                         )}
@@ -380,7 +421,7 @@ export function Billing() {
 
                   {/* CTA Button */}
                   <button
-                    onClick={() => handlePlanPurchase(plan.id, plan.name)}
+                    onClick={() => handlePlanPurchase(plan.plan)}
                     disabled={plan.current}
                     title={`خرید پلن ${plan.name}`}
                     className={`w-full py-4 rounded-2xl transition-all duration-300 text-center relative overflow-hidden group/btn ${
@@ -400,7 +441,7 @@ export function Billing() {
                     <span className="relative z-10">
                       {plan.current
                         ? "✓ پلن فعلی شما"
-                        : plan.id === "enterprise"
+                        : plan.id === "3"
                         ? "📞 تماس با فروش"
                         : "🛒 انتخاب و خرید"}
                     </span>

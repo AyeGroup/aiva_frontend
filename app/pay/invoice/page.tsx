@@ -34,7 +34,7 @@ interface InvoiceData {
   } | null;
 }
 
-export function Invoice() {
+export default function Invoice() {
   const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
   const router = useRouter();
 

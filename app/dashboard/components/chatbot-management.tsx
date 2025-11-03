@@ -21,6 +21,7 @@ import {
   X,
   Plus,
 } from "lucide-react";
+import { convertToPersian } from "@/utils/common";
 
 export function ChatbotManagement() {
   const router = useRouter();
@@ -186,12 +187,10 @@ export function ChatbotManagement() {
                     <MessageSquare className="w-5 h-5 text-white" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-grey-900 mb-1    ">
-                  {chatbots.length}
+                <h3 className="text-2xl font-bold text-grey-900 mb-1">
+                  {convertToPersian(chatbots.length)}
                 </h3>
-                <p className="text-grey-600 text-sm text-left    ">
-                  کل چت بات‌ها
-                </p>
+                <p className="text-grey-600 text-sm text-left">کل چت بات‌ها</p>
               </div>
               <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
                 <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-success/10"></div>
@@ -202,7 +201,11 @@ export function ChatbotManagement() {
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
-                  {chatbots.filter((bot) => bot.active === true).length}
+                  {
+                    convertToPersian(chatbots.filter(
+                      (bot) => bot.active === true
+                    ).length)
+                  }
                 </h3>
                 <p className="text-grey-600 text-sm text-left">چت بات فعال</p>
               </div>
@@ -218,9 +221,11 @@ export function ChatbotManagement() {
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
-                  {Object.values(sessions).reduce(
-                    (sum, count) => sum + count,
-                    0
+                  {convertToPersian(
+                    Object.values(sessions).reduce(
+                      (sum, count) => sum + count,
+                      0
+                    )
                   )}
                 </h3>
                 <p className="text-grey-600 text-sm text-left">
@@ -273,7 +278,7 @@ export function ChatbotManagement() {
                         <div className="text-center">
                           <p className="text-lg font-bold text-grey-900">
                             {/* {chatbot.conversationsToday} */}
-                            {sessions?.[chatbot?.uuid as any] || "0"}
+                            {convertToPersian(sessions?.[chatbot?.uuid as any] || "0")}
                           </p>
                           <p className="text-xs text-grey-500">گفتگو امروز</p>
                         </div>

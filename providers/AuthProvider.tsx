@@ -33,6 +33,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  useEffect(() => {
+    const handleLogout = () => {
+      router.push("/auth/login");
+    };
+    window.addEventListener("auth-logout", handleLogout);
+    return () => window.removeEventListener("auth-logout", handleLogout);
+  }, [router]);
+
+  
    useEffect(() => {
     const token = localStorage.getItem("accessToken");
     const savedUser = localStorage.getItem("user");

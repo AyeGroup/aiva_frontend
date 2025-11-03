@@ -77,7 +77,7 @@ export default function Dashboard() {
           response.data.data.length > 0
         ) {
           setIsNew(false);
-          console.log("curret bot :", response.data.data[0]);
+          // console.log("curret bot :", response.data.data[0]);
         } else setIsNew(true);
       } catch (error) {
         console.error("Error fetching bots:", error);
@@ -122,6 +122,13 @@ export default function Dashboard() {
     fetchFaqList();
   }, [user, currentBot, timeRange]);
 
+  useEffect(() => {
+    if (currentBot) {
+      // console.log("بات انتخاب شده:", currentBot.name);
+    }
+  }, [currentBot]);
+
+
   const fetchUserTrend = async (days: string) => {
     if (!currentBot) return;
     try {
@@ -139,12 +146,6 @@ export default function Dashboard() {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
   };
-
-  useEffect(() => {
-    if (currentBot) {
-      console.log("بات انتخاب شده:", currentBot.name);
-    }
-  }, [currentBot]);
 
   const fetchSessionTrend = async (days: string) => {
     if (!currentBot) return;
@@ -192,7 +193,8 @@ export default function Dashboard() {
   };
 
   const fetchRecentSession = async () => {
-    console.log("fetchRecentSession", currentBot);
+    // console.log("fetchRecentSession", currentBot);
+    setRecentSession([]);
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(

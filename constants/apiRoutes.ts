@@ -86,11 +86,12 @@ export const API_ROUTES = {
   },
 
   PAYMENT: {
-    INITIATE: `${API_BASE_URL}/financial/initiate`,
-    CALLBACK: `${API_BASE_URL}/financial/callback`,
+    DISCOUNT: `${API_BASE_URL}/payment/discont/verify`,
+    INITIATE: `${API_BASE_URL}/payment/initiate`,
+    CALLBACK: `${API_BASE_URL}/payment/callback`,
     VERIFY: (payment_id: string) =>
-      `${API_BASE_URL}/financial/verify/${payment_id}`,
-    HISTORY: `${API_BASE_URL}/financial/history`,
-    PRICING: `${API_BASE_URL}/financial/pricing`,
+      `${API_BASE_URL}/payment/verify/${payment_id}`,
+    HISTORY: `${API_BASE_URL}/payment/history`,
+    PRICING: `${API_BASE_URL}/payment/pricing`,
   },
 };

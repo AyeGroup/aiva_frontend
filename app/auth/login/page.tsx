@@ -48,7 +48,7 @@ function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const identity = phone.trim();
-    console.log("login ", identity);
+    // console.log("login ", identity);
     if (!isValidEmail(identity) && !isValidPhone(identity)) {
       toast.error("لطفاً شماره موبایل یا ایمیل معتبر وارد کنید");
       return;

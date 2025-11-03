@@ -1,19 +1,3 @@
-export interface BaseComponentProps {
-  className?: string;
-  children?: React.ReactNode;
-  id?: string;
-}
-
-export const colorPalette = [
-  { name: "صورتی", value: "#ec4899" },
-  { name: "بنفش", value: "#8b5cf6" },
-  { name: "سبز", value: "#22c55e" },
-  { name: "آبی", value: "#3b82f6" },
-  { name: "عنبری", value: "#f5a623" },
-  { name: "فیروزه‌ای", value: "#4ca7a5" },
-  { name: "کورال", value: "#eb6e5b" },
-];
-
 export type PageType =
   | "landing"
   | "register"
@@ -31,6 +15,34 @@ export type PageType =
   | "payment-success"
   | "payment-failed"
   | "components";
+
+export type TicketCategory = "technical" | "financial" | "general" | "others";
+
+export type TicketPriority = "low" | "medium" | "high" | "urgent";
+
+export type ViewType = "list" | "create" | "view";
+
+export type LoadingState = "idle" | "loading" | "success" | "error";
+
+export type Breakpoint = "sm" | "md" | "lg" | "xl" | "2xl";
+
+export type billingPeriod = "monthly" | "yearly";
+
+export interface BaseComponentProps {
+  className?: string;
+  children?: React.ReactNode;
+  id?: string;
+}
+
+export const colorPalette = [
+  { name: "صورتی", value: "#ec4899" },
+  { name: "بنفش", value: "#8b5cf6" },
+  { name: "سبز", value: "#22c55e" },
+  { name: "آبی", value: "#3b82f6" },
+  { name: "عنبری", value: "#f5a623" },
+  { name: "فیروزه‌ای", value: "#4ca7a5" },
+  { name: "کورال", value: "#eb6e5b" },
+];
 
 export interface BotConfig {
   uuid: string;
@@ -81,6 +93,7 @@ export interface KnowledgeItem {
   qa_id?: string;
   upload_id?: string;
 }
+
 export interface PurchaseHistory {
   id: string;
   date: string;
@@ -89,11 +102,19 @@ export interface PurchaseHistory {
   status: "success" | "failed" | "pending";
   invoiceUrl?: string;
 }
-export type TicketCategory = "technical" | "financial" | "general" | "others";
-export type TicketPriority = "low" | "medium" | "high" | "urgent";
- 
-export type ViewType = "list" | "create" | "view";
 
+export interface Plan {
+  id: string;
+  plan: string;
+  name: string;
+  price_yearly_irr: string;
+  price_monthly_irr: string;
+  description: string;
+  features: string[];
+  recommended?: boolean;
+  color: string;
+  current?: boolean;
+}
 
 export interface Ticket {
   id: string;
@@ -108,7 +129,6 @@ export interface Ticket {
   tags?: string[];
   messages?: any[];
 }
-
 
 export interface ButtonProps extends BaseComponentProps {
   variant?: "primary" | "secondary" | "tertiary";
@@ -204,15 +224,11 @@ export interface FormField {
   };
 }
 
-export type LoadingState = "idle" | "loading" | "success" | "error";
-
 export interface AsyncState<T> {
   data: T | null;
   status: LoadingState;
   error: string | null;
 }
-
-export type Breakpoint = "sm" | "md" | "lg" | "xl" | "2xl";
 
 export interface ResponsiveProps {
   sm?: string;

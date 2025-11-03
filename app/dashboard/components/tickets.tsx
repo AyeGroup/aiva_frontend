@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { StatusBadge } from "../status-badge";
-import { ChatbotSelector } from "../chatbot-selector";
 import { Ticket, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
 import { ViewTicketDetail } from "../TicketView";
@@ -99,7 +98,7 @@ export function Tickets() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <ChatbotSelector />
+                  {/* <ChatbotSelector /> */}
 
                   {view === "list" && (
                     <button
