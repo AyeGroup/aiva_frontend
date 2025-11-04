@@ -97,7 +97,7 @@ export function RecentChats({
             <ChatHistoryCard
               key={chat.userId}
               userId={chat.userId}
-              userName={`کاربر ${index + 1}`}
+              userName={`کاربر ${convertToPersian(index + 1)}`}
               // userName={chat.userName}
               userAvatar={chat.userAvatar}
               messages={chat.messages}
