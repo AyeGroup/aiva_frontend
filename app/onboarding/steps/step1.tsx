@@ -3,6 +3,7 @@ import { Select } from "@/components/select";
 import { BotConfig } from "@/types/common";
 import { onboardingData } from "../onboarding.data";
 import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
+import { useState } from "react";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -13,6 +14,7 @@ export function WizardStep1({
   botConfig,
   updateConfig,
 }: WizardStep1Props) {
+  const [newItem, setNewItem] = useState("");
   return (
     <div
       className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg "
@@ -129,8 +131,36 @@ export function WizardStep1({
                   : ""
               }`}
             />
-            
-            
+          </div>
+          <div className="mt-4">
+            <p className="text-grey-700 mb-3 text-body-small text-right text-[14px]">
+              دستورالعمل‌های پیشنهادی
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {onboardingData.sampleGuidlines.map((content, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => {
+                    updateConfig({
+                      guidelines: botConfig.guidelines
+                        ? botConfig.guidelines + "\n" + content
+                        : content,
+                    });
+                  }}
+                  className="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-grey-200 hover:bg-brand-primary hover:text-white hover:border-brand-primary text-grey-700 text-body-small group"
+                >
+                  <svg
+                    className="w-3 h-3 text-brand-primary group-hover:text-white"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  <span className="text-[13px] leading-tight">{content}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { convertToPersian } from "@/utils/common";
 import ChatbotDetailModal from "../ChatbotDetailModal";
+import { Switch } from "@/components/switch";
 
 export function ChatbotManagement() {
   const router = useRouter();
@@ -323,7 +324,17 @@ export function ChatbotManagement() {
                         {/* Actions */}
                         <div className="flex items-center gap-2">
                           <div className="rounded-3xl border text-sm p-2 border-gray-200">
-                            <ToggleSmall
+                            <Switch
+                              checked={chatbot.active}
+                              onCheckedChange={() =>
+                                openConfirmActiveModal(
+                                  chatbot.uuid,
+                                  !chatbot.active
+                                )
+                              }
+                             
+                            /> 
+                            {/* <ToggleSmall
                               label={
                                 chatbot.active ? "غیرفعال کردن" : "فعال کردن"
                               }
@@ -334,7 +345,7 @@ export function ChatbotManagement() {
                                   !chatbot.active
                                 )
                               }
-                            />
+                            /> */}
                           </div>
 
                           {/* Actions Menu */}

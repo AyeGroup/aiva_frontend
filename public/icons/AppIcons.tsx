@@ -613,11 +613,18 @@ export const TicketClose = () => {
   );
 };
 
-// export const pppp = () => {
-//   return (
-
-//   );
-// };
+export const RightGo = () => {
+  return (
+    <svg
+    
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="text-white"
+    >
+      <path d="M8 6l6 6-6 6V6z" />
+    </svg>
+  );
+};
 
 // export const pppp = () => {
 //   return (

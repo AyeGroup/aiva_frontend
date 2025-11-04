@@ -21,7 +21,6 @@ export const PLANS: PlanInfo[] = [
   { code: "ENTERPRISE", id: 4, faName: "ویژه" },
 ];
 
-// 🟢 ساخت مپ‌های سریع از PLANS
 export const PLAN_TYPES: Record<number, string> = Object.fromEntries(
   PLANS.map((p) => [p.id, p.faName])
 );
@@ -34,6 +33,17 @@ export const PLAN_TYPES_NAME: Record<PlanCode, string> = Object.fromEntries(
   PLANS.map((p) => [p.code, p.faName])
 ) as Record<PlanCode, string>;
 
+export function getFaNameByCode(
+  code: string
+): (typeof PLANS)[number]["faName"] | undefined {
+  const plan = PLANS.find((p) => p.code === code);
+  return plan?.faName;
+}
+
+export const getPlanIdByCode = (code: string): number | undefined => {
+  const plan = PLANS.find((p) => p.code === code);
+  return plan?.id;
+};
 export const getPlanCodeById = (id: number): PlanCode | undefined => {
   const plan = PLANS.find((p) => p.id === id);
   return plan?.code;
