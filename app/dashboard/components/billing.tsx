@@ -12,16 +12,11 @@ import { ChatbotSelector } from "../chatbot-selector";
 import { purchaseHistory } from "../billing.data";
 import { convertToEnglish } from "@/utils/common";
 import { Check, Download, CreditCard } from "lucide-react";
+import { billingPeriod, Plan, PurchaseHistory } from "@/types/common";
 import {
-  billingPeriod,
-  colorPalette,
-  Plan,
-  PurchaseHistory,
-} from "@/types/common";
-import {
+  getFaNameByCode,
   PLAN_COLORS,
   PLAN_TYPES,
-  PLAN_TYPES_NAME,
   SUBSCRIPTION_TYPES,
 } from "@/constants/plans";
 
@@ -34,9 +29,6 @@ export function Billing() {
   const { currentBot } = useBot();
   const router = useRouter();
 
-  const startDate = new Date(subscription?.start_date || "").toLocaleDateString(
-    "fa-IR"
-  );
   const endDate = new Date(subscription?.end_date || "").toLocaleDateString(
     "fa-IR"
   );
@@ -99,7 +91,7 @@ export function Billing() {
   const normalizedPlans = plans.map((p, index) => ({
     id: index.toString(),
     plan: p.plan,
-    name: PLAN_TYPES_NAME[p.plan],
+    name: getFaNameByCode(p.plan),
     description:
       p.plan === "FREE"
         ? "پلن رایگان برای شروع"

@@ -21,8 +21,11 @@ import {
   DashTime,
   DashUser,
   Faqs,
+  RightGo,
   User,
 } from "@/public/icons/AppIcons";
+import { Link } from "lucide-react";
+import { GenericSelector } from "@/components/selector";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -466,8 +469,16 @@ export default function Dashboard() {
                         تعداد گفتگوها
                       </button>
                     </div>
-
-                    <Select
+                    <GenericSelector
+                      items={TIME_RANGES}
+                      selectedValue={timeRange}
+                      onSelect={(value) => {
+                        setTimeRange(value);
+                        handleTimeRangeChange(value);
+                      }}
+                      showIndicator={true}
+                    />
+                    {/* <Select
                       value={timeRange}
                       onValueChange={(value) => {
                         setTimeRange(value);
@@ -483,7 +494,7 @@ export default function Dashboard() {
                           {range.label}
                         </option>
                       ))}
-                    </Select>
+                    </Select> */}
                   </div>
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2 px-[12px] py-[0px]">
@@ -567,28 +578,27 @@ export default function Dashboard() {
                     })}
 
                     {/* More Users Button */}
-                    {activeUsers && activeUsers.length > 4 && (
+                    {activeUsers && activeUsers.length > 3 && (
                       <div
-                        className="relative rounded-lg p-4 shadow-sm hover-lift cursor-pointer flex items-center justify-center"
+                        className="relative rounded-lg p-4 shadow-sm hover-lift   flex items-center justify-center"
                         style={{
                           background: "#FF8970",
                           border: "1px solid #FF8970",
                         }}
                       >
-                        <div className="flex items-center justify-center gap-2">
-                          <h4 className="font-bold text-[14px] text-white">
+                        <button
+                          onClick={() =>
+                            router.push("/dashboard?tab=activeusers")
+                          }
+                          className="flex cursor-pointer items-center justify-center gap-2"
+                        >
+                          <h4 className="font-bold text-sm text-white">
                             مشاهده همه
                           </h4>
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="text-white"
-                          >
-                            <path d="M8 6l6 6-6 6V6z" />
-                          </svg>
-                        </div>
+                          <div className="w-4 h-4">
+                            <RightGo />
+                          </div>
+                        </button>
                       </div>
                     )}
                   </div>

@@ -13,6 +13,8 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { convertToEnglish, convertToPersian } from "@/utils/common";
 import { ArrowRight, Tag, Receipt, CreditCard } from "lucide-react";
 import {
+  getFaNameByCode,
+  getPlanIdByCode,
   PLAN_COLORS,
   PLAN_TYPES_CODE,
   PLAN_TYPES_NAME,
@@ -125,7 +127,7 @@ export default function Checkout() {
         purpose: "subscription_purchase",
         amount_irr: totalPrice,
         chatbot_uuid: currentBot?.uuid,
-        subscription_plan: PLAN_TYPES_CODE[selectedPlan.plan],
+        subscription_plan: getPlanIdByCode(selectedPlan.plan),
         subscription_type: selectedPlan.billingPeriod,
         description: selectedPlan.description,
       };
@@ -194,7 +196,7 @@ export default function Checkout() {
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="text-grey-900 mb-1">
-                        پلن {PLAN_TYPES_NAME[selectedPlan.plan]}
+                        پلن {getFaNameByCode(selectedPlan.plan)}
                       </h3>
                       <p className="text-grey-600 text-sm mb-3">
                         {selectedPlan.description}

@@ -4124,3 +4124,121 @@ html[dir="rtl"] .code-actions {
 .chatbot-menu-button:active {
   transform: scale(0.95);
 }
+/* Switch Root - دقیقاً مطابق با دیزاین فیگما */
+.switch-root {
+  /* Reset button styles */
+  all: unset;
+  
+  /* Layout */
+  position: relative;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-block;
+  
+  /* Size - از فیگما */
+  width: 44px;
+  height: 22px;
+  
+  /* Transition */
+  transition: background-color 0.2s ease;
+}
+
+.switch-root:focus-visible {
+  outline: 2px solid #65bcb6;
+  outline-offset: 2px;
+}
+
+/* Inner container */
+.switch-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Track container */
+.switch-track {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Checked state - رنگ برند */
+.switch-checked {
+  background-color: #65bcb6;
+}
+
+.switch-track-checked {
+  justify-content: flex-end;
+  padding: 2px 2px 2px 18px;
+}
+
+/* Unchecked state - خاکستری */
+.switch-unchecked {
+  background-color: #d1d5db; /* gray-300 */
+}
+
+.switch-track-unchecked {
+  justify-content: flex-start;
+  padding: 2px 18px 2px 2px;
+}
+
+/* Disabled state */
+.switch-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Halo effect - برای focus */
+.switch-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 22px;
+  background-color: #00091a;
+  opacity: 0;
+  border-radius: 23px;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.switch-root:focus-visible .switch-halo {
+  opacity: 0.1;
+}
+
+/* Switch Nob - دقیقاً مطابق فیگما */
+.switch-nob {
+  height: 18px;
+  width: 18px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0px 2px 4px 0px rgba(0, 35, 11, 0.2);
+  flex-shrink: 0;
+}
+
+/* Hover Effects */
+.switch-root:not(.switch-disabled):hover {
+  filter: brightness(0.95);
+}
+
+.switch-root:not(.switch-disabled):active {
+  filter: brightness(0.9);
+}
+
+/* Smooth animations */
+@media (prefers-reduced-motion: no-preference) {
+  .switch-root {
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .switch-nob {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

@@ -446,11 +446,16 @@ export default function OnboardingWizard() {
             </div>
           </div>
 
-          <div className="text-grey-900 mb-4 font-bold text-lg text-center">
-            {title}
-          </div>
+          {!id ||
+            (id === "new" && (
+              <div className="text-grey-900 mb-4 font-bold text-lg text-center">
+                {title}
+              </div>
+            ))}
           <div className="text-grey-700 max-w-lg mx-auto text-center">
-            {subtitle}
+            {!id || id === "new"
+              ? subtitle
+              : "پس از اعمال تغییرات، کد نصب را مجدد در سایت خود قرار دهید."}
           </div>
         </div>
 

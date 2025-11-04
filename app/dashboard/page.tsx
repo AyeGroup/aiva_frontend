@@ -11,6 +11,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import PageLoader from "@/components/pageLoader";
 import OnboardingWizard from "../onboarding/page";
+import ActiveUsers from "./components/activeusers";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -22,6 +23,7 @@ export default function DashboardPage() {
     | "chatbot-management"
     | "tickets"
     | "onboarding"
+    | "activeusers"
     | "billing";
 
   const pages: Record<string, JSX.Element> = {
@@ -30,6 +32,7 @@ export default function DashboardPage() {
     billing: <Billing />,
     dashboard: <DashboardHome />,
     onboarding: <OnboardingWizard />,
+    activeusers: <ActiveUsers />,
   };
 
   //authentication

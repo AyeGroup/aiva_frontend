@@ -10,6 +10,7 @@ export type PageType =
   | "chatbot-management"
   | "tickets"
   | "billing"
+  | "activeusers"
   | "checkout"
   | "payment-gateway"
   | "payment-success"
