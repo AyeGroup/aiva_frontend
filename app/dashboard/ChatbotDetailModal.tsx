@@ -83,16 +83,20 @@ export default function ChatbotDetailModal({
 
         // 🟢 6. محاسبه درصد استفاده از پیام‌ها
         if (
-          subData?.used_messages !== undefined &&
+          subData?.remaining_upload_chars !== undefined &&
           currentPlan?.upload_char_limit
         ) {
-          const percentage = Math.min(
-            (subData.used_messages / currentPlan.upload_char_limit) * 100,
-            100
-          );
+          const percentage =100-(  (subData.remaining_upload_chars / currentPlan.upload_char_limit) *
+            100)
+          ;
+
+          console.log("remaining: ", subData.remaining_upload_chars);
+          console.log("total: ", currentPlan.upload_char_limit);
+          console.log("percentage: ", percentage);
+
           setUsagePercentage(percentage);
         } else {
-          setUsagePercentage(80);
+          setUsagePercentage(0);
         }
       } catch (err) {
         console.error("Error fetching subscription or pricing:", err);
@@ -274,7 +278,7 @@ export default function ChatbotDetailModal({
                     lineHeight: "1",
                   }}
                 >
-                  {(usagePercentage || "").toLocaleString("fa-IR")}٪
+                  {(usagePercentage || "0").toLocaleString("fa-IR")}٪
                 </p>
                 <p className="text-grey-600" style={{ fontSize: "11px" }}>
                   مصرف شده
