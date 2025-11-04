@@ -5,29 +5,63 @@ export enum TRANSACTION_TYPE {
   MESSAGE_COST = "message_cost",
 }
 
-export const PLAN_TYPES: Record<number, string> = {
-  0: "رایگان",
-  1: "پایه",
-  2: "حرفه‌ای",
-  3: "پیشرفته",
-  4: "سازمانی",
+type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
+
+interface PlanInfo {
+  code: PlanCode;
+  id: number;
+  faName: string;
+}
+
+export const PLANS: PlanInfo[] = [
+  { code: "FREE", id: 0, faName: "آغازین" },
+  { code: "BASIC", id: 1, faName: "پایه" },
+  { code: "MEDIUM", id: 2, faName: "حرفه‌ای" },
+  { code: "ADVANCE", id: 3, faName: "پیشرفته" },
+  { code: "ENTERPRISE", id: 4, faName: "ویژه" },
+];
+
+// 🟢 ساخت مپ‌های سریع از PLANS
+export const PLAN_TYPES: Record<number, string> = Object.fromEntries(
+  PLANS.map((p) => [p.id, p.faName])
+);
+
+export const PLAN_TYPES_CODE: Record<PlanCode, number> = Object.fromEntries(
+  PLANS.map((p) => [p.code, p.id])
+) as Record<PlanCode, number>;
+
+export const PLAN_TYPES_NAME: Record<PlanCode, string> = Object.fromEntries(
+  PLANS.map((p) => [p.code, p.faName])
+) as Record<PlanCode, string>;
+
+export const getPlanCodeById = (id: number): PlanCode | undefined => {
+  const plan = PLANS.find((p) => p.id === id);
+  return plan?.code;
 };
 
-export const PLAN_TYPES_CODE: Record<string, number> = {
-  FREE: 0,
-  BASIC: 1,
-  MEDIUM: 2,
-  ADVANCE: 3,
-  ENTERPRISE: 4,
-};
+// export const PLAN_TYPES: Record<number, string> = {
+//   0: "رایگان",
+//   1: "پایه",
+//   2: "حرفه‌ای",
+//   3: "پیشرفته",
+//   4: "ویژه",
+// };
 
-export const PLAN_TYPES_NAME: Record<string, string> = {
-  FREE: "رایگان",
-  BASIC: "پایه",
-  MEDIUM: "حرفه‌ای",
-  ADVANCE: "پیشرفته",
-  ENTERPRISE: "سازمانی",
-};
+// export const PLAN_TYPES_CODE: Record<string, number> = {
+//   FREE: 0,
+//   BASIC: 1,
+//   MEDIUM: 2,
+//   ADVANCE: 3,
+//   ENTERPRISE: 4,
+// };
+
+// export const PLAN_TYPES_NAME: Record<string, string> = {
+//   FREE: "رایگان",
+//   BASIC: "پایه",
+//   MEDIUM: "حرفه‌ای",
+//   ADVANCE: "پیشرفته",
+//   ENTERPRISE: "سازمانی",
+// };
 
 export const PLAN_COLORS: Record<string, string> = {
   FREE: "#9ca3af",

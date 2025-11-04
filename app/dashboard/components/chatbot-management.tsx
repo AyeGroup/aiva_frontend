@@ -22,6 +22,7 @@ import {
   Plus,
 } from "lucide-react";
 import { convertToPersian } from "@/utils/common";
+import ChatbotDetailModal from "../ChatbotDetailModal";
 
 export function ChatbotManagement() {
   const router = useRouter();
@@ -29,6 +30,14 @@ export function ChatbotManagement() {
   const [chatbots, setChatbots] = useState<BotConfig[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  // const [planColor, setPlanColor] = useState<string>("65BCB6");
+  // const [chatbotName, setChatbotName] = useState<string>("");
+  const [selectedChatbot, setSelectedChatbot] = useState<BotConfig | null>(
+    null
+  );
+
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     id: string | null;
@@ -52,6 +61,23 @@ export function ChatbotManagement() {
     fetchChatbots();
   }, [user?.token]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".chatbot-menu-container")) {
+        setOpenMenuId(null);
+      }
+    };
+
+    if (openMenuId) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openMenuId]);
+
   const loadChatbots = async () => {
     setIsLoading(true);
 
@@ -64,7 +90,7 @@ export function ChatbotManagement() {
         API_ROUTES.BOTS.SESSION_COUNT_COVER
       );
       setSessions(response1.data.data.chatbots);
-      console.log("SESSION_COUNT_COVER: ", response1.data.data.chatbots);
+      // console.log("SESSION_COUNT_COVER: ", response1.data.data.chatbots);
     } catch (apiError: any) {
       console.warn("API fetch failed, using local data:", apiError);
     } finally {
@@ -201,11 +227,9 @@ export function ChatbotManagement() {
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
-                  {
-                    convertToPersian(chatbots.filter(
-                      (bot) => bot.active === true
-                    ).length)
-                  }
+                  {convertToPersian(
+                    chatbots.filter((bot) => bot.active === true).length
+                  )}
                 </h3>
                 <p className="text-grey-600 text-sm text-left">چت بات فعال</p>
               </div>
@@ -235,7 +259,7 @@ export function ChatbotManagement() {
             </div>
 
             {/* Chatbots List */}
-            <div className="bg-white rounded-3xl border border-grey-100 shadow-card overflow-hidden">
+            <div className="bg-white rounded-3xl border border-grey-100 shadow-card overflow-visible">
               <div className="p-6 border-b border-grey-100">
                 <h2 className="font-bold text-grey-900 text-xl">
                   لیست چت بات‌ها
@@ -278,7 +302,9 @@ export function ChatbotManagement() {
                         <div className="text-center">
                           <p className="text-lg font-bold text-grey-900">
                             {/* {chatbot.conversationsToday} */}
-                            {convertToPersian(sessions?.[chatbot?.uuid as any] || "0")}
+                            {convertToPersian(
+                              sessions?.[chatbot?.uuid as any] || "0"
+                            )}
                           </p>
                           <p className="text-xs text-grey-500">گفتگو امروز</p>
                         </div>
@@ -310,7 +336,81 @@ export function ChatbotManagement() {
                               }
                             />
                           </div>
-                          <button
+
+                          {/* Actions Menu */}
+                          <div className="chatbot-menu-container">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setOpenMenuId(
+                                  openMenuId === chatbot.uuid
+                                    ? null
+                                    : chatbot.uuid
+                                )
+                              }
+                              className="chatbot-menu-button"
+                              title="منوی عملیات"
+                              aria-label="منوی عملیات"
+                              aria-expanded={openMenuId === chatbot.uuid}
+                              aria-haspopup="true"
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+
+                            {/* Dropdown Menu */}
+                            {openMenuId === chatbot.uuid && (
+                              <div
+                                className="chatbot-dropdown-menu"
+                                role="menu"
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedChatbot(chatbot);
+                                    setShowDetailModal(true);
+                                    setOpenMenuId(null);
+                                    // setPlanColor(chatbot.primary_color);
+                                    // setChatbotName(chatbot.name);
+                                  }}
+                                  className="chatbot-menu-item"
+                                  title="جزئیات بیشتر"
+                                  role="menuitem"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  <span>جزئیات بیشتر</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setOpenMenuId(null);
+                                    router.push(
+                                      `/dashboard?tab=onboarding&id=${chatbot.uuid}`
+                                    );
+                                  }}
+                                  className="chatbot-menu-item"
+                                  title="ویرایش"
+                                  role="menuitem"
+                                >
+                                  <Edit3 className="w-4 h-4" />
+                                  <span>ویرایش</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    openConfirmModal(chatbot.uuid);
+                                    setOpenMenuId(null);
+                                  }}
+                                  className="chatbot-menu-item chatbot-menu-item-danger"
+                                  title="حذف"
+                                  role="menuitem"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                  <span>حذف</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          {/* <button
                             onClick={() =>
                               router.push(
                                 `/dashboard?tab=onboarding&id=${chatbot.uuid}`
@@ -327,7 +427,7 @@ export function ChatbotManagement() {
                             title="حذف"
                           >
                             <Trash2 className="w-4 h-4" />
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                     </div>
@@ -351,6 +451,14 @@ export function ChatbotManagement() {
             confirmText="بله، تایید"
             cancelText="لغو"
             type={confirmActiveModal.newStatus ? "success" : "warning"}
+          />
+          <ChatbotDetailModal
+            chatbot={selectedChatbot}
+            show={showDetailModal}
+            onClose={() => {
+              setShowDetailModal(false);
+              setSelectedChatbot(null);
+            }}
           />
 
           <ConfirmModal

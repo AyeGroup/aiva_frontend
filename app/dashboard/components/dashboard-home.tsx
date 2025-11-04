@@ -128,7 +128,6 @@ export default function Dashboard() {
     }
   }, [currentBot]);
 
-
   const fetchUserTrend = async (days: string) => {
     if (!currentBot) return;
     try {
