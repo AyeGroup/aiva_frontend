@@ -139,7 +139,7 @@ export function Sidebar({ currentPage = "dashboard-home", router }: SidebarProps
         <SidebarItem
           label="مالی"
           active={currentPage === "billing"}
-          onClick={() => router.push("/dashboard?tab=billing")}
+          // onClick={() => router.push("/dashboard?tab=billing")}
         />
       </nav>
 
