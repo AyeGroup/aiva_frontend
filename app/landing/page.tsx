@@ -36,6 +36,7 @@ const LoadingSection = () => (
 export default function Landing() {
   return (
     <main className="landing-page min-h-screen bg-white">
+    
       {/* Hero Section */}
       <ErrorBoundary>
         <Hero />

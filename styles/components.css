@@ -4242,3 +4242,240 @@ html[dir="rtl"] .code-actions {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
+/* Credit Summary Card Styles */
+.credit-summary-card {
+  background: white;
+  border-radius: 20px;
+  border: 2px solid rgba(229, 231, 235, 0.5);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.credit-summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.credit-summary-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  border-color: rgba(229, 231, 235, 0.8);
+}
+
+.credit-summary-card:hover::before {
+  opacity: 0.3;
+}
+
+.credit-summary-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Number animation */
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.credit-summary-card .text-3xl {
+  animation: count-up 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .credit-summary-card {
+    padding: 20px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .credit-summary-card {
+  text-align: right;
+}
+/* Chatbot Plan Card Styles */
+.chatbot-plan-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 24px;
+  border: 2px solid;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.chatbot-plan-card:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.chatbot-plan-card-header {
+  padding: 24px;
+  border-bottom: 2px solid rgba(229, 231, 235, 0.5);
+  padding-right: 20px;
+}
+
+.chatbot-plan-card-header .status-badge {
+  transition: all 0.3s ease;
+}
+
+.chatbot-plan-card-header .status-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chatbot-plan-card-body {
+  padding: 32px 24px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatbot-plan-card-footer {
+  padding: 20px 24px;
+  background: linear-gradient(to bottom, rgba(249, 250, 251, 0.5), white);
+  border-top: 2px solid rgba(229, 231, 235, 0.3);
+}
+
+/* Circular Progress Animations */
+.circular-progress {
+  transition: all 0.3s ease;
+}
+
+.circular-progress-fill {
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.circular-progress-bg {
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.circular-progress-inner {
+  transition: all 0.3s ease;
+}
+
+.circular-progress-text {
+  transition: all 0.5s ease;
+  animation: fade-in 0.8s ease-in-out;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Hover effects for Progress */
+.chatbot-plan-card:hover .circular-progress {
+  transform: scale(1.05);
+}
+
+.chatbot-plan-card:hover .circular-progress-fill {
+  opacity: 1;
+}
+
+.chatbot-plan-card:hover .circular-progress-inner {
+  fill: #FAFAFA;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chatbot-plan-card-body .grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .chatbot-plan-card-header {
+    padding: 20px;
+  }
+
+  .chatbot-plan-card-footer {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .chatbot-plan-card-footer > div {
+    width: 100%;
+  }
+
+  .chatbot-plan-card-footer button {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .chatbot-plan-card {
+  text-align: right;
+}
+
+/* افکت‌های بصری اضافی */
+.circular-progress-fill:hover {
+  animation-play-state: paused;
+}
+
+/* انیمیشن برای وقتی کارت در viewport می‌آید */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chatbot-plan-card {
+  animation: card-enter 0.6s ease-out;
+}

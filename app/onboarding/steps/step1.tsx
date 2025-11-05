@@ -3,18 +3,23 @@ import { Select } from "@/components/select";
 import { BotConfig } from "@/types/common";
 import { onboardingData } from "../onboarding.data";
 import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
-import { useState } from "react";
+import react, { useState } from "react";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
-   updateConfig: (updates: Partial<BotConfig>) => void;
+  updateConfig: (updates: Partial<BotConfig>) => void;
 }
 
-export function WizardStep1({
-  botConfig,
-  updateConfig,
-}: WizardStep1Props) {
-  const [newItem, setNewItem] = useState("");
+export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
+  // const [newItem, setNewItem] = useState("");
+  type GuidelineCategory = keyof typeof onboardingData.GroupGuidelines;
+
+  const categories = Object.keys(
+    onboardingData.GroupGuidelines
+  ) as GuidelineCategory[];
+
+  const [activeTab, setActiveTab] = useState<GuidelineCategory>(categories[0]);
+
   return (
     <div
       className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg "
@@ -132,7 +137,88 @@ export function WizardStep1({
               }`}
             />
           </div>
-          <div className="mt-4">
+
+          <div className="mt-5 rounded-sm p-2 bg-gray-100">
+            <p className="flex items-center text-grey-700 mb-3 text-sm font-medium text-right">
+              <svg
+                className="w-3 h-3 ml-1 text-brand-primary group-hover:text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              دستورالعمل‌های پیشنهادی
+            </p>
+
+            {/* تب‌ها */}
+            <div className="flex flex-wrap gap-2 mb-3 pb-2 border-b  border-grey-300">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setActiveTab(cat)}
+                  className={`px-3 py-1 rounded-sm text-[13px] ${
+                    activeTab === cat
+                      ? "bg-brand-primary text-white"
+                      : "bg-white text-grey-700 hover:bg-grey-200"
+                  }`}
+                >
+                  {cat === "general" && "عمومی"}
+                  {cat === "education" && " آموزش و دوره‌های آموزشی"}
+                  {cat === "shop" && " فروشگاه آنلاین"}
+                  {cat === "technical" && " خدمات فنی و پشتیبانی"}
+                  {cat === "medicine" && "سلامت و پزشکی "}
+                  {cat === "tourism" && "گردشگری و رزرو اقامت"}
+                  {cat === "media" && "رسانه و محتوا"}
+                </button>
+              ))}
+            </div>
+
+            {/* محتوای تب فعال */}
+            <div className="flex flex-wrap gap-2">
+              {onboardingData.GroupGuidelines[activeTab].map(
+                (content, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => {
+                      updateConfig({
+                        guidelines: botConfig.guidelines
+                          ? botConfig.guidelines + "\n" + content
+                          : content,
+                      });
+                    }}
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-grey-200 hover:bg-brand-primary hover:text-white hover:border-brand-primary text-grey-700 text-[13px] group transition-all"
+                  >
+                    <span>{content}</span>
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+
+          {/* <div className="form-group">
+            <label
+              htmlFor="welcomeMessage"
+              className="block text-grey-900 mb-3"
+            >
+              دستورالعمل‌ها <span className="text-brand-primary ml-1">*</span>
+            </label>
+            <textarea
+              id="welcomeMessage"
+              value={botConfig.guidelines}
+              onChange={(e) => updateConfig({ guidelines: e.target.value })}
+              placeholder="قوانین و مقررات را بنویسید"
+              rows={3}
+              className={`w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary resize-none ${
+                !botConfig.guidelines || botConfig.guidelines.length == 0
+                  ? "!border-red-400"
+                  : ""
+              }`}
+            />
+          </div> */}
+
+          {/* <div className="mt-4">
             <p className="text-grey-700 mb-3 text-body-small text-right text-[14px]">
               دستورالعمل‌های پیشنهادی
             </p>
@@ -161,7 +247,7 @@ export function WizardStep1({
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
