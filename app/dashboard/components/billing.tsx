@@ -59,7 +59,7 @@ interface Transaction {
   invoiceUrl?: string;
 }
 
-export function Billing({ onNavigate }: BillingProps) {
+export function Billing( ) {
   const [showDiscountHint, setShowDiscountHint] = useState(true);
 
   // داده‌های پلن‌های چت‌بات‌ها
@@ -264,10 +264,14 @@ export function Billing({ onNavigate }: BillingProps) {
 
       <main className="flex-1 p-8" role="main">
         <header className="mb-8">
-          <h1 className="text-grey-900 mb-2 text-right">مالی و اشتراک</h1>
-          <p className="text-grey-600 text-right">
-            مدیریت پلن‌ها، اعتبار و تراکنش‌های مالی
-          </p>
+          <div className="text-right">
+            <h1 className="text-grey-900 mb-2">مالی و اشتراک</h1>
+            <p className="text-grey-600">
+              مدیریت پلن‌ها، اعتبار و تراکنش‌های مالی
+            </p>
+          </div>
+
+        
         </header>
 
         {/* Credit Summary Cards */}
@@ -318,10 +322,7 @@ export function Billing({ onNavigate }: BillingProps) {
         {/* Discount & Expiring Alert */}
         {showDiscountHint && expiringPlan && (
           <section className="mb-8" aria-label="هشدار و اطلاعیه‌ها">
-            <Card
-              className="p-0 overflow-hidden border-2 bg-[#FFA18E]"
-      
-            >
+            <Card className="p-0 overflow-hidden border-2 bg-[#FFA18E]">
               <div
                 className="px-6 py-4 flex items-start gap-4"
                 style={{

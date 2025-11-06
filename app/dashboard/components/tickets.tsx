@@ -79,27 +79,14 @@ export function Tickets() {
             {/* Header */}
             <header className="flex-shrink-0 bg-bg-surface border-b border-border-soft px-8 py-6">
               <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 bg-brand-purple/10 rounded-xl flex items-center justify-center">
-                      <div className="w-7 h-7">
-                        <TicketTitle />
-                      </div>
-                    </div>
-                    <div>
-                      <h1 className="text-grey-900 text-right">
-                        تیکت‌های پشتیبانی
-                      </h1>
-                      <p className="text-grey-600 text-sm">
-                        مدیریت و پیگیری درخواست‌های پشتیبانی
-                      </p>
-                    </div>
-                  </div>
+                <div className="text-right">
+                  <h1 className="text-grey-900 mb-2"> تیکت‌های پشتیبانی</h1>
+                  <p className="text-grey-600">
+                    مدیریت و پیگیری درخواست‌های پشتیبانی
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  {/* <ChatbotSelector /> */}
-
                   {view === "list" && (
                     <button
                       type="button"

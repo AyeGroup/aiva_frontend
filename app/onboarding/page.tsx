@@ -115,6 +115,8 @@ export default function OnboardingWizard() {
             setMaxReachedStep(savedCurrent); // <-- از localStorage
           }
         } else {
+          localStorage.removeItem("aiva-onboarding-data");
+
           setCurrentStep(1);
           setMaxReachedStep(1);
         }
@@ -133,6 +135,7 @@ export default function OnboardingWizard() {
 
     fetchBotData();
   }, [user?.token, id]);
+
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
     if (!botConfig) return;

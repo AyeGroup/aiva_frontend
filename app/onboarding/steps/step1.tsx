@@ -1,9 +1,9 @@
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
+import { useState } from "react";
 import { BotConfig } from "@/types/common";
 import { onboardingData } from "../onboarding.data";
 import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
-import react, { useState } from "react";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -11,13 +11,12 @@ interface WizardStep1Props {
 }
 
 export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
-  // const [newItem, setNewItem] = useState("");
   type GuidelineCategory = keyof typeof onboardingData.GroupGuidelines;
-
+  
   const categories = Object.keys(
     onboardingData.GroupGuidelines
   ) as GuidelineCategory[];
-
+  
   const [activeTab, setActiveTab] = useState<GuidelineCategory>(categories[0]);
 
   return (

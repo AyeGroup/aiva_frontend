@@ -1,22 +1,17 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
 import { useBot } from "@/providers/BotProvider";
 import { BotConfig } from "@/types/common";
+import { ChevronDown } from "lucide-react";
 
 export function ChatbotSelector() {
   const { bots, currentBot, setCurrentBot, refreshBots } = useBot();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // اگر می‌خواهیم local state جدا داشته باشیم
   const [selectedChatbot, setSelectedChatbot] = useState<BotConfig | null>(
     null
   );
 
- 
-
-  // Load bots on mount (برای مواقعی که تازه Context لود شده)
   useEffect(() => {
     if (!bots || bots.length === 0) return;
     setSelectedChatbot(currentBot);
@@ -24,7 +19,7 @@ export function ChatbotSelector() {
 
   const handleSelect = (chatbot: BotConfig) => {
     setSelectedChatbot(chatbot);
-    setCurrentBot(chatbot); // آپدیت currentBot در Context
+    setCurrentBot(chatbot);
     setIsOpen(false);
   };
 

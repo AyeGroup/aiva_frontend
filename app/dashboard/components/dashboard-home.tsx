@@ -1,7 +1,6 @@
 "use client";
 import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
-import { Select } from "@/components/select";
 import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import { RecentChats } from "../recent-chats";
 import { HeatmapChart } from "@/components/heatmap-chart";
 import { UpgradeBanner } from "../upgrade-banner";
 import { ActivityChart } from "@/components/activity-chart";
+import { GenericSelector } from "@/components/selector";
 import { ChatbotSelector } from "../chatbot-selector";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
@@ -24,14 +24,11 @@ import {
   RightGo,
   User,
 } from "@/public/icons/AppIcons";
-import { Link } from "lucide-react";
-import { GenericSelector } from "@/components/selector";
 
 export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { bots, currentBot, setCurrentBot } = useBot();
-
+  const { currentBot } = useBot();
   const [isNew, setIsNew] = useState(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -260,10 +257,10 @@ export default function Dashboard() {
               <div className=" !z-0 stats-hero-section bg-[#E3F4F1] p-8 rounded-3xl border-2 border-white/50 shadow-xl backdrop-blur-sm mb-8">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-2xl font-bold text-grey-900 text-[20px]">
-                    📊 آمار کلیدی امروز
+                    📊 آمار کلیدی
                   </h2>
                   <p className="text-[rgba(166,166,166,1)] text-[14px]">
-                    نگاهی سریع به عملکرد چت‌بات در ۲۴ ساعت گذشته
+                    نگاهی سریع به عملکرد چت‌بات
                   </p>
                 </div>
 
@@ -472,29 +469,13 @@ export default function Dashboard() {
                     <GenericSelector
                       items={TIME_RANGES}
                       selectedValue={timeRange}
+                      disabled={isChartLoading}
                       onSelect={(value) => {
                         setTimeRange(value);
                         handleTimeRangeChange(value);
                       }}
                       showIndicator={true}
                     />
-                    {/* <Select
-                      value={timeRange}
-                      onValueChange={(value) => {
-                        setTimeRange(value);
-                        handleTimeRangeChange(value);
-                      }}
-                      placeholder="انتخاب بازه زمانی"
-                      size="small"
-                      disabled={isChartLoading}
-                      className="min-w-[120px]"
-                    >
-                      {TIME_RANGES.map((range) => (
-                        <option key={range.value} value={range.value}>
-                          {range.label}
-                        </option>
-                      ))}
-                    </Select> */}
                   </div>
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2 px-[12px] py-[0px]">
