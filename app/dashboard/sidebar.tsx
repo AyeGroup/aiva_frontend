@@ -7,10 +7,11 @@ import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { AddChatbotModal } from "./add-chatbot-modal";
 import { AddAccountModal } from "./add-account-modal";
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+// import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { User, LogOut, ArrowLeft } from "lucide-react";
-import { useBot } from "@/providers/BotProvider";
-import { ChatbotSelector } from "./chatbot-selector";
+import Image from "next/image";
+// import { useBot } from "@/providers/BotProvider";
+// import { ChatbotSelector } from "./chatbot-selector";
 
 interface QAPair {
   id: string;
@@ -18,21 +19,21 @@ interface QAPair {
   answer: string;
 }
 
-interface Website {
-  id: string;
-  name: string;
-  url: string;
-  color: string;
-  qaData?: QAPair[];
-}
+// interface Website {
+//   id: string;
+//   name: string;
+//   url: string;
+//   color: string;
+//   qaData?: QAPair[];
+// }
 
-interface Account {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  role: string;
-}
+// interface Account {
+//   id: string;
+//   name: string;
+//   email: string;
+//   avatar?: string;
+//   role: string;
+// }
 
 interface SidebarItemProps {
   label: string;
@@ -61,7 +62,10 @@ interface SidebarProps {
   router: ReturnType<typeof useRouter>;
 }
 
-export function Sidebar({ currentPage = "dashboard-home", router }: SidebarProps) {
+export function Sidebar({
+  currentPage = "dashboard-home",
+  router,
+}: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const { user, loading, logout } = useAuth();
@@ -167,7 +171,9 @@ export function Sidebar({ currentPage = "dashboard-home", router }: SidebarProps
       <div className="px-6 py-2 border-t border-white/30">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
-            <ImageWithFallback
+            <Image
+              width={32}
+              height={32}
               src="logo.png"
               alt="آیوا - دستیار هوشمند"
               className="w-8 h-8 object-cover"

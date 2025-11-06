@@ -6,7 +6,6 @@ import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { Input } from "@/components/input";
 import { useBot } from "@/providers/BotProvider";
-import { Toaster } from "../../../components/ui/sonner";
 import { Checkbox } from "@/components/checkbox";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
@@ -16,8 +15,6 @@ import {
   getFaNameByCode,
   getPlanIdByCode,
   PLAN_COLORS,
-  PLAN_TYPES_CODE,
-  PLAN_TYPES_NAME,
   SUBSCRIPTION_TYPES,
 } from "@/constants/plans";
 
@@ -324,7 +321,6 @@ export default function Checkout() {
           </div>
         </div>
       </main>
-      <Toaster position="top-center" dir="rtl" />
     </div>
   );
 }

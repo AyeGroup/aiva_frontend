@@ -20,7 +20,6 @@ import { CreditSummaryCard } from "@/components/credit-summary-card";
 import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { ChatbotPlanCard } from "@/components/chatbot-plan-card";
-// import { Toaster } from "../../components/ui/sonner";
 
 type PageType =
   | "landing"
@@ -59,7 +58,7 @@ interface Transaction {
   invoiceUrl?: string;
 }
 
-export function Billing( ) {
+export function Billing() {
   const [showDiscountHint, setShowDiscountHint] = useState(true);
 
   // داده‌های پلن‌های چت‌بات‌ها
@@ -270,8 +269,6 @@ export function Billing( ) {
               مدیریت پلن‌ها، اعتبار و تراکنش‌های مالی
             </p>
           </div>
-
-        
         </header>
 
         {/* Credit Summary Cards */}

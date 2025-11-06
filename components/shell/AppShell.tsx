@@ -11,9 +11,7 @@ const Checkout = lazy(() => import("@/app/pay/checkout/page"));
 const Login = lazy(() => import("@/app/auth/login/page"));
 const Register = lazy(() => import("@/app/auth/register/page"));
 const OTPVerification = lazy(() => import("@/app/auth/verification/page"));
-const ChatHistoryDemo = lazy(
-  () => import("@/app/onboarding/demo/chat-history-demo")
-);
+
 
 const PageLoader = () => {
   return (
@@ -48,8 +46,7 @@ export default function AppShell({ page }: AppShellProps) {
         return <Login />;
       case "verification":
         return <OTPVerification />;
-      case "demo":
-        return <ChatHistoryDemo />;
+     
       default:
         return <LandingPage />;
     }
