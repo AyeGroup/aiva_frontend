@@ -40,9 +40,15 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (user?.token) loadOnboardingData();
-  }, [user?.token]);
+useEffect(() => {
+  if (!user?.token || !botConfig?.uuid) return;
+
+  const fetchData = async () => {
+    await loadQa(botConfig.uuid);
+  };
+
+  fetchData();
+}, [user?.token, botConfig?.uuid]);
 
   const loadOnboardingData = async () => {
     try {

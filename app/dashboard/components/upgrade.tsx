@@ -28,7 +28,6 @@ export function Upgrade() {
   const { user, loading } = useAuth();
   const { currentBot } = useBot();
   const router = useRouter();
-
   const endDate = new Date(subscription?.end_date || "").toLocaleDateString(
     "fa-IR"
   );
@@ -110,30 +109,32 @@ export function Upgrade() {
     current: subscription.plan === p.plan,
   }));
 
-  // console.log("normalizedPlans", normalizedPlans);
-
   const handlePlanPurchase = (planName: string) => {
-    // console.log("planName", planName);
     if (planName.toLowerCase() === "enterprise".toLowerCase()) {
       toast.info("لطفاً با تیم فروش ما تماس بگیرید");
+      return;
     } else if (planName.toLowerCase() === "free".toLowerCase()) {
       toast.info("شما در حال حاضر از پلن رایگان استفاده می‌کنید");
-    } else {
-      // Navigate to checkout page
-      const plan = plans.find(
-        (p) => p.plan.toLowerCase() === planName.toLowerCase()
+      return;
+    }
+
+    console.log("planName", planName);
+    // Navigate to checkout page
+    const plan = plans.find(
+      (p) => p.plan.toLowerCase() === planName.toLowerCase()
+    );
+    console.log("plans:", plans);
+    if (plan) {
+      localStorage.setItem("returnUrl", window.location.href);
+
+      localStorage.setItem(
+        "selectedPlan",
+        JSON.stringify({
+          ...plan,
+          billingPeriod,
+        })
       );
-      console.log("plans:", plans);
-      if (plan) {
-        router.push("/pay/checkout");
-        localStorage.setItem(
-          "selectedPlan",
-          JSON.stringify({
-            ...plan,
-            billingPeriod,
-          })
-        );
-      }
+      router.push("/pay/checkout");
     }
   };
 

@@ -7,33 +7,8 @@ import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { AddChatbotModal } from "./add-chatbot-modal";
 import { AddAccountModal } from "./add-account-modal";
-// import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { User, LogOut, ArrowLeft } from "lucide-react";
 import Image from "next/image";
-// import { useBot } from "@/providers/BotProvider";
-// import { ChatbotSelector } from "./chatbot-selector";
-
-interface QAPair {
-  id: string;
-  question: string;
-  answer: string;
-}
-
-// interface Website {
-//   id: string;
-//   name: string;
-//   url: string;
-//   color: string;
-//   qaData?: QAPair[];
-// }
-
-// interface Account {
-//   id: string;
-//   name: string;
-//   email: string;
-//   avatar?: string;
-//   role: string;
-// }
 
 interface SidebarItemProps {
   label: string;

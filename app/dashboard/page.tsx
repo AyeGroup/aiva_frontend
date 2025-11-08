@@ -12,6 +12,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import PageLoader from "@/components/pageLoader";
 import OnboardingWizard from "../onboarding/page";
 import ActiveUsers from "./components/activeusers";
+import { Upgrade } from "./components/upgrade";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -24,12 +25,14 @@ export default function DashboardPage() {
     | "tickets"
     | "onboarding"
     | "activeusers"
-    | "billing";
+    | "billing"
+    | "upgrade";
 
   const pages: Record<string, JSX.Element> = {
     "chatbot-management": <ChatbotManagement />,
     tickets: <Tickets />,
     billing: <Billing />,
+    upgrade: <Upgrade />,
     dashboard: <DashboardHome />,
     onboarding: <OnboardingWizard />,
     activeusers: <ActiveUsers />,
@@ -41,7 +44,16 @@ export default function DashboardPage() {
       router.push("/auth/login");
     }
   }, [loading, user, router]);
-  if (loading) return <PageLoader/>;
+
+  useEffect(() => {
+    const returnUrl = localStorage.getItem("returnUrl");
+    if (returnUrl) {
+      router.push(returnUrl);
+      localStorage.removeItem("returnUrl");  
+    }
+  }, [loading, user, router]);
+
+  if (loading) return <PageLoader />;
   if (!user) return null;
 
   return (

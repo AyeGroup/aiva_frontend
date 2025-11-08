@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { Sidebar } from "./sidebar";
 // import { Card } from "../_components/Card/card";
 // import { Button } from "../_components/Button/button";
@@ -20,20 +20,10 @@ import { CreditSummaryCard } from "@/components/credit-summary-card";
 import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { ChatbotPlanCard } from "@/components/chatbot-plan-card";
-
-type PageType =
-  | "landing"
-  | "signup"
-  | "dashboard"
-  | "consultation"
-  | "chatbot-management"
-  | "tickets"
-  | "billing"
-  | "profile";
-
-interface BillingProps {
-  onNavigate: (page: PageType) => void;
-}
+import { useAuth } from "@/providers/AuthProvider";
+import { useBot } from "@/providers/BotProvider";
+import axiosInstance from "@/lib/axiosInstance";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 interface ChatbotPlan {
   id: string;
@@ -256,6 +246,34 @@ export function Billing() {
     (sum, plan) => sum + plan.usedCredit,
     0
   );
+  const { user, loading } = useAuth();
+  const { currentBot } = useBot();
+  const [isLoading, setIsLoading] = useState(false);
+  const [subscription, setSubscription] = useState<any>();
+
+useEffect(() => {
+  if (!user?.token) return;
+  if (!currentBot?.uuid) return;
+
+  const fetchAllData = async () => {
+    setIsLoading(true);
+
+    try {
+      const res = await axiosInstance.get(
+        API_ROUTES.FINANCIAL.SUBSCRIPTION(currentBot.uuid)
+      );
+
+      setSubscription(res.data?.data ?? []);
+      console.log("subscription :", res.data?.data);
+    } catch (apiError: any) {
+      console.warn("API fetch failed:", apiError);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchAllData();
+}, [user?.token, currentBot?.uuid]);
 
   return (
     <div className="min-h-screen flex bg-grey-50" dir="rtl">
