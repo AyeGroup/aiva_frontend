@@ -1,105 +1,34 @@
 "use client";
+import Header from "./components/Header";
+import Section1WithAnimation from "./components/Section1WithAnimation";
+import Section2WithAnimation from "./components/Section2WithAnimation";
+import Section3WithAnimation from "./components/Section3WithAnimation";
+import Section4WithAnimation from "./components/Section4WithAnimation";
+import Section5WithAnimation from "./components/Section5WithAnimation";
+import Section6WithAnimation from "./components/Section6WithAnimation";
+import Section7WithAnimation from "./components/Section7WithAnimation";
+import Section8WithAnimation from "./components/Section8WithAnimation";
+import Section9WithAnimation from "./components/Section9WithAnimation";
+import Section10WithAnimation from "./components/Section10WithAnimation";
+import Section11WithAnimation from "./components/Section11WithAnimation";
+import Section12WithAnimation from "./components/Section12WithAnimation";
 
-import React from "react";
-import { FAQ } from "./faq";
-import { Hero } from "./hero";
-import { Trust } from "./trust";
-import { Footer } from "./footer";
-import { Pricing } from "./pricing";
-import { FinalCTA } from "./final-cta";
-import { Features } from "./features";
-import { CaseStudy } from "./case-study";
-import { HowItWorks } from "./how-it-works";
-import { Comparison } from "./comparison";
-import { ErrorBoundary } from "@/components/error-boundary";
-
- 
-
-// Loading fallback component
-const LoadingSection = () => (
-  <div className="py-16 md:py-24">
-    <div className="container mx-auto px-4">
-      <div className="animate-pulse">
-        <div className="h-8 bg-gray-200 rounded w-1/3 mx-auto mb-4"></div>
-        <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto mb-8"></div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded"></div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// export function LandingPage({ onNavigate }: LandingPageProps) {
-export default function Landing() {
+export default function App() {
   return (
-    <main className="landing-page min-h-screen bg-white">
-    
-      {/* Hero Section */}
-      <ErrorBoundary>
-        <Hero />
-      </ErrorBoundary>
-
-      {/* چطور کار می‌کند */}
-      <ErrorBoundary>
-        <section className="py-24 bg-[#F9FAFB]">
-          <HowItWorks />
-        </section>
-      </ErrorBoundary>
-
-      {/* ویژگی‌ها */}
-      <ErrorBoundary>
-        <section className="py-24 bg-white">
-          <Features />
-        </section>
-      </ErrorBoundary>
-
-      {/* مقایسه پشتیبانی */}
-      <ErrorBoundary>
-        <section className="py-24 bg-[#F9FAFB]">
-          <Comparison />
-        </section>
-      </ErrorBoundary>
-
-      {/* داستان موفقیت */}
-      <ErrorBoundary>
-        <section className="py-24 bg-white">
-          <CaseStudy />
-        </section>
-      </ErrorBoundary>
-
-      {/* قیمت‌گذاری */}
-      <ErrorBoundary>
-        <section className="py-24 bg-[#F9FAFB]">
-          <Pricing />
-        </section>
-      </ErrorBoundary>
-
-      {/* امنیت و اعتماد */}
-      <ErrorBoundary>
-        <section className="py-20 bg-white">
-          <Trust />
-        </section>
-      </ErrorBoundary>
-
-      {/* سؤالات متداول */}
-      <ErrorBoundary>
-        <section className="py-24 bg-[#F9FAFB]">
-          <FAQ />
-        </section>
-      </ErrorBoundary>
-
-      {/* دعوت نهایی به اقدام */}
-      <ErrorBoundary>
-        <FinalCTA />
-      </ErrorBoundary>
-
-      {/* فوتر */}
-      <ErrorBoundary>
-        <Footer />
-      </ErrorBoundary>
-    </main>
+    <div className="min-h-screen bg-white">
+      <Header />
+      <Section1WithAnimation id="Section1" />
+      <Section2WithAnimation />
+      <Section3WithAnimation />
+      <Section4WithAnimation />
+      <Section5WithAnimation />
+      <Section6WithAnimation />
+      <Section7WithAnimation />
+      <Section8WithAnimation />
+      <Section9WithAnimation />
+      <Section10WithAnimation />
+      <Section11WithAnimation id="section8" />
+      <Section12WithAnimation />
+    </div>
   );
 }
