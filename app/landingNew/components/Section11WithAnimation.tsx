@@ -1,15 +1,14 @@
+"use client";
 import { motion } from "motion/react";
 import Section from "./Section-starting";
 interface Section1WithAnimationProps {
   id: string;
 }
 
-export default function Section11WithAnimation({
-  id,
-}: Section1WithAnimationProps) {
+export default function Section11WithAnimation( ) {
   return (
     <motion.div
-      id={id}
+      // id={id}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

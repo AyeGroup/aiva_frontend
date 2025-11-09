@@ -16,7 +16,7 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between px-8 py-4 shadow-sm bg-white">
       {/* ✅ Logo */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ali">
         <Image src="/logo.png" alt="لوگوی آیوا" width={48} height={48} />
         <div className="text-right leading-tight">
           <p className="text-lg text-gray-900 font-semibold">آیوا</p>

@@ -1,6 +1,8 @@
+"use client";
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import svgPaths from "../svg/svg-2dmtneq5en";
+import { cubicBezier } from "motion/react";
 
 // Background decorative icons
 function Icon() {
@@ -704,21 +706,39 @@ function Article3({ isActive }: { isActive: boolean }) {
   );
 }
 
+// const cardVariants = {
+//   hidden: { 
+//     opacity: 0, 
+//     y: 50,
+//     scale: 0.9
+//   },
+//   visible: { 
+//     opacity: 1, 
+//     y: 0,
+//     scale: 1,
+//     transition: { 
+//       duration: 0.6,
+//       ease: [0.25, 0.1, 0.25, 1]
+//     } 
+//   }
+// };
+
+
 const cardVariants = {
-  hidden: { 
-    opacity: 0, 
+  hidden: {
+    opacity: 0,
     y: 50,
-    scale: 0.9
+    scale: 0.9,
   },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     scale: 1,
-    transition: { 
+    transition: {
       duration: 0.6,
-      ease: [0.25, 0.1, 0.25, 1]
-    } 
-  }
+      ease: cubicBezier(0.25, 0.1, 0.25, 1), // ✅ درست و معادل ease قبلی
+    },
+  },
 };
 
 function Container26({ activeStep }: { activeStep: number }) {

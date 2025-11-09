@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "motion/react";
 import svgPaths from "../svg/svg-gcyltdwgwo";
 import bgSvgPaths from "../svg/svg-kdb7ct6mks";

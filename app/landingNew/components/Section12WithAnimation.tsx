@@ -1,7 +1,8 @@
+"use client";
 import { motion } from "motion/react";
-import Section from "./Section-faq";
+import Footer from "./Footer";
 
-export default function Section10WithAnimation() {
+export default function Section12WithAnimation() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -9,9 +10,8 @@ export default function Section10WithAnimation() {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
       className="relative w-full"
-      style={{ minHeight: "930px" }}
     >
-      <Section />
+      <Footer />
     </motion.div>
   );
 }

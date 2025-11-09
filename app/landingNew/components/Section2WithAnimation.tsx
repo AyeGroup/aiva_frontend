@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "motion/react";
 import svgPaths from "../svg/svg-jdf94yeg6v";
 import PhoneAndCustomer1 from "./PhoneAndCustomer1";
