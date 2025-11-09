@@ -3,7 +3,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+// import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { cleanPhoneNumber, persianToEnglish } from "@/utils/number-utils";
@@ -12,6 +12,7 @@ import {
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
+import Image from "next/image";
 
 export default function Verification() {
   const router = useRouter();
@@ -203,9 +204,10 @@ export default function Verification() {
             <div className="flex items-center justify-between">
               {/* Logo - Right Side */}
               <div className="flex items-center gap-3">
-                <ImageWithFallback
+                <Image
                   src="/logo.png"
-                  // src=""
+                  width={80}
+                  height={80}
                   alt="آیوا"
                   className="w-20 h-20 object-cover"
                 />

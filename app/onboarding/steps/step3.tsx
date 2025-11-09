@@ -1,3 +1,4 @@
+"use client"
 import { Input } from "@/components/input";
 import { useState } from "react";
 import {  BotConfig } from "@/types/common";
@@ -22,6 +23,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
   // });
 
   const [sliderValue, setSliderValue] = useState(10);
+console.log("ThreeLevelSlider imported!");
 
   // const handleBehaviorChange = (key: keyof BehaviorSettings, value: any) => {
   //   const updated = { ...behaviors, [key]: value };
@@ -52,7 +54,14 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           <MessageSquare className="w-5 h-5 text-brand-primary" />
           میزان انطباق پاسخ با اسناد
         </h3>
-        <ThreeLevelSlider value={sliderValue} onChange={setSliderValue} />
+        {/* <ThreeLevelSlider value={sliderValue} onChange={setSliderValue} /> */}
+        <ThreeLevelSlider
+          value={sliderValue}
+          onChange={(val) => {
+            setSliderValue(val);
+            updateConfig({ k: val });
+          }}
+        />
       </div>
 
       {/* Response Length */}
@@ -136,7 +145,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             type="text"
             numeric={true}
             inputMode="numeric"
-            value={botConfig.support_phone}
+            value={botConfig.support_phone || ""}
             onChange={
               (e) => updateConfig({ support_phone: e.target.value })
               // handleBehaviorChange("support_phone", e.target.value)

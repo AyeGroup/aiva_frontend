@@ -89,11 +89,10 @@ export default function OnboardingWizard() {
                 : [];
 
             const updatedBotConfig = { ...botData, faqs };
-
             setBotConfig(updatedBotConfig);
             const apiCurrent = response.data?.currentStep || 1;
             setCurrentStep(apiCurrent);
-            setMaxReachedStep(apiCurrent); // <-- مقدار از API
+            setMaxReachedStep(apiCurrent);
 
             localStorage.setItem(
               "aiva-onboarding-data",
@@ -109,12 +108,24 @@ export default function OnboardingWizard() {
           const savedData = localStorage.getItem("aiva-onboarding-data");
           if (savedData) {
             const parsed = JSON.parse(savedData);
-            setBotConfig(parsed.botConfig || botConfig);
-            const savedCurrent = parsed.currentStep || 1;
-            setCurrentStep(savedCurrent);
-            setMaxReachedStep(savedCurrent); // <-- از localStorage
+            const savedTime = new Date(parsed.timestamp).getTime();
+            const now = Date.now();
+            const hoursPassed = (now - savedTime) / (1000 * 60 * 60);
+
+            if (hoursPassed > 1) {
+              // ⏳ اگر بیش از ۲۴ ساعت گذشته باشد، پاک کن
+              localStorage.removeItem("aiva-onboarding-data");
+              console.log("⚠️ داده قدیمی onboarding حذف شد (بیش از 24 ساعت)");
+            } else {
+              // ✅ داده معتبر است
+              setBotConfig(parsed.botConfig || botConfig);
+              const savedCurrent = parsed.currentStep || 1;
+              setCurrentStep(savedCurrent);
+              setMaxReachedStep(savedCurrent);
+            }
           }
         } else {
+          localStorage.removeItem("aiva-onboarding-data");
           setCurrentStep(1);
           setMaxReachedStep(1);
         }
@@ -123,16 +134,91 @@ export default function OnboardingWizard() {
         const savedData = localStorage.getItem("aiva-onboarding-data");
         if (savedData) {
           const parsed = JSON.parse(savedData);
-          setBotConfig(parsed.botConfig || botConfig);
-          const savedCurrent = parsed.currentStep || 1;
-          setCurrentStep(savedCurrent);
-          setMaxReachedStep(savedCurrent);
+          const savedTime = new Date(parsed.timestamp).getTime();
+          const now = Date.now();
+          const hoursPassed = (now - savedTime) / (1000 * 60 * 60);
+          if (hoursPassed <= 24) {
+            setBotConfig(parsed.botConfig || botConfig);
+            const savedCurrent = parsed.currentStep || 1;
+            setCurrentStep(savedCurrent);
+            setMaxReachedStep(savedCurrent);
+          } else {
+            localStorage.removeItem("aiva-onboarding-data");
+          }
         }
       }
     };
 
     fetchBotData();
   }, [user?.token, id]);
+
+  // useEffect(() => {
+  //   if (!user?.token) return;
+
+  //   const fetchBotData = async () => {
+  //     try {
+  //       if (id && id !== "new" && id.length > 3) {
+  //         const response = await axiosInstance.get(
+  //           `${API_ROUTES.BOTS.GET}${id}`
+  //         );
+  //         const hasApiData = response.data?.success && response.data?.data;
+
+  //         if (hasApiData) {
+  //           const botData = response.data.data;
+  //           const response2 = await axiosInstance.get(API_ROUTES.BOTS.FAQ(id));
+  //           const faqs =
+  //             response2.data?.success && Array.isArray(response2.data?.data)
+  //               ? response2.data.data
+  //               : [];
+
+  //           const updatedBotConfig = { ...botData, faqs };
+
+  //           setBotConfig(updatedBotConfig);
+  //           const apiCurrent = response.data?.currentStep || 1;
+  //           setCurrentStep(apiCurrent);
+  //           setMaxReachedStep(apiCurrent); // <-- مقدار از API
+
+  //           localStorage.setItem(
+  //             "aiva-onboarding-data",
+  //             JSON.stringify({
+  //               botConfig: updatedBotConfig,
+  //               currentStep: apiCurrent,
+  //               timestamp: new Date().toISOString(),
+  //             })
+  //           );
+  //           return;
+  //         }
+  //       } else if (!id) {
+  //         const savedData = localStorage.getItem("aiva-onboarding-data");
+  //         if (savedData) {
+  //           const parsed = JSON.parse(savedData);
+  //           setBotConfig(parsed.botConfig || botConfig);
+  //           const savedCurrent = parsed.currentStep || 1;
+  //           setCurrentStep(savedCurrent);
+  //           setMaxReachedStep(savedCurrent); // <-- از localStorage
+  //         }
+  //       } else {
+  //         localStorage.removeItem("aiva-onboarding-data");
+
+  //         setCurrentStep(1);
+  //         setMaxReachedStep(1);
+  //       }
+  //     } catch (error) {
+  //       console.warn("خطا در دریافت داده‌های بات:", error);
+  //       const savedData = localStorage.getItem("aiva-onboarding-data");
+  //       if (savedData) {
+  //         const parsed = JSON.parse(savedData);
+  //         setBotConfig(parsed.botConfig || botConfig);
+  //         const savedCurrent = parsed.currentStep || 1;
+  //         setCurrentStep(savedCurrent);
+  //         setMaxReachedStep(savedCurrent);
+  //       }
+  //     }
+  //   };
+
+  //   fetchBotData();
+  // }, [user?.token, id]);
+
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
     if (!botConfig) return;
@@ -271,47 +357,99 @@ export default function OnboardingWizard() {
     }
 
     setIsSaving(true);
+
+    const formData = new FormData();
+    formData.append("uuid", botConfig.uuid || "");
+    formData.append("name", botConfig.name);
+    formData.append("language", botConfig.language);
+    formData.append("description", botConfig.description);
+    formData.append("guidelines", botConfig.guidelines);
+
     try {
-      const formData = new FormData();
-      formData.append("uuid", botConfig.uuid);
-      formData.append("name", botConfig.name);
-      formData.append("language", botConfig.language);
-      formData.append("description", botConfig.description);
-      formData.append("guidelines", botConfig.guidelines);
-
       let res;
-      if (botConfig.uuid) {
-        // آپدیت چت بات
-        res = await axiosInstance.put(
-          `${API_ROUTES.BOTS.SAVE}${
-            botConfig.uuid ? `/${botConfig.uuid}` : ""
-          }`,
-          formData
-        );
-        if (res.data.success) {
-          await refreshBots();
 
-          return true;
-        } else {
-          toast.error(res.data?.message || "خطا در ثبت اطلاعات");
-          return false;
+      if (botConfig.uuid) {
+        // 🔹 تلاش برای آپدیت چت‌بات
+        try {
+          res = await axiosInstance.put(
+            `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
+            formData
+          );
+
+          if (res.data.success) {
+            await refreshBots();
+            return true;
+          } else {
+            //here:
+            toast.error(res.data?.message || "خطا در ثبت اطلاعات");
+            return false;
+          }
+        } catch (err: any) {
+          const status = err.response?.status;
+          const msg = err.response?.data?.message || err.message || "";
+
+          console.log("PUT error:", status, msg);
+
+          // 🔸 اگر خطای 404 یا پیام مشابه داشت، بریم روی insert
+          if (status === 404 || msg.toLowerCase().includes("not found")) {
+            console.warn("Bot not found on backend. Trying insert...");
+            try {
+              res = await axiosInstance.post(API_ROUTES.BOTS.SAVE, formData);
+              if (res.data.success) {
+                const newId = res.data.data?.uuid;
+                const updated = { ...botConfig, uuid: newId };
+                setBotConfig(updated);
+                localStorage.setItem(
+                  "aiva-onboarding-data",
+                  JSON.stringify(updated)
+                );
+                await refreshBots();
+                setCurrentBot(updated);
+                return newId;
+              } else {
+                toast.error(res.data?.message || "خطا در ثبت اطلاعات");
+                return false;
+              }
+            } catch (insertErr: any) {
+              toast.error(
+                "خطا در ثبت مجدد اطلاعات: " +
+                  (insertErr.response?.data?.message || insertErr.message)
+              );
+              console.error("Insert error:", insertErr);
+              return false;
+            }
+          } else {
+            // خطای دیگر غیر از 404
+            toast.error("خطا در ثبت اطلاعات: " + msg);
+            console.error(err);
+            return false;
+          }
         }
       } else {
-        // ثبت چت بات
-        res = await axiosInstance.post(API_ROUTES.BOTS.SAVE, formData);
-        if (res.data.success) {
-          const newId = res.data.data?.uuid;
-          // console.log("new id: ", newId);
-
-          const updated = { ...botConfig, uuid: newId };
-          setBotConfig(updated);
-          localStorage.setItem("aiva-onboarding-data", JSON.stringify(updated));
-          await refreshBots();
-          setCurrentBot(updated);
-
-          return newId;
-        } else {
-          toast.error(res.data?.message || "خطا در ثبت اطلاعات");
+        // 🟢 بدون UUID، مستقیم Insert
+        try {
+          res = await axiosInstance.post(API_ROUTES.BOTS.SAVE, formData);
+          if (res.data.success) {
+            const newId = res.data.data?.uuid;
+            const updated = { ...botConfig, uuid: newId };
+            setBotConfig(updated);
+            localStorage.setItem(
+              "aiva-onboarding-data",
+              JSON.stringify(updated)
+            );
+            await refreshBots();
+            setCurrentBot(updated);
+            return newId;
+          } else {
+            toast.error(res.data?.message || "خطا در ثبت اطلاعات");
+            return false;
+          }
+        } catch (err: any) {
+          toast.error(
+            "خطا در ثبت اطلاعات: " +
+              (err.response?.data?.message || err.message)
+          );
+          console.error(err);
           return false;
         }
       }
@@ -332,6 +470,7 @@ export default function OnboardingWizard() {
       ...updates,
     }));
   };
+
   const nextStep = async () => {
     if (currentStep == 1) {
       const uuid = await saveBotConfig();
@@ -356,6 +495,7 @@ export default function OnboardingWizard() {
       router.push("/dashboard");
     }
   };
+
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
@@ -363,17 +503,10 @@ export default function OnboardingWizard() {
   };
 
   const goToStep = (step: number) => {
-    // اگر بات uuid دارد => ویرایش، اجازه رفتن به هر استپی داده می‌شود
-    // اگر بات جدید است => فقط تا maxReachedStep اجازه بده (یعنی جاهایی که کاربر قبلاً رسیده)
     if (botConfig.uuid) {
       setCurrentStep(step);
     } else {
-      if (step <= maxReachedStep) {
-        setCurrentStep(step);
-      } else {
-        // اختیاری: می‌تونی یک toast نمایش بدی که هنوز به آن استپ نرسیده‌اند
-        // toast.info("ابتدا باید تا این مرحله پیش بروید.");
-      }
+      if (step <= maxReachedStep) setCurrentStep(step);
     }
   };
 
@@ -415,11 +548,6 @@ export default function OnboardingWizard() {
     }
   };
 
-  if (loading) return <PageLoader />;
-  if (!user) return null;
-
-  const showButton = !id || id === "new" || currentStep < totalSteps;
-
   const saveCaption = () => {
     if (isSaving) return "در حال ذخیره...";
 
@@ -433,6 +561,10 @@ export default function OnboardingWizard() {
       else return "بعدی";
     }
   };
+
+  if (loading) return <PageLoader />;
+  if (!user) return null;
+  const showButton = !id || id === "new" || currentStep < totalSteps;
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app">
@@ -489,14 +621,14 @@ export default function OnboardingWizard() {
                     <button
                       onClick={() => goToStep(stepNumber)}
                       className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 text-sm font-medium shadow-sm
-          ${
-            isActive
-              ? "text-white shadow-lg border-2"
-              : isReached
-              ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
-              : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
-          }
-        `}
+                        ${
+                          isActive
+                            ? "text-white shadow-lg border-2"
+                            : isReached
+                            ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
+                            : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
+                        }
+                      `}
                       style={
                         isActive ? { background: "var(--sharp-primary)" } : {}
                       }
@@ -540,67 +672,6 @@ export default function OnboardingWizard() {
                   </div>
                 );
               })}
-              {/* {steps.map((step, index) => {
-                const stepNumber = index + 1;
-                const isActive = stepNumber === currentStep;
-                const isCompleted = stepNumber < currentStep;
-
-                return (
-                  <div
-                    key={step.id}
-                    className="flex flex-col items-center min-w-[120px] flex-1"
-                  >
-                    <button
-                      onClick={() => goToStep(stepNumber)}
-                      className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 text-sm font-medium shadow-sm
-                                ${
-                                  isActive
-                                    ? "text-white shadow-lg border-2"
-                                    : isCompleted
-                                    ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
-                                    : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
-                                }
-                              `}
-                      style={
-                        isActive ? { background: "var(--sharp-primary)" } : {}
-                      }
-                      disabled={
-                        !id || id === "new" // اگر بات جدید است
-                          ? stepNumber > currentStep // فقط استپ‌های قبلی فعال
-                          : false // در حالت ویرایش همه فعال
-                      }
-                    >
-                      {isCompleted ? (
-                        <svg
-                          className="w-5 h-5"
-                          fill="white"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      ) : (
-                        englishToPersian(String(stepNumber))
-                      )}
-                    </button>
-
-                    <p
-                      className={`mt-3 text-sm text-center font-medium whitespace-nowrap ${
-                        isActive
-                          ? "text-brand-primary"
-                          : isCompleted
-                          ? "text-secondary"
-                          : "text-grey-600"
-                      }`}
-                    >
-                      {step.title}
-                    </p>
-                  </div>
-                );
-              })} */}
             </div>
           </div>
         </div>

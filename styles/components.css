@@ -4242,3 +4242,1021 @@ html[dir="rtl"] .code-actions {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
+/* Credit Summary Card Styles */
+.credit-summary-card {
+  background: white;
+  border-radius: 20px;
+  border: 2px solid rgba(229, 231, 235, 0.5);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.credit-summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.credit-summary-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  border-color: rgba(229, 231, 235, 0.8);
+}
+
+.credit-summary-card:hover::before {
+  opacity: 0.3;
+}
+
+.credit-summary-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Number animation */
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.credit-summary-card .text-3xl {
+  animation: count-up 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .credit-summary-card {
+    padding: 20px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .credit-summary-card {
+  text-align: right;
+}
+/* Chatbot Plan Card Styles */
+.chatbot-plan-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 24px;
+  border: 2px solid;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.chatbot-plan-card:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.chatbot-plan-card-header {
+  padding: 24px;
+  border-bottom: 2px solid rgba(229, 231, 235, 0.5);
+  padding-right: 20px;
+}
+
+.chatbot-plan-card-header .status-badge {
+  transition: all 0.3s ease;
+}
+
+.chatbot-plan-card-header .status-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chatbot-plan-card-body {
+  padding: 32px 24px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatbot-plan-card-footer {
+  padding: 20px 24px;
+  background: linear-gradient(to bottom, rgba(249, 250, 251, 0.5), white);
+  border-top: 2px solid rgba(229, 231, 235, 0.3);
+}
+
+/* Circular Progress Animations */
+.circular-progress {
+  transition: all 0.3s ease;
+}
+
+.circular-progress-fill {
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.circular-progress-bg {
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.circular-progress-inner {
+  transition: all 0.3s ease;
+}
+
+.circular-progress-text {
+  transition: all 0.5s ease;
+  animation: fade-in 0.8s ease-in-out;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Hover effects for Progress */
+.chatbot-plan-card:hover .circular-progress {
+  transform: scale(1.05);
+}
+
+.chatbot-plan-card:hover .circular-progress-fill {
+  opacity: 1;
+}
+
+.chatbot-plan-card:hover .circular-progress-inner {
+  fill: #FAFAFA;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chatbot-plan-card-body .grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .chatbot-plan-card-header {
+    padding: 20px;
+  }
+
+  .chatbot-plan-card-footer {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .chatbot-plan-card-footer > div {
+    width: 100%;
+  }
+
+  .chatbot-plan-card-footer button {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .chatbot-plan-card {
+  text-align: right;
+}
+
+/* افکت‌های بصری اضافی */
+.circular-progress-fill:hover {
+  animation-play-state: paused;
+}
+
+/* انیمیشن برای وقتی کارت در viewport می‌آید */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chatbot-plan-card {
+  animation: card-enter 0.6s ease-out;
+}
+/* Billing Page Styles */
+
+/* Progress bar animations */
+.billing-progress-bar {
+  transition: width 0.4s ease !important;
+}
+
+/* Button hover animations */
+.billing-upgrade-btn {
+  transition: background-color 0.2s ease !important;
+}
+/* ==============================================
+   WALLET MINIMAL CARD - CLEAN & SIMPLE DESIGN
+   ============================================== */
+
+.wallet-minimal-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+/* ==============================================
+   HEADER - ULTRA MINIMAL & CLEAN DESIGN
+   ============================================== */
+
+.wallet-minimal-header {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-bottom: none;
+}
+
+/* Main Balance Row */
+.wallet-header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 32px 24px 32px;
+  gap: 24px;
+  border-bottom: 1px solid #f0f1f3;
+}
+
+.wallet-header-balance {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.wallet-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: rgba(101, 188, 182, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(101, 188, 182, 0.12);
+  transition: all 0.3s ease;
+}
+
+.wallet-minimal-header:hover .wallet-icon-circle {
+  background: rgba(101, 188, 182, 0.1);
+  border-color: rgba(101, 188, 182, 0.2);
+}
+
+.wallet-balance-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wallet-title {
+  color: #6B7280;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.wallet-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.wallet-amount-number {
+  color: #111827;
+  letter-spacing: -0.02em;
+}
+
+.wallet-amount-unit {
+  color: #9CA3AF;
+}
+
+/* Action Buttons */
+.wallet-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.wallet-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Vazirmatn', sans-serif;
+  white-space: nowrap;
+}
+
+.wallet-btn-primary {
+  background: #65bcb6;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(101, 188, 182, 0.25);
+}
+
+.wallet-btn-primary:hover {
+  background: #52bcaf;
+  box-shadow: 0 4px 16px rgba(101, 188, 182, 0.35);
+  transform: translateY(-1px);
+}
+
+.wallet-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(101, 188, 182, 0.25);
+}
+
+.wallet-btn-outline {
+  background: #ffffff;
+  color: #6B7280;
+  border: 1.5px solid #e5e7eb;
+}
+
+.wallet-btn-outline:hover {
+  background: #fafbfc;
+  border-color: #d1d5db;
+  color: #111827;
+  transform: translateY(-1px);
+}
+
+.wallet-btn-outline:active {
+  transform: translateY(0);
+}
+
+/* Stats Row - Clean Inline */
+.wallet-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px 32px;
+  background: #fafbfc;
+}
+
+.wallet-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  flex: 1;
+}
+
+.wallet-stat-label {
+  color: #9CA3AF;
+}
+
+.wallet-stat-value {
+  color: #111827;
+  letter-spacing: -0.01em;
+}
+
+.wallet-stat-deposit {
+  color: #52d4a0;
+}
+
+.wallet-stat-withdraw {
+  color: #FFA18E;
+}
+
+.wallet-stat-count {
+  color: #65bcb6;
+}
+
+.wallet-stat-separator {
+  width: 1px;
+  height: 36px;
+  background: #e5e7eb;
+}
+
+
+
+/* ==============================================
+   TRANSACTIONS
+   ============================================== */
+
+.wallet-minimal-transactions {
+  padding: 28px 32px 32px;
+}
+
+.wallet-minimal-transactions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.wallet-minimal-transactions-title {
+  color: #111827;
+  margin: 0;
+}
+
+/* Inline Filters */
+.wallet-minimal-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wallet-minimal-filter-group {
+  display: flex;
+  gap: 4px;
+  background: #f9fafb;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.wallet-minimal-filter {
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #6b7280;
+  font-family: 'Vazirmatn', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.wallet-minimal-filter:hover {
+  color: #111827;
+  background: rgba(101, 188, 182, 0.08);
+}
+
+.wallet-minimal-filter.active {
+  background: #65bcb6;
+  color: white;
+}
+
+.wallet-minimal-export {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wallet-minimal-export:hover {
+  border-color: #65bcb6;
+  color: #65bcb6;
+  background: rgba(101, 188, 182, 0.05);
+}
+
+/* Transactions List */
+.wallet-minimal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 200px;
+}
+
+.wallet-minimal-transaction {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.wallet-minimal-transaction:hover {
+  background: #fafbfc;
+  border-color: #e5e7eb;
+  transform: translateX(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.wallet-minimal-transaction-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wallet-minimal-transaction-desc {
+  color: #111827;
+  font-weight: 600;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wallet-minimal-transaction-date {
+  color: #9CA3AF;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.wallet-minimal-transaction-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wallet-minimal-transaction-amount {
+  font-weight: 700;
+  direction: rtl;
+}
+
+.wallet-minimal-transaction-status {
+  font-weight: 600;
+}
+
+/* Loading & Empty States */
+.wallet-minimal-loading,
+.wallet-minimal-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 20px;
+  color: #9CA3AF;
+}
+
+.wallet-minimal-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f4f6;
+  border-top-color: #65bcb6;
+  border-radius: 50%;
+  animation: wallet-spin 0.8s linear infinite;
+}
+
+@keyframes wallet-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pagination */
+.wallet-minimal-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.wallet-minimal-page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wallet-minimal-page-btn:hover:not(:disabled) {
+  border-color: #65bcb6;
+  color: #65bcb6;
+  background: rgba(101, 188, 182, 0.05);
+}
+
+.wallet-minimal-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wallet-minimal-page-info {
+  color: #6B7280;
+  font-weight: 500;
+}
+
+/* ==============================================
+   RESPONSIVE
+   ============================================== */
+
+@media (max-width: 768px) {
+  .wallet-header-main {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 24px 20px 20px 20px;
+    gap: 20px;
+  }
+
+  .wallet-header-balance {
+    gap: 14px;
+  }
+
+  .wallet-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .wallet-header-actions {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .wallet-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .wallet-stats-row {
+    padding: 18px 20px;
+    gap: 12px;
+  }
+
+  .wallet-stat-separator {
+    height: 32px;
+  }
+
+  .wallet-minimal-transactions {
+    padding: 20px;
+  }
+
+  .wallet-minimal-transactions-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .wallet-minimal-filters {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+/* Plan Card Component */
+
+.plan-card {
+  position: relative;
+  border-radius: 16px;
+  padding: 24px 20px;
+  border: 1.5px solid var(--grey-200);
+  background: white;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.plan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-color: var(--brand-primary);
+}
+
+.plan-card.featured {
+  border-color: var(--brand-primary);
+  border-width: 2px;
+  box-shadow: 0 4px 16px rgba(101, 188, 182, 0.1);
+}
+
+.plan-card-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: var(--brand-secondary);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.plan-card-header {
+  margin-bottom: 20px;
+}
+
+.plan-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  background: rgba(101, 188, 182, 0.1);
+  color: var(--brand-primary);
+}
+
+.plan-card-name {
+  color: var(--grey-900);
+  margin-bottom: 6px;
+}
+
+.plan-card-description {
+  color: var(--grey-600);
+  margin: 0;
+}
+
+.plan-card-price {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--grey-100);
+}
+
+.plan-card-price-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.plan-card-price-number {
+  color: var(--brand-primary);
+  line-height: 1;
+}
+
+.plan-card-price-currency {
+  color: var(--grey-600);
+}
+
+.plan-card-price-period {
+  color: var(--grey-500);
+  margin: 0;
+}
+
+.plan-card-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  flex: 1;
+}
+
+.plan-card-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--grey-700);
+}
+
+.plan-card-feature:last-child {
+  margin-bottom: 0;
+}
+
+.plan-card-feature-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(101, 188, 182, 0.1);
+  color: var(--brand-primary);
+  margin-top: 2px;
+}
+
+.plan-card-feature.disabled {
+  color: var(--grey-400);
+}
+
+.plan-card-feature.disabled .plan-card-feature-icon {
+  background: var(--grey-100);
+  color: var(--grey-400);
+}
+
+.plan-card-button {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background: var(--brand-primary);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
+}
+
+.plan-card-button:hover {
+  background: #52a89d;
+}
+
+.plan-card-button.secondary {
+  background: transparent;
+  border: 1.5px solid var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.plan-card-button.secondary:hover {
+  background: rgba(101, 188, 182, 0.05);
+}
+
+.plan-card-button:disabled {
+  background: var(--grey-200);
+  color: var(--grey-500);
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .plan-card {
+    padding: 20px 16px;
+  }
+
+  .plan-card-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+/* Modal Component Styles */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  max-width: 95vw;
+  max-height: 90vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+  position: relative;
+}
+
+.modal-header {
+  padding: 24px 32px;
+  border-bottom: 2px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #041e1e;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.modal-close:hover {
+  background: #e5e7eb;
+  color: #374151;
+  transform: scale(1.05);
+}
+
+.modal-body {
+  padding: 24px 32px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #65bcb6 #f3f4f6;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #65bcb6;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #52a89d;
+}
+
+.modal-footer {
+  padding: 20px 32px;
+  border-top: 2px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: 20px;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

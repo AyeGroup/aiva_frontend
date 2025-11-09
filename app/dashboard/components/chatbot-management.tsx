@@ -2,13 +2,15 @@
 import React, { useEffect, useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
+import ChatbotDetailModal from "../ChatbotDetailModal";
 import { toast } from "sonner";
+import { Switch } from "@/components/switch";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { ToggleSmall } from "@/components/toggleSmall";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { convertToPersian } from "@/utils/common";
 import {
   Edit3,
   Trash2,
@@ -21,24 +23,20 @@ import {
   X,
   Plus,
 } from "lucide-react";
-import { convertToPersian } from "@/utils/common";
-import ChatbotDetailModal from "../ChatbotDetailModal";
-import { Switch } from "@/components/switch";
+import { useBot } from "@/providers/BotProvider";
 
 export function ChatbotManagement() {
   const router = useRouter();
   const { user, loading } = useAuth();
+  const { refreshBots } = useBot();
   const [chatbots, setChatbots] = useState<BotConfig[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  // const [planColor, setPlanColor] = useState<string>("65BCB6");
-  // const [chatbotName, setChatbotName] = useState<string>("");
   const [selectedChatbot, setSelectedChatbot] = useState<BotConfig | null>(
     null
   );
-
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     id: string | null;
@@ -138,6 +136,7 @@ export function ChatbotManagement() {
 
       if (res.data.success) {
         await loadChatbots();
+        await refreshBots();
         toast.success("چت بات با موفقیت حذف شد");
       } else {
         toast.error("خطا در حذف چت بات");
@@ -332,20 +331,7 @@ export function ChatbotManagement() {
                                   !chatbot.active
                                 )
                               }
-                             
-                            /> 
-                            {/* <ToggleSmall
-                              label={
-                                chatbot.active ? "غیرفعال کردن" : "فعال کردن"
-                              }
-                              checked={chatbot.active}
-                              onChange={() =>
-                                openConfirmActiveModal(
-                                  chatbot.uuid,
-                                  !chatbot.active
-                                )
-                              }
-                            /> */}
+                            />
                           </div>
 
                           {/* Actions Menu */}

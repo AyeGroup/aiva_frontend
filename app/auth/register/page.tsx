@@ -6,7 +6,7 @@ import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+// import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
 import { LoginTopLeft, RegisterTopLeft } from "@/public/icons/AppIcons";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";

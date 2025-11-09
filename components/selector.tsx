@@ -16,6 +16,7 @@ interface GenericSelectorProps {
   onSelect: (value: string) => void;
   labelKey?: keyof SelectorItem;
   valueKey?: keyof SelectorItem;
+  disabled?: boolean;
   showIndicator?: boolean;
   initialOpen?: boolean;
   headerTitle?: string;
@@ -27,6 +28,7 @@ export function GenericSelector({
   onSelect,
   labelKey = "label",
   valueKey = "value",
+  disabled = false,
   showIndicator = true,
   initialOpen = false,
   headerTitle = "انتخاب‌ها",
@@ -111,6 +113,7 @@ export function GenericSelector({
                     key={item.value || item.id || index.toString()}
                     onClick={() => handleSelect(item)}
                     className={`chatbot-item ${isActive ? "active" : ""}`}
+                    disabled={disabled}
                     type="button"
                     title={`انتخاب ${item.label}`}
                   >

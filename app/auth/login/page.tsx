@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/input";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import {
