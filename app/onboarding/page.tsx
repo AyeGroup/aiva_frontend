@@ -69,7 +69,6 @@ export default function OnboardingWizard() {
   }, [user, loading, router]);
 
   // get data
-  // get data
   useEffect(() => {
     if (!user?.token) return;
 

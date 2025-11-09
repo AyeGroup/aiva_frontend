@@ -45,13 +45,13 @@ export default function DashboardPage() {
     }
   }, [loading, user, router]);
 
-  useEffect(() => {
-    const returnUrl = localStorage.getItem("returnUrl");
-    if (returnUrl) {
-      router.push(returnUrl);
-      localStorage.removeItem("returnUrl");  
-    }
-  }, [loading, user, router]);
+  // useEffect(() => {
+  //   const returnUrl = localStorage.getItem("returnUrl");
+  //   if (returnUrl) {
+  //     router.push(returnUrl);
+  //     localStorage.removeItem("returnUrl");
+  //   }
+  // }, [loading, user, router]);
 
   if (loading) return <PageLoader />;
   if (!user) return null;

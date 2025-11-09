@@ -1,16 +1,13 @@
 "use client";
 
 import React from "react";
-import { MessageSquare } from "lucide-react";
 
 interface ThreeLevelSliderProps {
-  label?: string;
   value: number;
   onChange: (value: number) => void;
 }
 
 export default function ThreeLevelSlider({
-  label = "میزان انطباق پاسخ با اسناد",
   value,
   onChange,
 }: ThreeLevelSliderProps) {
@@ -29,6 +26,7 @@ export default function ThreeLevelSlider({
         : prev
     );
     onChange(closest.value);
+    console.log("k",closest.value)
   };
 
   const getGradient = () => {

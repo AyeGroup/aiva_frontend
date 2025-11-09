@@ -50,8 +50,8 @@ export default function Checkout() {
     ? parseInt(
         convertToEnglish(
           selectedPlan.billingPeriod === "yearly"
-            ? selectedPlan.price_monthly_irr
-            : selectedPlan.price_yearly_irr
+            ? selectedPlan.price_yearly_irr
+            : selectedPlan.price_monthly_irr
         ).replace(/,/g, ""),
         10
       )
@@ -95,6 +95,16 @@ export default function Checkout() {
     }
   };
 
+  // official_invoice: requestOfficialInvoice
+  //   ? {
+  //       company_name: companyName,
+  //       economic_code: economicCode,
+  //       national_id: nationalId,
+  //     }
+  //   : null,
+
+  // purpose: TRANSACTION_TYPE.BUY_SUBSCRIPTION,
+
   // ---- ایجاد فاکتور و هدایت به درگاه ----
   const handleProceedToPayment = async () => {
     if (!selectedPlan) {
@@ -110,15 +120,6 @@ export default function Checkout() {
 
     try {
       setIsLoading(true);
-      // official_invoice: requestOfficialInvoice
-      //   ? {
-      //       company_name: companyName,
-      //       economic_code: economicCode,
-      //       national_id: nationalId,
-      //     }
-      //   : null,
-
-      // purpose: TRANSACTION_TYPE.BUY_SUBSCRIPTION,
 
       const invoicePayload = {
         purpose: "subscription_purchase",
@@ -133,14 +134,62 @@ export default function Checkout() {
         API_ROUTES.PAYMENT.INITIATE,
         invoicePayload
       );
-      const data = await res.data;
+      const data = res.data;
 
-      if (res.data.success) toast.error(data.message || "خطا در ایجاد فاکتور");
-      console.log("INITIATE", data);
-      const callbackUrl = encodeURIComponent(
-        `${window.location.origin}/pay/success`
+      if (!data.success) {
+        toast.error(data.message || "خطا در ایجاد فاکتور");
+        return;
+      }
+
+      // ✅ فاکتور را قبل از ریدایرکت در localStorage ذخیره کن
+      const invoiceId = data.data.invoice_id;
+      localStorage.setItem("lastInvoiceId", invoiceId);
+      localStorage.setItem(`invoice-${invoiceId}`, JSON.stringify(data.data));
+
+      toast.success("فاکتور با موفقیت ایجاد شد. در حال انتقال به درگاه...");
+      router.push(data.data.gateway_url);
+    } catch (err: any) {
+      toast.error(err.message || "خطا در اتصال به درگاه پرداخت");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  const handleProceedToPayment1 = async () => {
+    if (!selectedPlan) {
+      toast.error("طرح انتخاب شده معتبر نیست");
+      return;
+    }
+
+    if (requestOfficialInvoice) {
+      if (!companyName.trim()) return toast.error("نام شرکت الزامی است");
+      if (!economicCode.trim()) return toast.error("کد اقتصادی الزامی است");
+      if (!nationalId.trim()) return toast.error("شناسه ملی الزامی است");
+    }
+
+    try {
+      setIsLoading(true);
+
+      const invoicePayload = {
+        purpose: "subscription_purchase",
+        amount_irr: totalPrice,
+        chatbot_uuid: currentBot?.uuid,
+        subscription_plan: getPlanIdByCode(selectedPlan.plan),
+        subscription_type: selectedPlan.billingPeriod,
+        description: selectedPlan.description,
+      };
+
+      const res = await axiosInstance.post(
+        API_ROUTES.PAYMENT.INITIATE,
+        invoicePayload
       );
-      // window.location.href = `${data.data.gateway_url}&callback=${callbackUrl}`;
+      const data = res.data;
+
+      if (!data.success) {
+        toast.error(data.message || "خطا در ایجاد فاکتور");
+        return;
+      }
 
       toast.success("فاکتور با موفقیت ایجاد شد. در حال انتقال به درگاه...");
       router.push(data.data.gateway_url);

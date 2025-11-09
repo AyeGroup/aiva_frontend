@@ -123,7 +123,7 @@ export function Upgrade() {
     const plan = plans.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
-    console.log("plans:", plans);
+    console.log("ali:", plan);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
 
