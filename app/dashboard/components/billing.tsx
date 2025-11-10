@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { Sidebar } from "./sidebar";
 // import { Card } from "../_components/Card/card";
 // import { Button } from "../_components/Button/button";
@@ -34,6 +34,9 @@ import { Card } from "@/components/card";
 import { PlanCard } from "../plan-card";
 import { Button } from "@/components/button";
 import { Modal } from "../modal";
+import axiosInstance from "@/lib/axiosInstance";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { useAuth } from "@/providers/AuthProvider";
 // import { Toaster } from "../../components/ui/sonner";
 // import "./billing.css";
 
@@ -80,9 +83,33 @@ export function Billing() {
   const [isCreditIncreaseModalOpen, setIsCreditIncreaseModalOpen] =
     useState(false);
   const [selectedChatbotId, setSelectedChatbotId] = useState<string>("");
+  const [activeSubscrp, setActiveSubscrp] = useState<any[]>([]);
+     const { user, loading } = useAuth();
+   
   const [selectedChatbotName, setSelectedChatbotName] = useState<string>("");
   const [messageCount, setMessageCount] = useState<string>("1000");
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+   useEffect(() => {
+     const fetchData = async () => {
+      //  if (!currentBot) return;
+       setIsLoading(true);
+       try {
+         const response = await axiosInstance.get(
+           API_ROUTES.FINANCIAL.SUBSCRIPTIONS
+         );
+         setActiveSubscrp(response.data.data);
+       } catch (error) {
+         console.error("  خطا در دریافت داده کاربران:", error);
+       } finally {
+         setIsLoading(false);
+       }
+     };
+     fetchData();
+   }, [user]);
+
+
   // داده‌های کیف پول
   const walletBalance = 2450000; // تومان
   const walletTransactions = [
@@ -137,80 +164,80 @@ export function Billing() {
     .reduce((sum, t) => sum + t.amount, 0);
 
   // داده‌های پلن‌های چت‌بات‌ها
-  const chatbotPlans: ChatbotPlan[] = [
-    {
-      id: "cb-1",
-      chatbotName: "چت‌بات فروشگاه",
-      planName: "پیشرفته",
-      planColor: "#65bcb6", // سبز آبی
-      totalCredit: 20000,
-      usedCredit: 18500,
-      totalFileChars: 500000,
-      usedFileChars: 450000,
-      expiryDate: "۱۴۰۳/۱۰/۲۵",
-      daysLeft: 5,
-    },
-    {
-      id: "cb-2",
-      chatbotName: "پشتیبانی مشتریان",
-      planName: "پایه",
-      planColor: "#7c89b8", // آبی بنفش
-      totalCredit: 5000,
-      usedCredit: 2300,
-      totalFileChars: 200000,
-      usedFileChars: 85000,
-      expiryDate: "۱۴۰۳/۱۱/۱۵",
-      daysLeft: 35,
-    },
-    {
-      id: "cb-3",
-      chatbotName: "فروش آنلاین",
-      planName: "متوسط",
-      planColor: "#52d4a0", // سبز زمردی
-      totalCredit: 20000,
-      usedCredit: 5200,
-      totalFileChars: 500000,
-      usedFileChars: 120000,
-      expiryDate: "۱۴۰۴/۰۱/۰۵",
-      daysLeft: 70,
-    },
-    {
-      id: "cb-4",
-      chatbotName: "خدمات مشاوره",
-      planName: "سازمانی",
-      planColor: "#b07cc6", // بنفش
-      totalCredit: 15000,
-      usedCredit: 8200,
-      totalFileChars: 350000,
-      usedFileChars: 180000,
-      expiryDate: "۱۴۰۳/۱۲/۱۰",
-      daysLeft: 60,
-    },
-    {
-      id: "cb-5",
-      chatbotName: "رزرواسیون",
-      planName: "رایگان",
-      planColor: "#FFA18E", // نارنجی
-      totalCredit: 5000,
-      usedCredit: 3800,
-      totalFileChars: 200000,
-      usedFileChars: 160000,
-      expiryDate: "۱۴۰۳/۱۱/۰۵",
-      daysLeft: 25,
-    },
-    {
-      id: "cb-6",
-      chatbotName: "سفارش‌گیری",
-      planName: "پیشرفته",
-      planColor: "#f59e0b", // زرد/عنبری
-      totalCredit: 15000,
-      usedCredit: 4500,
-      totalFileChars: 350000,
-      usedFileChars: 95000,
-      expiryDate: "۱۴۰۴/۰۲/۱۲",
-      daysLeft: 105,
-    },
-  ];
+  // const chatbotPlans: ChatbotPlan[] = [
+  //   {
+  //     id: "cb-1",
+  //     chatbotName: "چت‌بات فروشگاه",
+  //     planName: "پیشرفته",
+  //     planColor: "#65bcb6", // سبز آبی
+  //     totalCredit: 20000,
+  //     usedCredit: 18500,
+  //     totalFileChars: 500000,
+  //     usedFileChars: 450000,
+  //     expiryDate: "۱۴۰۳/۱۰/۲۵",
+  //     daysLeft: 5,
+  //   },
+  //   {
+  //     id: "cb-2",
+  //     chatbotName: "پشتیبانی مشتریان",
+  //     planName: "پایه",
+  //     planColor: "#7c89b8", // آبی بنفش
+  //     totalCredit: 5000,
+  //     usedCredit: 2300,
+  //     totalFileChars: 200000,
+  //     usedFileChars: 85000,
+  //     expiryDate: "۱۴۰۳/۱۱/۱۵",
+  //     daysLeft: 35,
+  //   },
+  //   {
+  //     id: "cb-3",
+  //     chatbotName: "فروش آنلاین",
+  //     planName: "متوسط",
+  //     planColor: "#52d4a0", // سبز زمردی
+  //     totalCredit: 20000,
+  //     usedCredit: 5200,
+  //     totalFileChars: 500000,
+  //     usedFileChars: 120000,
+  //     expiryDate: "۱۴۰۴/۰۱/۰۵",
+  //     daysLeft: 70,
+  //   },
+  //   {
+  //     id: "cb-4",
+  //     chatbotName: "خدمات مشاوره",
+  //     planName: "سازمانی",
+  //     planColor: "#b07cc6", // بنفش
+  //     totalCredit: 15000,
+  //     usedCredit: 8200,
+  //     totalFileChars: 350000,
+  //     usedFileChars: 180000,
+  //     expiryDate: "۱۴۰۳/۱۲/۱۰",
+  //     daysLeft: 60,
+  //   },
+  //   {
+  //     id: "cb-5",
+  //     chatbotName: "رزرواسیون",
+  //     planName: "رایگان",
+  //     planColor: "#FFA18E", // نارنجی
+  //     totalCredit: 5000,
+  //     usedCredit: 3800,
+  //     totalFileChars: 200000,
+  //     usedFileChars: 160000,
+  //     expiryDate: "۱۴۰۳/۱۱/۰۵",
+  //     daysLeft: 25,
+  //   },
+  //   {
+  //     id: "cb-6",
+  //     chatbotName: "سفارش‌گیری",
+  //     planName: "پیشرفته",
+  //     planColor: "#f59e0b", // زرد/عنبری
+  //     totalCredit: 15000,
+  //     usedCredit: 4500,
+  //     totalFileChars: 350000,
+  //     usedFileChars: 95000,
+  //     expiryDate: "۱۴۰۴/۰۲/۱۲",
+  //     daysLeft: 105,
+  //   },
+  // ];
 
   // تراکنش‌ها - ترکیبی از پلن و کیف پول
   const transactions: Transaction[] = [
@@ -497,19 +524,19 @@ export function Billing() {
   };
 
   // پیدا کردن پلنی که رو به اتمام است (کمتر از 10 روز)
-  const expiringPlan = chatbotPlans.find((p) => p.daysLeft <= 10);
+  const expiringPlan = activeSubscrp.find((p) => p.daysLeft <= 10);
 
   // محاسبه آمار کلی
-  const totalChatbots = chatbotPlans.length;
-  const totalCredit = chatbotPlans.reduce(
+  const totalChatbots = activeSubscrp.length;
+  const totalCredit = activeSubscrp.reduce(
     (sum, plan) => sum + (plan.totalCredit - plan.usedCredit),
     0
   );
-  const totalFileChars = chatbotPlans.reduce(
+  const totalFileChars = activeSubscrp.reduce(
     (sum, plan) => sum + (plan.totalFileChars - plan.usedFileChars),
     0
   );
-  const totalUsedCredit = chatbotPlans.reduce(
+  const totalUsedCredit = activeSubscrp.reduce(
     (sum, plan) => sum + plan.usedCredit,
     0
   );
@@ -639,7 +666,7 @@ export function Billing() {
           </div>
 
           <Card>
-            {chatbotPlans.length === 0 ? (
+            {activeSubscrp.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-4">
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
@@ -692,7 +719,7 @@ export function Billing() {
                     </tr>
                   </thead>
                   <tbody>
-                    {chatbotPlans.map((plan) => {
+                    {activeSubscrp.map((plan) => {
                       const creditPercent = Math.round(
                         (plan.usedCredit / plan.totalCredit) * 100
                       );

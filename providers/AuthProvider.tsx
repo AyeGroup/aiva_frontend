@@ -1,6 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
 import PageLoader from "@/components/pageLoader";
@@ -32,71 +39,65 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  console.log("👤 user changed", user);
 
+  // ✅ فقط یکبار ثبت listener
   useEffect(() => {
-    const handleLogout = () => {
-      router.push("/auth/login");
-    };
+    console.log("aaa");
+    const handleLogout = () => router.push("/auth/login");
     window.addEventListener("auth-logout", handleLogout);
     return () => window.removeEventListener("auth-logout", handleLogout);
   }, [router]);
 
-  
-   useEffect(() => {
+  // ✅ دریافت اطلاعات از localStorage
+  useEffect(() => {
+console.log("bbb");
     const token = localStorage.getItem("accessToken");
     const savedUser = localStorage.getItem("user");
-
-    if (token && savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-
+    if (token && savedUser) setUser(JSON.parse(savedUser));
     setLoading(false);
   }, []);
 
-  // ✅ Login
-  const login = async (
-    identity: string,
-    password: string
-  ): Promise<LoginResponse> => {
-    try {
-       const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
-        identity,
-        password,
-      });
-      // console.log("login res",res)
- 
-      const data = res.data.data;
-      localStorage.setItem("accessToken", data.access_token);
-      localStorage.setItem("refreshToken", data.refresh_token);
+  // ✅ useCallback برای جلوگیری از ساخت تابع جدید در هر رندر
+  const login = useCallback(
+    async (identity: string, password: string): Promise<LoginResponse> => {
+      try {
+        const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
+          identity,
+          password,
+        });
+        const data = res.data.data;
 
-      const user: User = {
-        id: data.id,
-        name: data.name || "",
-        email: data.email,
-        phone: data.phone || identity,
-        token: data.access_token,
-      };
+        const user: User = {
+          id: data.id,
+          name: data.name || "",
+          email: data.email,
+          phone: data.phone || identity,
+          token: data.access_token,
+        };
 
-      localStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
+        localStorage.setItem("accessToken", data.access_token);
+        localStorage.setItem("refreshToken", data.refresh_token);
+        localStorage.setItem("user", JSON.stringify(user));
 
-      return { success: true, user };
-    } catch (err: any) {
-      console.error("Login error:", err);
+        setUser(user);
+        return { success: true, user };
+      } catch (err: any) {
+        const status = err.response?.status ?? null;
+        let message = "خطای ناشناخته از سرور";
+        if (status === 401) message = "اطلاعات ورود نادرست است";
+        else if (status === 403)
+          message = "لطفاً شماره موبایل خود را تایید کنید";
+        else if (err.message) message = err.message;
 
-      const status = err.response?.status ?? null;
-      let message = "خطای ناشناخته از سرور";
+        return { success: false, status, message };
+      }
+    },
+    []
+  );
 
-      if (status === 401) message = "اطلاعات ورود نادرست است";
-      else if (status === 403) message = "لطفاً شماره موبایل خود را تایید کنید";
-      else if (err.message) message = err.message;
-
-      return { success: false, status, message };
-    }
-  };
-
-  // ✅ Logout
-  const logout = async () => {
+  // ✅ useCallback برای logout
+  const logout = useCallback(async () => {
     try {
       await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
     } catch {
@@ -108,9 +109,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(null);
       router.push("/auth/login");
     }
-  };
+  }, [router]);
 
-  const value: AuthContextType = { user, loading, login, logout };
+  // ✅ useMemo برای جلوگیری از ساخت آبجکت جدید value
+  const value = useMemo(
+    () => ({ user, loading, login, logout }),
+    [user, loading, login, logout]
+  );
 
   return (
     <AuthContext.Provider value={value}>

@@ -76,7 +76,7 @@ export default function OnboardingWizard() {
       try {
         if (id && id !== "new" && id.length > 3) {
           const response = await axiosInstance.get(
-            `${API_ROUTES.BOTS.GET}${id}`
+            `${API_ROUTES.BOTS.GET}/${id}`
           );
           const hasApiData = response.data?.success && response.data?.data;
 
@@ -151,73 +151,6 @@ export default function OnboardingWizard() {
 
     fetchBotData();
   }, [user?.token, id]);
-
-  // useEffect(() => {
-  //   if (!user?.token) return;
-
-  //   const fetchBotData = async () => {
-  //     try {
-  //       if (id && id !== "new" && id.length > 3) {
-  //         const response = await axiosInstance.get(
-  //           `${API_ROUTES.BOTS.GET}${id}`
-  //         );
-  //         const hasApiData = response.data?.success && response.data?.data;
-
-  //         if (hasApiData) {
-  //           const botData = response.data.data;
-  //           const response2 = await axiosInstance.get(API_ROUTES.BOTS.FAQ(id));
-  //           const faqs =
-  //             response2.data?.success && Array.isArray(response2.data?.data)
-  //               ? response2.data.data
-  //               : [];
-
-  //           const updatedBotConfig = { ...botData, faqs };
-
-  //           setBotConfig(updatedBotConfig);
-  //           const apiCurrent = response.data?.currentStep || 1;
-  //           setCurrentStep(apiCurrent);
-  //           setMaxReachedStep(apiCurrent); // <-- مقدار از API
-
-  //           localStorage.setItem(
-  //             "aiva-onboarding-data",
-  //             JSON.stringify({
-  //               botConfig: updatedBotConfig,
-  //               currentStep: apiCurrent,
-  //               timestamp: new Date().toISOString(),
-  //             })
-  //           );
-  //           return;
-  //         }
-  //       } else if (!id) {
-  //         const savedData = localStorage.getItem("aiva-onboarding-data");
-  //         if (savedData) {
-  //           const parsed = JSON.parse(savedData);
-  //           setBotConfig(parsed.botConfig || botConfig);
-  //           const savedCurrent = parsed.currentStep || 1;
-  //           setCurrentStep(savedCurrent);
-  //           setMaxReachedStep(savedCurrent); // <-- از localStorage
-  //         }
-  //       } else {
-  //         localStorage.removeItem("aiva-onboarding-data");
-
-  //         setCurrentStep(1);
-  //         setMaxReachedStep(1);
-  //       }
-  //     } catch (error) {
-  //       console.warn("خطا در دریافت داده‌های بات:", error);
-  //       const savedData = localStorage.getItem("aiva-onboarding-data");
-  //       if (savedData) {
-  //         const parsed = JSON.parse(savedData);
-  //         setBotConfig(parsed.botConfig || botConfig);
-  //         const savedCurrent = parsed.currentStep || 1;
-  //         setCurrentStep(savedCurrent);
-  //         setMaxReachedStep(savedCurrent);
-  //       }
-  //     }
-  //   };
-
-  //   fetchBotData();
-  // }, [user?.token, id]);
 
   //   ذخیره‌ی داده‌ها
   useEffect(() => {

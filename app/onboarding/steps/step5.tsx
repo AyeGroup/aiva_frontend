@@ -9,13 +9,7 @@ import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { useEffect, useState } from "react";
-import {
-  Copy,
-  Globe,
-  CheckCircle2,
-  BarChart3,
-  HelpCircle,
-} from "lucide-react";
+import { Copy, Globe, CheckCircle2, BarChart3, HelpCircle } from "lucide-react";
 import { convertToPersian } from "@/utils/common";
 
 interface WizardStep5Props {
@@ -34,13 +28,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
       try {
         setIsLoading(true);
         const res = await axiosInstance.get(
-          API_ROUTES.BOTS.GET_EMBED(botConfig.uuid),
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
+          API_ROUTES.BOTS.GET_EMBED(botConfig.uuid)
         );
         setInstallCode(res.data?.data?.embed_script || "");
       } catch (err) {
@@ -71,7 +59,6 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
       console.error("Failed to copy:", err);
     }
   };
-
 
   const copyToClipboard1 = async () => {
     try {
@@ -268,7 +255,6 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
             >
               ۰۹۹۰۳۲۰۲۹۰۳
             </a>
-            
           </div>
         </div>
       </div>
