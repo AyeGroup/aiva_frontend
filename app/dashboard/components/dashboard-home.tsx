@@ -45,9 +45,9 @@ export default function Dashboard() {
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
   const TIME_RANGES = [
-    { value: "7d", label: "۷ روز اخیر" },
-    { value: "30d", label: "۳۰ روز اخیر" },
-    { value: "90d", label: "۹۰ روز اخیر" },
+    { value: "7d", label: "۷ روز اخیر", disable: false },
+    { value: "30d", label: "۳۰ روز اخیر", disable: false },
+    { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
 
   //Authentication

@@ -22,28 +22,30 @@ import PageLoader from "@/components/pageLoader";
 import { convertToPersian } from "@/utils/common";
 import { Card } from "@/components/card";
 import { useBot } from "@/providers/BotProvider";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 
 export const Transactions: React.FC = () => {
   const { user, loading } = useAuth();
-  // const router = useRouter();
   const { bots } = useBot();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<any[]>([]);
-
-  // فیلترها
   const [transactionTypeFilter, setTransactionTypeFilter] = useState<
-    "all" | "plan" | "wallet"
+    "all" | TRANSACTION_TYPE
   >("all");
   const [walletTypeFilter, setWalletTypeFilter] = useState<
     "all" | "deposit" | "withdraw"
   >("all");
   const [dateFrom, setDateFrom] = useState("");
+  const [dateFromTemp, setDateFromTemp] = useState("");
+  const [dateToTemp, setDateToTemp] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // صفحه بندی
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -69,39 +71,60 @@ export const Transactions: React.FC = () => {
     fetchHistory();
   }, [user?.token]);
 
-  // اعمال فیلتر
   useEffect(() => {
-    let data = [...transactions];
-
-    if (transactionTypeFilter !== "all") {
-      if (transactionTypeFilter === "plan") {
-        data = data.filter((t) => t.type === TRANSACTION_TYPE.BUY_SUBSCRIPTION);
-      } else if (transactionTypeFilter === "wallet") {
-        data = data.filter((t) => t.type === TRANSACTION_TYPE.INCREASE_WALLET);
+    const handleClickOutside = (event: MouseEvent) => {
+      const dropdown = document.getElementById("filter-dropdown");
+      if (dropdown && !dropdown.contains(event.target as Node)) {
+        setIsFilterOpen(false);
       }
-    }
+    };
 
-    if (walletTypeFilter !== "all") {
-      data = data.filter((t) => t.walletType === walletTypeFilter);
-    }
+    if (isFilterOpen)
+      document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isFilterOpen]);
 
-    if (dateFrom) {
-      data = data.filter((t) => new Date(t.created_at) >= new Date(dateFrom));
-    }
+  // اعمال فیلتر
+ useEffect(() => {
+   if (!transactions) return;
 
-    if (dateTo) {
-      data = data.filter((t) => new Date(t.created_at) <= new Date(dateTo));
-    }
+   let data = [...transactions];
 
-    setFilteredTransactions(data);
-    setCurrentPage(1); // بازگشت به صفحه اول بعد از فیلتر
-  }, [transactionTypeFilter, walletTypeFilter, dateFrom, dateTo, transactions]);
+   // فیلتر نوع تراکنش
+   if (transactionTypeFilter !== "all") {
+     if (transactionTypeFilter === TRANSACTION_TYPE.BUY_SUBSCRIPTION) {
+       data = data.filter((t) => t.type === TRANSACTION_TYPE.BUY_SUBSCRIPTION);
+     } else if (transactionTypeFilter === TRANSACTION_TYPE.INCREASE_WALLET) {
+       data = data.filter((t) => t.type === TRANSACTION_TYPE.INCREASE_WALLET);
+     }
+   }
 
-  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-  const paginatedTransactions = filteredTransactions.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+   // فیلتر بازه زمانی
+   if (dateFrom) {
+     const from = new Date(dateFrom);
+     data = data.filter((t) => new Date(t.created_at) >= from);
+   }
+
+   if (dateTo) {
+     const to = new Date(dateTo);
+     data = data.filter((t) => new Date(t.created_at) <= to);
+   }
+
+   setFilteredTransactions(data);
+   setCurrentPage(1);
+ }, [transactionTypeFilter, dateFrom, dateTo, transactions]);
+
+  // const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+  // const paginatedTransactions = filteredTransactions.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage
+  // );
+const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+const paginatedTransactions = filteredTransactions.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
+
 
   const getTransactionTitle = (type: string) =>
     type === TRANSACTION_TYPE.BUY_SUBSCRIPTION ? "خرید پلن" : "افزایش موجودی";
@@ -139,9 +162,11 @@ export const Transactions: React.FC = () => {
             همه
           </button>
           <button
-            onClick={() => setTransactionTypeFilter("plan")}
+            onClick={() =>
+              setTransactionTypeFilter(TRANSACTION_TYPE.BUY_SUBSCRIPTION)
+            }
             className={`px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${
-              transactionTypeFilter === "plan"
+              transactionTypeFilter === TRANSACTION_TYPE.BUY_SUBSCRIPTION
                 ? "bg-[#65bcb6] text-white shadow-sm"
                 : "bg-grey-50 text-grey-700 hover:bg-grey-100"
             }`}
@@ -151,9 +176,11 @@ export const Transactions: React.FC = () => {
             <span>پلن‌ها</span>
           </button>
           <button
-            onClick={() => setTransactionTypeFilter("wallet")}
+            onClick={() =>
+              setTransactionTypeFilter(TRANSACTION_TYPE.INCREASE_WALLET)
+            }
             className={`px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${
-              transactionTypeFilter === "wallet"
+              transactionTypeFilter === TRANSACTION_TYPE.INCREASE_WALLET
                 ? "bg-[#65bcb6] text-white shadow-sm"
                 : "bg-grey-50 text-grey-700 hover:bg-grey-100"
             }`}
@@ -175,18 +202,17 @@ export const Transactions: React.FC = () => {
                   ? "bg-[#65bcb6] text-white shadow-sm"
                   : "bg-grey-50 text-grey-700 hover:bg-grey-100"
               }`}
-              title="فیلترهای پیشرفته"
+              title="فیلتر تاریخ"
               type="button"
             >
               <Filter
                 style={{ width: "16px", height: "16px" }}
                 aria-hidden="true"
               />
-              <span>فیلترها</span>
+              <span>تاریخ</span>
               {hasActiveFilters && (
                 <span className="bg-white text-[#65bcb6] rounded-full px-2 py-0.5 text-xs">
-                  {(dateFrom || dateTo ? 1 : 0) +
-                    (walletTypeFilter !== "all" ? 1 : 0)}
+                  {dateFrom || dateTo ? 1 : 0}
                 </span>
               )}
               <ChevronDown
@@ -200,67 +226,12 @@ export const Transactions: React.FC = () => {
               />
             </button>
 
-            {/* Dropdown Menu */}
             {isFilterOpen && (
               <div
+                id="filter-dropdown"
                 className="absolute left-0 mt-2 w-96 bg-white rounded-2xl shadow-lg border border-grey-100 p-4 z-50"
                 style={{ maxWidth: "calc(100vw - 2rem)" }}
               >
-                {/* Wallet Type Filter */}
-                {transactionTypeFilter === "wallet" && (
-                  <div className="mb-4 pb-4 border-b border-grey-100">
-                    <label className="block text-grey-700 mb-3">
-                      نوع عملیات کیف پول:
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() => setWalletTypeFilter("all")}
-                        className={`px-4 py-2 rounded-xl text-sm transition-all duration-200 ${
-                          walletTypeFilter === "all"
-                            ? "bg-[#65bcb6] text-white shadow-sm"
-                            : "bg-grey-50 text-grey-700 hover:bg-grey-100"
-                        }`}
-                        type="button"
-                        title="نمایش همه تراکنش‌های کیف پول"
-                      >
-                        همه
-                      </button>
-                      <button
-                        onClick={() => setWalletTypeFilter("deposit")}
-                        className={`px-4 py-2 rounded-xl text-sm transition-all duration-200 flex items-center gap-2 ${
-                          walletTypeFilter === "deposit"
-                            ? "bg-[#52d4a0] text-white shadow-sm"
-                            : "bg-grey-50 text-grey-700 hover:bg-grey-100"
-                        }`}
-                        type="button"
-                        title="فقط تراکنش‌های واریز"
-                      >
-                        <TrendingUp
-                          style={{ width: "16px", height: "16px" }}
-                          aria-hidden="true"
-                        />
-                        <span>واریز</span>
-                      </button>
-                      <button
-                        onClick={() => setWalletTypeFilter("withdraw")}
-                        className={`px-4 py-2 rounded-xl text-sm transition-all duration-200 flex items-center gap-2 ${
-                          walletTypeFilter === "withdraw"
-                            ? "bg-[#FFA18E] text-white shadow-sm"
-                            : "bg-grey-50 text-grey-700 hover:bg-grey-100"
-                        }`}
-                        type="button"
-                        title="فقط تراکنش‌های برداشت"
-                      >
-                        <Download
-                          style={{ width: "16px", height: "16px" }}
-                          aria-hidden="true"
-                        />
-                        <span>برداشت</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-
                 {/* Date Range Filter */}
                 <div className="mb-4">
                   <label className="block text-grey-700 mb-3">
@@ -268,39 +239,55 @@ export const Transactions: React.FC = () => {
                   </label>
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <label
-                        htmlFor="date-from"
-                        className="text-grey-600 whitespace-nowrap text-sm min-w-[30px]"
-                      >
+                      <label className="text-grey-600 whitespace-nowrap text-sm min-w-[30px]">
                         از:
                       </label>
-                      <input
-                        id="date-from"
-                        type="date"
-                        value={dateFrom}
-                        onChange={(e) => setDateFrom(e.target.value)}
-                        className="flex-1 px-3 py-2 rounded-lg border border-grey-200 focus:border-[#65bcb6] focus:outline-none transition-colors text-sm"
-                        title="تاریخ شروع"
+                      <DatePicker
+                        value={dateFromTemp ? new Date(dateFromTemp) : ""}
+                        onChange={(val) =>
+                          setDateFromTemp(
+                            val?.toDate?.()?.toISOString?.() || ""
+                          )
+                        }
+                        calendar={persian}
+                        locale={persian_fa}
+                        inputClass="flex-1 px-3 py-2 rounded-lg border border-grey-200 focus:border-[#65bcb6] focus:outline-none transition-colors text-sm w-full"
+                        placeholder="انتخاب تاریخ شروع"
+                        calendarPosition="bottom-right"
                       />
                     </div>
                     <div className="flex items-center gap-2">
-                      <label
-                        htmlFor="date-to"
-                        className="text-grey-600 whitespace-nowrap text-sm min-w-[30px]"
-                      >
+                      <label className="text-grey-600 whitespace-nowrap text-sm min-w-[30px]">
                         تا:
                       </label>
-                      <input
-                        id="date-to"
-                        type="date"
-                        value={dateTo}
-                        onChange={(e) => setDateTo(e.target.value)}
-                        className="flex-1 px-3 py-2 rounded-lg border border-grey-200 focus:border-[#65bcb6] focus:outline-none transition-colors text-sm"
-                        title="تاریخ پایان"
+                      <DatePicker
+                        value={dateToTemp ? new Date(dateToTemp) : ""}
+                        onChange={(val) =>
+                          setDateToTemp(val?.toDate?.()?.toISOString?.() || "")
+                        }
+                        calendar={persian}
+                        locale={persian_fa}
+                        inputClass="flex-1 px-3 py-2 rounded-lg border border-grey-200 focus:border-[#65bcb6] focus:outline-none transition-colors text-sm w-full"
+                        placeholder="انتخاب تاریخ پایان"
+                        calendarPosition="bottom-right"
                       />
                     </div>
                   </div>
                 </div>
+
+                {/* Apply Filters Button */}
+                <button
+                  onClick={() => {
+                    setDateFrom(dateFromTemp);
+                    setDateTo(dateToTemp);
+                    setIsFilterOpen(false);
+                  }}
+                  className="w-full px-4 py-2 mt-3 rounded-lg bg-[#65bcb6] text-white hover:bg-[#52a89d] transition-colors flex items-center justify-center gap-2"
+                  type="button"
+                >
+                  <Filter style={{ width: "16px", height: "16px" }} />
+                  <span>اعمال فیلتر</span>
+                </button>
 
                 {/* Clear Filters */}
                 {hasActiveFilters && (
@@ -308,9 +295,8 @@ export const Transactions: React.FC = () => {
                     onClick={() => {
                       setDateFrom("");
                       setDateTo("");
-                      setWalletTypeFilter("all");
                     }}
-                    className="w-full px-4 py-2 rounded-lg bg-grey-50 text-grey-700 hover:bg-grey-100 transition-colors flex items-center justify-center gap-2"
+                    className="w-full px-4 py-2 mt-2 rounded-lg bg-grey-50 text-grey-700 hover:bg-grey-100 transition-colors flex items-center justify-center gap-2"
                     type="button"
                   >
                     <X
@@ -341,18 +327,6 @@ export const Transactions: React.FC = () => {
             تراکنش
           </span>
         </div>
-        {/* <button
-          onClick={() => setTransactionTypeFilter("all")}
-          className="px-4 py-2 rounded-xl bg-[#65bcb6] text-white hover:bg-[#52a89d] transition-all duration-200 flex items-center gap-2 shadow-sm"
-          type="button"
-          title="مشاهده همه تراکنش‌ها"
-        >
-          <FileText
-            style={{ width: "16px", height: "16px" }}
-            aria-hidden="true"
-          />
-          <span>مشاهده همه</span>
-        </button> */}
       </div>
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
@@ -389,7 +363,7 @@ export const Transactions: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredTransactions.map((transaction) => (
+                  {paginatedTransactions.map((transaction) => (
                     <tr
                       key={transaction.id}
                       className="border-b border-grey-100 hover:bg-grey-50 transition-colors"
@@ -613,7 +587,7 @@ export const Transactions: React.FC = () => {
                   : "bg-grey-50 text-grey-700"
               }`}
             >
-              {i + 1}
+              {(i + 1).toLocaleString("fa-IR")}
             </button>
           ))}
         </div>

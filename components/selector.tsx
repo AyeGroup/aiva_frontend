@@ -1,14 +1,10 @@
 "use client";
 import React, { useState, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
+import { SelectorItem } from "@/types/common";
 
 const COLORS = ["#e19f87", "#65bcb6", "#b07cc6", "#f9c74f", "#52d4a0"];
 
-interface SelectorItem {
-  value: string;
-  label: string;
-  id?: string;
-}
 
 interface GenericSelectorProps {
   items: SelectorItem[];
@@ -101,7 +97,7 @@ export function GenericSelector({
             </div>
 
             <div className="chatbot-list">
-              {items.map((item, index) => {
+              {/* {items.map((item, index) => {
                 const isActive =
                   item[valueKey as keyof SelectorItem] === selectedValue;
                 const itemColor = showIndicator
@@ -116,6 +112,40 @@ export function GenericSelector({
                     disabled={disabled}
                     type="button"
                     title={`انتخاب ${item.label}`}
+                  >
+                    {showIndicator && itemColor && (
+                      <span
+                        className="chatbot-indicator"
+                        style={{ backgroundColor: itemColor }}
+                      />
+                    )}
+                    <span className="chatbot-name">{item.label}</span>
+                  </button>
+                );
+              })} */}
+              {items.map((item, index) => {
+                const isActive =
+                  item[valueKey as keyof SelectorItem] === selectedValue;
+                const itemColor = showIndicator
+                  ? COLORS[index % COLORS.length]
+                  : undefined;
+
+                const isDisabled = disabled || item.disabled; // 🔸 بررسی همزمان
+
+                return (
+                  <button
+                    key={item.value || item.id || index.toString()}
+                    onClick={() => !isDisabled && handleSelect(item)} // 🔸 کلیک فقط اگر فعال باشد
+                    className={`chatbot-item ${isActive ? "active" : ""} ${
+                      isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    disabled={isDisabled}
+                    type="button"
+                    title={
+                      isDisabled
+                        ? `${item.label} (غیرفعال)`
+                        : `انتخاب ${item.label}`
+                    }
                   >
                     {showIndicator && itemColor && (
                       <span

@@ -57,7 +57,7 @@ export function Billing() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const maxDays = 30;
-  const maxCredit = 85;
+  const maxCredit = 5;
   const [showDiscountHint, setShowDiscountHint] = useState(true);
   const [transactionFilter, setTransactionFilter] = useState<
     "all" | "plan" | "wallet"

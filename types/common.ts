@@ -248,3 +248,10 @@ export interface SEOProps {
   canonical?: string;
   noindex?: boolean;
 }
+
+export interface SelectorItem {
+  value: string;
+  label: string;
+  id?: string;
+  disabled?:boolean;
+}

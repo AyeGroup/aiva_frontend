@@ -1,9 +1,11 @@
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { useState } from "react";
-import { BotConfig } from "@/types/common";
+import { BotConfig, SelectorItem } from "@/types/common";
 import { onboardingData } from "../onboarding.data";
 import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
+import { Dropdown } from "@/components/dropdown";
+import { GenericSelector } from "@/components/selector";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -18,6 +20,15 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
   ) as GuidelineCategory[];
 
   const [activeTab, setActiveTab] = useState<GuidelineCategory>(categories[0]);
+
+  const languageOptions: SelectorItem[] = onboardingData.languages
+    // .filter((lang) => !lang.disabled)
+    .map((lang) => ({
+      value: lang.code,
+      disabled: lang.disabled,
+      label: lang.name,
+      id: lang.code, // اختیاری است
+    }));
 
   return (
     <div
@@ -74,11 +85,20 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 زبان پیش‌فرض
                 <span className="text-brand-primary ml-1">*</span>
               </label>
-              <Select
+              <GenericSelector
+                items={languageOptions }
+                selectedValue={botConfig.language}
+                // disabled={isChartLoading}
+                onSelect={(value) => {
+                  updateConfig({ language: value });
+                }}
+                showIndicator={true}
+              />
+              {/* <Select
                 value={botConfig.language}
                 onValueChange={(value) => updateConfig({ language: value })}
                 className={`w-full text-gray-800 ${
-                  !botConfig.language ? "!border-red-400" : ""
+                  !botConfig.language ? "border-red-400" : ""
                 }`}
                 placeholder="زبان را انتخاب کنید"
               >
@@ -91,7 +111,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                     {lang.name} ({lang.native})
                   </option>
                 ))}
-              </Select>
+              </Select> */}
             </div>
           </div>
         </div>
