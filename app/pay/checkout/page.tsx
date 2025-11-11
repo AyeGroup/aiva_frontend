@@ -16,6 +16,7 @@ import {
   getPlanIdByCode,
   PLAN_COLORS,
   SUBSCRIPTION_TYPES,
+  TRANSACTION_TYPE,
 } from "@/constants/plans";
 
 export default function Checkout() {
@@ -49,7 +50,7 @@ export default function Checkout() {
   const basePrice = selectedPlan
     ? parseInt(
         convertToEnglish(
-          selectedPlan.billingPeriod === "yearly"
+          selectedPlan.period === "yearly"
             ? selectedPlan.price_yearly_irr
             : selectedPlan.price_monthly_irr
         ).replace(/,/g, ""),
@@ -123,13 +124,15 @@ export default function Checkout() {
 
       const invoicePayload = {
         purpose: "subscription_purchase",
+        // purpose:TRANSACTION_TYPE.BUY_SUBSCRIPTION,
+
         amount_irr: totalPrice,
         chatbot_uuid: currentBot?.uuid,
         subscription_plan: getPlanIdByCode(selectedPlan.plan),
-        subscription_type: selectedPlan.billingPeriod,
+        subscription_type: selectedPlan.period,
         description: selectedPlan.description,
       };
-
+console.log("ALI",invoicePayload)
       const res = await axiosInstance.post(
         API_ROUTES.PAYMENT.INITIATE,
         invoicePayload
@@ -156,49 +159,6 @@ export default function Checkout() {
   };
 
 
-  const handleProceedToPayment1 = async () => {
-    if (!selectedPlan) {
-      toast.error("طرح انتخاب شده معتبر نیست");
-      return;
-    }
-
-    if (requestOfficialInvoice) {
-      if (!companyName.trim()) return toast.error("نام شرکت الزامی است");
-      if (!economicCode.trim()) return toast.error("کد اقتصادی الزامی است");
-      if (!nationalId.trim()) return toast.error("شناسه ملی الزامی است");
-    }
-
-    try {
-      setIsLoading(true);
-
-      const invoicePayload = {
-        purpose: "subscription_purchase",
-        amount_irr: totalPrice,
-        chatbot_uuid: currentBot?.uuid,
-        subscription_plan: getPlanIdByCode(selectedPlan.plan),
-        subscription_type: selectedPlan.billingPeriod,
-        description: selectedPlan.description,
-      };
-
-      const res = await axiosInstance.post(
-        API_ROUTES.PAYMENT.INITIATE,
-        invoicePayload
-      );
-      const data = res.data;
-
-      if (!data.success) {
-        toast.error(data.message || "خطا در ایجاد فاکتور");
-        return;
-      }
-
-      toast.success("فاکتور با موفقیت ایجاد شد. در حال انتقال به درگاه...");
-      router.push(data.data.gateway_url);
-    } catch (err: any) {
-      toast.error(err.message || "خطا در اتصال به درگاه پرداخت");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   if (!isPlanLoaded) {
     return <PageLoader />;
@@ -253,7 +213,7 @@ export default function Checkout() {
                         {basePrice.toLocaleString("fa-IR")} تومان
                       </p>
                       <p className="text-grey-500 text-sm">
-                        {SUBSCRIPTION_TYPES[selectedPlan.billingPeriod]}
+                        {SUBSCRIPTION_TYPES[selectedPlan.period]}
                       </p>
                     </div>
                   </div>

@@ -1,9 +1,37 @@
 export enum TRANSACTION_TYPE {
-  INCREASE_WALLET = "increase_wallet", // User wallet charge (payment gateway)
-  INCREASE_BALANCE = "increase_balance", // Chatbot balance increase
+  INCREASE_WALLET = "increase_wallet",  
+  INCREASE_BALANCE = "increase_balance", 
   BUY_SUBSCRIPTION = "buy_subscription",
   MESSAGE_COST = "message_cost",
 }
+
+ export enum TRANSACTION_TITLE {
+   increase_wallet = "افزایش موجودی",
+   increase_balance = "افزایش بالانس",
+   buy_subscription = "خرید پلن",
+   message_cost = "هزینه پیام",
+ }
+
+ export const getTransactionTitle = (type: keyof typeof TRANSACTION_TITLE) => {
+   return TRANSACTION_TITLE[type] || "";
+ };
+
+// export const TRANSACTION_TITLE: Record<string, string> = {
+//   increase_wallet: "افزایش موجودی",
+//   increase_balance: "افزایش بالانس",
+//   buy_subscription: "خرید پلن",
+//   message_cost: "هزینه پیام",
+// };
+
+// export const getTransactionTitle = (type: string): string  => {
+
+//   if (type == "increase_wallet") return "افزایش موجودی";
+//   else if (type == "increase_balance") return "افزایش بالانس";
+//   else if (type == "buy_subscription") return "خرید پلن";
+//   else if (type == "message_cost") return "هزینه پیام";
+//   else return "";
+// };
+
 
 type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
 
@@ -48,30 +76,10 @@ export const getPlanCodeById = (id: number): PlanCode | undefined => {
   const plan = PLANS.find((p) => p.id === id);
   return plan?.code;
 };
-
-// export const PLAN_TYPES: Record<number, string> = {
-//   0: "رایگان",
-//   1: "پایه",
-//   2: "حرفه‌ای",
-//   3: "پیشرفته",
-//   4: "ویژه",
-// };
-
-// export const PLAN_TYPES_CODE: Record<string, number> = {
-//   FREE: 0,
-//   BASIC: 1,
-//   MEDIUM: 2,
-//   ADVANCE: 3,
-//   ENTERPRISE: 4,
-// };
-
-// export const PLAN_TYPES_NAME: Record<string, string> = {
-//   FREE: "رایگان",
-//   BASIC: "پایه",
-//   MEDIUM: "حرفه‌ای",
-//   ADVANCE: "پیشرفته",
-//   ENTERPRISE: "سازمانی",
-// };
+export const getPlanNameById = (id: number): string | undefined => {
+  const plan = PLANS.find((p) => p.id === id);
+  return plan?.faName;
+};
 
 export const PLAN_COLORS: Record<string, string> = {
   FREE: "#9ca3af",
@@ -80,77 +88,18 @@ export const PLAN_COLORS: Record<string, string> = {
   ADVANCE: "#f59e0b",
   ENTERPRISE: "#8b5cf6",
 };
+export const PLAN_COLORS_BYID: Record<string, string> = {
+  1: "#9ca3af",
+  2: "#60a5fa",
+  3: "#34d399",
+  4: "#f59e0b",
+  5: "#8b5cf6",
+};
 
 export const SUBSCRIPTION_TYPES: Record<string, string> = {
   monthly: "ماهانه",
   yearly: "سالانه",
 };
-// const plans: Plan[] = [
-//   {
-//     id: "0",
 
-//     name: "رایگان",
-//     price: "۰",
-//     description: "برای شروع و آزمایش",
-//     color: "#9B59B6",
-//     features: [
-//       "تا ۱۰۰ پیام در ماه",
-//       "یک چت‌بات",
-//       "پشتیبانی ایمیلی",
-//       "گزارش‌های پایه",
-//     ],
-//   },
-//   {
-//     id: "1",
-//     name: "استارتر",
-//     price: billingPeriod === "monthly" ? "۲۹۹,۰۰۰" : "۲,۸۷۰,۰۰۰",
-//     priceMonthly: billingPeriod === "yearly" ? "۲۳۹,۰۰۰" : undefined,
-//     description: "برای کسب‌وکارهای کوچک",
-//     color: "#3498DB",
-//     features: [
-//       "تا ۵,۰۰۰ پیام در ماه",
-//       "تا ۳ چت‌بات",
-//       "پشتیبانی ایمیلی و چت",
-//       "گزارش‌های پیشرفته",
-//       "قابلیت سفارشی‌سازی ظاهر",
-//       "یکپارچگی با ابزارهای محبوب",
-//     ],
-//   },
-//   {
-//     id: "2",
-//     name: "حرفه‌ای",
-//     price: billingPeriod === "monthly" ? "۷۹۹,۰۰۰" : "۷,۶۷۰,۰۰۰",
-//     priceMonthly: billingPeriod === "yearly" ? "۶۳۹,۰۰۰" : undefined,
-//     description: "برای کسب‌وکارهای در حال رشد",
-//     color: "#65bcb6",
-//     recommended: true,
-//     current: true,
-//     features: [
-//       "تا ۲۰,۰۰۰ پیام در ماه",
-//       "تا ۱۰ چت‌بات",
-//       "پشتیبانی ۲۴/۷",
-//       "گزارش‌های تحلیلی پیشرفته",
-//       "سفارشی‌سازی کامل",
-//       "API دسترسی",
-//       "آموزش هوش مصنوعی اختصاصی",
-//       "ادغام با CRM",
-//     ],
-//   },
-//   {
-//     id: "3",
-//     name: "سازمانی",
-//     price: "تماس بگیرید",
-//     description: "برای سازمان‌های بزرگ",
-//     color: "#FFA18E",
-//     features: [
-//       "پیام نامحدود",
-//       "چت‌بات نامحدود",
-//       "مدیر اختصاصی",
-//       "پشتیبانی اولویت‌دار",
-//       "سفارشی‌سازی کامل",
-//       "قرارداد SLA",
-//       "آموزش تیم",
-//       "استقرار اختصاصی",
-//     ],
-//   },
-// ];
+
+ 

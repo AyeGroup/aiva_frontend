@@ -16,7 +16,7 @@ interface Transaction {
 }
 
 interface WalletCardProps {
-  balance: number;
+  // balance: number;
   totalDeposit: number;
   totalWithdraw: number;
   transactions: Transaction[];
@@ -36,7 +36,7 @@ type StatusFilter = "all" | "completed" | "pending" | "failed";
 type SortType = "date-desc" | "date-asc" | "amount-desc" | "amount-asc";
 
 export function WalletCard({
-  balance,
+  // balance,
   totalDeposit,
   totalWithdraw,
   transactions,

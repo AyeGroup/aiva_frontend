@@ -76,6 +76,7 @@ export const API_ROUTES = {
 
   FINANCIAL: {
     WALLET: `${API_BASE_URL}/financial/wallet`,
+    TRANSACTION_ALL: `${API_BASE_URL}/financial/transactions`,
     SUBSCRIPTIONS: `${API_BASE_URL}/financial/my-subscriptions`,
     SUBSCRIPTION: (bot_uuid: string) =>
       `${API_BASE_URL}/financial/chatbots/${bot_uuid}/subscription`,

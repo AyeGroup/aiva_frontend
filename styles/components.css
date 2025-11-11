@@ -4058,13 +4058,13 @@ html[dir="rtl"] .code-actions {
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  box-shadow: 0px 10px 25px -5px rgba(0, 0, 0, 0.15), 0px 4px 10px -2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 10px 25px -5px rgba(0, 0, 0, 0.15),
+    0px 4px 10px -2px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   min-width: 150px;
   animation: menuSlideIn 0.2s ease;
   z-index: 1000;
 }
-
 
 .chatbot-menu-item {
   display: flex;
@@ -4128,17 +4128,17 @@ html[dir="rtl"] .code-actions {
 .switch-root {
   /* Reset button styles */
   all: unset;
-  
+
   /* Layout */
   position: relative;
   border-radius: 16px;
   cursor: pointer;
   display: inline-block;
-  
+
   /* Size - از فیگما */
   width: 44px;
   height: 22px;
-  
+
   /* Transition */
   transition: background-color 0.2s ease;
 }
@@ -4237,7 +4237,7 @@ html[dir="rtl"] .code-actions {
   .switch-root {
     transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .switch-nob {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -4256,7 +4256,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .credit-summary-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -4382,7 +4382,8 @@ html[dir="rtl"] .code-actions {
 }
 
 @keyframes pulse-slow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -4393,7 +4394,8 @@ html[dir="rtl"] .code-actions {
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -4426,7 +4428,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .chatbot-plan-card:hover .circular-progress-inner {
-  fill: #FAFAFA;
+  fill: #fafafa;
 }
 
 /* Responsive Design */
@@ -4556,7 +4558,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .wallet-title {
-  color: #6B7280;
+  color: #6b7280;
   margin: 0;
   letter-spacing: 0.01em;
 }
@@ -4573,7 +4575,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .wallet-amount-unit {
-  color: #9CA3AF;
+  color: #9ca3af;
 }
 
 /* Action Buttons */
@@ -4592,7 +4594,7 @@ html[dir="rtl"] .code-actions {
   border: none;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Vazirmatn', sans-serif;
+  font-family: "Vazirmatn", sans-serif;
   white-space: nowrap;
 }
 
@@ -4615,7 +4617,7 @@ html[dir="rtl"] .code-actions {
 
 .wallet-btn-outline {
   background: #ffffff;
-  color: #6B7280;
+  color: #6b7280;
   border: 1.5px solid #e5e7eb;
 }
 
@@ -4649,7 +4651,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .wallet-stat-label {
-  color: #9CA3AF;
+  color: #9ca3af;
 }
 
 .wallet-stat-value {
@@ -4662,7 +4664,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .wallet-stat-withdraw {
-  color: #FFA18E;
+  color: #ffa18e;
 }
 
 .wallet-stat-count {
@@ -4674,8 +4676,6 @@ html[dir="rtl"] .code-actions {
   height: 36px;
   background: #e5e7eb;
 }
-
-
 
 /* ==============================================
    TRANSACTIONS
@@ -4720,7 +4720,7 @@ html[dir="rtl"] .code-actions {
   border: none;
   border-radius: 8px;
   color: #6b7280;
-  font-family: 'Vazirmatn', sans-serif;
+  font-family: "Vazirmatn", sans-serif;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -4800,7 +4800,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .wallet-minimal-transaction-date {
-  color: #9CA3AF;
+  color: #9ca3af;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -4830,7 +4830,7 @@ html[dir="rtl"] .code-actions {
   justify-content: center;
   gap: 16px;
   padding: 60px 20px;
-  color: #9CA3AF;
+  color: #9ca3af;
 }
 
 .wallet-minimal-spinner {
@@ -4885,7 +4885,7 @@ html[dir="rtl"] .code-actions {
 }
 
 .wallet-minimal-page-info {
-  color: #6B7280;
+  color: #6b7280;
   font-weight: 500;
 }
 
@@ -5258,5 +5258,23 @@ html[dir="rtl"] .code-actions {
   .modal-footer {
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+.available-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 1280px) {
+  .available-plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .available-plans-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
