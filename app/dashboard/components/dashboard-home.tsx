@@ -28,7 +28,7 @@ import {
 export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { currentBot } = useBot();
+  const { bots, currentBot } = useBot();
   const [isNew, setIsNew] = useState(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,9 +45,9 @@ export default function Dashboard() {
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
   const TIME_RANGES = [
-    { value: "7d", label: "۷ روز اخیر" },
-    { value: "30d", label: "۳۰ روز اخیر" },
-    { value: "90d", label: "۹۰ روز اخیر" },
+    { value: "7d", label: "۷ روز اخیر", disable: false },
+    { value: "30d", label: "۳۰ روز اخیر", disable: false },
+    { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
 
   //Authentication
@@ -60,33 +60,11 @@ export default function Dashboard() {
 
   // user has a bot
   useEffect(() => {
-    if (!user) return;
-
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axiosInstance.get(API_ROUTES.BOTS.GET, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
-        if (
-          response.data.success &&
-          response.data.data &&
-          response.data.data.length > 0
-        ) {
-          setIsNew(false);
-          // console.log("curret bot :", response.data.data[0]);
-        } else setIsNew(true);
-      } catch (error) {
-        console.error("Error fetching bots:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+    if (!bots) return;
+    // console.log
+    if (bots && bots.length > 0) setIsNew(false);
+    else setIsNew(true);
+  }, [bots]);
 
   //statistic cover
   useEffect(() => {
@@ -111,17 +89,25 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
-  //call statistics api
+
   useEffect(() => {
-    if (!user || !currentBot) return;
+  if (!user || !currentBot?.uuid) return;
+  if (isLoading) return; // تا وقتی در حال لود هست، دوباره فراخوانی نکن
+  fetchAllStatistics();
+}, [user?.id, currentBot?.uuid, timeRange]);
 
-    fetchUserTrend(timeRange);
-    fetchSessionTrend(timeRange);
-    fetchActiveUsers();
-    fetchRecentSession();
-    fetchFaqList();
-  }, [user, currentBot, timeRange]);
-
+const fetchAllStatistics = async () => {
+  setIsLoading(true);
+  await Promise.all([
+    fetchUserTrend(timeRange),
+    fetchSessionTrend(timeRange),
+    fetchActiveUsers(),
+    fetchRecentSession(),
+    fetchFaqList(),
+  ]);
+  setIsLoading(false);
+};
+ 
   useEffect(() => {
     if (currentBot) {
       // console.log("بات انتخاب شده:", currentBot.name);

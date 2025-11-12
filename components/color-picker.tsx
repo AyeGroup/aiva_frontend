@@ -119,37 +119,36 @@ export default function ColorPicker({
     ? `rgba(${previewRgb.r},${previewRgb.g},${previewRgb.b},${alpha})`
     : previewHex;
 
-function handleSaturationPointer(e: React.PointerEvent) {
-  const el = e.currentTarget as HTMLDivElement;
-  el.setPointerCapture(e.pointerId);
+  function handleSaturationPointer(e: React.PointerEvent) {
+    const el = e.currentTarget as HTMLDivElement;
+    el.setPointerCapture(e.pointerId);
 
-  const updateColor = (clientX: number, clientY: number) => {
-    const rect = el.getBoundingClientRect();
-    const x = clamp((clientX - rect.left) / rect.width, 0, 1);
-    const y = clamp((clientY - rect.top) / rect.height, 0, 1);
-    setSat(x);
-    setVal(1 - y);
-    commitChange(hue, x, 1 - y, alpha); // 🔥 در هر حرکت مقدار جدید اعمال می‌شود
-  };
+    const updateColor = (clientX: number, clientY: number) => {
+      const rect = el.getBoundingClientRect();
+      const x = clamp((clientX - rect.left) / rect.width, 0, 1);
+      const y = clamp((clientY - rect.top) / rect.height, 0, 1);
+      setSat(x);
+      setVal(1 - y);
+      commitChange(hue, x, 1 - y, alpha);
+    };
 
-  const onMove = (ev: PointerEvent) => {
-    updateColor(ev.clientX, ev.clientY);
-  };
+    const onMove = (ev: PointerEvent) => {
+      updateColor(ev.clientX, ev.clientY);
+    };
 
-  const onUp = (ev: PointerEvent) => {
-    el.releasePointerCapture(e.pointerId);
-    window.removeEventListener("pointermove", onMove);
-    window.removeEventListener("pointerup", onUp);
-    updateColor(ev.clientX, ev.clientY); // 🔥 اطمینان از ثبت آخرین نقطه
-  };
+    const onUp = (ev: PointerEvent) => {
+      el.releasePointerCapture(e.pointerId);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      updateColor(ev.clientX, ev.clientY);
+    };
 
-  window.addEventListener("pointermove", onMove);
-  window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
 
-  // اولین کلیک را هم بلافاصله به‌روزرسانی کن
-  updateColor(e.clientX, e.clientY);
-}
-
+    // اولین کلیک را هم بلافاصله به‌روزرسانی کن
+    updateColor(e.clientX, e.clientY);
+  }
 
   function handleHueChange(e: React.ChangeEvent<HTMLInputElement>) {
     const h = Number(e.target.value);
@@ -161,18 +160,6 @@ function handleSaturationPointer(e: React.PointerEvent) {
     setAlpha(a);
     commitChange(hue, sat, val, a);
   }
-  function handleHexInput(e: React.ChangeEvent<HTMLInputElement>) {
-    const v = e.target.value;
-    setHexInput(v);
-    const parsed = hexToRgb(v.startsWith("#") ? v : `#${v}`);
-    if (parsed) {
-      const hsv = rgbToHsv(parsed.r, parsed.g, parsed.b);
-      setHue(hsv.h);
-      setSat(hsv.s);
-      setVal(hsv.v);
-      commitChange(hsv.h, hsv.s, hsv.v, alpha);
-    }
-  }
 
   return (
     <div
@@ -180,65 +167,13 @@ function handleSaturationPointer(e: React.PointerEvent) {
         className || ""
       }`}
     >
-      {/* <div className="flex items-center gap-3 mb-3">
-        <div
-          className="w-12 h-12 rounded-md border relative"
-          style={{
-            background: `linear-gradient(45deg, #fff 0%, rgba(0,0,0,0) 100%)`,
-          }}
-        >
-          <div
-            className="absolute inset-0 rounded-md"
-            style={{ background: previewCss }}
-            aria-hidden
-          />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <input
-              aria-label="Hex color"
-              value={hexInput}
-              onChange={handleHexInput}
-              className="w-full rounded px-2 py-1 border"
-            />
-            <button
-              type="button"
-              onClick={() => {
-                navigator.clipboard?.writeText(
-                  showAlpha
-                    ? `${previewHex}${Math.round(alpha * 255)
-                        .toString(16)
-                        .padStart(2, "0")
-                        .toUpperCase()}`
-                    : previewHex
-                );
-              }}
-              className="px-2 py-1 border rounded"
-            >
-              Copy
-            </button> 
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
-            Preview:{" "}
-            {showAlpha
-              ? `${previewHex}${Math.round(alpha * 255)
-                  .toString(16)
-                  .padStart(2, "0")
-                  .toUpperCase()}`
-              : previewHex}
-          </div>
-        </div>
-      </div> */}
-
       <div className="mb-3">
         {presets.length > 0 && (
           <div className="mb-2">
-            {/* <div className="text-xs text-gray-600 mb-1">Presets</div> */}
             <div className="flex gap-2 flex-wrap">
               {presets.map((c, i) => (
                 <div
                   key={c + i}
-                  // onClick={() => setColor(c)} // 👈 با کلیک، رنگ انتخابی تنظیم می‌شود
                   onClick={() => {
                     const parsed = hexToRgb(c);
                     if (parsed) {
@@ -293,8 +228,12 @@ function handleSaturationPointer(e: React.PointerEvent) {
           type="range"
           min={0}
           max={360}
-          value={Math.round(hue)}
-          onChange={handleHueChange}
+          value={Math.round(360 - hue)} // برعکس کردن نمایش مکان‌نما
+          onChange={(e) => {
+            const h = 360 - Number(e.target.value); // برگرداندن مقدار واقعی
+            setHue(h);
+            commitChange(h, sat, val, alpha);
+          }}
           className="w-full h-2 appearance-none rounded"
           style={{
             background: `linear-gradient(90deg, red 0%, yellow 17%, lime 33%, cyan 50%, blue 67%, magenta 83%, red 100%)`,

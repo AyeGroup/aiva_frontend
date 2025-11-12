@@ -6,7 +6,7 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  size?:'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
   footer?: React.ReactNode;
 }
 
@@ -46,16 +46,17 @@ export function Modal({
   if (!isOpen) return null;
 
   const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-2xl',
-    lg: 'max-w-4xl',
-    xl: 'max-w-6xl',
-    full: 'max-w-7xl'
+    xs: "!max-w-1/2",
+    sm: "!max-w-md",
+    md: "!max-w-2xl",
+    lg: "!max-w-4xl",
+    xl: "!max-w-6xl",
+    full: "!max-w-7xl",
   };
 
   return (
     <div 
-      className="modal-overlay" 
+      className="modal-overlay " 
       onClick={onClose}
       role="dialog"
       aria-modal="true"

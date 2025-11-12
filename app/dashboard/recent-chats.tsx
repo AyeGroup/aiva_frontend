@@ -50,7 +50,6 @@ export function RecentChats({
   onChatClick,
   onViewAll,
 }: RecentChatsProps) {
-  // 🔹 تبدیل داده‌های خام بک‌اند به ساختار مناسب برای نمایش
   const chats: ChatData[] = data.map((chat) => {
     const lastMessage = chat.messages.at(-1);
     return {
@@ -68,6 +67,14 @@ export function RecentChats({
         timestamp: new Date(m.ts * 1000).toISOString(),
       })),
     };
+  });
+
+  const userIdToIndexMap = new Map<string, number>();
+  let counter = 1;
+  chats.forEach((chat) => {
+    if (!userIdToIndexMap.has(chat.userId)) {
+      userIdToIndexMap.set(chat.userId, counter++);
+    }
   });
 
   return (
@@ -97,8 +104,11 @@ export function RecentChats({
             <ChatHistoryCard
               key={chat.userId}
               userId={chat.userId}
-              userName={`کاربر ${convertToPersian(index + 1)}`}
+              // userName={`کاربر ${convertToPersian(index + 1)}`}
               // userName={chat.userName}
+              userName={`کاربر ${convertToPersian(
+                userIdToIndexMap.get(chat.userId)!
+              )}`}
               userAvatar={chat.userAvatar}
               messages={chat.messages}
               status={chat.status}

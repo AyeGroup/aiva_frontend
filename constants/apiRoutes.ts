@@ -13,17 +13,17 @@ export const API_ROUTES = {
 
   STATISTIC: {
     GET_COVER: (bot_uuid: string) =>
-      `${API_BASE_URL}/dashboard/overview/${bot_uuid}/`,
+      `${API_BASE_URL}/dashboard/overview/${bot_uuid}`,
     HEATMAP: (bot_uuid: string) =>
-      `${API_BASE_URL}/dashboard/message-heatmap/${bot_uuid}/`,
+      `${API_BASE_URL}/dashboard/message-heatmap/${bot_uuid}`,
     ACTIVE_USERS: (bot_uuid: string) =>
-      `${API_BASE_URL}/dashboard/active-users/${bot_uuid}/`,
+      `${API_BASE_URL}/dashboard/active-users/${bot_uuid}`,
     RECCENT_SESSION: (bot_uuid: string) =>
-      `${API_BASE_URL}/dashboard/recent-sessions/${bot_uuid}/`,
+      `${API_BASE_URL}/dashboard/recent-sessions/${bot_uuid}`,
     USERS: (bot_uuid: string) =>
-      `${API_BASE_URL}/dashboard/users-trend/${bot_uuid}/`, //days
+      `${API_BASE_URL}/dashboard/users-trend/${bot_uuid}`, //days
     SESSION: (bot_uuid: string) =>
-      `${API_BASE_URL}/dashboard/sessions-trend/${bot_uuid}/`, //days
+      `${API_BASE_URL}/dashboard/sessions-trend/${bot_uuid}`, //days
 
     FAQ_LIST: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/faqs`, //days
   },
@@ -34,7 +34,7 @@ export const API_ROUTES = {
     EDIT: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}`,
     SAVE: `${API_BASE_URL}/chatbots`,
     LIST: `${API_BASE_URL}/chatbots`,
-    GET: `${API_BASE_URL}/chatbots/`, //bot_uuid
+    GET: `${API_BASE_URL}/chatbots`, //bot_uuid
 
     GET_EMBED: (bot_uuid: string) =>
       `${API_BASE_URL}/widget/embed-script/${bot_uuid}`,
@@ -75,6 +75,9 @@ export const API_ROUTES = {
   },
 
   FINANCIAL: {
+    WALLET: `${API_BASE_URL}/financial/wallet`,
+    TRANSACTION_ALL: `${API_BASE_URL}/financial/transactions`,
+    SUBSCRIPTIONS: `${API_BASE_URL}/financial/my-subscriptions`,
     SUBSCRIPTION: (bot_uuid: string) =>
       `${API_BASE_URL}/financial/chatbots/${bot_uuid}/subscription`,
     BALANCE: (bot_uuid: string) =>
@@ -88,6 +91,7 @@ export const API_ROUTES = {
   PAYMENT: {
     DISCOUNT: `${API_BASE_URL}/payment/discont/verify`,
     INITIATE: `${API_BASE_URL}/payment/initiate`,
+    FACTOR: `${API_BASE_URL}/payment/factor`,
     CALLBACK: `${API_BASE_URL}/payment/callback`,
     VERIFY: (payment_id: string) =>
       `${API_BASE_URL}/payment/verify/${payment_id}`,

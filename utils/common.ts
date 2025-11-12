@@ -83,7 +83,6 @@ export const convertNumbersToPersian = (text: string | number): string => {
     .replace(/\d/g, (digit) => persianDigits[parseInt(digit, 10)]);
 };
 
-
 export const normalizeFileUrl = (path: string) => {
   if (!path) return "";
   return (
@@ -94,4 +93,15 @@ export const normalizeFileUrl = (path: string) => {
       .replace(/^(\.\/)?data\//, "") // حذف ./data/
   );
 };
- 
+ export function getDaysRemaining(targetDate: string | Date): number {
+   const target = new Date(targetDate);
+   const now = new Date();
+
+   // Calculate difference in milliseconds
+   const diffMs = target.getTime() - now.getTime();
+
+   // Convert milliseconds to days
+   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+   return diffDays;
+ }
