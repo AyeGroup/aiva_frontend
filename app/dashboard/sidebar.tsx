@@ -115,11 +115,11 @@ export function Sidebar({
           active={currentPage === "tickets"}
           onClick={() => router.push("/dashboard?tab=tickets")}
         />
-        {/* <SidebarItem
+        <SidebarItem
           label="مالی"
           active={currentPage === "billing"}
-          onClick={() => router.push("/dashboard?tab=billing")}
-        /> */}
+          // onClick={() => router.push("/dashboard?tab=billing")}
+        />
       </nav>
 
       {/* Bottom Actions */}
