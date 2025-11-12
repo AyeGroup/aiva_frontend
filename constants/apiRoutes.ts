@@ -91,6 +91,7 @@ export const API_ROUTES = {
   PAYMENT: {
     DISCOUNT: `${API_BASE_URL}/payment/discont/verify`,
     INITIATE: `${API_BASE_URL}/payment/initiate`,
+    FACTOR: `${API_BASE_URL}/payment/factor`,
     CALLBACK: `${API_BASE_URL}/payment/callback`,
     VERIFY: (payment_id: string) =>
       `${API_BASE_URL}/payment/verify/${payment_id}`,

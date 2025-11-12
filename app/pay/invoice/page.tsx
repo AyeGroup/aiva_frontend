@@ -3,15 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
+import { convertToPersian } from "@/utils/common";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Download,
-  ArrowRight,
-  CheckCircle,
-  Receipt,
-  Calendar,
-  CreditCard,
-} from "lucide-react";
+import { Download, ArrowRight, CheckCircle } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 interface InvoiceData {
   invoiceId: string;
@@ -39,23 +37,19 @@ export default function Invoice() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [returnUrl, setReturnUrl] = useState<string | null>(null);
 
-  const formatNumber = (num: number) => num.toLocaleString("fa-IR");
+  useEffect(() => {
+    const storedUrl = localStorage.getItem("returnUrl");
+    setReturnUrl(storedUrl);
+  }, []);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("fa-IR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
+  const handleBack = () => {
+    router.push(returnUrl || "/dashboard?tab=billing");
   };
 
   useEffect(() => {
     const status = searchParams.get("status");
-    const tracking = searchParams.get("tracking");
 
     // 🟢 بررسی وضعیت پرداخت
     if (!status) {
@@ -109,7 +103,44 @@ export default function Invoice() {
     return null;
   }
 
-  const handleDownload = () => toast.success("فاکتور در حال دانلود است");
+  const handleDownload = async () => {
+    try {
+      toast.info("در حال آماده‌سازی فایل PDF...");
+
+      const invoiceElement = document.querySelector(".invoice-content");
+      if (!invoiceElement) {
+        toast.error("محتوای فاکتور یافت نشد");
+        return;
+      }
+
+      // گرفتن snapshot از بخش فاکتور
+      const canvas = await html2canvas(invoiceElement as HTMLElement, {
+        scale: 2, // کیفیت بالاتر
+        useCORS: true,
+        logging: false,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+
+      // تنظیم ابعاد PDF
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+      // نام فایل با شماره فاکتور
+      const filename = `invoice-${invoiceData?.invoiceId || "payment"}.pdf`;
+      pdf.save(filename);
+
+      toast.success("فاکتور با موفقیت دانلود شد 🎉");
+    } catch (err) {
+      console.error(err);
+      toast.error("خطا در تولید فایل PDF");
+    }
+  };
   const handlePrint = () => window.print();
 
   const trackingCode = searchParams.get("tracking");
@@ -118,27 +149,16 @@ export default function Invoice() {
     <div className="min-h-screen bg-grey-50 py-12 px-4" dir="rtl">
       <main className="max-w-4xl mx-auto" role="main">
         {/* Header */}
-        <header className="mb-8 no-print">
+        <header className="mb-8 no-print flex justify-between items-center">
           <button
-            onClick={() => router.push("/dashboard?tab=billing")}
-            className="flex items-center gap-2 text-grey-600 hover:text-grey-900 transition-colors mb-4"
-            title="بازگشت به صفحه مالی"
+            onClick={handleBack}
+            className="flex items-center gap-2 text-grey-600 hover:text-grey-900 transition-colors mb-4 cursor-pointer font-medium border-none outline-0"
+            title="بازگشت "
           >
             <ArrowRight className="w-5 h-5" />
-            <span>بازگشت به صفحه مالی</span>
+            <span>بازگشت</span>
           </button>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-grey-900 mb-2 text-right">فاکتور پرداخت</h1>
-              <p className="text-grey-600 text-right">
-                شماره فاکتور: {invoiceData.invoiceId}
-              </p>
-              {trackingCode && (
-                <p className="text-grey-600 text-right">
-                  کد پیگیری: {trackingCode}
-                </p>
-              )}
-            </div>
+          <div className="flex items-center justify-end">
             <div className="flex gap-3">
               <Button
                 variant="secondary"
@@ -166,37 +186,56 @@ export default function Invoice() {
         {/* ✅ تمام استایل‌ها و ساختار اصلی حفظ شده */}
         <Card className="p-8 invoice-content">
           {/* Invoice Header */}
-          <div className="flex items-start justify-between mb-8 pb-8 border-b-2 border-grey-200">
-            <div>
-              <h2 className="text-grey-900 mb-2">چت‌بات فروشگاه</h2>
-              <p className="text-grey-600 text-sm">
-                سامانه هوشمند مدیریت چت‌بات
-              </p>
-              <p className="text-grey-600 text-sm mt-2">
-                📧 info@chatbot.ir
-                <br />
-                📞 021-12345678
-                <br />
-                🌐 www.chatbot.ir
-              </p>
-            </div>
-            <div className="text-left">
-              <div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-white shadow-lg mb-4"
-                style={{
-                  background: `linear-gradient(135deg, ${invoiceData.plan.color} 0%, ${invoiceData.plan.color}dd 100%)`,
-                }}
-              >
+          <div className="flex-1  mb-8 pb-8 border-b-2 border-grey-200">
+            <div className="flex items-center justify-between">
+              <h1 className="text-grey-900 font-bold mb-2 text-right">
+                فاکتور پرداخت
+              </h1>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-white shadow-lg mb-4 bg-primary">
                 <CheckCircle className="w-5 h-5" />
                 <span>پرداخت شده</span>
               </div>
-              <p className="text-grey-600 text-sm">شماره فاکتور</p>
-              <p className="text-grey-900">{invoiceData.invoiceId}</p>
+            </div>
+            <div className="flex flex-col gap-3 mr-3 text-grey-700 ">
+              <div>تاریخ پرداخت:</div>
+              <div>
+                شماره فاکتور: {convertToPersian(invoiceData.invoiceId || "")}
+              </div>
+
+              <div>کد پیگیری: {convertToPersian(trackingCode || "  ")}</div>
+
+              <div>توضیحات :</div>
             </div>
           </div>
+          <div>
+            <div className="flex">
+              <Image
+                src="/logo.png"
+                alt="آیوا"
+                width={30}
+                height={30}
+                priority
+              />
+              <h2 className="font-bold text-grey-900 m-1">
+                آیوا{" "}
+                <span className="text-grey-600 font-medium text-sm">
+                  دستیار هوشمند{" "}
+                </span>
+              </h2>
+            </div>
 
-          {/* بقیه بخش‌ها دقیقاً مثل قبل */}
-          {/* Customer, Payment Info, Table, Footer... بدون تغییر */}
+            <p className="flex flex-col gap-2 text-grey-600 text-sm mt-2 mr-6">
+              <a href="tel:09903202903" className=" " title="تماس با پشتیبانی">
+                📞 ۰۹۹۰۳۲۰۲۹۰۳
+              </a>
+              <Link
+                href="/"
+                className="flex items-center gap-3 hover:opacity-90 transition"
+              >
+                🌐 ragbuilder.aia-ai.com
+              </Link>
+            </p>
+          </div>
         </Card>
       </main>
     </div>

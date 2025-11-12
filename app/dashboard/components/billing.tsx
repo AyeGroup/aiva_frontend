@@ -56,8 +56,8 @@ export function Billing() {
   const { bots } = useBot();
   const { user, loading } = useAuth();
   const router = useRouter();
-  const maxDays = 30;
-  const maxCredit = 5;
+  const maxDays = 31;
+  const maxCredit = 85;
   const [showDiscountHint, setShowDiscountHint] = useState(true);
   const [transactionFilter, setTransactionFilter] = useState<
     "all" | "plan" | "wallet"
@@ -67,15 +67,13 @@ export function Billing() {
   >("all");
   const [dateFrom, setDateFrom] = useState<string>("");
   const [dateTo, setDateTo] = useState<string>("");
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isAllTransactionsModalOpen, setIsAllTransactionsModalOpen] =
-    useState(false);
+ 
   const [isCreditIncreaseModalOpen, setIsCreditIncreaseModalOpen] =
     useState(false);
-  const [selectedChatbotId, setSelectedChatbotId] = useState<string>("");
+  const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
   const [activeSubscrp, setActiveSubscrp] = useState<any[]>([]);
-  const [selectedChatbotName, setSelectedChatbotName] = useState<string>("");
-  const [messageCount, setMessageCount] = useState<string>("1000");
+  // const [selectedChatbotName, setSelectedChatbotName] = useState<string>("");
+  // const [messageCount, setMessageCount] = useState<string>("1000");
   const [isLoading, setIsLoading] = useState(true);
   const [expiringPlan, setExpiringPlan] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
@@ -345,10 +343,8 @@ export function Billing() {
 
   // پاکسازی فیلترها
 
-  const handleUpgrade = (chatbotId: string, chatbotName: string) => {
-    setSelectedChatbotId(chatbotId);
-    setSelectedChatbotName(chatbotName);
-    setMessageCount("1000");
+  const handleUpgrade = (chatbot: any ) => {
+    setSelectedChatbot(chatbot);
     setIsCreditIncreaseModalOpen(true);
   };
 
@@ -369,59 +365,9 @@ export function Billing() {
     }
   };
 
-  const handleCreditIncrease = () => {
-    const count = parseInt(messageCount) || 0;
-    if (count < 100) {
-      toast.error("حداقل تعداد پیام باید 100 عدد باشد");
-      return;
-    }
+ 
 
-    const { pricePerMessage } = calculateMessagePrice(count);
-    const basePrice = count * pricePerMessage;
-    const tax = Math.round(basePrice * 0.09);
-    const totalPrice = basePrice + tax;
-
-    // اینجا می‌توانیم به صفحه checkout بریم یا درگاه پرداخت
-    toast.success(`در حال انتقال به درگاه پرداخت...`);
-
-    // شبیه‌سازی انتقال به checkout
-    setTimeout(() => {
-      setIsCreditIncreaseModalOpen(false);
-      // onNavigate('checkout'); // اگر صفحه checkout داریم
-      toast.info("در محیط واقعی به درگاه پرداخت منتقل می‌شوید");
-    }, 1500);
-  };
-
-  const handleAddCredit = (chatbotId: string, chatbotName: string) => {
-    toast.info(`در حال انتقال به صفحه افزایش اعتبار برای ${chatbotName}...`);
-    // می‌توان به صفحه خرید اعتبار هدایت شود
-  };
-
-  const getStatusBadge = (status: Transaction["status"]) => {
-    const styles = {
-      success: "bg-green-50 text-green-700 border-green-200",
-      failed: "bg-red-50 text-red-700 border-red-200",
-      pending: "bg-yellow-50 text-yellow-700 border-yellow-200",
-    };
-
-    const labels = {
-      success: "موفق",
-      failed: "ناموفق",
-      pending: "در انتظار",
-    };
-
-    return (
-      <span
-        className={`px-3 py-1 rounded-full text-sm border ${styles[status]}`}
-      >
-        {labels[status]}
-      </span>
-    );
-  };
-
-  const calculatePercentage = (used: number, total: number): number => {
-    return Math.round((used / total) * 100);
-  };
+ 
 
   const getProgressColor = (percentage: number): string => {
     if (percentage >= 90) return "#FF6B6B";
@@ -429,26 +375,24 @@ export function Billing() {
     return "#65bcb6";
   };
 
-  // پیدا کردن پلنی که رو به اتمام است (کمتر از 10 روز)
 
   // محاسبه آمار کلی
-  const totalChatbots = activeSubscrp.length;
-  const totalCredit = activeSubscrp.reduce(
-    (sum, plan) => sum + (plan.totalCredit - plan.usedCredit),
-    0
-  );
-  const totalFileChars = activeSubscrp.reduce(
-    (sum, plan) => sum + (plan.totalFileChars - plan.usedFileChars),
-    0
-  );
-  const totalUsedCredit = activeSubscrp.reduce(
-    (sum, plan) => sum + plan.usedCredit,
-    0
-  );
+  // const totalChatbots = activeSubscrp.length;
+  // const totalCredit = activeSubscrp.reduce(
+  //   (sum, plan) => sum + (plan.totalCredit - plan.usedCredit),
+  //   0
+  // );
+  // const totalFileChars = activeSubscrp.reduce(
+  //   (sum, plan) => sum + (plan.totalFileChars - plan.usedFileChars),
+  //   0
+  // );
+  // const totalUsedCredit = activeSubscrp.reduce(
+  //   (sum, plan) => sum + plan.usedCredit,
+  //   0
+  // );
 
   return (
     <div className="min-h-screen flex bg-grey-50" dir="rtl">
-      {/* <Sidebar onNavigate={onNavigate} currentPage="billing" /> */}
 
       <main className="flex-1 p-8" role="main">
         <header className="mb-8">
@@ -517,9 +461,10 @@ export function Billing() {
                   </button>
                 </div>
 
-                {expiringPlan.map((plan: any) => (
+                {expiringPlan.map((plan: any, index: number) => (
                   <div
-                    key={plan.id}
+                    key={index}
+                    // key={plan.id}
                     className="flex justify-between items-center text-grey-700 mx-4 my-2 text-right"
                   >
                     <div className="my-4">
@@ -542,14 +487,29 @@ export function Billing() {
                       )}
                     </div>
 
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      title="تمدید"
-                      onClick={() => handleUpgrade(plan.id, plan.chatbot_name)}
-                    >
-                      تمدید پلن
-                    </Button>
+                    {plan.daysRemaining <= maxDays ? (
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        title="تمدید"
+                        onClick={() =>
+                          handleUpgrade(plan )
+                        }
+                      >
+                        تمدید پلن
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        title="افزایش اعتبار"
+                        onClick={
+                          () => handleUpgrade(plan)
+                        }
+                      >
+                        افزایش اعتبار
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -763,7 +723,7 @@ export function Billing() {
                             <div className="flex items-center justify-center">
                               <button
                                 onClick={() =>
-                                  handleUpgrade(plan.id, plan.chatbotName)
+                                  handleUpgrade(plan )
                                 }
                                 className="px-4 py-2 rounded-lg billing-upgrade-btn"
                                 style={{
@@ -837,9 +797,9 @@ export function Billing() {
       <CreditIncreaseModal
         isOpen={isCreditIncreaseModalOpen}
         onClose={() => setIsCreditIncreaseModalOpen(false)}
-        selectedChatbotName={selectedChatbotName}
-        calculateMessagePrice={calculateMessagePrice}
-        handleCreditIncrease={handleCreditIncrease}
+        selectedChatbot={selectedChatbot}
+        // calculateMessagePrice={calculateMessagePrice}
+        // handleCreditIncrease={handleCreditIncrease}
       />
     </div>
   );

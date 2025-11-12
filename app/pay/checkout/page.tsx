@@ -16,7 +16,6 @@ import {
   getPlanIdByCode,
   PLAN_COLORS,
   SUBSCRIPTION_TYPES,
-  TRANSACTION_TYPE,
 } from "@/constants/plans";
 
 export default function Checkout() {
