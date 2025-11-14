@@ -1,35 +1,9 @@
 import svgPaths from "../svg/svg-9phy88g1qu";
 
-function ClipPathGroup() {
-  return (
-    <div className="absolute inset-[47.51%_36.17%_51.9%_63.37%]" data-name="Clip path group">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 4 4">
-        <g id="Clip path group">
-          <mask height="4" id="mask0_0_6810" maskUnits="userSpaceOnUse" style={{ maskType: "luminance" }} width="4" x="0" y="0">
-            <g id="SVGID_00000164505457362235244360000010094883853838411914_">
-              <path d={svgPaths.p98500c0} fill="var(--fill-0, white)" id="Vector" />
-            </g>
-          </mask>
-          <g mask="url(#mask0_0_6810)">
-            <path d={svgPaths.p1808de00} fill="var(--fill-0, #D4FCFF)" id="Vector_2" />
-          </g>
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Group() {
-  return (
-    <div className="absolute contents inset-[47.51%_36.17%_51.9%_63.37%]" data-name="Group">
-      <ClipPathGroup />
-    </div>
-  );
-}
-
+ 
 export default function PhoneAndCustomer1() {
   return (
-    <div className="relative size-full" data-name="phone-and-customer 1">
+    <div className="relative size-full" >
       <div className="absolute inset-[14.93%_35.97%_78.46%_57.52%]" data-name="Vector">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48 38">
           <path d={svgPaths.p14b58e80} fill="var(--fill-0, #3F9896)" id="Vector" />
@@ -697,7 +671,22 @@ export default function PhoneAndCustomer1() {
           <path d={svgPaths.p2627fa00} fill="var(--fill-0, #F07162)" id="Vector" />
         </svg>
       </div>
-      <Group />
+      <div className="absolute contents inset-[47.51%_36.17%_51.9%_63.37%]" data-name="Group">
+       <div className="absolute inset-[47.51%_36.17%_51.9%_63.37%]" data-name="Clip path group">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 4 4">
+        <g id="Clip path group">
+          <mask height="4" id="mask0_0_6810" maskUnits="userSpaceOnUse" style={{ maskType: "luminance" }} width="4" x="0" y="0">
+            <g id="SVGID_00000164505457362235244360000010094883853838411914_">
+              <path d={svgPaths.p98500c0} fill="var(--fill-0, white)" id="Vector" />
+            </g>
+          </mask>
+          <g mask="url(#mask0_0_6810)">
+            <path d={svgPaths.p1808de00} fill="var(--fill-0, #D4FCFF)" id="Vector_2" />
+          </g>
+        </g>
+      </svg>
+    </div>
+    </div>
       <div className="absolute inset-[38.35%_10.83%_52.16%_77.56%]" data-name="Vector">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 85 54">
           <path d={svgPaths.p116ab100} fill="var(--fill-0, white)" id="Vector" />

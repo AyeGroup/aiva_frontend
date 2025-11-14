@@ -1,7 +1,6 @@
 "use client";
 import Header from "./components/Header";
 import Section1 from "./components/Section1";
-import Section2WithAnimation from "./components/Section2WithAnimation";
 import Section3WithAnimation from "./components/Section3WithAnimation";
 import Section4WithAnimation from "./components/Section4WithAnimation";
 import Section5WithAnimation from "./components/Section5WithAnimation";
@@ -12,6 +11,7 @@ import Section9WithAnimation from "./components/Section9WithAnimation";
 import Section10WithAnimation from "./components/Section10WithAnimation";
 import Section11WithAnimation from "./components/Section11WithAnimation";
 import Section12WithAnimation from "./components/Section12WithAnimation";
+import Section2 from "./components/Section2";
 
 export default function App() {
   return (
@@ -19,8 +19,9 @@ export default function App() {
     {/* <main className="landing-page min-h-screen bg-white"> */}
       <Header />
 
+      <Section2 />
       <Section1 />
-      {/* <Section2WithAnimation />
+      {/* 
       <Section3WithAnimation />
       <Section4WithAnimation />
       <Section5WithAnimation />
