@@ -17,8 +17,8 @@ import Image from "next/image";
 export default function Verification() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
-  const phoneNumber = searchParams.get("phone") || "";
+  const email = searchParams?.get("email") || "";
+  const phoneNumber = searchParams?.get("phone") || "";
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpTime = Number(process.env.PHONE_OTP_TTL_SECONDS) || 60;
   const [error, setError] = useState("");

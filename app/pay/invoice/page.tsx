@@ -49,7 +49,7 @@ export default function Invoice() {
   };
 
   useEffect(() => {
-    const status = searchParams.get("status");
+    const status = searchParams?.get("status");
 
     // 🟢 بررسی وضعیت پرداخت
     if (!status) {
@@ -98,7 +98,7 @@ export default function Invoice() {
   }
 
   // اگر وضعیت پرداخت موفق نیست، فاکتور نمایش داده نمی‌شود
-  const status = searchParams.get("status");
+  const status = searchParams?.get("status");
   if (status !== "success" || !invoiceData) {
     return null;
   }
@@ -143,7 +143,7 @@ export default function Invoice() {
   };
   const handlePrint = () => window.print();
 
-  const trackingCode = searchParams.get("tracking");
+  const trackingCode = searchParams?.get("tracking");
 
   return (
     <div className="min-h-screen bg-grey-50 py-12 px-4" dir="rtl">

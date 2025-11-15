@@ -26,7 +26,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function OnboardingWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = searchParams?.get("id");
   const { refreshBots, setCurrentBot } = useBot();
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
