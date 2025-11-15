@@ -511,7 +511,7 @@ const fetchAllStatistics = async () => {
                   }}
                 >
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-4 gap-4">
-                    {activeUsers.map((user, index) => {
+                    {activeUsers.slice(0,3).map((user, index) => {
                       const color = colors[index % colors.length]; // انتخاب رنگ به ترتیب
                       return (
                         <div

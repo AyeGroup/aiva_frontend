@@ -25,6 +25,9 @@ import { useBot } from "@/providers/BotProvider";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import { ChatbotSelector } from "./chatbot-selector";
+import { ChatbotList } from "./chatbot-list";
+import { BotConfig } from "@/types/common";
 
 export const Transactions: React.FC = () => {
   const { user, loading } = useAuth();
@@ -47,6 +50,7 @@ export const Transactions: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [isLoading, setIsLoading] = useState(true);
+  const [filterBot, setFilterBot] = useState<BotConfig | null>(null);
 
   useEffect(() => {
     if (!user?.token) return;
@@ -109,10 +113,13 @@ export const Transactions: React.FC = () => {
      const to = new Date(dateTo);
      data = data.filter((t) => new Date(t.created_at) <= to);
    }
+   if (filterBot) {
+     data = data.filter((t) => t.chatbot_uuid === filterBot.uuid);
+   }
 
    setFilteredTransactions(data);
    setCurrentPage(1);
- }, [transactionTypeFilter, dateFrom, dateTo, transactions]);
+ }, [transactionTypeFilter, dateFrom, dateTo, filterBot, transactions]);
 
   // const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   // const paginatedTransactions = filteredTransactions.slice(
@@ -192,7 +199,13 @@ const paginatedTransactions = filteredTransactions.slice(
             />
             <span>کیف پول</span>
           </button>
-
+          <div>
+            {/* <ChatbotList onSelect={(bot) => setFilterBot(bot)} /> */}
+            <ChatbotList
+              selectedBot={filterBot}
+              onSelect={(bot) => setFilterBot(bot)}
+            />
+          </div>
           {/* Filter Dropdown Button */}
           <div className="relative mr-auto">
             <button
