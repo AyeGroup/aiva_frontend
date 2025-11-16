@@ -1,11 +1,347 @@
 import { motion } from "motion/react";
 import svgPaths from "@app/landing/svg/svg-sayy2jojyo";
 import svgPaths7 from "@app/landing/svg/svg-kwkm5bjjwl";
+import svgPaths3 from "@app/landing/svg/svg-2dmtneq5en";
+
+export function Sec3_Icon() {
+  return (
+    <div
+      className="absolute left-[1063.7px] size-16 top-[226.71px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 64 64"
+      >
+        <g id="Icon" opacity="0.25">
+          <path
+            d={svgPaths3.paab5900}
+            id="Vector"
+            stroke="var(--stroke-0, #52D4A0)"
+            strokeWidth="5.33333"
+          />
+          <path
+            d={svgPaths3.p23cebf00}
+            id="Vector_2"
+            stroke="var(--stroke-0, #52D4A0)"
+            strokeWidth="5.33333"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon1() {
+  return (
+    <div
+      className="absolute left-[100.23px] size-14 top-[737.52px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 56 56"
+      >
+        <g id="Icon" opacity="0.25">
+          <path
+            d={svgPaths3.p7152400}
+            fill="var(--fill-0, #FFA18E)"
+            id="Vector"
+            opacity="0.524085"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon2() {
+  return (
+    <div
+      className="absolute left-[187.94px] size-12 top-[510.11px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 48 48"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d="M10 24H38"
+            id="Vector"
+            stroke="var(--stroke-0, #4460F7)"
+            strokeWidth="4"
+          />
+          <path
+            d="M24 10L38 24L24 38"
+            id="Vector_2"
+            stroke="var(--stroke-0, #4460F7)"
+            strokeWidth="4"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon3() {
+  return (
+    <div
+      className="absolute left-[1062.64px] size-10 top-[866.88px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 40 40"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPaths3.p19a01780}
+            id="Vector"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="3.33333"
+          />
+          <path
+            d={svgPaths3.p24376300}
+            id="Vector_2"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="3.33333"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon4() {
+  return (
+    <div className="relative shrink-0 size-7" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths3.p1668d400}
+            id="Vector"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+          <path
+            d={svgPaths3.p18e93240}
+            id="Vector_2"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+          <path
+            d={svgPaths3.p1987b500}
+            id="Vector_3"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+          <path
+            d={svgPaths3.p86b7780}
+            id="Vector_4"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon5() {
+  return (
+    <div className="relative shrink-0 size-[29.4px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 30 30"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths3.p18226e00}
+            id="Vector"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.45"
+          />
+          <path
+            d={svgPaths3.p3b126880}
+            id="Vector_2"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.45"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon6() {
+  return (
+    <div className="relative shrink-0 size-7" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d="M14 3.5V17.5"
+            id="Vector"
+            stroke="var(--stroke-0, #52D4A0)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+          <path
+            d={svgPaths3.p1264cb00}
+            id="Vector_2"
+            stroke="var(--stroke-0, #52D4A0)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+          <path
+            d={svgPaths3.p1e686c20}
+            id="Vector_3"
+            stroke="var(--stroke-0, #52D4A0)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon7() {
+  return (
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths3.p3de7e600}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.75"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon8() {
+  return (
+    <div className="relative shrink-0 size-7" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths3.p184ba090}
+            id="Vector"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+          <path
+            d={svgPaths3.p5d36b00}
+            id="Vector_2"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+          <path
+            d="M22.1667 9.33333V16.3333"
+            id="Vector_3"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+          <path
+            d="M25.6667 12.8333H18.6667"
+            id="Vector_4"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.33333"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec3_Icon9() {
+  return (
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths3.p3de7e600}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.75"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
 
 export function Icon0() {
   return (
     <motion.div
-      className="absolute left-[114.48px] size-[64px] top-[273.4px]"
+      className="absolute left-0 size-14 top-0"
+      // className="absolute left-[114.48px] size-16 top-[273.4px]"
       data-name="Icon"
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 0.25, rotate: 360 }}
@@ -45,7 +381,7 @@ export function Icon0() {
 export function Icon1() {
   return (
     <motion.div
-      className="absolute left-[1231.91px] size-[56px] top-[1083.17px]"
+      // className="size-16"
       data-name="Icon"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 0.3, scale: [0.8, 1.2, 0.8] }}
@@ -79,7 +415,8 @@ export function Icon1() {
 export function Icon2() {
   return (
     <motion.div
-      className="absolute left-[71.55px] size-[256px] top-[80px]"
+      className="  size-64  "
+      // className="absolute left-[71.55px] size-[256px] top-[80px]"
       data-name="Icon"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 0.15, y: [0, -20, 0] }}
@@ -115,7 +452,8 @@ export function Icon2() {
 export function Icon3() {
   return (
     <div
-      className="absolute left-[1047px] size-[384px] top-[1134.89px]"
+      className="  size-64  "
+      // className="absolute left-[1047px] size-[384px] top-[1134.89px]"
       data-name="Icon"
     >
       <svg
@@ -140,7 +478,8 @@ export function Icon3() {
 export function Icon4() {
   return (
     <motion.div
-      className="absolute left-[1168.35px] size-[48px] top-[455.66px]"
+      className="  size-64  "
+      // className="absolute left-[1168.35px] size-[48px] top-[455.66px]"
       data-name="Icon"
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 0.3, rotate: [0, 180, 360] }}
@@ -167,7 +506,8 @@ export function Icon4() {
 export function Icon5() {
   return (
     <motion.div
-      className="absolute left-[286.19px] size-[40px] top-[1099.17px]"
+      className="  size-64  "
+      // className="absolute left-[286.19px] size-[40px] top-[1099.17px]"
       data-name="Icon"
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 0.3, rotate: [0, -180, -360] }}
@@ -194,7 +534,8 @@ export function Icon5() {
 export function Icon6() {
   return (
     <motion.div
-      className="absolute h-[1518.89px] left-0 top-0 w-[1431px]"
+      className="  size-64  "
+      // className="absolute h-[1518.89px] left-0 top-0 w-[1431px]"
       data-name="Icon"
       initial={{ opacity: 0 }}
       animate={{ opacity: 0.25 }}
@@ -283,10 +624,7 @@ export function Icon12() {
 
 export function Icon26() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -318,10 +656,7 @@ export function Icon26() {
 
 export function Icon28() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -377,10 +712,7 @@ export function Icon28() {
 
 export function Icon30() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -428,10 +760,7 @@ export function Icon30() {
 
 export function Icon32() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -463,10 +792,7 @@ export function Icon32() {
 
 export function Icon34() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -498,10 +824,7 @@ export function Icon34() {
 
 export function Icon36() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -525,10 +848,7 @@ export function Icon36() {
 
 export function Icon14() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -576,10 +896,7 @@ export function Icon14() {
 
 export function Icon16() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -619,10 +936,7 @@ export function Icon16() {
 
 export function Icon18() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -670,10 +984,7 @@ export function Icon18() {
 
 export function Icon20() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -729,10 +1040,7 @@ export function Icon20() {
 
 export function Icon22() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -764,10 +1072,7 @@ export function Icon22() {
 
 export function Icon24() {
   return (
-    <div
-      className="absolute left-[14px] size-[28px] top-[14px]"
-      data-name="Icon"
-    >
+    <div className="size-7">
       <svg
         className="block size-full"
         fill="none"
@@ -994,16 +1299,16 @@ export const Bazaryabi = () => {
       <path
         d="M18.6667 8.16699H25.6667V15.167"
         stroke="#52D4A0"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M25.6666 8.16699L15.75 18.0837L9.91665 12.2503L2.33331 19.8337"
         stroke="#52D4A0"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -1021,9 +1326,9 @@ export const Poshtibani = () => {
       <path
         d="M3.5 16.3333H7C7.61884 16.3333 8.21233 16.5792 8.64992 17.0168C9.0875 17.4543 9.33333 18.0478 9.33333 18.6667V22.1667C9.33333 22.7855 9.0875 23.379 8.64992 23.8166C8.21233 24.2542 7.61884 24.5 7 24.5H5.83333C5.21449 24.5 4.621 24.2542 4.18342 23.8166C3.74583 23.379 3.5 22.7855 3.5 22.1667V14C3.5 11.2152 4.60625 8.54451 6.57538 6.57538C8.54451 4.60625 11.2152 3.5 14 3.5C16.7848 3.5 19.4555 4.60625 21.4246 6.57538C23.3938 8.54451 24.5 11.2152 24.5 14V22.1667C24.5 22.7855 24.2542 23.379 23.8166 23.8166C23.379 24.2542 22.7855 24.5 22.1667 24.5H21C20.3812 24.5 19.7877 24.2542 19.3501 23.8166C18.9125 23.379 18.6667 22.7855 18.6667 22.1667V18.6667C18.6667 18.0478 18.9125 17.4543 19.3501 17.0168C19.7877 16.5792 20.3812 16.3333 21 16.3333H24.5"
         stroke="#65BCB6"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -1041,9 +1346,9 @@ export const Khadamat = () => {
       <path
         d="M3.5 16.3333H7C7.61884 16.3333 8.21233 16.5792 8.64992 17.0168C9.0875 17.4543 9.33333 18.0478 9.33333 18.6667V22.1667C9.33333 22.7855 9.0875 23.379 8.64992 23.8166C8.21233 24.2542 7.61884 24.5 7 24.5H5.83333C5.21449 24.5 4.621 24.2542 4.18342 23.8166C3.74583 23.379 3.5 22.7855 3.5 22.1667V14C3.5 11.2152 4.60625 8.54451 6.57538 6.57538C8.54451 4.60625 11.2152 3.5 14 3.5C16.7848 3.5 19.4555 4.60625 21.4246 6.57538C23.3938 8.54451 24.5 11.2152 24.5 14V22.1667C24.5 22.7855 24.2542 23.379 23.8166 23.8166C23.379 24.2542 22.7855 24.5 22.1667 24.5H21C20.3812 24.5 19.7877 24.2542 19.3501 23.8166C18.9125 23.379 18.6667 22.7855 18.6667 22.1667V18.6667C18.6667 18.0478 18.9125 17.4543 19.3501 17.0168C19.7877 16.5792 20.3812 16.3333 21 16.3333H24.5"
         stroke="#65BCB6"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -1061,30 +1366,30 @@ export const Amoozesh = () => {
       <path
         d="M12.8333 25.3519C13.188 25.5567 13.5904 25.6645 14 25.6645C14.4096 25.6645 14.812 25.5567 15.1667 25.3519L23.3333 20.6852C23.6877 20.4806 23.982 20.1864 24.1868 19.8322C24.3916 19.4779 24.4996 19.0761 24.5 18.6669V9.33354C24.4996 8.92436 24.3916 8.52249 24.1868 8.16823C23.982 7.81398 23.6877 7.5198 23.3333 7.31521L15.1667 2.64854C14.812 2.44375 14.4096 2.33594 14 2.33594C13.5904 2.33594 13.188 2.44375 12.8333 2.64854L4.66667 7.31521C4.31231 7.5198 4.01798 7.81398 3.81321 8.16823C3.60843 8.52249 3.50042 8.92436 3.5 9.33354V18.6669C3.50042 19.0761 3.60843 19.4779 3.81321 19.8322C4.01798 20.1864 4.31231 20.4806 4.66667 20.6852L12.8333 25.3519Z"
         stroke="#EA580C"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M14 25.6667V14"
         stroke="#EA580C"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M3.83835 8.16699L14 14.0003L24.1617 8.16699"
         stroke="#EA580C"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M8.75 4.98145L19.25 10.9898"
         stroke="#EA580C"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -1102,30 +1407,30 @@ export const Sazmani = () => {
       <path
         d="M18.6666 24.5V22.1667C18.6666 20.929 18.175 19.742 17.2998 18.8668C16.4246 17.9917 15.2377 17.5 14 17.5H6.99998C5.7623 17.5 4.57532 17.9917 3.70015 18.8668C2.82498 19.742 2.33331 20.929 2.33331 22.1667V24.5"
         stroke="#6366F1"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M18.6667 3.64941C19.6674 3.90885 20.5536 4.49322 21.1863 5.31082C21.819 6.12842 22.1623 7.13295 22.1623 8.16675C22.1623 9.20054 21.819 10.2051 21.1863 11.0227C20.5536 11.8403 19.6674 12.4246 18.6667 12.6841"
         stroke="#6366F1"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M25.6667 24.4997V22.1664C25.6659 21.1324 25.3218 20.1279 24.6883 19.3107C24.0548 18.4935 23.1678 17.9099 22.1667 17.6514"
         stroke="#6366F1"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M10.5 12.8333C13.0773 12.8333 15.1666 10.744 15.1666 8.16667C15.1666 5.58934 13.0773 3.5 10.5 3.5C7.92265 3.5 5.83331 5.58934 5.83331 8.16667C5.83331 10.744 7.92265 12.8333 10.5 12.8333Z"
         stroke="#6366F1"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -1143,30 +1448,30 @@ export const Moshavere = () => {
       <path
         d="M12.8333 25.3519C13.188 25.5567 13.5904 25.6645 14 25.6645C14.4096 25.6645 14.812 25.5567 15.1667 25.3519L23.3333 20.6852C23.6877 20.4806 23.982 20.1864 24.1868 19.8322C24.3916 19.4779 24.4996 19.0761 24.5 18.6669V9.33354C24.4996 8.92436 24.3916 8.52249 24.1868 8.16823C23.982 7.81398 23.6877 7.5198 23.3333 7.31521L15.1667 2.64854C14.812 2.44375 14.4096 2.33594 14 2.33594C13.5904 2.33594 13.188 2.44375 12.8333 2.64854L4.66667 7.31521C4.31231 7.5198 4.01798 7.81398 3.81321 8.16823C3.60843 8.52249 3.50042 8.92436 3.5 9.33354V18.6669C3.50042 19.0761 3.60843 19.4779 3.81321 19.8322C4.01798 20.1864 4.31231 20.4806 4.66667 20.6852L12.8333 25.3519Z"
         stroke="#EA580C"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M14 25.6667V14"
         stroke="#EA580C"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M3.83835 8.16699L14 14.0003L24.1617 8.16699"
         stroke="#EA580C"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M8.75 4.98145L19.25 10.9898"
         stroke="#EA580C"
-        stroke-width="2.33333"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.33333"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -1174,10 +1479,7 @@ export const Moshavere = () => {
 
 export function Sec7_Icon() {
   return (
-    <div
-      className="absolute left-[71.55px] size-[320px] top-[71.19px]"
-      data-name="Icon"
-    >
+    <div className="absolute left-0  top-20" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -1408,10 +1710,29 @@ export function Sec7_Icon6() {
 export function Sec7_Icon7() {
   return (
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
         <g id="Icon">
-          <path d={svgPaths7.p33f6b680} id="Vector" stroke="var(--stroke-0, white)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d="M15.8333 10H4.16667" id="Vector_2" stroke="var(--stroke-0, white)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path
+            d={svgPaths7.p33f6b680}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.66667"
+          />
+          <path
+            d="M15.8333 10H4.16667"
+            id="Vector_2"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.66667"
+          />
         </g>
       </svg>
     </div>
@@ -1419,21 +1740,13 @@ export function Sec7_Icon7() {
 }
 export function Sec7_Icon8() {
   return (
-    <div
-      className="absolute left-[80.22px] size-[16px] top-[10px]"
-      data-name="Icon"
-    >
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 16 16"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
         <g clipPath="url(#clip0_0_5848)" id="Icon">
           <path
             d={svgPaths7.pca5b500}
             id="Vector"
-            stroke="var(--stroke-0, white)"
+            stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="1.33333"
@@ -1441,7 +1754,7 @@ export function Sec7_Icon8() {
           <path
             d="M13.3333 1.33333V4"
             id="Vector_2"
-            stroke="var(--stroke-0, white)"
+            stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="1.33333"
@@ -1449,7 +1762,7 @@ export function Sec7_Icon8() {
           <path
             d="M14.6667 2.66667H12"
             id="Vector_3"
-            stroke="var(--stroke-0, white)"
+            stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="1.33333"
@@ -1457,7 +1770,7 @@ export function Sec7_Icon8() {
           <path
             d={svgPaths7.p22966600}
             id="Vector_4"
-            stroke="var(--stroke-0, white)"
+            stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="1.33333"
@@ -1478,13 +1791,13 @@ export function Sec7_Icon8() {
 
 //   );
 // };
-// 
+//
 // export const   = () => {
 //   return (
 
 //   );
 // };
-// 
+//
 // export const   = () => {
 //   return (
 

@@ -217,36 +217,7 @@ function Article() {
   );
 }
 
-function Heading4() {
-  return (
-    <div className="h-[30px] relative shrink-0 w-full" data-name="Heading 3">
-      <p className="absolute  font-medium leading-[30px] left-[452.84px] text-[22px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" dir="auto">
-        تلفن روی انتظار
-      </p>
-    </div>
-  );
-}
-
-function Paragraph2() {
-  return (
-    <div className="h-[26px] relative shrink-0 w-full" data-name="Paragraph">
-      <p className="absolute  font-medium leading-[26px] left-[452.02px] text-[15.008px] text-gray-600 text-nowrap text-right top-[-1px] translate-x-[-100%] whitespace-pre" dir="auto">
-        مشتری ده دقیقه منتظر میمونه تا کسی جواب بده
-      </p>
-    </div>
-  );
-}
-
-function Container8() {
-  return (
-    <div className="basis-0 grow h-[64px] min-h-px min-w-px relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border content-stretch flex flex-col gap-[8px] h-[64px] items-start relative w-full">
-        <Heading4 />
-        <Paragraph2 />
-      </div>
-    </div>
-  );
-}
+ 
 
 function Icon4() {
   return (
@@ -259,41 +230,42 @@ function Icon4() {
     </div>
   );
 }
-
-function Container9() {
+ 
+ 
+function Article1() {
   return (
+    <div className="  bg-white relative rounded-[16px] shrink-0" data-name="Article">
+      <div aria-hidden="true" className="absolute border-2 border-[rgba(239,68,68,0.2)] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.05)]" />
+    <div className="absolute content-stretch flex gap-[20px] h-[64px] items-start left-[34px] top-[46px] w-[536px]" data-name="Container">
+      <div className="basis-0 grow h-[64px] min-h-px min-w-px relative shrink-0" data-name="Container">
+      <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border content-stretch flex flex-col gap-[8px] h-[64px] items-start relative w-full">
+        <div className="h-[30px] relative shrink-0 w-full" data-name="Heading 3">
+      <p className="absolute  font-medium leading-[30px] left-[452.84px] text-[22px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" dir="auto">
+        تلفن روی انتظار
+      </p>
+    </div>
+      <div className="h-[26px] relative shrink-0 w-full" data-name="Paragraph">
+      <p className="absolute  font-medium leading-[26px] left-[452.02px] text-[15.008px] text-gray-600 text-nowrap text-right top-[-1px] translate-x-[-100%] whitespace-pre" dir="auto">
+        مشتری ده دقیقه منتظر میمونه تا کسی جواب بده
+      </p>
+    </div>
+      </div>
+    </div>
     <div className="bg-[rgba(239,68,68,0.1)] relative rounded-[16px] shrink-0 size-[64px]" data-name="Container">
       <div aria-hidden="true" className="absolute border-2 border-[rgba(239,68,68,0.15)] border-solid inset-0 pointer-events-none rounded-[16px]" />
       <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border content-stretch flex items-center justify-center p-[2px] relative size-[64px]">
         <Icon4 />
       </div>
     </div>
-  );
-}
-
-function Container10() {
-  return (
-    <div className="absolute content-stretch flex gap-[20px] h-[64px] items-start left-[34px] top-[46px] w-[536px]" data-name="Container">
-      <Container8 />
-      <Container9 />
     </div>
-  );
-}
-
-function Text2() {
-  return (
-    <div className="basis-0 grow h-[18px] min-h-px min-w-px relative shrink-0" data-name="Text">
+      <div className="absolute bg-red-500 box-border content-stretch flex gap-[6px] h-[26px] items-center left-[503.11px] px-[12px] py-0 rounded-[1.67772e+07px] shadow-[0px_2px_8px_0px_rgba(239,68,68,0.2)] top-[-8px] w-[74.891px]" data-name="Container">
+      <div className="basis-0 grow h-[18px] min-h-px min-w-px relative shrink-0" data-name="Text">
       <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border h-[18px] relative w-full">
         <p className="absolute  font-semibold leading-[18px] left-0 text-[12px] text-nowrap text-white top-[-0.5px] whitespace-pre" dir="auto">
           مشکل
         </p>
       </div>
     </div>
-  );
-}
-
-function Icon5() {
-  return (
     <div className="relative shrink-0 size-[14px]" data-name="Icon">
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
@@ -302,43 +274,171 @@ function Icon5() {
         </g>
       </svg>
     </div>
-  );
-}
-
-function Container11() {
-  return (
-    <div className="absolute bg-red-500 box-border content-stretch flex gap-[6px] h-[26px] items-center left-[503.11px] px-[12px] py-0 rounded-[1.67772e+07px] shadow-[0px_2px_8px_0px_rgba(239,68,68,0.2)] top-[-8px] w-[74.891px]" data-name="Container">
-      <Text2 />
-      <Icon5 />
+    </div>
     </div>
   );
 }
 
-function Article1() {
+type ArticleProps = {
+  id: number;
+  title: string;
+  desc: string;
+  type: "problem" | "solution" | string;
+  Icon: React.ElementType;
+};
+
+function ArticleItem({ title, desc, Icon, type }: ArticleProps) {
+  const isProblem = type === "problem";
+
   return (
-    <div className="  bg-white relative rounded-[16px] shrink-0" data-name="Article">
-      <div aria-hidden="true" className="absolute border-2 border-[rgba(239,68,68,0.2)] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.05)]" />
-      <Container10 />
-      <Container11 />
-    </div>
+    <article className="relative bg-white rounded-2xl shadow-sm p-4 pr-6 flex flex-row-reverse items-center gap-4 min-h-[88px]">
+      {/* badge */}
+      {isProblem ? (
+        <div className="absolute right-3 -top-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md flex items-center gap-2">
+          <span>مشکل</span>
+          <svg className="w-3 h-3" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M10.5 3.5L3.5 10.5"
+              stroke="white"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
+            <path
+              d="M3.5 3.5L10.5 10.5"
+              stroke="white"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </div>
+      ) : null}
+
+      {/* متن */}
+      <div className="flex-1 flex flex-col gap-1">
+        <h3 className="text-right text-lg font-medium leading-6 text-gray-900">
+          {title}
+        </h3>
+        <p className="text-right text-sm text-gray-600 leading-5">{desc}</p>
+      </div>
+
+      {/* آیکون */}
+      <div className="w-16 h-16 flex items-center justify-center rounded-lg bg-[rgba(239,68,68,0.06)] shrink-0">
+        <Icon />
+      </div>
+    </article>
   );
 }
 
-function Container12() {
+ function ContainerMain() {
+  const problemData: ArticleProps[] = [
+    {
+      id: 1,
+      title: "تلفن روی انتظار",
+      desc: "مشتری ده دقیقه منتظر میمونه تا کسی جواب بده",
+      type: "problem",
+      Icon: Icon4,
+    },
+    {
+      id: 2,
+      title: "پاسخ متفاوت هر بار",
+      desc: "هر پشتیبان یه جور جواب میده٬ مشتری گیج میشه",
+      type: "problem",
+      Icon: Icon4,
+    },
+    {
+      id: 3,
+      title: "هزینه بالای پرسنل",
+      desc: "حقوق پشتیبان از ۳ تا ۲ میلیون تومان شروع میشه",
+      type: "problem",
+      Icon: Icon2,
+    },
+    {
+      id: 4,
+      title: "هزینه بالای بیمه و مالیات",
+      desc: "بیمه و مالیات نیروی انسانی هزینه‌های پنهان قابل‌توجهی ایجاد می‌کنه",
+      type: "problem",
+      Icon: Icon3,
+    },
+    {
+      id: 5,
+      title: "خستگی و استرس",
+      desc: "پشتیبان انسانی بعد از ساعت‌ها پاسخگویی خسته میشه",
+      type: "problem",
+      Icon: Icon4,
+    },
+  ];
+
+  const solutionData: ArticleProps[] = [
+    {
+      id: 1,
+      title: "پاسخ فوری",
+      desc: "چت‌بات در کمتر از ۳ ثانیه پاسخ میده",
+      type: "solution",
+      Icon: Icon6,
+    },
+    {
+      id: 2,
+      title: "پاسخ یکنواخت و دقیق",
+      desc: "همیشه همون اطلاعات صحیح، بدون تناقض",
+      type: "solution",
+      Icon: Icon6,
+    },
+    {
+      id: 3,
+      title: "هزینه ثابت و کم",
+      desc: "پلان‌های آیوا از چند هزار تومان شروع می‌شن",
+      type: "solution",
+      Icon: Icon7,
+    },
+    {
+      id: 4,
+      title: "بدون هزینه اضافی",
+      desc: "این هزینه‌ها با پلن‌های آیوا قابل مقایسه نیست",
+      type: "solution",
+      Icon: Icon8,
+    },
+    {
+      id: 5,
+      title: "همیشه آماده",
+      desc: "چت‌بات ۲۴/۷ با همون انرژی پاسخ می‌ده",
+      type: "solution",
+      Icon: Icon8,
+    },
+  ];
+
   return (
-    <motion.div 
-      className="gap-[24px] grid grid-cols-[repeat(2,_minmax(0px,_1fr))] grid-rows-[repeat(1,_minmax(0px,_1fr))] h-[144px] relative shrink-0 w-full" 
-      data-name="Container"
+    <motion.div
+      className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.5, delay: 0.1 }}
+      transition={{ duration: 0.45, delay: 0.08 }}
     >
-      <Article1 />
-      <Article />
+      {problemData.map((item) => (
+        <ArticleItem
+          key={`${item.type}-${item.id}`} // یکتا کردن کلید
+          id={item.id}
+          title={item.title}
+          desc={item.desc}
+          type={item.type}
+          Icon={item.Icon}
+        />
+      ))}
+
+      {solutionData.map((item) => (
+        <ArticleItem
+          key={`${item.type}-${item.id}`}
+          id={item.id}
+          title={item.title}
+          desc={item.desc}
+          type={item.type}
+          Icon={item.Icon}
+        />
+      ))}
     </motion.div>
   );
 }
+
 
 // Row 2: پاسخ یکنواخت و دقیق vs پاسخ متفاوت هر بار
 function Icon6() {
@@ -1275,11 +1375,7 @@ function Container48() {
 function Container49() {
   return (
     <div className="content-stretch flex flex-col gap-[32px] h-[848px] items-start relative shrink-0 w-full" data-name="Container">
-      <Container12 />
-      <Container21 />
-      <Container30 />
-      <Container39 />
-      <Container48 />
+      <ContainerMain />
     </div>
   );
 }

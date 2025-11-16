@@ -6,8 +6,6 @@ import {
   Bazaryabi,
   Icon0,
   Icon1,
-  Icon11,
-  Icon12,
   Icon14,
   Icon16,
   Icon18,
@@ -44,60 +42,35 @@ interface TabListProps {
 
 function Header() {
   return (
-    <div
-      className="content-stretch flex flex-col gap-6 items-center justify-center relative shrink-0 w-[1232px]"
-      data-name="Header"
-    >
+    <div className="content-stretch w-full flex flex-col gap-6 items-center justify-center relative">
       <motion.div
-        className="bg-white box-border content-stretch flex gap-2 items-center px-4 py-2 relative rounded-sm shrink-0"
-        data-name="Container"
+        className="bg-white flex gap-2 items-center justify-center px-4 py-2 rounded-sm  "
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="h-5 relative shrink-0 w-[77.555px]" data-name="Text">
-          <p
-            className="absolute  font-medium leading-5 left-[39px] text-[#65bcb6] text-[14px] text-center text-nowrap top-0 translate-x-[-50%] whitespace-pre"
-            dir="auto"
-          >
-            صنایع مختلف
-          </p>
-        </div>
-        <div
-          className="bg-[#65bcb6] content-stretch flex flex-col items-start relative rounded-sm shrink-0 size-2"
-          data-name="Container"
-        >
-          <div
-            className="bg-[#65bcb6] h-2 rounded-sm shrink-0 w-full"
-            data-name="Container"
-          />
-        </div>
+        <div className="bg-[#65bcb6] h-2 w-2 rounded-full" />
+        <div className=" font-medium text-[#65bcb6] text-sm">صنایع مختلف</div>
       </motion.div>
       <motion.div
-        className="h-[57.594px] relative shrink-0 w-[1232px]"
+        className="flex justify-center items-center text-center"
         data-name="Heading 2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
       >
-        <p
-          className="absolute  font-extrabold leading-[57.6px] left-[616.27px] text-12 text-center text-nowrap text-white -top-1 tracking-[-0.96px] translate-x-[-50%] whitespace-pre"
-          dir="auto"
-        >
+        <p className="font-extrabold text-4xl text-center  text-white  ">
           آیوا برای چه کسب‌وکارهایی مناسب است؟
         </p>
       </motion.div>
       <motion.div
-        className="content-stretch flex h-[28.797px] items-start relative shrink-0 w-2xl"
+        className="content-stretch flex   items-start relative shrink-0 "
         data-name="Paragraph"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
       >
-        <p
-          className="basis-0  font-normal grow leading-[28.8px] min-h-px min-w-px relative shrink-0 text-[18px] text-center text-gray-600"
-          dir="auto"
-        >
+        <p className=" font-normal   leading-[28.8px]    text-lg text-center text-gray-600">
           چت‌بات هوشمند برای صنایع مختلف با کاربردهای تخصصی
         </p>
       </motion.div>
@@ -106,15 +79,11 @@ function Header() {
 }
 function TabList({ activeTab, setActiveTab }: TabListProps) {
   return (
-    <div className="h-14 relative shrink-0 w-[1232px]" data-name="Tab List">
-      <motion.div
-        className="absolute bg-gray-100 box-border content-stretch flex gap-1 h-14 items-start left-[468.98px] pb-0 pt-1 px-1 rounded-xl top-0 w-[294.047px]"
-        data-name="Container"
-      >
-        {/* Tab 1 */}
+    <motion.div className="flex items-center w-full justify-center my-3">
+      <div className="w-fit flex p-1  bg-gray-100   rounded-xl">
         <div
           onClick={() => setActiveTab("usage")}
-          className={`h-12 relative rounded-xl shrink-0 w-[136.57px] cursor-pointer transition-all
+          className={`h-12 relative rounded-xl shrink-0   cursor-pointer transition-all
             ${activeTab === "usage" ? "bg-white shadow" : ""}`}
         >
           <div className="h-12 relative flex items-center px-6">
@@ -130,7 +99,7 @@ function TabList({ activeTab, setActiveTab }: TabListProps) {
         {/* Tab 2 */}
         <div
           onClick={() => setActiveTab("industry")}
-          className={`h-12 relative rounded-xl shrink-0 w-[136.57px] cursor-pointer grow transition-all
+          className={`h-12 relative rounded-xl shrink-0   cursor-pointer grow transition-all
             ${activeTab === "industry" ? "bg-white shadow" : ""}`}
         >
           <div className="h-12 relative flex items-center px-6">
@@ -144,8 +113,8 @@ function TabList({ activeTab, setActiveTab }: TabListProps) {
             </p>
           </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -164,21 +133,21 @@ function Article({
 }) {
   return (
     <motion.div
-      className="bg-white h-[203px] overflow-clip relative rounded-lg shrink-0 w-[293px]"
-      data-name="Article"
+      className="bg-white rounded-lg relative flex flex-col justify-between p-4 overflow-hidden"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
-      <div className="absolute left-[229px] size-16 top-0" data-name="Icon">
+      {/* Absolute SVG background icon */}
+      <div className="w-20 h-20 absolute top-0 -right-5 ">
         <svg
-          className="block size-full"
+          className="w-full h-full  "
           fill="none"
           preserveAspectRatio="none"
           viewBox="0 0 64 64"
         >
-          <g clipPath="url(#clip0_article)" id="Icon" opacity="0.05">
+          <g clipPath="url(#clip0_article)" id="Icon" opacity="0.5">
             <path
               d={svgPaths.p37ddc40}
               fill={`var(--fill-0, ${color})`}
@@ -187,41 +156,24 @@ function Article({
           </g>
           <defs>
             <clipPath id="clip0_article">
-              <rect fill="white" height="64" width="64" />
+              <rect fill="white" height="48" width="48" />
             </clipPath>
           </defs>
         </svg>
       </div>
-      <div
-        className="absolute left-[213px] rounded-lg size-14 top-6"
-        data-name="Container"
-      >
-        {icon}
-      </div>
-      <div
-        className="absolute content-stretch flex flex-col gap-2 items-start left-6 top-[100px] w-[245px]"
-        data-name="Container"
-      >
-        <div
-          className="h-[23.805px] relative shrink-0 w-full"
-          data-name="Heading 3"
-        >
-          <p
-            className="absolute  font-semibold leading-[23.811px] text-[17.008px] text-gray-900 text-nowrap text-right top-[0.5px] whitespace-pre"
-            dir="auto"
-            style={{ right: "0" }}
-          >
-            {title}
-          </p>
-        </div>
-        <div className="relative shrink-0 w-full" data-name="Paragraph">
-          <p
-            className=" font-medium leading-[23.8px] text-[14px] text-gray-600 text-right top-[-0.5px]"
-            dir="auto"
-          >
-            {description}
-          </p>
-        </div>
+
+      {/* Content */}
+      <div className="flex flex-col gap-2 items-start">
+        {/* Icon on the right */}
+
+        <div className="w-14 h-14 mt-4 mr-4">{icon}</div>
+
+        <p className="font-semibold text-lg text-gray-900 text-right wrap-break-word">
+          {title}
+        </p>
+        <p className="font-medium leading-[1.4rem] text-sm text-gray-600 text-right wrap-break-word">
+          {description}
+        </p>
       </div>
     </motion.div>
   );
@@ -288,10 +240,7 @@ function ContainerUsage() {
   ];
 
   return (
-    <div
-      className="absolute gap-5 grid grid-cols-[repeat(4,_minmax(0px,_1fr))] grid-rows-[repeat(3,_minmax(0px,_1fr))] h-[674px] left-0 overflow-clip top-[-0.39px] w-[1307px]"
-      data-name="Container"
-    >
+    <div className="grid grid-cols-4 gap-5 auto-rows-fr w-full">
       {usages.map((use, index) => (
         <Article
           key={index}
@@ -401,10 +350,7 @@ function ContainerIndustry() {
   ];
 
   return (
-    <div
-      className="absolute gap-5 grid grid-cols-4 grid-rows-3 h-[674px] left-0 overflow-clip top-[-0.39px] w-[1307px]"
-      data-name="Container"
-    >
+    <div className="gap-5 grid grid-cols-4 grid-rows-3 overflow-clip w-full">
       {industries.map((industry, index) => (
         <Article
           key={index}
@@ -421,31 +367,23 @@ function ContainerIndustry() {
 
 function TabPanel({ activeTab }: TabPanelProps) {
   return (
-    <div className="content-stretch flex flex-col gap-2.5 h-[673.992px] items-center justify-center relative shrink-0 w-full">
+    <div className=" flex flex-col gap-2.5 h-[673.992px] items-center justify-centerw-full">
       {activeTab === "industry" ? <ContainerIndustry /> : <ContainerUsage />}
     </div>
   );
 }
 
- 
-
 function ContainerFooter() {
   return (
-    <div
-      className="content-stretch flex flex-col gap-5 items-center relative shrink-0 w-full"
-      data-name="Container"
-    >
+    <div className=" flex flex-col gap-5 items-center mt-10  w-full">
       <motion.div
-        className="h-[22.508px] relative shrink-0 w-[1232px]"
+        className="h-[22.508px] relative shrink-0 "
         data-name="Paragraph"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 1.1 }}
       >
-        <p
-          className="absolute  font-normal leading-[22.512px] left-[616.61px] text-[15.008px] text-center text-gray-600 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre"
-          dir="auto"
-        >
+        <p className="font-normal leading-[22.512px]    text-center text-gray-600">
           صنعت شما در لیست نبود؟ آیوا برای هر کسب‌وکاری قابل تنظیم است.
         </p>
       </motion.div>
@@ -464,10 +402,7 @@ function ContainerFooter() {
           </div>
         </div>
         <div className="h-6 relative shrink-0 w-[85.578px]" data-name="Text">
-          <p
-            className="absolute  font-normal leading-6 left-0 text-4 text-nowrap text-white top-[-0.5px] whitespace-pre"
-            dir="auto"
-          >
+          <p className="absolute  font-normal leading-6 left-0 text-4 text-nowrap text-white top-[-0.5px] whitespace-pre">
             مشاوره رایگان
           </p>
         </div>
@@ -477,192 +412,273 @@ function ContainerFooter() {
   );
 }
 
+function ContainerBackground() {
+  return (
+    <div className="  relative shrink-0 ">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1431 1252"
+      >
+        <g id="Container">
+          <motion.g
+            id="Icon"
+            opacity="0.25"
+            animate={{
+              scale: [1, 1.05, 1],
+              rotate: [0, 5, 0],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <path
+              d={svgPaths.p296d4380}
+              fill="var(--fill-0, white)"
+              id="Vector"
+            />
+          </motion.g>
+          <motion.g
+            id="Icon_2"
+            opacity="0.5"
+            animate={{
+              rotate: [0, 360],
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          >
+            <path
+              d={svgPaths.p3a24a440}
+              id="Vector_2"
+              stroke="var(--stroke-0, #F9DB8D)"
+              strokeWidth="1.6"
+            />
+            <path
+              d={svgPaths.p1042a380}
+              id="Vector_3"
+              stroke="var(--stroke-0, #F9DB8D)"
+              strokeWidth="1.6"
+            />
+            <path
+              d={svgPaths.p1f645500}
+              id="Vector_4"
+              stroke="var(--stroke-0, #F9DB8D)"
+              strokeWidth="1.6"
+            />
+          </motion.g>
+          <motion.g
+            id="Icon_3"
+            opacity="0.36"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.36, 0.5, 0.36],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <path
+              d={svgPaths.p17d8bf00}
+              id="Vector_5"
+              stroke="var(--stroke-0, #F0E4E1)"
+              strokeWidth="1.92"
+            />
+          </motion.g>
+          <motion.g
+            clipPath="url(#clip0_0_6412)"
+            id="Icon_4"
+            opacity="0.25"
+            animate={{
+              x: [0, 10, 0],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <path
+              d="M214.648 1191.89H414.648"
+              id="Vector_6"
+              stroke="var(--stroke-0, #65BCB6)"
+              strokeDasharray="4 4"
+              strokeWidth="2"
+            />
+          </motion.g>
+          <motion.path
+            d={svgPaths.pbbf0d80}
+            fill="var(--fill-0, white)"
+            fillOpacity="0.5"
+            id="Vector_7"
+            animate={{
+              y: [0, -15, 0],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.path
+            d={svgPaths.p3641a020}
+            fill="var(--fill-0, white)"
+            fillOpacity="0.5"
+            id="Vector_8"
+            opacity="0.45"
+            animate={{
+              scale: [1, 1.08, 1],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.path
+            d="M1362 569L1054 703.798"
+            id="Vector_9"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeDasharray="4 4"
+            strokeOpacity="0.18"
+            strokeWidth="10"
+            animate={{
+              strokeDashoffset: [0, 20, 0],
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_0_6412">
+            <rect
+              fill="white"
+              height="8"
+              transform="translate(214.648 1190.89)"
+              width="192"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+function Container() {
+  return (
+    <div className="h-[1252px] w-full absolute z-10 top-0 left-0 overflow-clip">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1431 1252"
+      >
+        <g id="Container">
+          {/* Icon */}
+          <motion.g
+            id="Icon"
+            opacity="0.25"
+            animate={{ scale: [1, 1.05, 1], rotate: [0, 5, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <path d={svgPaths.p296d4380} fill="white" />
+          </motion.g>
+
+          {/* Icon_2 */}
+          <motion.g
+            id="Icon_2"
+            opacity="0.5"
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          >
+            <path d={svgPaths.p3a24a440} stroke="#F9DB8D" strokeWidth="1.6" />
+            <path d={svgPaths.p1042a380} stroke="#F9DB8D" strokeWidth="1.6" />
+            <path d={svgPaths.p1f645500} stroke="#F9DB8D" strokeWidth="1.6" />
+          </motion.g>
+
+          {/* Icon_3 */}
+          <motion.g
+            id="Icon_3"
+            opacity="0.36"
+            animate={{ scale: [1, 1.1, 1], opacity: [0.36, 0.5, 0.36] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <path d={svgPaths.p17d8bf00} stroke="#F0E4E1" strokeWidth="1.92" />
+          </motion.g>
+
+          {/* Icon_4 */}
+          <motion.g
+            id="Icon_4"
+            clipPath="url(#clip0)"
+            opacity="0.25"
+            animate={{ x: [0, 10, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <path
+              d="M214.648 1191.89H414.648"
+              stroke="#65BCB6"
+              strokeWidth="2"
+              strokeDasharray="4 4"
+            />
+          </motion.g>
+
+          {/* Floating shapes */}
+          <motion.path
+            d={svgPaths.pbbf0d80}
+            fill="white"
+            fillOpacity="0.5"
+            animate={{ y: [0, -15, 0] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <motion.path
+            d={svgPaths.p3641a020}
+            fill="white"
+            fillOpacity="0.5"
+            opacity="0.45"
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <motion.path
+            d="M1362 569L1054 703.798"
+            stroke="#65BCB6"
+            strokeWidth="10"
+            strokeDasharray="4 4"
+            strokeOpacity="0.18"
+            animate={{ strokeDashoffset: [0, 20, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          />
+        </g>
+
+        <defs>
+          <clipPath id="clip0">
+            <rect width="192" height="8" fill="white" x="214.648" y="1190.89" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+
 export default function Section4() {
   const [activeTab, setActiveTab] = useState<"industry" | "usage">("industry");
 
   return (
-    <div
-      className="bg-linear-to-b content-stretch flex flex-col from-[#ffffff] gap-2.5 items-center relative w-full h-[1288px] to-[#ffffff] via-50% via-[#f9fafb]"
-      data-name="Section"
-    >
-      <div
-        className="h-[1264px] overflow-clip relative shrink-0 w-[1431px]"
-        data-name="Container"
-      >
-        <Icon0 />
-        <Icon1 />
-        <Icon2 />
-        <Icon3 />
-        <Icon4 />
-        <Icon5 />
-        <Icon6 />
+    <div className=" w-full flex flex-col relative  bg-linear-to-b from-[#ffffff] gap-2.5 items-center to-[#ffffff] via-50% via-[#f9fafb]">
+      {/* Container روی همه چیز قرار می‌گیرد */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <Container />
       </div>
-      <div
-        className="absolute bg-gradient-to-b content-stretch flex flex-col from-[#65bcb6] gap-[10px] h-[1288px] items-start left-0 to-[#ecf5f4] top-[-0.37px]"
-        data-name="HowItWorks"
-      >
-        <div
-          className="h-[1252px] relative shrink-0 w-[1431px]"
-          data-name="Container"
-        >
-          <svg
-            className="block size-full"
-            fill="none"
-            preserveAspectRatio="none"
-            viewBox="0 0 1431 1252"
-          >
-            <g id="Container">
-              <motion.g
-                id="Icon"
-                opacity="0.25"
-                animate={{
-                  scale: [1, 1.05, 1],
-                  rotate: [0, 5, 0],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <path
-                  d={svgPaths.p296d4380}
-                  fill="var(--fill-0, white)"
-                  id="Vector"
-                />
-              </motion.g>
-              <motion.g
-                id="Icon_2"
-                opacity="0.5"
-                animate={{
-                  rotate: [0, 360],
-                }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-              >
-                <path
-                  d={svgPaths.p3a24a440}
-                  id="Vector_2"
-                  stroke="var(--stroke-0, #F9DB8D)"
-                  strokeWidth="1.6"
-                />
-                <path
-                  d={svgPaths.p1042a380}
-                  id="Vector_3"
-                  stroke="var(--stroke-0, #F9DB8D)"
-                  strokeWidth="1.6"
-                />
-                <path
-                  d={svgPaths.p1f645500}
-                  id="Vector_4"
-                  stroke="var(--stroke-0, #F9DB8D)"
-                  strokeWidth="1.6"
-                />
-              </motion.g>
-              <motion.g
-                id="Icon_3"
-                opacity="0.36"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  opacity: [0.36, 0.5, 0.36],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <path
-                  d={svgPaths.p17d8bf00}
-                  id="Vector_5"
-                  stroke="var(--stroke-0, #F0E4E1)"
-                  strokeWidth="1.92"
-                />
-              </motion.g>
-              <motion.g
-                clipPath="url(#clip0_0_6412)"
-                id="Icon_4"
-                opacity="0.25"
-                animate={{
-                  x: [0, 10, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <path
-                  d="M214.648 1191.89H414.648"
-                  id="Vector_6"
-                  stroke="var(--stroke-0, #65BCB6)"
-                  strokeDasharray="4 4"
-                  strokeWidth="2"
-                />
-              </motion.g>
-              <motion.path
-                d={svgPaths.pbbf0d80}
-                fill="var(--fill-0, white)"
-                fillOpacity="0.5"
-                id="Vector_7"
-                animate={{
-                  y: [0, -15, 0],
-                }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              <motion.path
-                d={svgPaths.p3641a020}
-                fill="var(--fill-0, white)"
-                fillOpacity="0.5"
-                id="Vector_8"
-                opacity="0.45"
-                animate={{
-                  scale: [1, 1.08, 1],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              <motion.path
-                d="M1362 569L1054 703.798"
-                id="Vector_9"
-                stroke="var(--stroke-0, #65BCB6)"
-                strokeDasharray="4 4"
-                strokeOpacity="0.18"
-                strokeWidth="10"
-                animate={{
-                  strokeDashoffset: [0, 20, 0],
-                }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              />
-            </g>
-            <defs>
-              <clipPath id="clip0_0_6412">
-                <rect
-                  fill="white"
-                  height="8"
-                  transform="translate(214.648 1190.89)"
-                  width="192"
-                />
-              </clipPath>
-            </defs>
-          </svg>
-        </div>
-        <div
-          className="absolute box-border content-stretch flex flex-col gap-[59px] items-center justify-center left-0 p-16 top-0 w-[1431px]"
-          data-name="Container"
-        >
-          <Header />
-          <TabList activeTab={activeTab} setActiveTab={setActiveTab} />
 
-          <TabPanel activeTab={activeTab} />
-          <ContainerFooter />
-        </div>
+      <div className="bg-linear-to-b w-full m-0 content-stretch flex flex-col from-[#65bcb6] gap-2.5 items-start to-[#ecf5f4] justify-center p-20 relative z-0">
+        {/* z-10 باعث می‌شود که محتوای اصلی بالاتر از Container باشد */}
+        <Header />
+        <TabList activeTab={activeTab} setActiveTab={setActiveTab} />
+        <TabPanel activeTab={activeTab} />
+        <ContainerFooter />
       </div>
     </div>
   );

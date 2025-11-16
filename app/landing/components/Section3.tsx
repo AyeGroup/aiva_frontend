@@ -1,416 +1,18 @@
 "use client";
-import svgPaths from "../svg/svg-2dmtneq5en";
-import { color, motion } from "motion/react";
+import Link from "next/link";
+import { motion } from "motion/react";
 import { cubicBezier } from "motion/react";
 import { useState, useEffect } from "react";
+import { Sec7_Icon, Sec7_Icon1, Sec7_Icon2, Sec7_Icon3, Sec7_Icon4, Sec7_Icon5, Sec7_Icon6, Sec7_Icon8 } from "@/public/icons/landing";
 
-function Icon() {
-  return (
-    <div
-      className="absolute left-[1063.7px] size-16 top-[226.71px]"
-      data-name="Icon"
-    >
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 64 64"
-      >
-        <g id="Icon" opacity="0.25">
-          <path
-            d={svgPaths.paab5900}
-            id="Vector"
-            stroke="var(--stroke-0, #52D4A0)"
-            strokeWidth="5.33333"
-          />
-          <path
-            d={svgPaths.p23cebf00}
-            id="Vector_2"
-            stroke="var(--stroke-0, #52D4A0)"
-            strokeWidth="5.33333"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
 
-function Icon1() {
-  return (
-    <div
-      className="absolute left-[100.23px] size-14 top-[737.52px]"
-      data-name="Icon"
-    >
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 56 56"
-      >
-        <g id="Icon" opacity="0.25">
-          <path
-            d={svgPaths.p7152400}
-            fill="var(--fill-0, #FFA18E)"
-            id="Vector"
-            opacity="0.524085"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Icon2() {
-  return (
-    <div
-      className="absolute left-[187.94px] size-12 top-[510.11px]"
-      data-name="Icon"
-    >
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 48 48"
-      >
-        <g id="Icon" opacity="0.3">
-          <path
-            d="M10 24H38"
-            id="Vector"
-            stroke="var(--stroke-0, #4460F7)"
-            strokeWidth="4"
-          />
-          <path
-            d="M24 10L38 24L24 38"
-            id="Vector_2"
-            stroke="var(--stroke-0, #4460F7)"
-            strokeWidth="4"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Icon3() {
-  return (
-    <div
-      className="absolute left-[1062.64px] size-10 top-[866.88px]"
-      data-name="Icon"
-    >
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 40 40"
-      >
-        <g id="Icon" opacity="0.3">
-          <path
-            d={svgPaths.p19a01780}
-            id="Vector"
-            stroke="var(--stroke-0, #65BCB6)"
-            strokeWidth="3.33333"
-          />
-          <path
-            d={svgPaths.p24376300}
-            id="Vector_2"
-            stroke="var(--stroke-0, #65BCB6)"
-            strokeWidth="3.33333"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Icon4() {
-  return (
-    <div className="relative shrink-0 size-7" data-name="Icon">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 28 28"
-      >
-        <g id="Icon">
-          <path
-            d={svgPaths.p1668d400}
-            id="Vector"
-            stroke="var(--stroke-0, #B07CC6)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-          <path
-            d={svgPaths.p18e93240}
-            id="Vector_2"
-            stroke="var(--stroke-0, #B07CC6)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-          <path
-            d={svgPaths.p1987b500}
-            id="Vector_3"
-            stroke="var(--stroke-0, #B07CC6)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-          <path
-            d={svgPaths.p86b7780}
-            id="Vector_4"
-            stroke="var(--stroke-0, #B07CC6)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Icon5() {
-  return (
-    <div className="relative shrink-0 size-[29.4px]" data-name="Icon">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 30 30"
-      >
-        <g id="Icon">
-          <path
-            d={svgPaths.p18226e00}
-            id="Vector"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.45"
-          />
-          <path
-            d={svgPaths.p3b126880}
-            id="Vector_2"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.45"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Icon6() {
-  return (
-    <div className="relative shrink-0 size-7" data-name="Icon">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 28 28"
-      >
-        <g id="Icon">
-          <path
-            d="M14 3.5V17.5"
-            id="Vector"
-            stroke="var(--stroke-0, #52D4A0)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-          <path
-            d={svgPaths.p1264cb00}
-            id="Vector_2"
-            stroke="var(--stroke-0, #52D4A0)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-          <path
-            d={svgPaths.p1e686c20}
-            id="Vector_3"
-            stroke="var(--stroke-0, #52D4A0)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Icon7() {
-  return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
-        <g id="Icon">
-          <path
-            d={svgPaths.p3de7e600}
-            id="Vector"
-            stroke="var(--stroke-0, white)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.75"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Icon8() {
-  return (
-    <div className="relative shrink-0 size-7" data-name="Icon">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 28 28"
-      >
-        <g id="Icon">
-          <path
-            d={svgPaths.p184ba090}
-            id="Vector"
-            stroke="var(--stroke-0, #65BCB6)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-          <path
-            d={svgPaths.p5d36b00}
-            id="Vector_2"
-            stroke="var(--stroke-0, #65BCB6)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-          <path
-            d="M22.1667 9.33333V16.3333"
-            id="Vector_3"
-            stroke="var(--stroke-0, #65BCB6)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-          <path
-            d="M25.6667 12.8333H18.6667"
-            id="Vector_4"
-            stroke="var(--stroke-0, #65BCB6)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.33333"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Icon9() {
-  return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
-      <svg
-        className="block size-full"
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
-        <g id="Icon">
-          <path
-            d={svgPaths.p3de7e600}
-            id="Vector"
-            stroke="var(--stroke-0, white)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.75"
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-///////////////////////////////////////////////////////////////////////////////
 function CardContainer() {
   return (
-    <div
-      className="h-[978px] overflow-clip relative shrink-0 w-full"
-      data-name="Container"
-    >
-      <Icon />
-      <Icon1 />
-      <Icon2 />
-      <Icon3 />
-    </div>
-  );
-}
-
-function Heading1() {
-  return (
-    <div
-      className="bg-[rgba(101,188,182,0.08)] h-[46px] relative rounded-[100px] shrink-0 w-[130.617px]"
-      data-name="Container"
-    >
-      <div
-        aria-hidden="true"
-        className="absolute border border-[rgba(101,188,182,0.15)] border-solid inset-0 pointer-events-none rounded-[100px]"
-      />
-      <div
-        className="absolute bg-[#65bcb6] left-[101.62px] rounded-sm size-2 top-5"
-        data-name="Text"
-      />
-      <div
-        className="absolute h-6 left-[21px] top-[11px] w-[72.617px]"
-        data-name="Text"
-      >
-        <p
-          className="absolute  font-semibold leading-6 left-9 text-[#65bcb6] text-center text-nowrap top-[-0.5px] tracking-[-0.16px] translate-x-[-50%] whitespace-pre"
-          dir="auto"
-        >
-          فرآیند ساده
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Heading2() {
-  return (
-    <div
-      className="h-[57.594px] relative shrink-0 w-full"
-      data-name="Heading 2"
-    >
-      <p
-        className="absolute 
-       font-extrabold leading-[57.6px] left-[616.04px] text-center text-gray-900 -top-px tracking-[-0.96px] translate-x-[-50%] w-[709px]"
-        dir="auto"
-      >
-        آیوا را در ۴ مرحله ساده راه‌اندازی کنید
-      </p>
-    </div>
-  );
-}
-
-function Heading3() {
-  return (
-    <div
-      className="content-stretch flex h-[28.797px] items-start relative shrink-0 w-[600px]"
-      data-name="Paragraph"
-    >
-      <p
-        className="basis-0  font-normal grow leading-[28.8px] min-h-px min-w-px relative shrink-0 text-center text-gray-600"
-        dir="auto"
-      >
-        از ثبت‌نام تا اولین گفت‌وگو، تنها چند دقیقه فاصله دارید
-      </p>
+    <div className="  relative   w-full">
+      <Sec7_Icon />
+      <Sec7_Icon1 />
+      <Sec7_Icon2 />
+      <Sec7_Icon3 />
     </div>
   );
 }
@@ -422,25 +24,19 @@ function Header() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.8 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="content-stretch flex flex-col gap-6 items-center justify-center relative shrink-0 w-[1232px]"
-      data-name="Header"
+      className="flex flex-col justify-center text-center gap-8 w-full"
     >
-      <Heading1 />
-      <Heading2 />
-      <Heading3 />
+      <div className="flex items-center justify-center rounded-3xl bg-[rgba(101,188,182,0.08)] border border-[rgba(101,188,182,0.15)] py-2 px-3 mx-auto">
+        <div className="bg-primary rounded-full w-2 h-2 ml-3"></div>
+        <span className="text-primary">فرآیند ساده</span>
+      </div>
+      <p className="font-extrabold text-center text-gray-900">
+        آیوا را در ۴ مرحله ساده راه‌اندازی کنید
+      </p>
+      <p className="text-center text-gray-600">
+        از ثبت‌نام تا اولین گفت‌وگو، تنها چند دقیقه فاصله دارید
+      </p>
     </motion.div>
-  );
-}
-
-function SliderDot({ isActive }: { isActive: boolean }) {
-  return (
-    <motion.div
-      className="h-[3px] rounded-bl-6 rounded-br-6 shrink-0 w-full transition-colors duration-500"
-      style={{
-        backgroundColor: isActive ? "#B07CC6" : "#e5e7eb",
-      }}
-      data-name="Container"
-    />
   );
 }
 
@@ -539,15 +135,6 @@ function Article({
                 ></div>
                 {duration}
               </div>
-              {/* <div */}
-              {/* aria-hidden="true" */}
-              {/* className="absolute inset-0 pointer-events-none border border-gray-200 rounded-full" */}
-              {/* /> */}
-              {/* <div className="absolute bg-gray-400 left-[75.45px] rounded-[3px] size-1.5 top-[18px]" /> */}
-              {/* <div className="absolute h-6 left-[17px] top-[9px] w-[50.453px]  bg-gray-300"> */}
-              {/* <p className="absolute font-bold leading-6 left-1/2 -translate-x-1/2 text-center w-[51px]"> */}
-              {/* </p> */}
-              {/* </div> */}
             </div>
           </div>
 
@@ -556,10 +143,7 @@ function Article({
             style={{
               backgroundColor: isActive ? color : "#e5e7eb",
             }}
-            data-name="Container"
           />
-
-          {/* <SliderDot isActive={isActive} /> */}
         </div>
       </div>
     </div>
@@ -570,7 +154,7 @@ const articlesData = [
   {
     step: 0,
     color: "#65BCB6",
-    icon: <Icon8 />,
+    icon: <Sec7_Icon8 />,
     title: "ثبت‌نام",
     description: "حساب کاربری خود را در کمتر از ۳۰ ثانیه ایجاد کنید",
     duration: "۳۰ ثانیه",
@@ -578,7 +162,7 @@ const articlesData = [
   {
     step: 1,
     color: "#52D4A0",
-    icon: <Icon6 />,
+    icon: <Sec7_Icon6 />,
     title: "آموزش",
     description: "منابع و اطلاعات کسب‌وکار خود را آپلود کنید",
     duration: "2 دقیقه",
@@ -586,7 +170,7 @@ const articlesData = [
   {
     step: 2,
     color: "#ffa18e",
-    icon: <Icon5 />,
+    icon: <Sec7_Icon5 />,
     title: "شخصی‌سازی",
     description: "ظاهر و رفتار چت‌بات را مطابق برند خود تنظیم کنید",
     duration: "5 دقیقه",
@@ -594,7 +178,7 @@ const articlesData = [
   {
     step: 3,
     color: "#B07CC6",
-    icon: <Icon4 />,
+    icon: <Sec7_Icon4 />,
     title: "راه‌اندازی",
     description: "چت‌بات را روی وب‌سایت یا اپلیکیشن خود نصب کنید",
     duration: "۲ دقیقه",
@@ -616,7 +200,7 @@ function Card({ activeStep }: { activeStep: number }) {
           },
         },
       }}
-      className="flex gap-6 items-center justify-center w-full relative shrink-0"
+      className="flex gap-6 items-center justify-center w-full relative shrink-0 px-8"
     >
       {articlesData.map(({ step, ...props }) => (
         <motion.div key={step} variants={cardVariants}>
@@ -630,10 +214,7 @@ function Card({ activeStep }: { activeStep: number }) {
 // Timeline
 function Container27() {
   return (
-    <div
-      className="absolute bg-gray-200 h-0.5 right-0 rounded-[1px] top-0 w-[900px]"
-      data-name="Container"
-    />
+    <div className="absolute bg-gray-200 h-0.5 right-0 rounded-[1px] top-0 w-[900px]" />
   );
 }
 
@@ -655,14 +236,13 @@ function Container28({ activeStep }: { activeStep: number }) {
         duration: 0.5,
         ease: "easeInOut",
       }}
-      data-name="Container"
     />
   );
 }
 
 function Container29({ activeStep }: { activeStep: number }) {
   return (
-    <div className="h-0.5 relative shrink-0 w-[900px]" data-name="Container">
+    <div className="h-0.5 relative shrink-0 w-[900px]">
       <Container27 />
       <Container28 activeStep={activeStep} />
     </div>
@@ -717,7 +297,7 @@ function Liner({ activeStep }: { activeStep: number }) {
 
 function CTA() {
   return (
-    <div className="content-stretch flex gap-3 h-[46px] items-center ">
+    <div className="content-stretch flex gap-3 items-center ">
       <span> کل فرآیند کمتر از</span>
       <span className=" text-[#65bcb6] font-bold"> ۱۰ دقیقه</span>
       <span> زمان می‌برد</span>
@@ -727,12 +307,14 @@ function CTA() {
 
 function Button() {
   return (
-    <div
-      className="bg-[#65bcb6]  rounded-2xl text-white px-8 py-4"
-      data-name="Button"
-    >
-      شروع رایگان
-    </div>
+    <Link href="/onboarding"  >
+      <div
+        className="bg-[#65bcb6] cursor-pointer rounded-2xl text-white px-8 py-4 inline-block text-center"
+        data-name="Button"
+      >
+        شروع رایگان
+      </div>  
+    </Link>
   );
 }
 
@@ -744,13 +326,10 @@ function ContainerFooter() {
       viewport={{ once: true, amount: 0.8 }}
       transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
       className="relative shrink-0 w-full"
-      data-name="Container"
     >
-      <div className="flex flex-col items-center justify-center size-full">
-        <div className="box-border content-stretch flex flex-col gap-8 items-center justify-center px-[470px] py-0 relative w-full">
-          <CTA />
-          <Button />
-        </div>
+      <div className="flex flex-col items-center justify-center w-full gap-6">
+        <CTA />
+        <Button />
       </div>
     </motion.div>
   );
@@ -773,22 +352,15 @@ export default function Section3() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="content-stretch flex flex-col gap-2 items-start relative w-full"
+      className=" content-stretch flex flex-col gap-2 p-10 items-start relative w-full"
     >
       <CardContainer />
-      <div
-        className="absolute bg-linear-to-b from-[#ffffff] h-[956px] left-0 overflow-clip to-[#ffffff] top-[-0.37px] via-50% via-[#f9fafb] w-[1431px]"
-        data-name="Process"
-      >
-        <div
-          className="absolute box-border content-stretch flex flex-col gap-[58px] items-center justify-center left-0 p-16 top-[-0.37px] w-[1419px]"
-          data-name="Container"
-        >
-          <Header />
-          <Card activeStep={activeStep} />
-          <Liner activeStep={activeStep} />
-          <ContainerFooter />
-        </div>
+
+      <div className="box-border flex flex-col gap-[58px] items-center justify-center p-16 w-full">
+        <Header />
+        <Card activeStep={activeStep} />
+        <Liner activeStep={activeStep} />
+        <ContainerFooter />
       </div>
     </motion.div>
   );
