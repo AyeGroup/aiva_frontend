@@ -1,5 +1,6 @@
 "use client";
 import Header from "./components/Header";
+import SectionSecurity from "./components/Section-security";
 import Section1 from "./components/Section1";
 import Section2 from "./components/Section2";
 import Section3 from "./components/Section3";
@@ -21,6 +22,7 @@ export default function App() {
       <Section6 />
       <Section7 />
       <Section8 />
+      <SectionSecurity />
       {/* 
       <Section9WithAnimation />
       <Section10WithAnimation />

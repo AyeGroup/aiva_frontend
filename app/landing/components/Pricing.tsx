@@ -194,22 +194,25 @@ const PricingCard = ({ plan }: { plan: PricingPlan }) => {
   return (
     <div className="bg-white rounded-3xl border-2 overflow-hidden border-gray-300 shadow-sm relative h-full flex flex-col">
       {/* Popular Badge */}
-      {isPriceNumeric?( <div
-        className="absolute left-[264.66px] opacity-20 size-[128px] top-[2px]"
-        data-name="Pricing"
-        style={{
-          backgroundImage:
-            "url('data:image/svg+xml;utf8,<svg viewBox=\\'0 0 128 128\\' xmlns=\\'http://www.w3.org/2000/svg\\' preserveAspectRatio=\\'none\\'><rect x=\\'0\\' y=\\'0\\' height=\\'100%\\' width=\\'100%\\' fill=\\'url(%23grad)\\' opacity=\\'1\\'/><defs><radialGradient id=\\'grad\\' gradientUnits=\\'userSpaceOnUse\\' cx=\\'0\\' cy=\\'0\\' r=\\'10\\' gradientTransform=\\'matrix(0 -18.102 -18.102 0 128 0)\\'><stop stop-color=\\'rgba(99,102,241,1)\\' offset=\\'0\\'/><stop stop-color=\\'rgba(74,77,181,0.75)\\' offset=\\'0.175\\'/><stop stop-color=\\'rgba(50,51,121,0.5)\\' offset=\\'0.35\\'/><stop stop-color=\\'rgba(25,26,60,0.25)\\' offset=\\'0.525\\'/><stop stop-color=\\'rgba(0,0,0,0)\\' offset=\\'0.7\\'/></radialGradient></defs></svg>')",
-        }}
-      />):(<div
-        className="absolute right-0 opacity-20 size-32 top-0"
-        style={{
-          backgroundImage:
-            "url('data:image/svg+xml;utf8,<svg viewBox=\\'0 0 128 128\\' xmlns=\\'http://www.w3.org/2000/svg\\' preserveAspectRatio=\\'none\\'><rect x=\\'0\\' y=\\'0\\' height=\\'100%\\' width=\\'100%\\' fill=\\'url(%23grad)\\' opacity=\\'1\\'/><defs><radialGradient id=\\'grad\\' gradientUnits=\\'userSpaceOnUse\\' cx=\\'0\\' cy=\\'0\\' r=\\'10\\' gradientTransform=\\'matrix(0 -18.102 -18.102 0 128 0)\\'><stop stop-color=\\'rgba(82,212,160,1)\\' offset=\\'0\\'/><stop stop-color=\\'rgba(62,159,120,0.75)\\' offset=\\'0.175\\'/><stop stop-color=\\'rgba(41,106,80,0.5)\\' offset=\\'0.35\\'/><stop stop-color=\\'rgba(21,53,40,0.25)\\' offset=\\'0.525\\'/><stop stop-color=\\'rgba(0,0,0,0)\\' offset=\\'0.7\\'/></radialGradient></defs></svg>')",
-        }}
-      />)}
-      
-     
+      {isPriceNumeric ? (
+        <div
+          className="absolute right-0 opacity-20 size-32 top-0"
+          data-name="Pricing"
+          style={{
+            backgroundImage:
+              "url('data:image/svg+xml;utf8,<svg viewBox=\\'0 0 128 128\\' xmlns=\\'http://www.w3.org/2000/svg\\' preserveAspectRatio=\\'none\\'><rect x=\\'0\\' y=\\'0\\' height=\\'100%\\' width=\\'100%\\' fill=\\'url(%23grad)\\' opacity=\\'1\\'/><defs><radialGradient id=\\'grad\\' gradientUnits=\\'userSpaceOnUse\\' cx=\\'0\\' cy=\\'0\\' r=\\'10\\' gradientTransform=\\'matrix(0 -18.102 -18.102 0 128 0)\\'><stop stop-color=\\'rgba(99,102,241,1)\\' offset=\\'0\\'/><stop stop-color=\\'rgba(74,77,181,0.75)\\' offset=\\'0.175\\'/><stop stop-color=\\'rgba(50,51,121,0.5)\\' offset=\\'0.35\\'/><stop stop-color=\\'rgba(25,26,60,0.25)\\' offset=\\'0.525\\'/><stop stop-color=\\'rgba(0,0,0,0)\\' offset=\\'0.7\\'/></radialGradient></defs></svg>')",
+          }}
+        />
+      ) : (
+        <div
+          className="absolute right-0 opacity-20 size-32 top-0"
+          style={{
+            backgroundImage:
+              "url('data:image/svg+xml;utf8,<svg viewBox=\\'0 0 128 128\\' xmlns=\\'http://www.w3.org/2000/svg\\' preserveAspectRatio=\\'none\\'><rect x=\\'0\\' y=\\'0\\' height=\\'100%\\' width=\\'100%\\' fill=\\'url(%23grad)\\' opacity=\\'1\\'/><defs><radialGradient id=\\'grad\\' gradientUnits=\\'userSpaceOnUse\\' cx=\\'0\\' cy=\\'0\\' r=\\'10\\' gradientTransform=\\'matrix(0 -18.102 -18.102 0 128 0)\\'><stop stop-color=\\'rgba(82,212,160,1)\\' offset=\\'0\\'/><stop stop-color=\\'rgba(62,159,120,0.75)\\' offset=\\'0.175\\'/><stop stop-color=\\'rgba(41,106,80,0.5)\\' offset=\\'0.35\\'/><stop stop-color=\\'rgba(21,53,40,0.25)\\' offset=\\'0.525\\'/><stop stop-color=\\'rgba(0,0,0,0)\\' offset=\\'0.7\\'/></radialGradient></defs></svg>')",
+          }}
+        />
+      )}
+
       <div className="p-8 flex flex-col h-full">
         {/* Header */}
         <div className="flex flex-col justify-between items-start mb-6">
