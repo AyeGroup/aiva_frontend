@@ -2,19 +2,19 @@
 import Image from "next/image";
 
 const menuItems = [
-  { label: "خانه", href: "#section1", active: true },
-  { label: "ویژگی‌ها", href: "#section2", badge: "جدید" },
-  { label: "نحوه کار", href: "#section3" },
+  { label: "خانه", href: "/", active: true },
+  { label: "ویژگی‌ها", href: "#features", badge: "جدید" },
+  { label: "نحوه کار", href: "#luanch" },
   { label: "نمونه کارها", href: "#section4" },
-  { label: "قیمت‌گذاری", href: "#section5" },
-  { label: "سوالات متداول", href: "#section6" },
-  { label: "بلاگ", href: "#section7" },
-  { label: "تماس با ما", href: "#section8" },
+  { label: "قیمت‌گذاری", href: "#pricing" },
+  { label: "سوالات متداول", href: "#faq" },
+  { label: "بلاگ", href: "#" },
+  { label: "تماس با ما", href: "#starting" },
 ];
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between px-8 py-4 shadow-sm bg-white">
+    <header className="flex items-center justify-between px-8 py-6 bg-white">
       {/* ✅ Logo */}
       <div className="flex items-center gap-3 ali">
         <Image src="/logo.png" alt="لوگوی آیوا" width={48} height={48} />
@@ -25,34 +25,38 @@ export default function Header() {
       </div>
 
       {/* ✅ Menu */}
-      <nav className="flex items-center gap-6">
+      <nav className="flex items-center gap-2">
         {menuItems.map(({ label, href, badge, active }) => (
           <a
             key={href}
             href={href}
-            className={`flex items-center gap-2 px-3 py-2 rounded-2xl transition-all duration-200
+            className={`flex items-center p-2 gap-1 rounded-2xl transition-all duration-200
               ${
                 active
                   ? "bg-gray-100 text-[#65bcb6]"
                   : "text-gray-700 hover:text-[#65bcb6]"
               }`}
-          >
+              >
+            {label}
             {badge && (
-              <span className="bg-[#e67e7e] text-white text-xs px-2 py-[1px] rounded-full">
+              <span className="bg-[#e67e7e] text-white text-xs px-2 -mt-2 rounded-full">
                 {badge}
               </span>
             )}
-            {label}
           </a>
         ))}
       </nav>
 
       {/* ✅ Auth buttons */}
       <div className="flex items-center gap-4">
+        <a href="/dashboard" className="text-[#65bcb6] text-base">
+          ورود
+        </a>
         <a
-          href="#"
-          className="flex items-center gap-2 bg-[#65bcb6] text-white px-4 py-2 rounded-xl shadow hover:bg-[#58aaa5] transition"
+          href="/onboarding"
+          className="flex items-center gap-2 bg-[#65bcb6] text-white px-4 py-2 rounded-sm shadow hover:bg-[#58aaa5] transition"
         >
+          شروع رایگان
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path
               d="M3.75 9H14.25M9 3.75L14.25 9L9 14.25"
@@ -62,10 +66,6 @@ export default function Header() {
               strokeWidth="1.5"
             />
           </svg>
-          شروع رایگان
-        </a>
-        <a href="#" className="text-[#65bcb6] text-base">
-          ورود
         </a>
       </div>
     </header>

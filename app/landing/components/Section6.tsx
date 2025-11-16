@@ -93,17 +93,6 @@ function Header() {
         data-name="Container"
       >
         <div
-          className="content-stretch flex gap-[10px] items-center justify-center relative shrink-0"
-          data-name="Text"
-        >
-          <p
-            className=" font-medium leading-[20px] relative shrink-0 text-[#65bcb6] text-[14px] text-center text-nowrap whitespace-pre"
-            dir="auto"
-          >
-            ویژگی های آیوا
-          </p>
-        </div>
-        <div
           className="bg-[#65bcb6] content-stretch flex gap-[10px] items-center relative rounded-[1.67772e+07px] shrink-0"
           data-name="Container"
         >
@@ -112,15 +101,20 @@ function Header() {
             data-name="Container"
           />
         </div>
+        <div
+          className="content-stretch flex gap-[10px] items-center justify-center relative shrink-0"
+          data-name="Text"
+        >
+          <p className=" font-medium leading-[20px] relative shrink-0 text-[#65bcb6] text-[14px] text-center text-nowrap whitespace-pre">
+            ویژگی‌های آیوا
+          </p>
+        </div>
       </div>
       <div
         className="h-[57.594px] relative shrink-0 w-[1232px]"
         data-name="Heading 2"
       >
-        <p
-          className="absolute  font-extrabold leading-[57.6px] left-[616.71px] text-[48px] text-center text-gray-900 text-nowrap top-[-1px] tracking-[-0.96px] translate-x-[-50%] whitespace-pre"
-          dir="auto"
-        >
+        <p className="absolute  font-extrabold leading-[57.6px] left-[616.71px] text-[48px] text-center text-gray-900 text-nowrap top-[-1px] tracking-[-0.96px] translate-x-[-50%] whitespace-pre">
           پشتیبانی سریع‌تر، ارزان‌تر و بدون خستگی؛
         </p>
       </div>
@@ -128,10 +122,7 @@ function Header() {
         className="content-stretch flex h-[28.797px] items-start relative shrink-0 w-[768px]"
         data-name="Paragraph"
       >
-        <p
-          className="basis-0  font-normal grow leading-[28.8px] min-h-px min-w-px relative shrink-0 text-[18px] text-center text-gray-600"
-          dir="auto"
-        >
+        <p className="basis-0  font-normal grow leading-[28.8px] min-h-px min-w-px relative shrink-0 text-[18px] text-center text-gray-600">
           پشتیبانی انسانی گران و خسته‌کننده است، اما بات آیوا همیشه آماده‌است.
         </p>
       </div>
@@ -334,7 +325,7 @@ function Footer() {
 
 export default function Section6() {
   return (
-    <div className="relative w-full ">
+    <div id="features" className="relative w-full ">
       <BackgroundContainer />
       <div
         className="relative box-border content-stretch flex flex-col items-center justify-center overflow-clip p-16 w-full z-10"

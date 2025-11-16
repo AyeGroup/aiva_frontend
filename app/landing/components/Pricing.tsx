@@ -294,7 +294,7 @@ const PricingCard = ({ plan }: { plan: PricingPlan }) => {
 // Main Pricing Component
 export default function PricingPage() {
   return (
-    <div className="min-h-screen py-16 px-24">
+    <div className="min-h-screen py-16 px-24" id="pricing">
       <ComponentImage />
       <div className="max-w-7xl mx-auto">
         {/* Header */}

@@ -667,7 +667,7 @@ export default function Section4() {
   const [activeTab, setActiveTab] = useState<"industry" | "usage">("industry");
 
   return (
-    <div className=" w-full flex flex-col relative  bg-linear-to-b from-[#ffffff] gap-2.5 items-center to-[#ffffff] via-50% via-[#f9fafb]">
+    <div id="crafts" className=" w-full flex flex-col relative  bg-linear-to-b from-[#ffffff] gap-2.5 items-center to-[#ffffff] via-50% via-[#f9fafb]">
       {/* Container روی همه چیز قرار می‌گیرد */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Container />

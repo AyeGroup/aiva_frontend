@@ -201,7 +201,7 @@ export default function Section7() {
   return (
     <div
       className="bg-white content-stretch flex flex-col gap-2.5 items-start relative w-full min-h-[712px]"
-      data-name="Section7"
+      id="Interaction"
     >
       <Container />
       <CaseStudy />

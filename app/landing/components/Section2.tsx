@@ -1179,7 +1179,7 @@ export default function Section2() {
   return (
     <div
       className="bg-[rgba(255,228,222,0.45)] content-stretch flex flex-col gap-2 items-center justify-center relative w-full"
-      data-name="Section2"
+      id="about"
     >
       <Container />
       <div className="relative shrink-0 w-full" data-name="About">

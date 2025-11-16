@@ -409,7 +409,7 @@ export default function SecuritySection() {
   ];
 
   return (
-    <section id="Security" className="bg-white relative size-full">
+    <section id="Security" className="bg-white relative size-full py-5">
       {/* Background decorations */}
       <BackgroundDecorations />
 

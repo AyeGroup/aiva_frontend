@@ -29,7 +29,7 @@ export const headerData = {
     {
       id: "how-it-works",
       title: "نحوه کار",
-      href: "#how-it-works",
+      href: "#launch",
       icon: "zap",
       description: "آیوا چگونه کسب‌وکار شما را تقویت می‌کند",
     },

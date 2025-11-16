@@ -73,7 +73,7 @@ function Icon4() {
 
 function Container() {
   return (
-    <div className="absolute bg-[rgba(255,161,142,0.1)] h-[868px] left-0 overflow-clip top-[0.24px] w-[1431px]" data-name="Container">
+    <div className="absolute bg-[rgba(255,161,142,0.1)] h-[868px] left-0 overflow-clip top-[0.24px] w-[1431px]" >
       <Icon />
       <Icon1 />
       <Icon2 />
@@ -86,7 +86,7 @@ function Container() {
 function Heading() {
   return (
     <div className="h-[57.594px] relative shrink-0 w-[1232px]" data-name="Heading 2">
-      <p className="absolute font-['Vazirmatn:ExtraBold',sans-serif] font-extrabold leading-[57.6px] left-[615.93px] text-[48px] text-center text-gray-900 text-nowrap top-[-1px] tracking-[-0.96px] translate-x-[-50%] whitespace-pre" dir="auto">
+      <p className="absolute 2 font-extrabold leading-[57.6px] left-[615.93px] text-[48px] text-center text-gray-900 text-nowrap top-[-1px] tracking-[-0.96px] translate-x-[-50%] whitespace-pre" >
         سؤالات پرتکرار
       </p>
     </div>
@@ -96,7 +96,7 @@ function Heading() {
 function Paragraph() {
   return (
     <div className="content-stretch flex h-[28.797px] items-start relative shrink-0 w-[672px]" data-name="Paragraph">
-      <p className="basis-0 font-['Vazirmatn:Regular',sans-serif] font-normal grow leading-[28.8px] min-h-px min-w-px relative shrink-0 text-[18px] text-center text-gray-600" dir="auto">
+      <p className="basis-0  font-normal grow leading-[28.8px] min-h-px min-w-px relative shrink-0 text-[18px] text-center text-gray-600" >
         پاسخ‌های سریع برای سؤالاتی که ممکنه داشته باشید
       </p>
     </div>
@@ -138,7 +138,7 @@ function Text() {
 
 function Container1() {
   return (
-    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" data-name="Container">
+    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" >
       <Text />
     </div>
   );
@@ -147,7 +147,7 @@ function Container1() {
 function Heading1() {
   return (
     <div className="absolute h-[26px] left-[25px] top-[93px] w-[318px]" data-name="Heading 3">
-      <p className="absolute font-['Vazirmatn:SemiBold',sans-serif] font-semibold leading-[26px] left-[318.95px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" dir="auto">
+      <p className="absolute  font-semibold leading-[26px] left-[318.95px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" >
         اطلاعات من امن هست؟
       </p>
     </div>
@@ -157,7 +157,7 @@ function Heading1() {
 function Paragraph1() {
   return (
     <div className="absolute h-[44px] left-[25px] top-[131px] w-[318px]" data-name="Paragraph">
-      <p className="absolute font-['Vazirmatn:Medium',sans-serif] font-medium leading-[22px] left-[318.37px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[294px]" dir="auto">
+      <p className="absolute   font-medium leading-[22px] left-[318.37px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[294px]" >
         بله، تمام داده‌ها با رمزنگاری پیشرفته در سرورهای امن ذخیره می‌شوند و فقط شما به اون‌ها دسترسی دارید.
       </p>
     </div>
@@ -208,7 +208,7 @@ function Text1() {
 
 function Container2() {
   return (
-    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" data-name="Container">
+    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" >
       <Text1 />
     </div>
   );
@@ -217,7 +217,7 @@ function Container2() {
 function Heading2() {
   return (
     <div className="absolute h-[26px] left-[25px] top-[93px] w-[318px]" data-name="Heading 3">
-      <p className="absolute font-['Vazirmatn:SemiBold',sans-serif] font-semibold leading-[26px] left-[318.92px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" dir="auto">
+      <p className="absolute  font-semibold leading-[26px] left-[318.92px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" >
         چقدر طول می‌کشه تا راه‌اندازی بشه؟
       </p>
     </div>
@@ -227,7 +227,7 @@ function Heading2() {
 function Paragraph2() {
   return (
     <div className="absolute h-[44px] left-[25px] top-[131px] w-[318px]" data-name="Paragraph">
-      <p className="absolute font-['Vazirmatn:Medium',sans-serif] font-medium leading-[22px] left-[318.87px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[302px]" dir="auto">
+      <p className="absolute  font-medium leading-[22px] left-[318.87px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[302px]" >
         کمتر از ۳۰ دقیقه! فقط فایل‌هایی آپلود کن، تنظیمات رو انجام بده و چت‌بات آماده‌ست.
       </p>
     </div>
@@ -285,7 +285,7 @@ function Text2() {
 
 function Container3() {
   return (
-    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" data-name="Container">
+    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" >
       <Text2 />
     </div>
   );
@@ -294,7 +294,7 @@ function Container3() {
 function Heading3() {
   return (
     <div className="absolute h-[26px] left-[25px] top-[93px] w-[318px]" data-name="Heading 3">
-      <p className="absolute font-['Vazirmatn:SemiBold',sans-serif] font-semibold leading-[26px] left-[318.18px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" dir="auto">
+      <p className="absolute   font-semibold leading-[26px] left-[318.18px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" >
         آیا نیاز به دانش فنی دارم؟
       </p>
     </div>
@@ -304,7 +304,7 @@ function Heading3() {
 function Paragraph3() {
   return (
     <div className="absolute h-[44px] left-[25px] top-[131px] w-[318px]" data-name="Paragraph">
-      <p className="absolute font-['Vazirmatn:Medium',sans-serif] font-medium leading-[22px] left-[318.37px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[312px]" dir="auto">
+      <p className="absolute  font-medium leading-[22px] left-[318.37px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[312px]" >
         خیر، رابط کاربری RagBuilder طوری طراحی شده که بدون هیچ دانش فنی بتوانید چت‌بات خود رو بسازید.
       </p>
     </div>
@@ -376,7 +376,7 @@ function Text3() {
 
 function Container4() {
   return (
-    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" data-name="Container">
+    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" >
       <Text3 />
     </div>
   );
@@ -385,7 +385,7 @@ function Container4() {
 function Heading4() {
   return (
     <div className="absolute h-[26px] left-[25px] top-[93px] w-[318px]" data-name="Heading 3">
-      <p className="absolute font-['Vazirmatn:SemiBold',sans-serif] font-semibold leading-[26px] left-[318.23px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" dir="auto">
+      <p className="absolute  ld',sans-serif] font-semibold leading-[26px] left-[318.23px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" >
         چه فرمت‌هایی رو پشتیبانی می‌کنه؟
       </p>
     </div>
@@ -395,7 +395,7 @@ function Heading4() {
 function Paragraph4() {
   return (
     <div className="absolute h-[44px] left-[25px] top-[131px] w-[318px]" data-name="Paragraph">
-      <p className="absolute font-['Vazirmatn:Medium',sans-serif] font-medium leading-[22px] left-[318.46px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[267px]" dir="auto">
+      <p className="absolute  font-medium leading-[22px] left-[318.46px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[267px]" >
         PDF, Word, Excel, CSV ساده، می‌تونید محتوای وب‌سایت خودتون رو هم اضافه کنید.
       </p>
     </div>
@@ -460,7 +460,7 @@ function Text4() {
 
 function Container5() {
   return (
-    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" data-name="Container">
+    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" >
       <Text4 />
     </div>
   );
@@ -469,7 +469,7 @@ function Container5() {
 function Heading5() {
   return (
     <div className="absolute h-[26px] left-[25px] top-[93px] w-[318px]" data-name="Heading 3">
-      <p className="absolute font-['Vazirmatn:SemiBold',sans-serif] font-semibold leading-[26px] left-[318.16px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" dir="auto">
+      <p className="absolute   font-semibold leading-[26px] left-[318.16px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" >
         آیا می‌تونم چندین چت‌بات بسازم؟
       </p>
     </div>
@@ -479,7 +479,7 @@ function Heading5() {
 function Paragraph5() {
   return (
     <div className="absolute h-[44px] left-[25px] top-[131px] w-[318px]" data-name="Paragraph">
-      <p className="absolute font-['Vazirmatn:Medium',sans-serif] font-medium leading-[22px] left-[318.16px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[302px]" dir="auto">
+      <p className="absolute  font-medium leading-[22px] left-[318.16px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[302px]" >
         بله، بسته به پلن انتخابی، می‌تونید چند چت‌بات مختلف برای بخش‌های مختلف کسب‌وکارتون بسازید.
       </p>
     </div>
@@ -523,7 +523,7 @@ function Text5() {
 
 function Container6() {
   return (
-    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" data-name="Container">
+    <div className="absolute bg-[rgba(101,188,182,0.1)] content-stretch flex items-center justify-center left-[295px] rounded-[24px] size-[48px] top-[25px]" >
       <Text5 />
     </div>
   );
@@ -532,7 +532,7 @@ function Container6() {
 function Heading6() {
   return (
     <div className="absolute h-[26px] left-[25px] top-[93px] w-[318px]" data-name="Heading 3">
-      <p className="absolute font-['Vazirmatn:SemiBold',sans-serif] font-semibold leading-[26px] left-[318.44px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" dir="auto">
+      <p className="absolute   font-semibold leading-[26px] left-[318.44px] text-[16px] text-gray-900 text-nowrap text-right top-[-0.5px] translate-x-[-100%] whitespace-pre" >
         آیا می‌تونم با پیام‌رسان‌ها متصلش کنم؟
       </p>
     </div>
@@ -542,7 +542,7 @@ function Heading6() {
 function Paragraph6() {
   return (
     <div className="absolute h-[44px] left-[25px] top-[131px] w-[318px]" data-name="Paragraph">
-      <p className="absolute font-['Vazirmatn:Medium',sans-serif] font-medium leading-[22px] left-[318.64px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[306px]" dir="auto">
+      <p className="absolute  font-medium leading-[22px] left-[318.64px] text-[14px] text-gray-600 text-right top-0 translate-x-[-100%] w-[306px]" >
         در پلن‌های متوسط و بالاتر، می‌تونید به واتساپ، تلگرام و اینستاگرام متصل کنید.
       </p>
     </div>
@@ -562,7 +562,7 @@ function Article5() {
 
 function Container7() {
   return (
-    <div className="gap-[24px] grid grid-cols-[repeat(3,_minmax(0px,_1fr))] grid-rows-[repeat(2,_minmax(0px,_1fr))] h-[424px] relative shrink-0 w-[1152px]" data-name="Container">
+    <div className="gap-[24px] grid grid-cols-[repeat(3,_minmax(0px,_1fr))] grid-rows-[repeat(2,_minmax(0px,_1fr))] h-[424px] relative shrink-0 w-[1152px]" >
       <Article />
       <Article1 />
       <Article2 />
@@ -576,7 +576,7 @@ function Container7() {
 function Paragraph7() {
   return (
     <div className="h-[26px] relative shrink-0 w-full" data-name="Paragraph">
-      <p className="absolute font-['Vazirmatn:Regular',sans-serif] font-normal leading-[26px] left-[616.15px] text-[16px] text-center text-gray-600 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre" dir="auto">
+      <p className="absolute  font-normal leading-[26px] left-[616.15px] text-[16px] text-center text-gray-600 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre" >
         سؤال دیگری دارید؟
       </p>
     </div>
@@ -587,7 +587,7 @@ function Text6() {
   return (
     <div className="h-[24px] relative shrink-0 w-[15.273px]" data-name="Text">
       <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border h-[24px] relative w-[15.273px]">
-        <p className="absolute font-['Vazirmatn:Regular','Noto_Sans_Symbols:Regular',sans-serif] font-normal leading-[24px] left-[8px] text-[16px] text-center text-gray-700 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre">←</p>
+        <p className="absolute   font-normal leading-[24px] left-[8px] text-[16px] text-center text-gray-700 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre">←</p>
       </div>
     </div>
   );
@@ -597,7 +597,7 @@ function Text7() {
   return (
     <div className="basis-0 grow h-[24px] min-h-px min-w-px relative shrink-0" data-name="Text">
       <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border h-[24px] relative w-full">
-        <p className="absolute font-['Vazirmatn:Regular',sans-serif] font-normal leading-[24px] left-[55px] text-[16px] text-center text-gray-700 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre" dir="auto">
+        <p className="absolute  font-normal leading-[24px] left-[55px] text-[16px] text-center text-gray-700 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre" >
           تماس با پشتیبانی
         </p>
       </div>
@@ -620,7 +620,7 @@ function Text8() {
   return (
     <div className="h-[24px] relative shrink-0 w-[15.273px]" data-name="Text">
       <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border h-[24px] relative w-[15.273px]">
-        <p className="absolute font-['Vazirmatn:Regular','Noto_Sans_Symbols:Regular',sans-serif] font-normal leading-[24px] left-[8px] text-[16px] text-center text-gray-700 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre">←</p>
+        <p className="absolute   font-normal leading-[24px] left-[8px] text-[16px] text-center text-gray-700 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre">←</p>
       </div>
     </div>
   );
@@ -630,7 +630,7 @@ function Text9() {
   return (
     <div className="basis-0 grow h-[24px] min-h-px min-w-px relative shrink-0" data-name="Text">
       <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border h-[24px] relative w-full">
-        <p className="absolute font-['Vazirmatn:Regular',sans-serif] font-normal leading-[24px] left-[47.5px] text-[16px] text-center text-gray-700 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre" dir="auto">
+        <p className="absolute  font-normal leading-[24px] left-[47.5px] text-[16px] text-center text-gray-700 text-nowrap top-[-0.5px] translate-x-[-50%] whitespace-pre" >
           مستندات کامل
         </p>
       </div>
@@ -651,7 +651,7 @@ function Link1() {
 
 function Container8() {
   return (
-    <div className="content-stretch flex gap-[16px] h-[24px] items-start justify-center relative shrink-0 w-full" data-name="Container">
+    <div className="content-stretch flex gap-[16px] h-[24px] items-start justify-center relative shrink-0 w-full" >
       <Link />
       <Link1 />
     </div>
@@ -660,7 +660,7 @@ function Container8() {
 
 function Container9() {
   return (
-    <div className="content-stretch flex flex-col gap-[24px] h-[74px] items-start relative shrink-0 w-full" data-name="Container">
+    <div className="content-stretch flex flex-col gap-[24px] h-[74px] items-start relative shrink-0 w-full" >
       <Paragraph7 />
       <Container8 />
     </div>
@@ -677,9 +677,9 @@ function Faq() {
   );
 }
 
-export default function Section() {
+export default function SectionFAQ() {
   return (
-    <div className="relative size-full" data-name="Section">
+    <div className="relative size-full" id="faq">
       <Container />
       <Faq />
     </div>
