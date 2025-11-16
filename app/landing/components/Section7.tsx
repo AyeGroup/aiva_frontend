@@ -54,11 +54,11 @@ function Interaction() {
             <div>
               <div className="bg-clip-padding border-0 border-transparent border-solid box-border content-stretch flex flex-col gap-2 items-start  ">
                 <div className="box-border content-stretch flex gap-[18px] items-center justify-end px-px py-0   text-right ">
-                  <p className=" font-normal leading-6 relative shrink-0 text-[#65bcb6] text-[16px] w-[33px]">
-                    +۵۰٪
-                  </p>
                   <p className=" font-medium leading-[30px] relative shrink-0 text-[22px] text-gray-900 text-nowrap whitespace-pre">
                     رشد تعامل شبانه
+                  </p> 
+                  <p className=" font-normal leading-6 relative shrink-0 text-[#65bcb6] text-[16px] ">
+                   ۵۰٪+
                   </p>
                 </div>
                 <div

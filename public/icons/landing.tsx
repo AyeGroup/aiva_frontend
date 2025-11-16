@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import svgPaths from "@app/landing/svg/svg-sayy2jojyo";
 import svgPaths7 from "@app/landing/svg/svg-kwkm5bjjwl";
 import svgPaths3 from "@app/landing/svg/svg-2dmtneq5en";
+import svgPaths6 from "@app/landing/svg/svg-gcyltdwgwo";
 
 export function Sec3_Icon() {
   return (
@@ -564,6 +565,7 @@ export function Icon6() {
     </motion.div>
   );
 }
+
 export function Icon11() {
   return (
     <div
@@ -1477,6 +1479,591 @@ export const Moshavere = () => {
   );
 };
 
+
+export function Sec6_Icon2() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p27520040}
+            id="Vector"
+            stroke="var(--stroke-0, #10B981)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon3() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p3de7e600}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon4() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p1efd0200}
+            id="Vector"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon6() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p2979bb00}
+            id="Vector"
+            stroke="var(--stroke-0, #10B981)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon7() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p3de7e600}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon8() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p27a3200}
+            id="Vector"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p3c1b880}
+            id="Vector_2"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p16bbf900}
+            id="Vector_3"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p2ee517c0}
+            id="Vector_4"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon9() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d="M10.5 3.5L3.5 10.5"
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+          <path
+            d="M3.5 3.5L10.5 10.5"
+            id="Vector_2"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon10() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.pa89ed00}
+            id="Vector"
+            stroke="var(--stroke-0, #10B981)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p20493380}
+            id="Vector_2"
+            stroke="var(--stroke-0, #10B981)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon11() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p3de7e600}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon12() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d="M16 2.66667V29.3333"
+            id="Vector"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p30e9cc00}
+            id="Vector_2"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon13() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d="M10.5 3.5L3.5 10.5"
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+          <path
+            d="M3.5 3.5L10.5 10.5"
+            id="Vector_2"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon14() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.pa89ed00}
+            id="Vector"
+            stroke="var(--stroke-0, #10B981)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p20493380}
+            id="Vector_2"
+            stroke="var(--stroke-0, #10B981)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon15() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p3de7e600}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon16() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p37a10d80}
+            id="Vector"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p29027680}
+            id="Vector_2"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d="M16 23.3333V8.66667"
+            id="Vector_3"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon17() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d="M10.5 3.5L3.5 10.5"
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+          <path
+            d="M3.5 3.5L10.5 10.5"
+            id="Vector_2"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon18() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d="M16 8V16L21.3333 18.6667"
+            id="Vector"
+            stroke="var(--stroke-0, #10B981)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p1dee4500}
+            id="Vector_2"
+            stroke="var(--stroke-0, #10B981)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon19() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p3de7e600}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon20() {
+  return (
+    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths6.p27a3200}
+            id="Vector"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p2ee517c0}
+            id="Vector_2"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p2f67b7f0}
+            id="Vector_3"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+          <path
+            d={svgPaths6.p2b361400}
+            id="Vector_4"
+            stroke="var(--stroke-0, #EF4444)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec6_Icon21() {
+  return (
+    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14 14"
+      >
+        <g id="Icon">
+          <path
+            d="M10.5 3.5L3.5 10.5"
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+          <path
+            d="M3.5 3.5L10.5 10.5"
+            id="Vector_2"
+            stroke="var(--stroke-0, white)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.16667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export function Sec7_Icon() {
   return (
     <div className="absolute left-0  top-20" data-name="Icon">
@@ -1707,6 +2294,7 @@ export function Sec7_Icon6() {
     </div>
   );
 }
+
 export function Sec7_Icon7() {
   return (
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
@@ -1738,6 +2326,7 @@ export function Sec7_Icon7() {
     </div>
   );
 }
+
 export function Sec7_Icon8() {
   return (
     <div>

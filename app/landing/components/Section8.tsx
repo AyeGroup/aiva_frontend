@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import svgPaths from "../svg/svg-65vfizetex";
 import Pricing10 from "./Pricing";
 
-// Background decorative icons component
+ 
 function BackgroundContainer() {
   return (
     <div className="absolute h-[1831.39px] left-0 overflow-clip top-0 w-full pointer-events-none">
@@ -17,7 +17,7 @@ function BackgroundContainer() {
         </svg>
       </div>
 
-      <div className="absolute left-[1231.91px] size-[56px] top-[1317.55px] opacity-30">
+      <div className="absolute left-[1231.91px] size-14 top-[1317.55px] opacity-30">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 56 56">
           <g id="Icon">
             <path d="M28 2.33301V53.6663" stroke="#52D4A0" strokeWidth="4.66667" />
@@ -26,7 +26,7 @@ function BackgroundContainer() {
         </svg>
       </div>
 
-      <div className="absolute left-[114.48px] size-[64px] top-[274.7px] opacity-25">
+      <div className="absolute left-[114.48px] size-16 top-[274.7px] opacity-25">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 64 64">
           <g id="Icon">
             <path d={svgPaths.p17e3d400} stroke="#52D4A0" strokeWidth="1.28" />
@@ -34,7 +34,7 @@ function BackgroundContainer() {
         </svg>
       </div>
 
-      <div className="absolute left-[1207.91px] size-[80px] top-[1385.12px] opacity-25">
+      <div className="absolute left-[1207.91px] size-20 top-[1385.12px] opacity-25">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 80 80">
           <g id="Icon">
             <path d="M40 8L72 40L40 72L8 40L40 8Z" stroke="#B07CC6" strokeWidth="1.6" />
@@ -42,7 +42,7 @@ function BackgroundContainer() {
         </svg>
       </div>
 
-      <div className="absolute left-[1120.35px] size-[96px] top-[640.98px] opacity-15">
+      <div className="absolute left-[1120.35px] size-24 top-[640.98px] opacity-15">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 96 96">
           <g id="Icon">
             <path d={svgPaths.p3853cd80} stroke="#4460F7" strokeWidth="1.92" />
@@ -51,7 +51,7 @@ function BackgroundContainer() {
         </svg>
       </div>
 
-      <div className="absolute h-[128px] left-0 top-0 w-full opacity-25">
+      <div className="absolute h-32 left-0 top-0 w-full opacity-25">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 1431 128">
           <g clipPath="url(#clip_section8_top)">
             <path d={svgPaths.pa67000} stroke="#65BCB6" strokeWidth="5" />
@@ -64,7 +64,7 @@ function BackgroundContainer() {
         </svg>
       </div>
 
-      <div className="absolute h-[160px] left-0 bottom-[160px] w-full opacity-25">
+      <div className="absolute h-40 left-0 bottom-40 w-full opacity-25">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 1431 160">
           <g clipPath="url(#clip_section8_bottom)">
             <path d={svgPaths.paee7380} stroke="#FFA18E" strokeWidth="10" />
@@ -77,7 +77,7 @@ function BackgroundContainer() {
         </svg>
       </div>
 
-      <div className="absolute left-[71.55px] size-[128px] top-[1153.98px] opacity-15">
+      <div className="absolute left-[71.55px] size-32 top-[1153.98px] opacity-15">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 128 128">
           <g id="Icon">
             <path d={svgPaths.p16dae400} stroke="#FFA18E" strokeDasharray="6.4 6.4" strokeWidth="1.28" />
@@ -90,7 +90,7 @@ function BackgroundContainer() {
 
 export default function Section8() {
   return (
-    <div className="relative w-full bg-gradient-to-b from-[rgba(235,242,254,0.8)] via-[#ffffff] via-50% to-[rgba(235,242,254,0.8)]" style={{ minHeight: '1832px' }}>
+    <div className="relative w-full bg-linear-to-b from-[rgba(235,242,254,0.8)] via-[#ffffff] via-50% to-[rgba(235,242,254,0.8)]" style={{ minHeight: '1832px' }}>
       <BackgroundContainer />
       
       <motion.div 

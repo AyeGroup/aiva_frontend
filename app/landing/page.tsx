@@ -13,23 +13,15 @@ export default function App() {
   return (
     <main className="landing-page min-h-screen bg-white">
       <Header />
-      <Section6 />
-
       <Section1 />
       <Section2 />
       <Section3 />
       <Section4 />
-      {/* داشتان موفقیت بدون دیتا */}
-      {/* <Section5 />  */}
-      {/* <Section7 /> */}
-      {/* <Section8 /> */}
+      {/* <Section5 />  */} {/*  موفقیت بدون دیتا */}
+      <Section6 />
+      <Section7 />
+      <Section8 />
       {/* 
-      <Section3WithAnimation />
-      <Section4WithAnimation />
-      <Section5WithAnimation />
-      <Section6WithAnimation />
-      <Section7WithAnimation />
-      <Section8WithAnimation />
       <Section9WithAnimation />
       <Section10WithAnimation />
       <Section11WithAnimation />
