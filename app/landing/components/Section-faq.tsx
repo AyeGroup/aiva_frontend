@@ -8,7 +8,13 @@ import {
   Users,
   MessageSquare,
 } from "lucide-react";
-import { Faq_Icon0, Faq_Icon1, Faq_Icon2, Faq_Icon3, Faq_Icon4 } from "@/public/icons/landing";
+import {
+  Faq_Icon0,
+  Faq_Icon1,
+  Faq_Icon2,
+  Faq_Icon3,
+  Faq_Icon4,
+} from "@/public/icons/landing";
 
 interface FAQItem {
   icon: React.ReactNode;
@@ -87,7 +93,7 @@ const FAQSection: React.FC = () => {
     <section id="faq" className="relative w-full min-h-screen">
       {/* Background */}
       <BackgroundDecoration />
-<Container/>
+      <Container />
       {/* Content */}
       <div className="relative max-w-7xl mx-auto px-8 py-16">
         {/* Header */}
@@ -112,14 +118,14 @@ const FAQSection: React.FC = () => {
           <p className="text-base text-gray-600 mb-6">سؤال دیگری دارید؟</p>
           <div className="flex items-center justify-center gap-4">
             <a
-              href="#docs"
+              href="#"
               className="flex items-center gap-2 text-base text-gray-700 hover:text-teal-600 transition-colors cursor-pointer"
             >
               <span>مستندات کامل</span>
               <span>←</span>
             </a>
             <a
-              href="#contact"
+              href="/contact"
               className="flex items-center gap-2 text-base text-gray-700 hover:text-teal-600 transition-colors cursor-pointer"
             >
               <span>تماس با پشتیبانی</span>

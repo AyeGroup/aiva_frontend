@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import SectionFAQ from "./components/Section-faq";
@@ -12,8 +13,23 @@ import Section5 from "./components/Section5";
 import Section6 from "./components/Section6";
 import Section7 from "./components/Section7";
 import Section8 from "./components/Section8";
+import { usePathname } from "next/navigation";
 
 export default function App() {
+    const pathname = usePathname();
+ useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.replace("#", "");
+      const element = document.getElementById(id);
+
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50); // کمی تاخیر برای رندر صفحه
+      }
+    }
+  }, [pathname]);
+
   return (
     <main className="landing-page min-h-screen bg-white">
       <Header />

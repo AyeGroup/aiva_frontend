@@ -3,11 +3,11 @@ import Image from "next/image";
 
 const menuItems = [
   { label: "خانه", href: "/", active: true },
-  { label: "ویژگی‌ها", href: "#features", badge: "جدید" },
-  { label: "نحوه کار", href: "#luanch" },
+  { label: "ویژگی‌ها", href: "/#features", badge: "جدید" },
+  { label: "نحوه کار", href: "/#luanch" },
   { label: "نمونه کارها", href: "#section4" },
-  { label: "قیمت‌گذاری", href: "#pricing" },
-  { label: "سوالات متداول", href: "#faq" },
+  { label: "قیمت‌گذاری", href: "/#pricing" },
+  { label: "سوالات متداول", href: "/#faq" },
   // { label: "بلاگ", href: "#" },
   { label: "تماس با ما", href: "/contact" },
 ];
