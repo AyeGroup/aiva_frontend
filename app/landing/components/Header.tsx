@@ -8,8 +8,8 @@ const menuItems = [
   { label: "نمونه کارها", href: "#section4" },
   { label: "قیمت‌گذاری", href: "#pricing" },
   { label: "سوالات متداول", href: "#faq" },
-  { label: "بلاگ", href: "#" },
-  { label: "تماس با ما", href: "#starting" },
+  // { label: "بلاگ", href: "#" },
+  { label: "تماس با ما", href: "/contact" },
 ];
 
 export default function Header() {

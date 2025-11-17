@@ -1,4 +1,5 @@
 "use client";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import SectionFAQ from "./components/Section-faq";
 import SectionSecurity from "./components/Section-security";
@@ -20,17 +21,14 @@ export default function App() {
       <Section2 />
       <Section3 />
       <Section4 />
-      {/* <Section5 />  */} {/*  موفقیت بدون دیتا */}
+      {/* <Section5 />  */}
       <Section6 />
       <Section7 />
       <Section8 />
       <SectionSecurity />
-      {/* <SectionFAQ /> */}
+      <SectionFAQ />
       <SectionStarting />
-      {/* 
-      <Section10WithAnimation />
-      <Section11WithAnimation />
-      <Section12WithAnimation /> */}
+      <Footer />
     </main>
   );
 }

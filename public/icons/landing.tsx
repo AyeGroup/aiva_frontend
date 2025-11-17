@@ -3,6 +3,8 @@ import svgPaths from "@app/landing/svg/svg-sayy2jojyo";
 import svgPaths7 from "@app/landing/svg/svg-kwkm5bjjwl";
 import svgPaths3 from "@app/landing/svg/svg-2dmtneq5en";
 import svgPaths6 from "@app/landing/svg/svg-gcyltdwgwo";
+import svgPathsFaq from "@app/landing/svg/svg-m5kcbvnqsq";
+import svgPathsStart from "@app/landing/svg/svg-c8s8h124u2";
 
 export function Sec3_Icon() {
   return (
@@ -2375,6 +2377,466 @@ export function Sec7_Icon8() {
   );
 }
 
+export function Faq_Icon0() {
+  return (
+    <div
+      className="absolute left-[1268.52px] size-[48px] top-[139.26px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 48 48"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPathsFaq.p32f09f50}
+            fill="var(--fill-0, #FFA18E)"
+            id="Vector"
+            opacity="0.569477"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Faq_Icon1() {
+  return (
+    <div
+      className="absolute left-[171.72px] size-[40px] top-[702.72px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 40 40"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPathsFaq.p27397900}
+            fill="var(--fill-0, #52D4A0)"
+            id="Vector"
+            opacity="0.752108"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Faq_Icon2() {
+  return (
+    <div
+      className="absolute h-[928.391px] left-0 top-0 w-[1431px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1431 929"
+      >
+        <g clipPath="url(#clip0_0_5830)" id="Icon" opacity="0.12">
+          <g id="Vector"></g>
+        </g>
+        <defs>
+          <clipPath id="clip0_0_5830">
+            <rect fill="white" height="928.391" width="1431" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+export function Faq_Icon3() {
+  return (
+    <div
+      className="absolute left-[1167.45px] size-[192px] top-[464.19px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 192 192"
+      >
+        <g id="Icon" opacity="0.15">
+          <path
+            d={svgPathsFaq.p3f326100}
+            id="Vector"
+            stroke="var(--stroke-0, #4460F7)"
+            strokeWidth="1.92"
+          />
+          <path
+            d={svgPathsFaq.p9b6e680}
+            id="Vector_2"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeWidth="1.44"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Faq_Icon4() {
+  return (
+    <div
+      className="absolute h-[160px] left-0 top-[706.39px] w-[1431px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1431 160"
+      >
+        <g clipPath="url(#clip0_0_6519)" id="Icon" opacity="0.25">
+          <path
+            d={svgPathsFaq.p1e6b3340}
+            id="Vector"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="1.99374"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_0_6519">
+            <rect fill="white" height="160" width="1431" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon0() {
+  return (
+    <div
+      className="absolute left-[1223.91px] size-[64px] top-[100.4px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 64 64"
+      >
+        <g id="Icon" opacity="0.25">
+          <path
+            d={svgPathsStart.pe74f000}
+            id="Vector"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="5.33333"
+          />
+          <path
+            d={svgPathsStart.p26c38200}
+            id="Vector_2"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="5.33333"
+          />
+          <path
+            d={svgPathsStart.p1ddc1580}
+            id="Vector_3"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="5.33333"
+          />
+          <path
+            d={svgPathsStart.p962ed00}
+            id="Vector_4"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="5.33333"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon1() {
+  return (
+    <div
+      className="absolute left-[114.48px] size-[56px] top-[320.5px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 56 56"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPathsStart.p1a7bb200}
+            id="Vector"
+            stroke="var(--stroke-0, #52D4A0)"
+            strokeWidth="4.66667"
+          />
+          <path
+            d={svgPathsStart.p1a9a0c00}
+            id="Vector_2"
+            stroke="var(--stroke-0, #52D4A0)"
+            strokeWidth="4.66667"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon2() {
+  return (
+    <div
+      className="absolute left-[171.72px] size-[48px] top-[225.9px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 48 48"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPathsStart.pcc5e380}
+            fill="var(--fill-0, #4460F7)"
+            id="Vector"
+            opacity="0.576628"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon3() {
+  return (
+    <div
+      className="absolute left-[1176.35px] size-[40px] top-[361.6px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 40 40"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPathsStart.p3e39870}
+            id="Vector"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="3.33333"
+          />
+          <path
+            d={svgPathsStart.p15663e00}
+            id="Vector_2"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="3.33333"
+          />
+          <path
+            d={svgPathsStart.p2ab37280}
+            id="Vector_3"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="3.33333"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon11() {
+  return (
+    <div className="absolute bg-[rgba(255,255,255,0.1)] blur-3xl filter left-[1135px] rounded-[1.67772e+07px] size-[256px] top-[40px]" />
+  );
+}
+
+export function SecSart_Icon12() {
+  return (
+    <div className="absolute bg-[rgba(255,255,255,0.1)] blur-3xl filter left-[40px] rounded-[1.67772e+07px] size-[320px] top-[142px]" />
+  );
+}
+
+export function SecSart_Icon4() {
+  return (
+    <div
+      className="absolute left-[114.48px] size-[80px] top-[75.3px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 80 80"
+      >
+        <g id="Icon" opacity="0.15">
+          <path
+            d={svgPathsStart.p2138fe00}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeWidth="1.6"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon5() {
+  return (
+    <div
+      className="absolute left-[1223.91px] size-[64px] top-[337.6px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 64 64"
+      >
+        <g id="Icon" opacity="0.15">
+          <path
+            d={svgPathsStart.p12160000}
+            fill="var(--fill-0, white)"
+            id="Vector"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon6() {
+  return (
+    <div
+      className="absolute left-[1303.45px] size-[56px] top-[251px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 56 56"
+      >
+        <g id="Icon" opacity="0.15">
+          <path
+            d={svgPathsStart.p3a95a700}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeWidth="1.12"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon7() {
+  return (
+    <div className="absolute h-[500px] left-0 top-0 w-full" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1431 500"
+      >
+        <g clipPath="url(#clip0_0_5672)" id="Icon" opacity="0.08">
+          <g id="Vector"></g>
+        </g>
+        <defs>
+          <clipPath id="clip0_0_5672">
+            <rect fill="white" height="500" width="1431" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon8() {
+  return (
+    <div className="absolute h-[500px] left-0 top-0 w-full" data-name="Icon">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1431 500"
+      >
+        <g clipPath="url(#clip0_0_5668)" id="Icon" opacity="0.15">
+          <path
+            d={svgPathsStart.p3c8b4380}
+            id="Vector"
+            stroke="var(--stroke-0, white)"
+            strokeWidth="1.57934"
+          />
+          <path
+            d={svgPathsStart.p19dfcf00}
+            id="Vector_2"
+            stroke="var(--stroke-0, white)"
+            strokeWidth="1.1845"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_0_5668">
+            <rect fill="white" height="500" width="1431" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon9() {
+  return (
+    <div
+      className="absolute left-[1176.35px] size-[40px] top-[125.5px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 40 40"
+      >
+        <g id="Icon" opacity="0.2">
+          <path
+            d={svgPathsStart.p2f9164f0}
+            fill="var(--fill-0, white)"
+            id="Vector"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function SecSart_Icon10() {
+  return (
+    <div
+      className="absolute left-[171.72px] size-[32px] top-[319.41px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 32 32"
+      >
+        <g id="Icon" opacity="0.2">
+          <path
+            d={svgPathsStart.p39136a00}
+            fill="var(--fill-0, white)"
+            id="Vector"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
 // export const   = () => {
 //   return (
 
