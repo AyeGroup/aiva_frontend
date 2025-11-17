@@ -270,6 +270,7 @@ export function WizardStep6({
                     onChange={(e) => handlePrimaryColor(e.target.value)}
                     placeholder="فرمت قابل قبول کد رنگ 6رقمی"
                     dir="ltr"
+                    maxLength={7}
                     className={`w-32 p-2 mx-2 border-2 rounded-2xl  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400 ${
                       errors?.primary_color
                         ? " border-red-500"
@@ -316,9 +317,10 @@ export function WizardStep6({
                   <input
                     type="text"
                     value={botConfig.accent_color}
-                    onChange={(e) => handlePrimaryColor(e.target.value)}
+                    onChange={(e) => handleAccentColor(e.target.value)}
                     placeholder="فرمت قابل قبول کد رنگ 6رقمی"
                     dir="ltr"
+                    maxLength={7}
                     className={`w-32 p-2 mx-2 border-2 rounded-2xl  text-gray-900 bg-transparent outline-none  placeholder:text-gray-400 ${
                       errors?.accent_color
                         ? " border-red-500"

@@ -86,7 +86,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 <span className="text-brand-primary ml-1">*</span>
               </label>
               <GenericSelector
-                items={languageOptions }
+                items={languageOptions}
                 selectedValue={botConfig.language}
                 // disabled={isChartLoading}
                 onSelect={(value) => {
@@ -120,29 +120,32 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
         <div className="space-y-4">
           <div className="form-group">
             <label className="block text-grey-900 mb-3">
-              توضیحات
+              توضیحات کلی دستیار
               <span className="text-brand-primary ml-1">*</span>
             </label>
             <textarea
               value={botConfig.description}
               onChange={(e) => updateConfig({ description: e.target.value })}
               rows={3}
-              placeholder="شما دستیار فروش فروشگاه خانه آرام هستید. 
+              placeholder={`شما دستیار فروش فروشگاه خانه آرام هستید.
 ما لوازم خانگی برقی مانند یخچال، ماشین لباسشویی و مایکروویو می‌فروشیم.
 محصولات ما گارانتی ۱۸ ماهه دارند و ارسال رایگان برای خرید بالای ۵ میلیون تومان.
-شماره تماس: ۰۲۱-۱۲۳۴۵۶۷۸"
-              className={`w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary resize-none ${
-                !botConfig.description || botConfig.description.length == 0
-                  ? "!border-red-400"
-                  : ""
-              }`}
-
-              // className={`w-full ${
-              //   !botConfig.description || botConfig.description.length == 0
-              //     ? "!border-red-400"
-              //     : ""
-              // }`}
+شماره تماس: ۰۲۱-۱۲۳۴۵۶۷۸`}
+              className={`w-full px-4 py-3 border border-border-soft rounded-lg 
+    focus:outline-none focus:ring-2 focus:ring-brand-primary/20 
+    focus:border-brand-primary resize-none whitespace-pre-wrap
+    text-base placeholder:text-sm placeholder:text-gray-400
+    ${
+      !botConfig.description || botConfig.description.length === 0
+        ? "!border-red-400"
+        : ""
+    }`}
             />
+
+            <span className="text-xs m-r2 mb-2">
+              در این قسمت، توضیحات کلی دستیار خود را وارد کنید. هرچه توضیحات
+              دقیق‌تر باشد، دقت پاسخ‌ها بیشتر خواهد شد.
+            </span>
           </div>
 
           <div className="form-group">
@@ -156,18 +159,28 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
               id="welcomeMessage"
               value={botConfig.guidelines}
               onChange={(e) => updateConfig({ guidelines: e.target.value })}
-              placeholder=" با لحن دوستانه و محترمانه صحبت کنید.
- پاسخ‌ها را کوتاه و مفید بدهید.
- هرگز قیمت اعلام نکنید - مشتری را به شماره تماس هدایت کنید.
- اگر محصولی نداریم، با عذرخواهی اعلام کنید.
- فقط درباره محصولات فروشگاه صحبت کنید."
+              placeholder={`با لحن دوستانه و محترمانه صحبت کنید.
+پاسخ‌ها را کوتاه و مفید بدهید.
+هرگز قیمت اعلام نکنید - مشتری را به شماره تماس هدایت کنید.
+اگر محصولی نداریم، با عذرخواهی اعلام کنید.
+فقط درباره محصولات فروشگاه صحبت کنید.`}
               rows={3}
-              className={`w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary resize-none ${
-                !botConfig.guidelines || botConfig.guidelines.length == 0
-                  ? "!border-red-400"
-                  : ""
-              }`}
+              className={`w-full px-4 py-3 border border-border-soft rounded-lg 
+    focus:outline-none focus:ring-2 focus:ring-brand-primary/20 
+    focus:border-brand-primary resize-none whitespace-pre-wrap
+    text-base placeholder:text-sm placeholder:text-gray-400
+    ${
+      !botConfig.guidelines || botConfig.guidelines.length === 0
+        ? "!border-red-400"
+        : ""
+    }`}
             />
+
+            <div className="text-xs mr-3 ">
+              در این بخش، دستورالعمل‌ها، قوانین، مقررات و بایدها و نبایدهای سایت
+              را بنویسید. این اطلاعات تأثیر زیادی در کیفیت پاسخ‌ها دارند، پس با
+              دقت پر کنید.
+            </div>
           </div>
           {false && (
             <div className="mt-5 rounded-sm p-2 bg-gray-100">

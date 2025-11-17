@@ -1,6 +1,7 @@
 import React from "react";
 import { Check } from "lucide-react";
 import svgPaths from "../svg/svg-f338pva7p3";
+import { useRouter } from "next/navigation";
 
 // Pricing Plan Type
 type PricingPlan = {
@@ -190,7 +191,10 @@ const pricingPlans: PricingPlan[] = [
 // PricingCard Component
 const PricingCard = ({ plan }: { plan: PricingPlan }) => {
   const isPriceNumeric = plan.id === "enterprise" || plan.id === "advanced";
-
+  const router = useRouter();
+  const handlePlan = () => {
+    router.push("http://localhost:3000/dashboard?tab=billing");
+  };
   return (
     <div className="bg-white rounded-3xl border-2 overflow-hidden border-gray-300 shadow-sm relative h-full flex flex-col">
       {/* Popular Badge */}
@@ -273,7 +277,8 @@ const PricingCard = ({ plan }: { plan: PricingPlan }) => {
 
         {/* Button */}
         <button
-          className={`w-full py-4 px-6 rounded-xl text-lg font-normal transition-all ${
+          onClick={handlePlan}
+          className={`w-full py-4 px-6 cursor-pointer rounded-xl text-lg font-normal transition-all ${
             plan.buttonVariant === "primary"
               ? "text-white shadow-md hover:shadow-lg"
               : "bg-white border-2 hover:shadow-md"
