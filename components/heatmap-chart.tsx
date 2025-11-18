@@ -77,24 +77,24 @@ export function HeatmapChart({
     <div
       className="w-full bg-white border border-grey-200 shadow-card"
       style={{
-        padding: "24px",
+        padding: "16px",
         borderRadius: "20px",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
       }}
     >
       {isLoading && <PageLoader />}
       {title && (
-        <div className="text-right mb-6">
+        <div className="text-right mb-4 md:mb-6">
           <h3
             className="text-grey-900 mb-1"
-            style={{ fontSize: "18px", fontWeight: "600" }}
+            style={{ fontSize: "16px", fontWeight: "600" }}
           >
             {title}
           </h3>
           {subtitle && (
             <p
               className="text-grey-600"
-              style={{ fontSize: "13px", lineHeight: "1.4" }}
+              style={{ fontSize: "12px", lineHeight: "1.4" }}
             >
               {subtitle}
             </p>
@@ -102,85 +102,92 @@ export function HeatmapChart({
         </div>
       )}
 
-      {/* جدول اصلی */}
-      <div
-        className="flex flex-col mb-5"
-        style={{ gap: "3px", fontSize: "11px" }}
-      >
-        {/* ردیف ساعت‌ها */}
-        <div className="flex items-center mb-1" style={{ gap: "3px" }}>
-          <div style={{ width: "55px", height: "22px" }}></div>
-          {HOURS.map((hour) => (
-            <div
-              key={hour}
-              className="flex w-[11px]   items-center justify-center text-grey-500"
-              style={{
-                height: "22px",
-                fontSize: "10px",
-                fontWeight: "500",
-              }}
-              title={`ساعت ${hour}:00`}
-            >
-              {hour % 2 === 1 ? convertToPersian(hour) : ""}
+      {/* جدول اصلی با اسکرول افقی */}
+      <div className="overflow-x-auto mb-4 md:mb-5 -mx-4 px-4 md:mx-0 md:px-0">
+        <div
+          className="flex flex-col w-fit"
+          style={{ gap: "3px", fontSize: "11px" }}
+        >
+          {/* ردیف ساعت‌ها - عنوان‌ها دقیقاً بالای سلول‌ها */}
+          <div className="flex items-start" style={{ gap: "3px" }}>
+            <div style={{ width: "46px", flexShrink: 0 }}></div>
+            <div className="flex" style={{ gap: "3px" }}>
+              {HOURS.map((hour) => (
+                <div
+                  key={hour}
+                  className="flex items-start justify-center text-grey-500"
+                  style={{
+                    width: "11px",
+                    height: "16px",
+                    fontSize: "10px",
+                    fontWeight: "500",
+                    paddingTop: "2px",
+                  }}
+                  title={`ساعت ${hour}:00`}
+                >
+                  {hour % 2 === 1 ? convertToPersian(hour) : ""}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* روزها */}
-        {DAYS.map((dayFa, dayIndex) => {
-          const dayEn = englishDays[dayIndex];
-          const hoursData = statisticHeatmap?.[dayEn] || [];
+          {/* روزها */}
+          {DAYS.map((dayFa, dayIndex) => {
+            const dayEn = englishDays[dayIndex];
+            const hoursData = statisticHeatmap?.[dayEn] || [];
 
-          return (
-            <div
-              key={dayIndex}
-              className="flex items-center"
-              style={{ gap: "2px" }}
-            >
+            return (
               <div
-                className="flex items-center justify-end text-grey-700 flex-shrink-0 pl-1 text-right"
-                style={{
-                  width: "46px",
-                  height: "22px",
-                  fontSize: "11px",
-                  fontWeight: "500",
-                }}
+                key={dayIndex}
+                className="flex items-center"
+                style={{ gap: "3px" }}
               >
-                {dayFa}
-              </div>
-              <div className="flex" style={{ gap: "3px" }}>
-                {HOURS.map((hour) => {
-                  const value = hoursData[hour] ?? 0;
-                  const color = getColorForValue(value);
+                <div
+                  className="flex items-center justify-end text-grey-700 flex-shrink-0 text-right"
+                  style={{
+                    width: "46px",
+                    height: "22px",
+                    fontSize: "11px",
+                    fontWeight: "500",
+                    paddingRight: "4px",
+                  }}
+                >
+                  {dayFa}
+                </div>
+                <div className="flex" style={{ gap: "3px" }}>
+                  {HOURS.map((hour) => {
+                    const value = hoursData[hour] ?? 0;
+                    const color = getColorForValue(value);
 
-                  return (
-                    <div
-                      key={`${dayEn}-${hour}`}
-                      className="cursor-pointer transition-all duration-150"
-                      style={{
-                        width: "11px",
-                        height: "22px",
-                        backgroundColor: color.bg,
-                        border: `1px solid ${color.border}`,
-                        borderRadius: "3px",
-                      }}
-                      title={`ساعت ${convertToPersian(
-                        hour
-                      )} | ${convertToPersian(value)} گفتگو`}
-                    />
-                  );
-                })}
+                    return (
+                      <div
+                        key={`${dayEn}-${hour}`}
+                        className="cursor-pointer transition-all duration-150 hover:opacity-80"
+                        style={{
+                          width: "11px",
+                          height: "22px",
+                          backgroundColor: color.bg,
+                          border: `1px solid ${color.border}`,
+                          borderRadius: "3px",
+                        }}
+                        title={`${dayFa} - ساعت ${convertToPersian(
+                          hour
+                        )} | ${convertToPersian(value)} گفتگو`}
+                      />
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* آمار پایین */}
       <div
-        className="flex justify-around"
+        className="flex flex-col sm:flex-row justify-around gap-4 sm:gap-0"
         style={{
-          padding: "16px",
+          padding: "12px 16px",
           background: "rgba(255, 161, 142, 0.04)",
           borderRadius: "12px",
           border: "1px solid rgba(255, 161, 142, 0.08)",
