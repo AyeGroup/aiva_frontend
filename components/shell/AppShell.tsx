@@ -63,7 +63,7 @@ export default function AppShell({ page }: AppShellProps) {
 
   return (
     <div className="app-shell" dir="rtl">
-      {/* {showHeader && <Header currentPage={page} />} */}
+      {showHeader && <Header currentPage={page} />}
       <Suspense fallback={<PageLoader />}>{renderPage()}</Suspense>
     </div>
   );

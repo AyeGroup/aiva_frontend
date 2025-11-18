@@ -360,7 +360,7 @@ export function ChatbotManagement() {
                                 className="chatbot-dropdown-menu"
                                 role="menu"
                               >
-                                <button
+                                {/* <button
                                   type="button"
                                   onClick={() => {
                                     setSelectedChatbot(chatbot);
@@ -375,7 +375,7 @@ export function ChatbotManagement() {
                                 >
                                   <Eye className="w-4 h-4" />
                                   <span>جزئیات بیشتر</span>
-                                </button>
+                                </button> */}
                                 <button
                                   type="button"
                                   onClick={() => {
