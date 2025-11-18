@@ -92,10 +92,10 @@ export function RecentChats({
           </div>
         </div>
 
-        <Button variant="tertiary" size="md" onClick={onViewAll}>
+        {/* <Button variant="tertiary" size="md" onClick={onViewAll}>
           مشاهده همه
           <ArrowLeft className="w-4 h-4 mr-2" />
-        </Button>
+        </Button> */}
       </div>
 
       <div className="space-y-4">

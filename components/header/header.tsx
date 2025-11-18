@@ -25,11 +25,13 @@ export function Header({
 
   return (
     <header
-      className={`header w-full transition-all duration-300 ${
-        currentPage === "landing"
-          ? "bg-transparent absolute top-0 left-0 right-0 z-50"
-          : "bg-white/95 backdrop-blur-sm border-b border-border-soft shadow-sm"
-      }`}
+      // className={`header w-full transition-all duration-300 ${
+      //   currentPage === "landing"
+      //     ? "bg-transparent absolute top-0 left-0 right-0 z-50"
+      //     : "bg-white/95 backdrop-blur-sm border-b border-border-soft shadow-sm"
+      // }`}
+      className="header w-full transition-all duration-300 "
+
       role="banner"
       style={{
         borderRadius:
@@ -40,43 +42,43 @@ export function Header({
     >
       <div className="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
         <div className="flex items-center justify-between">
-           {/* {!isEditingChatbot && !isOnboarding && ( */}
-            <div className="flex items-center">
-              <button
-                onClick={() => router.push("/landing")}
-                title={logo.title}
-                className="flex items-center gap-3 hover:opacity-80 animate-soft group"
-                aria-label="برگشت به صفحه اصلی"
-              >
-                {/* تصویر لوگو */}
-                {logo.image ? (
-                  <Image
-                    src="/logo.png"
-                    width={50}
-                    height={40}
-                    alt="Logo"
-                    style={{ width: "auto", height: "40px" }}
-                  />
-                ) : (
-                  <div className="h-8 w-8 lg:h-10 lg:w-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                    <span className="text-white text-sm lg:text-lg">
-                      {logo.text?.charAt(0)}
-                    </span>
-                  </div>
-                )}
-
-                {/* متن لوگو */}
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-grey-900 group-hover:text-brand-primary transition-colors leading-none text-right">
-                    {logo.text}
-                  </span>
-                  <span className="hidden sm:block text-grey-600 text-xs leading-none">
-                    دستیار هوشمند
+          {/* {!isEditingChatbot && !isOnboarding && ( */}
+          <div className="flex items-center">
+            <button
+              onClick={() => router.push("/landing")}
+              title={logo.title}
+              className="flex items-center gap-3 hover:opacity-80 animate-soft group"
+              aria-label="برگشت به صفحه اصلی"
+            >
+              {/* تصویر لوگو */}
+              {logo.image ? (
+                <Image
+                  src="/logo.png"
+                  width={50}
+                  height={40}
+                  alt="Logo"
+                  style={{ width: "auto", height: "40px" }}
+                />
+              ) : (
+                <div className="h-8 w-8 lg:h-10 lg:w-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                  <span className="text-white text-sm lg:text-lg">
+                    {logo.text?.charAt(0)}
                   </span>
                 </div>
-              </button>
-            </div>
-           {/* )} */}
+              )}
+
+              {/* متن لوگو */}
+              <div className="flex flex-col gap-0.5">
+                <span className="text-grey-900 group-hover:text-brand-primary transition-colors leading-none text-right">
+                  {logo.text}
+                </span>
+                <span className="hidden sm:block text-grey-600 text-xs leading-none">
+                  دستیار هوشمند
+                </span>
+              </div>
+            </button>
+          </div>
+          {/* )} */}
 
           {/* منوی ناوبری اصلی - فقط در دسکتاپ */}
           {!isEditingChatbot && !isOnboarding && (
@@ -198,6 +200,7 @@ export function Header({
               </Button>
             ) : isOnboarding ? (
               <></>
+            ) : (
               //  <Button
               //   variant="secondary"
               //   size="md"
@@ -208,7 +211,6 @@ export function Header({
               //   <ArrowLeft className="w-5 h-5 ml-2" />
               //   <span>برگشت</span>
               // </Button>
-            ) : (
               // دکمه‌های ورود و ثبت‌نام برای صفحات عادی
               <>
                 <Button

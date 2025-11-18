@@ -1,105 +1,50 @@
 "use client";
+import { useEffect } from "react";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import SectionFAQ from "./components/Section-faq";
+import SectionSecurity from "./components/Section-security";
+import SectionStarting from "./components/Section-starting";
+import Section1 from "./components/Section1";
+import Section2 from "./components/Section2";
+import Section3 from "./components/Section3";
+import Section4 from "./components/Section4";
+import Section5 from "./components/Section5";
+import Section6 from "./components/Section6";
+import Section7 from "./components/Section7";
+import Section8 from "./components/Section8";
+import { usePathname } from "next/navigation";
 
-import React from "react";
-import { FAQ } from "./faq";
-import { Hero } from "./hero";
-import { Trust } from "./trust";
-import { Footer } from "./footer";
-import { Pricing } from "./pricing";
-import { FinalCTA } from "./final-cta";
-import { Features } from "./features";
-import { CaseStudy } from "./case-study";
-import { HowItWorks } from "./how-it-works";
-import { Comparison } from "./comparison";
-import { ErrorBoundary } from "@/components/error-boundary";
+export default function App() {
+    const pathname = usePathname();
+ useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.replace("#", "");
+      const element = document.getElementById(id);
 
- 
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50); // کمی تاخیر برای رندر صفحه
+      }
+    }
+  }, [pathname]);
 
-// Loading fallback component
-const LoadingSection = () => (
-  <div className="py-16 md:py-24">
-    <div className="container mx-auto px-4">
-      <div className="animate-pulse">
-        <div className="h-8 bg-gray-200 rounded w-1/3 mx-auto mb-4"></div>
-        <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto mb-8"></div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded"></div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// export function LandingPage({ onNavigate }: LandingPageProps) {
-export default function Landing() {
   return (
     <main className="landing-page min-h-screen bg-white">
-    
-      {/* Hero Section */}
-      <ErrorBoundary>
-        <Hero />
-      </ErrorBoundary>
-
-      {/* چطور کار می‌کند */}
-      <ErrorBoundary>
-        <section className="py-24 bg-[#F9FAFB]">
-          <HowItWorks />
-        </section>
-      </ErrorBoundary>
-
-      {/* ویژگی‌ها */}
-      <ErrorBoundary>
-        <section className="py-24 bg-white">
-          <Features />
-        </section>
-      </ErrorBoundary>
-
-      {/* مقایسه پشتیبانی */}
-      <ErrorBoundary>
-        <section className="py-24 bg-[#F9FAFB]">
-          <Comparison />
-        </section>
-      </ErrorBoundary>
-
-      {/* داستان موفقیت */}
-      <ErrorBoundary>
-        <section className="py-24 bg-white">
-          <CaseStudy />
-        </section>
-      </ErrorBoundary>
-
-      {/* قیمت‌گذاری */}
-      <ErrorBoundary>
-        <section className="py-24 bg-[#F9FAFB]">
-          <Pricing />
-        </section>
-      </ErrorBoundary>
-
-      {/* امنیت و اعتماد */}
-      <ErrorBoundary>
-        <section className="py-20 bg-white">
-          <Trust />
-        </section>
-      </ErrorBoundary>
-
-      {/* سؤالات متداول */}
-      <ErrorBoundary>
-        <section className="py-24 bg-[#F9FAFB]">
-          <FAQ />
-        </section>
-      </ErrorBoundary>
-
-      {/* دعوت نهایی به اقدام */}
-      <ErrorBoundary>
-        <FinalCTA />
-      </ErrorBoundary>
-
-      {/* فوتر */}
-      <ErrorBoundary>
-        <Footer />
-      </ErrorBoundary>
+      <Header />
+      <Section1 />
+      <Section2 />
+      <Section3 />
+      <Section4 />
+      {/* <Section5 />  */}
+      <Section6 />
+      <Section7 />
+      <Section8 />
+      <SectionSecurity />
+      <SectionFAQ />
+      <SectionStarting />
+      <Footer />
     </main>
   );
 }

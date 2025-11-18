@@ -9,7 +9,7 @@ import { useBot } from "@/providers/BotProvider";
 import { Checkbox } from "@/components/checkbox";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { convertToEnglish, convertToPersian } from "@/utils/common";
+import {  convertToPersian } from "@/utils/common";
 import { ArrowRight, Tag, Receipt, CreditCard } from "lucide-react";
 import {
   getFaNameByCode,
@@ -25,44 +25,63 @@ export default function Checkout() {
   const [requestOfficialInvoice, setRequestOfficialInvoice] = useState(false);
   const [isPlanLoaded, setIsPlanLoaded] = useState(false);
   const [companyName, setCompanyName] = useState("");
-  const [economicCode, setEconomicCode] = useState("");
   const [nationalId, setNationalId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [invoice, setInvoice] = useState<any>(null);
   const router = useRouter();
   const { currentBot } = useBot();
 
   useEffect(() => {
-    const planData = localStorage.getItem("selectedPlan");
-    console.log("planData", planData);
+    const fetchPlanAndInvoice = async () => {
+      const planData = localStorage.getItem("selectedPlan");
+      if (!planData) {
+        router.push("/dashboard?tab=billing");
+        return;
+      }
 
-    if (planData) {
       const parsed = JSON.parse(planData);
       setSelectedPlan(parsed);
-      console.log("checkout Plan:", parsed);
-    } else {
-      router.push("/dashboard?tab=billing");
-    }
 
-    setIsPlanLoaded(true);
+      try {
+        setIsLoading(true);
+        // ایجاد فاکتور در بک‌اند
+        const invoicePayload = {
+          // purpose: TRANSACTION_TYPE.BUY_SUBSCRIPTION,
+          purpose: "subscription_purchase",
+          subscription_type: parsed.period,
+          subscription_plan: getPlanIdByCode(parsed.plan),
+
+          amount_irr:
+            parsed.period === "monthly"
+              ? parsed.price_monthly_irr
+              : parsed.price_yearly_irr,
+          chatbot_uuid: parsed?.billingBot?.uuid,
+        };
+        console.log("invoice", invoicePayload);
+        const res = await axiosInstance.post(
+          API_ROUTES.PAYMENT.FACTOR,
+          invoicePayload
+        );
+        const data = res.data;
+
+        if (!data.success) {
+          toast.error(data.message || "خطا در ایجاد فاکتور");
+          return;
+        }
+
+        // فاکتور را در state ذخیره کنید
+        setInvoice(data.data);
+      } catch (err: any) {
+        toast.error(err.message || "خطا در ایجاد فاکتور");
+      } finally {
+        setIsLoading(false);
+        setIsPlanLoaded(true);
+      }
+    };
+
+    fetchPlanAndInvoice();
   }, [router]);
 
-  const basePrice = selectedPlan
-    ? parseInt(
-        convertToEnglish(
-          selectedPlan.period === "yearly"
-            ? selectedPlan.price_yearly_irr
-            : selectedPlan.price_monthly_irr
-        ).replace(/,/g, ""),
-        10
-      )
-    : 0;
-  console.log("basePrice", basePrice);
-
-  const discountAmount = (basePrice * appliedDiscount) / 100;
-  const priceAfterDiscount = basePrice - discountAmount;
-  const taxRate = 10;
-  const taxAmount = (priceAfterDiscount * taxRate) / 100;
-  const totalPrice = priceAfterDiscount + taxAmount;
 
   const handleApplyDiscount = async () => {
     if (!discountCode.trim()) return;
@@ -114,7 +133,6 @@ export default function Checkout() {
 
     if (requestOfficialInvoice) {
       if (!companyName.trim()) return toast.error("نام شرکت الزامی است");
-      if (!economicCode.trim()) return toast.error("کد اقتصادی الزامی است");
       if (!nationalId.trim()) return toast.error("شناسه ملی الزامی است");
     }
 
@@ -125,13 +143,13 @@ export default function Checkout() {
         purpose: "subscription_purchase",
         // purpose:TRANSACTION_TYPE.BUY_SUBSCRIPTION,
 
-        amount_irr: totalPrice,
+        amount_irr: invoice?.total_amount_irr,
         chatbot_uuid: currentBot?.uuid,
         subscription_plan: getPlanIdByCode(selectedPlan.plan),
         subscription_type: selectedPlan.period,
         description: selectedPlan.description,
       };
-console.log("ALI",invoicePayload)
+      console.log("ALI", invoicePayload);
       const res = await axiosInstance.post(
         API_ROUTES.PAYMENT.INITIATE,
         invoicePayload
@@ -156,8 +174,6 @@ console.log("ALI",invoicePayload)
       setIsLoading(false);
     }
   };
-
-
 
   if (!isPlanLoaded) {
     return <PageLoader />;
@@ -209,7 +225,7 @@ console.log("ALI",invoicePayload)
                     </div>
                     <div className="text-left">
                       <p className="text-grey-900">
-                        {basePrice.toLocaleString("fa-IR")} تومان
+                        {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان
                       </p>
                       <p className="text-grey-500 text-sm">
                         {SUBSCRIPTION_TYPES[selectedPlan.period]}
@@ -262,17 +278,25 @@ console.log("ALI",invoicePayload)
               <div className="space-y-4 mb-6 pb-6 border-b border-grey-200">
                 <div className="flex justify-between items-center">
                   <span className="text-grey-600">مبلغ پایه</span>
-                  <span>{basePrice.toLocaleString("fa-IR")} تومان</span>
+                  <span>
+                    {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان
+                  </span>
                 </div>
                 {appliedDiscount > 0 && (
                   <div className="flex justify-between items-center text-green-600">
                     <span>تخفیف ({appliedDiscount}%)</span>
-                    <span>-{discountAmount.toLocaleString("fa-IR")} تومان</span>
+                    <span>
+                      -{invoice.discountAmount.toLocaleString("fa-IR")} تومان
+                    </span>
                   </div>
                 )}
                 <div className="flex justify-between items-center">
-                  <span>مالیات ({convertToPersian(taxRate)}%)</span>
-                  <span>{taxAmount.toLocaleString("fa-IR")} تومان</span>
+                  <span>
+                    مالیات ({convertToPersian(invoice.tax_percentage)}%)
+                  </span>
+                  <span>
+                    {invoice.tax_amount_irr.toLocaleString("fa-IR")} تومان
+                  </span>
                 </div>
               </div>
 
@@ -294,12 +318,7 @@ console.log("ALI",invoicePayload)
                       placeholder="نام شرکت"
                       label="نام شرکت"
                     />
-                    <Input
-                      type="text"
-                      value={economicCode}
-                      onChange={(e) => setEconomicCode(e.target.value)}
-                      placeholder="کد اقتصادی"
-                    />
+
                     <Input
                       type="text"
                       value={nationalId}
@@ -313,15 +332,14 @@ console.log("ALI",invoicePayload)
               <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-gradient-to-br from-grey-50 to-white border-2 border-grey-200">
                 <span>مبلغ قابل پرداخت</span>
                 <span className="text-xl font-bold text-[#65BCB6]">
-                  {/* {totalPrice} تومان */}
-                  {totalPrice.toLocaleString("fa-IR")} تومان
+                  {invoice.total_amount_irr.toLocaleString("fa-IR")} تومان
                 </span>
               </div>
 
               <button
                 onClick={handleProceedToPayment}
                 disabled={isLoading || !selectedPlan}
-                className="w-full py-4 rounded-2xl bg-gradient-to-br from-[#65BCB6] to-[#5AA8A2] text-white hover:from-[#5AA8A2] hover:to-[#4E9690] transition-all duration-300 shadow-lg"
+                className="w-full py-4 rounded-2xl bg-linear-to-br from-[#65BCB6] to-[#5AA8A2] text-white hover:from-[#5AA8A2] hover:to-[#4E9690] transition-all duration-300 shadow-lg"
               >
                 {isLoading ? "در حال پردازش..." : "پرداخت امن"}
               </button>

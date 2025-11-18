@@ -63,6 +63,16 @@ export default function OnboardingWizard() {
   });
   const totalSteps = steps.length;
 
+useEffect(() => {
+  const id = searchParams.get("id");
+
+  if (id === "new") {
+    // کار ایجاد بات جدید...
+
+    // حذف id=new از URL بدون ریلود شدن
+    router.replace("/dashboard?tab=onboarding");
+  }
+}, []);
   // authentication
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");

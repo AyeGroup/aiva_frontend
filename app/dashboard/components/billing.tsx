@@ -19,7 +19,6 @@ import {
   Users,
 } from "lucide-react";
 import { Card } from "@/components/card";
-import { Modal } from "../modal";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
@@ -28,29 +27,17 @@ import { PlanCard } from "../plan-card";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WalletCard } from "../wallet-card";
-import { convertToPersian, getDaysRemaining } from "@/utils/common";
+import { getDaysRemaining } from "@/utils/common";
 import {
   getFaNameByCode,
   getPlanNameById,
-  getTransactionTitle,
   PLAN_COLORS_BYID,
-  TRANSACTION_TYPE,
 } from "@/constants/plans";
 import axiosInstance from "@/lib/axiosInstance";
 import { CreditIncreaseModal } from "./CreditIncrease";
 import { Transactions } from "../Transactions";
-
-interface Transaction {
-  id: string;
-  date: string;
-  planName?: string;
-  chatbotName?: string;
-  amount: string;
-  status: "success" | "failed" | "pending";
-  invoiceUrl?: string;
-  type: "plan" | "wallet";
-  walletType?: "deposit" | "withdraw";
-}
+import { ChatbotList } from "../chatbot-list";
+import { BotConfig } from "@/types/common";
 
 export function Billing() {
   const { bots } = useBot();
@@ -67,7 +54,8 @@ export function Billing() {
   >("all");
   const [dateFrom, setDateFrom] = useState<string>("");
   const [dateTo, setDateTo] = useState<string>("");
- 
+  const [billingBot, setBillingBot] = useState<BotConfig | null>(null);
+
   const [isCreditIncreaseModalOpen, setIsCreditIncreaseModalOpen] =
     useState(false);
   const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
@@ -198,7 +186,10 @@ export function Billing() {
   };
 
   const handlePlanPurchase = (planName: string) => {
-    if (planName.toLowerCase() === "enterprise".toLowerCase()) {
+    if (!billingBot) {
+      toast.info("لطفاً چت‌بات مورد نظر را انتخاب کنید");
+      return;
+    } else if (planName.toLowerCase() === "enterprise".toLowerCase()) {
       toast.info("لطفاً با تیم فروش ما تماس بگیرید");
       return;
     } else if (planName.toLowerCase() === "free".toLowerCase()) {
@@ -214,14 +205,15 @@ export function Billing() {
     console.log("ali:", plan);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
-
-      localStorage.setItem(
-        "selectedPlan",
-        JSON.stringify({
-          ...plan,
-          period,
-        })
-      );
+      // 
+        localStorage.setItem(
+          "selectedPlan",
+          JSON.stringify({
+            ...plan,
+            billingBot,
+            period,
+          })
+        );
       router.push("/pay/checkout");
     }
   };
@@ -343,7 +335,7 @@ export function Billing() {
 
   // پاکسازی فیلترها
 
-  const handleUpgrade = (chatbot: any ) => {
+  const handleUpgrade = (chatbot: any) => {
     setSelectedChatbot(chatbot);
     setIsCreditIncreaseModalOpen(true);
   };
@@ -365,16 +357,11 @@ export function Billing() {
     }
   };
 
- 
-
- 
-
   const getProgressColor = (percentage: number): string => {
     if (percentage >= 90) return "#FF6B6B";
     if (percentage >= 70) return "#FFA18E";
     return "#65bcb6";
   };
-
 
   // محاسبه آمار کلی
   // const totalChatbots = activeSubscrp.length;
@@ -393,7 +380,6 @@ export function Billing() {
 
   return (
     <div className="min-h-screen flex bg-grey-50" dir="rtl">
-
       <main className="flex-1 p-8" role="main">
         <header className="mb-8">
           <div className="text-right">
@@ -492,9 +478,7 @@ export function Billing() {
                         variant="primary"
                         size="sm"
                         title="تمدید"
-                        onClick={() =>
-                          handleUpgrade(plan )
-                        }
+                        onClick={() => handleUpgrade(plan)}
                       >
                         تمدید پلن
                       </Button>
@@ -503,9 +487,7 @@ export function Billing() {
                         variant="secondary"
                         size="sm"
                         title="افزایش اعتبار"
-                        onClick={
-                          () => handleUpgrade(plan)
-                        }
+                        onClick={() => handleUpgrade(plan)}
                       >
                         افزایش اعتبار
                       </Button>
@@ -722,9 +704,7 @@ export function Billing() {
                           <td className="px-4 py-3">
                             <div className="flex items-center justify-center">
                               <button
-                                onClick={() =>
-                                  handleUpgrade(plan )
-                                }
+                                onClick={() => handleUpgrade(plan)}
                                 className="px-4 py-2 rounded-lg billing-upgrade-btn"
                                 style={{
                                   backgroundColor: "#65bcb6",
@@ -764,9 +744,14 @@ export function Billing() {
             >
               پلن‌های قابل خرید
             </h2>
-            <p className="text-grey-600 text-right">
+            <div className="flex items-center gap-3 text-grey-600 text-right">
               پلن مناسب خود را انتخاب کنید
-            </p>
+              <ChatbotList
+                placeholder="یک چت‌بات را انتخاب کنید"
+                selectedBot={billingBot}
+                onSelect={(bot) => setBillingBot(bot)}
+              />
+            </div>
           </div>
 
           <div className="available-plans-grid">
