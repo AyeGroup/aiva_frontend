@@ -48,7 +48,10 @@ export function Billing() {
   const [expiringPlan, setExpiringPlan] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
-  const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
+  // const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
+  const [periods, setPeriods] = useState<Record<string, "monthly" | "yearly">>(
+    {}
+  );
 
   useEffect(() => {
     if (!user) return;
@@ -150,6 +153,15 @@ export function Billing() {
       },
     ];
   };
+  const handlePeriodChange = (
+    planCode: string,
+    newPeriod: "monthly" | "yearly"
+  ) => {
+    setPeriods((prev) => ({
+      ...prev,
+      [planCode]: newPeriod, // ثبت period مخصوص این پلن
+    }));
+  };
 
   const getPlanIcon = (planCode: string) => {
     switch (planCode.toUpperCase()) {
@@ -194,7 +206,7 @@ export function Billing() {
         JSON.stringify({
           ...plan,
           billingBot,
-          period,
+          periods,
         })
       );
       router.push("/pay/checkout");
@@ -583,7 +595,7 @@ export function Billing() {
             </div>
           </div>
 
-          <div className="available-plans-grid">
+          <div className=" grid  grid-cols-2  gap-8 px-6">
             {plans.map((plan, index) => (
               <PlanCard
                 key={index}
@@ -591,7 +603,8 @@ export function Billing() {
                 description=""
                 priceMonthly={Number(plan?.price_monthly_irr || 0)}
                 priceYearly={Number(plan?.price_yearly_irr || 0)}
-                period={period}
+                period={periods[plan.plan] || "monthly"}
+                onPeriodChange={(p) => handlePeriodChange(plan.plan, p)}
                 icon={getPlanIcon(plan.plan)}
                 features={mapFeatures(plan)}
                 onSelect={() => {

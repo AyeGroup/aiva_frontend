@@ -190,7 +190,8 @@ body {
   /* Weights */
   --font-weight-display: 600;
   --font-weight-medium: 500;
-  --font-weight-normal: 400;
+  --font-weight-normal: 500;
+ 
 
   /* Spacing (8pt Grid) */
   --space-1: 4px;

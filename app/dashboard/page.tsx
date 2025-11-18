@@ -57,14 +57,12 @@ export default function DashboardPage() {
   if (!user) return null;
 
   return (
-    <BotProvider>
-      <div className="flex min-h-screen">
-        <Sidebar currentPage={currentPage} router={router} />
+    <div className="flex min-h-screen">
+      <Sidebar currentPage={currentPage} router={router} />
 
-        <main className="flex-1 bg-gray-50">
-          {pages[currentPage] || <DashboardHome />}
-        </main>
-      </div>
-    </BotProvider>
+      <main className="flex-1 bg-gray-50">
+        {pages[currentPage] || <DashboardHome />}
+      </main>
+    </div>
   );
 }

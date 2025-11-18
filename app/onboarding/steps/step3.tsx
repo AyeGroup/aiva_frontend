@@ -22,8 +22,8 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
   //   support_phone: "",
   // });
 
-  const [sliderValue, setSliderValue] = useState(10);
-console.log("ThreeLevelSlider imported!");
+  // const [sliderValue, setSliderValue] = useState(10);
+// console.log("ThreeLevelSlider imported!");
 
   // const handleBehaviorChange = (key: keyof BehaviorSettings, value: any) => {
   //   const updated = { ...behaviors, [key]: value };
@@ -56,9 +56,9 @@ console.log("ThreeLevelSlider imported!");
         </h3>
         {/* <ThreeLevelSlider value={sliderValue} onChange={setSliderValue} /> */}
         <ThreeLevelSlider
-          value={sliderValue}
+          value={botConfig.k}
           onChange={(val) => {
-            setSliderValue(val);
+            // setSliderValue(val);
             updateConfig({ k: val });
           }}
         />

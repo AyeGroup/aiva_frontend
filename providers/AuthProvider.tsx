@@ -8,11 +8,13 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
-import PageLoader from "@/components/pageLoader";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import axios from "axios";
+import PageLoader from "@/components/pageLoader";
+import axiosInstance from "@/lib/axiosInstance";
+
+console.log("✅ AuthProvider rendered");
 
 interface User {
   id: number;
@@ -39,11 +41,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  console.log("👤 user changed", user);
+  console.log("AuthProvider> ", user);
 
   // ✅ فقط یکبار ثبت listener
   useEffect(() => {
-    console.log("aaa");
+    console.log("AuthProvider> useEffect ");
     const handleLogout = () => router.push("/auth/login");
     window.addEventListener("auth-logout", handleLogout);
     return () => window.removeEventListener("auth-logout", handleLogout);
@@ -51,7 +53,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // ✅ دریافت اطلاعات از localStorage
   useEffect(() => {
-console.log("bbb");
+    console.log("AuthProvider> useEffect2 ");
+
     const token = localStorage.getItem("accessToken");
     const savedUser = localStorage.getItem("user");
     if (token && savedUser) setUser(JSON.parse(savedUser));
@@ -62,6 +65,7 @@ console.log("bbb");
   const login = useCallback(
     async (identity: string, password: string): Promise<LoginResponse> => {
       try {
+    console.log("AuthProvider> login ");
         const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
           identity,
           password,
@@ -99,6 +103,8 @@ console.log("bbb");
   // ✅ useCallback برای logout
   const logout = useCallback(async () => {
     try {
+    console.log("AuthProvider> logout ");
+
       await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
     } catch {
       /* ignore logout errors */

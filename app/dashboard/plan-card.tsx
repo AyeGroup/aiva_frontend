@@ -12,6 +12,8 @@ interface PlanCardProps {
   priceMonthly: number;
   priceYearly: number;
   period: "monthly" | "yearly";
+  onPeriodChange: (newPeriod: "monthly" | "yearly") => void;
+
   features: PlanFeature[];
   icon: React.ReactNode;
   featured?: boolean;
@@ -28,6 +30,7 @@ export function PlanCard({
   priceMonthly,
   priceYearly,
   period,
+  onPeriodChange,
   features,
   icon,
   featured = false,
@@ -54,6 +57,38 @@ export function PlanCard({
         <h3 className="plan-card-name text-right">{name}</h3>
         <p className="plan-card-description text-right">{description}</p>
       </header>
+      <div className="grid grid-cols-2   mb-3 w-full text-sm rounded-sm bg-gray-100 p-1.5">
+        <button
+          onClick={() => onPeriodChange("monthly")}
+          className={`px-4 py-2 rounded-sm transition
+            ${
+              period === "monthly"
+                ? "bg-white shadow text-primary "
+                : "text-gray-500"
+            }
+          `}
+        >
+          ماهانه
+        </button>
+
+        <button
+          onClick={() => onPeriodChange("yearly")}
+          className={`px-4 py-2 rounded-sm transition
+            ${
+              period === "yearly"
+                ? "bg-white shadow text-primary"
+                : "text-gray-500"
+            }
+          `}
+        >
+          <div>
+            سالانه
+            <span className="text-xs font-medium rounded-[6px] text-white bg-secondary px-1 mr-1">
+              ۲۰% تخفیف
+            </span>
+          </div>
+        </button>
+      </div>
 
       <div className="plan-card-price">
         <div className="plan-card-price-amount">
@@ -61,7 +96,9 @@ export function PlanCard({
             {price === 0 ? "رایگان" : formatPrice(price)}
           </span>
           {price > 0 && <span className="plan-card-price-currency">تومان</span>}
-        {price > 0 && <p className="plan-card-price-period text-sm">/ {periodLabel} </p>}
+          {price > 0 && (
+            <p className="plan-card-price-period text-sm">/ {periodLabel} </p>
+          )}
         </div>
       </div>
 
