@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axiosInstance from "@/lib/axiosInstance";
+import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
+import { useBot } from "@/providers/BotProvider";
+import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { getPlanNameById, TRANSACTION_TYPE } from "@/constants/plans";
+import { ChatbotList } from "./chatbot-list";
+import { convertToPersian } from "@/utils/common";
+import { getTransactionTitle, TRANSACTION_TYPE } from "@/constants/plans";
 import {
   Download,
-  Share2,
   RefreshCw,
   FileText,
   Bot,
@@ -18,16 +21,11 @@ import {
   Filter,
   ChevronDown,
 } from "lucide-react";
-import PageLoader from "@/components/pageLoader";
-import { convertToPersian } from "@/utils/common";
-import { Card } from "@/components/card";
-import { useBot } from "@/providers/BotProvider";
-import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
+import DatePicker from "react-multi-date-picker";
+import PageLoader from "@/components/pageLoader";
 import persian_fa from "react-date-object/locales/persian_fa";
-import { ChatbotSelector } from "./chatbot-selector";
-import { ChatbotList } from "./chatbot-list";
-import { BotConfig } from "@/types/common";
+import axiosInstance from "@/lib/axiosInstance";
 
 export const Transactions: React.FC = () => {
   const { user, loading } = useAuth();
@@ -37,18 +35,13 @@ export const Transactions: React.FC = () => {
   const [transactionTypeFilter, setTransactionTypeFilter] = useState<
     "all" | TRANSACTION_TYPE
   >("all");
-  const [walletTypeFilter, setWalletTypeFilter] = useState<
-    "all" | "deposit" | "withdraw"
-  >("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateFromTemp, setDateFromTemp] = useState("");
   const [dateToTemp, setDateToTemp] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  // صفحه بندی
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState(true);
   const [filterBot, setFilterBot] = useState<BotConfig | null>(null);
 
@@ -89,64 +82,69 @@ export const Transactions: React.FC = () => {
   }, [isFilterOpen]);
 
   // اعمال فیلتر
- useEffect(() => {
-   if (!transactions) return;
+  useEffect(() => {
+    if (!transactions) return;
 
-   let data = [...transactions];
+    let data = [...transactions];
 
-   // فیلتر نوع تراکنش
-   if (transactionTypeFilter !== "all") {
-     if (transactionTypeFilter === TRANSACTION_TYPE.BUY_SUBSCRIPTION) {
-       data = data.filter((t) => t.type === TRANSACTION_TYPE.BUY_SUBSCRIPTION);
-     } else if (transactionTypeFilter === TRANSACTION_TYPE.INCREASE_WALLET) {
-       data = data.filter((t) => t.type === TRANSACTION_TYPE.INCREASE_WALLET);
-     }
-   }
+    // فیلتر نوع تراکنش
+    if (transactionTypeFilter !== "all") {
+      if (transactionTypeFilter === TRANSACTION_TYPE.BUY_SUBSCRIPTION) {
+        data = data.filter((t) => t.type === TRANSACTION_TYPE.BUY_SUBSCRIPTION);
+      } else if (transactionTypeFilter === TRANSACTION_TYPE.INCREASE_WALLET) {
+        data = data.filter((t) => t.type === TRANSACTION_TYPE.INCREASE_WALLET);
+      }
+    }
 
-   // فیلتر بازه زمانی
-   if (dateFrom) {
-     const from = new Date(dateFrom);
-     data = data.filter((t) => new Date(t.created_at) >= from);
-   }
+    // فیلتر بازه زمانی
+    if (dateFrom) {
+      const from = new Date(dateFrom);
+      data = data.filter((t) => new Date(t.created_at) >= from);
+    }
 
-   if (dateTo) {
-     const to = new Date(dateTo);
-     data = data.filter((t) => new Date(t.created_at) <= to);
-   }
-   if (filterBot) {
-     data = data.filter((t) => t.chatbot_uuid === filterBot.uuid);
-   }
+    if (dateTo) {
+      const to = new Date(dateTo);
+      data = data.filter((t) => new Date(t.created_at) <= to);
+    }
+    if (filterBot) {
+      data = data.filter((t) => t.chatbot_uuid === filterBot.uuid);
+    }
 
-   setFilteredTransactions(data);
-   setCurrentPage(1);
- }, [transactionTypeFilter, dateFrom, dateTo, filterBot, transactions]);
+    setFilteredTransactions(data);
+    setCurrentPage(1);
+  }, [transactionTypeFilter, dateFrom, dateTo, filterBot, transactions]);
 
-  // const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-  // const paginatedTransactions = filteredTransactions.slice(
-  //   (currentPage - 1) * itemsPerPage,
-  //   currentPage * itemsPerPage
-  // );
-const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-const paginatedTransactions = filteredTransactions.slice(
-  (currentPage - 1) * itemsPerPage,
-  currentPage * itemsPerPage
-);
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+  const paginatedTransactions = filteredTransactions.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
 
-  const getTransactionTitle = (type: string) =>
-    type === TRANSACTION_TYPE.BUY_SUBSCRIPTION ? "خرید پلن" : "افزایش موجودی";
 
-  const hasActiveFilters =
-    transactionTypeFilter !== "all" ||
-    walletTypeFilter !== "all" ||
-    dateFrom !== "" ||
-    dateTo !== "";
+  const hasActiveFilters = dateFrom !== "" || dateTo !== "";
 
-  const clearFilters = () => {
-    setTransactionTypeFilter("all");
-    setWalletTypeFilter("all");
-    setDateFrom("");
-    setDateTo("");
+  const handlePdf = async (transaction_id: string) => {
+    try {
+      const response = await axiosInstance.get(
+        API_ROUTES.FINANCIAL.PDF(transaction_id),
+        { responseType: "blob" } // مهم!!
+      );
+
+      const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+
+      // دانلود
+      const url = window.URL.createObjectURL(pdfBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `invoice-${transaction_id}.pdf`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+
+      console.log("PDF downloaded");
+    } catch (error: any) {
+      console.error("Error downloading PDF:", error);
+    }
   };
 
   return (
@@ -431,14 +429,8 @@ const paginatedTransactions = filteredTransactions.slice(
                       {/* جزئیات */}
                       <td className="px-6 py-4">
                         <div className="flex flex-col gap-1">
-                          <p className="text-grey-900">
+                          <p className="text-grey-900 font-normal">
                             {getTransactionTitle(transaction.type)}
-                            {/* {transaction.type ===
-                            TRANSACTION_TYPE.BUY_SUBSCRIPTION
-                              ? "خرید پلن"
-                              : transaction.walletType === "deposit"
-                              ? "واریز"
-                              : "برداشت"} */}
                           </p>
                           {transaction.chatbot_uuid && (
                             <p className="text-grey-500 text-sm">
@@ -449,21 +441,12 @@ const paginatedTransactions = filteredTransactions.slice(
                               }
                             </p>
                           )}
-                          {/* {transaction.type === "wallet" && (
-                            <p className="text-grey-500 text-sm">
-                              {transaction.walletType === "deposit"
-                                ? "واریز به کیف پول"
-                                : "برداشت از کیف پول"}
-                            </p>
-                          )} */}
                         </div>
                       </td>
 
                       {/* شناسه */}
                       <td className="px-6 py-4">
-                        {/* <code className="text-grey-600 text-sm"> */}
                         {convertToPersian(transaction.tracking_code)}
-                        {/* </code> */}
                       </td>
 
                       {/* مبلغ */}
@@ -522,9 +505,7 @@ const paginatedTransactions = filteredTransactions.slice(
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
                           <button
-                            onClick={() =>
-                              toast.success("دانلود فاکتور شروع شد")
-                            }
+                            onClick={() => handlePdf(transaction.id)}
                             className="inline-flex items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
                             title="دانلود فاکتور"
                             type="button"
@@ -539,7 +520,7 @@ const paginatedTransactions = filteredTransactions.slice(
                             />
                           </button>
 
-                          <button
+                          {/* <button
                             onClick={() =>
                               toast.success("لینک اشتراک‌گذاری کپی شد")
                             }
@@ -555,7 +536,7 @@ const paginatedTransactions = filteredTransactions.slice(
                               }}
                               aria-hidden="true"
                             />
-                          </button>
+                          </button> */}
 
                           {/* پرداخت مجدد - فقط برای ناموفق‌ها */}
                           {transaction.status === "failed" && (

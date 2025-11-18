@@ -147,7 +147,7 @@ export default function Invoice() {
 
   return (
     <div className="min-h-screen bg-grey-50 py-12 px-4" dir="rtl">
-      <main className="max-w-4xl mx-auto" role="main">
+      <main className="max-w-2xl mx-auto" role="main">
         {/* Header */}
         <header className="mb-8 no-print flex justify-between items-center">
           <button
@@ -168,7 +168,7 @@ export default function Invoice() {
               >
                 🖨️ چاپ
               </Button>
-              <Button
+              {/* <Button
                 variant="primary"
                 size="md"
                 onClick={handleDownload}
@@ -178,7 +178,7 @@ export default function Invoice() {
                   <Download className="w-4 h-4" />
                   <span>دانلود PDF</span>
                 </div>
-              </Button>
+              </Button> */}
             </div>
           </div>
         </header>
@@ -186,29 +186,17 @@ export default function Invoice() {
         {/* ✅ تمام استایل‌ها و ساختار اصلی حفظ شده */}
         <Card className="p-8 invoice-content">
           {/* Invoice Header */}
-          <div className="flex-1  mb-8 pb-8 border-b-2 border-grey-200">
-            <div className="flex items-center justify-between">
-              <h1 className="text-grey-900 font-bold mb-2 text-right">
-                فاکتور پرداخت
-              </h1>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-white shadow-lg mb-4 bg-primary">
-                <CheckCircle className="w-5 h-5" />
-                <span>پرداخت شده</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-3 mr-3 text-grey-700 ">
-              <div>تاریخ پرداخت:</div>
-              <div>
-                شماره فاکتور: {convertToPersian(invoiceData.invoiceId || "")}
-              </div>
-
+          <div className="flex flex-col items-center justify-center gap-6 py-8 border-b-2 border-grey-200">
+            <h1 className="text-grey-900 font-bold text-right">
+              پرداخت با موفقیت انجام شد.
+            </h1>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-white shadow-lg mb-4 bg-primary">
+              <CheckCircle className="w-5 h-5" />
               <div>کد پیگیری: {convertToPersian(trackingCode || "  ")}</div>
-
-              <div>توضیحات :</div>
             </div>
           </div>
           <div>
-            <div className="flex">
+            <div className="flex mt-4">
               <Image
                 src="/logo.png"
                 alt="آیوا"

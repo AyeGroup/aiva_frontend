@@ -7,17 +7,16 @@ import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { MessageCircle } from "lucide-react";
+import { TRANSACTION_TYPE } from "@/constants/plans";
 
-interface CreditIncreaseModalProps {
+interface WalletIncreaseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedChatbot: any;
 }
 
-export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
+export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
   isOpen,
   onClose,
-  selectedChatbot,
 }) => {
   const [credit, setCredit] = useState<string>("");
   const [invoice, setInvoice] = useState<any>(null);
@@ -26,17 +25,16 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
 
   const handleFactor = async () => {
     if (!credit || Number(credit) < 1000) {
-      toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰ تومان)");
+      toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰۰ تومان)");
       return;
     }
 
     try {
       setIsLoading(true);
       const invoicePayload = {
-        // purpose: TRANSACTION_TYPE.INCREASE_BALANCE,
-        purpose: "balance_increase",
+        // purpose: TRANSACTION_TYPE.INCREASE_WALLET,
+        purpose: "wallet_charge",
         amount_irr: credit,
-        chatbot_uuid: selectedChatbot?.uuid,
       };
 
       const res = await axiosInstance.post(
@@ -67,10 +65,10 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
     try {
       setIsLoading(true);
       const res = await axiosInstance.post(API_ROUTES.PAYMENT.INITIATE, {
-        purpose: "balance_increase",
+        purpose: "wallet_charge",
+
         // purpose: TRANSACTION_TYPE.INCREASE_BALANCE,
         amount_irr: credit,
-        chatbot_uuid: selectedChatbot?.uuid,
       });
 
       const data = res.data;
@@ -96,7 +94,7 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`افزایش اعتبار - ${selectedChatbot?.chatbot_name}`}
+      title="افزایش موجودی کیف پول"
       size="xs"
     >
       {isLoading && <PageLoader />}
@@ -163,13 +161,12 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
               <MessageCircle
                 style={{ width: "18px", height: "18px", color: "#65bcb6" }}
               />
-              <span className="text-grey-900">فاکتور صادر شد</span>
+              <span className="text-grey-900">فاکتور </span>
             </div>
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-grey-600">مبلغ پایه</span>
-                {/* <span>{0} تومان</span> */}
                 <span>
                   {(invoice?.base_amount_irr || 0).toLocaleString("fa-IR")}{" "}
                   تومان
@@ -184,7 +181,9 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
               )}
 
               <div className="flex justify-between">
-                <span className="text-grey-600">مالیات ۹٪</span>
+                <span className="text-grey-600">
+                  مالیات {invoice.tax_percentage.toLocaleString("fa-IR")}٪
+                </span>
                 <span>
                   {(invoice?.tax_amount_irr || 0).toLocaleString("fa-IR")} تومان
                 </span>

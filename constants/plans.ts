@@ -1,20 +1,29 @@
 export enum TRANSACTION_TYPE {
-  INCREASE_WALLET = "increase_wallet",  
-  INCREASE_BALANCE = "increase_balance", 
+  INCREASE_WALLET = "increase_wallet",
+  INCREASE_BALANCE = "increase_balance",
   BUY_SUBSCRIPTION = "buy_subscription",
   MESSAGE_COST = "message_cost",
 }
 
- export enum TRANSACTION_TITLE {
-   increase_wallet = "افزایش موجودی",
-   increase_balance = "افزایش بالانس",
-   buy_subscription = "خرید پلن",
-   message_cost = "هزینه پیام",
- }
+export enum TRANSACTION_TITLE {
+  increase_wallet = "افزایش موجودی کیف پول",
+  increase_balance = "افزایش اعتبار",
+  buy_subscription = "خرید پلن",
+  message_cost = "هزینه پیام",
+}
 
- export const getTransactionTitle = (type: keyof typeof TRANSACTION_TITLE) => {
-   return TRANSACTION_TITLE[type] || "";
- };
+export const getTransactionTitle = (type: keyof typeof TRANSACTION_TITLE) => {
+  return TRANSACTION_TITLE[type] || "";
+};
+
+//  const getTransactionTitle = (type: string) =>
+//    type === TRANSACTION_TYPE.BUY_SUBSCRIPTION
+//      ? "خرید پلن"
+//      : type === TRANSACTION_TYPE.INCREASE_WALLET
+//      ? "افزایش موجودی کیف پول"
+//      : type === TRANSACTION_TYPE.INCREASE_BALANCE
+//      ? "افزایش اعنبار"
+//      : "نا مشخص";
 
 // export const TRANSACTION_TITLE: Record<string, string> = {
 //   increase_wallet: "افزایش موجودی",
@@ -31,7 +40,6 @@ export enum TRANSACTION_TYPE {
 //   else if (type == "message_cost") return "هزینه پیام";
 //   else return "";
 // };
-
 
 type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
 
@@ -100,6 +108,3 @@ export const SUBSCRIPTION_TYPES: Record<string, string> = {
   monthly: "ماهانه",
   yearly: "سالانه",
 };
-
-
- 

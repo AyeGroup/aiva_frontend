@@ -1,43 +1,36 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  AlertCircle,
-  TrendingUp,
-  Download,
-  RefreshCw,
-  X,
-  MessageCircle,
-  FileText,
-  Bot,
-  Filter,
-  ChevronDown,
-  Share2,
-  Rocket,
-  Crown,
-  Star,
-  Gift,
-  Users,
-} from "lucide-react";
+import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { PlanCard } from "../plan-card";
+import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WalletCard } from "../wallet-card";
+import { ChatbotList } from "../chatbot-list";
+import { Transactions } from "../Transactions";
+import { CreditIncreaseModal } from "./CreditIncrease";
 import { getDaysRemaining } from "@/utils/common";
+import {
+  AlertCircle,
+  X,
+  Bot,
+  Rocket,
+  Crown,
+  Star,
+  Gift,
+  Users,
+} from "lucide-react";
 import {
   getFaNameByCode,
   getPlanNameById,
   PLAN_COLORS_BYID,
 } from "@/constants/plans";
-import axiosInstance from "@/lib/axiosInstance";
-import { CreditIncreaseModal } from "./CreditIncrease";
-import { Transactions } from "../Transactions";
-import { ChatbotList } from "../chatbot-list";
-import { BotConfig } from "@/types/common";
+import PageLoader from "@/components/pageLoader";
 
 export function Billing() {
   const { bots } = useBot();
@@ -46,22 +39,11 @@ export function Billing() {
   const maxDays = 31;
   const maxCredit = 85;
   const [showDiscountHint, setShowDiscountHint] = useState(true);
-  const [transactionFilter, setTransactionFilter] = useState<
-    "all" | "plan" | "wallet"
-  >("all");
-  const [walletTypeFilter, setWalletTypeFilter] = useState<
-    "all" | "deposit" | "withdraw"
-  >("all");
-  const [dateFrom, setDateFrom] = useState<string>("");
-  const [dateTo, setDateTo] = useState<string>("");
   const [billingBot, setBillingBot] = useState<BotConfig | null>(null);
-
   const [isCreditIncreaseModalOpen, setIsCreditIncreaseModalOpen] =
     useState(false);
   const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
   const [activeSubscrp, setActiveSubscrp] = useState<any[]>([]);
-  // const [selectedChatbotName, setSelectedChatbotName] = useState<string>("");
-  // const [messageCount, setMessageCount] = useState<string>("1000");
   const [isLoading, setIsLoading] = useState(true);
   const [expiringPlan, setExpiringPlan] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
@@ -168,6 +150,7 @@ export function Billing() {
       },
     ];
   };
+
   const getPlanIcon = (planCode: string) => {
     switch (planCode.toUpperCase()) {
       case "FREE":
@@ -205,15 +188,15 @@ export function Billing() {
     console.log("ali:", plan);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
-      // 
-        localStorage.setItem(
-          "selectedPlan",
-          JSON.stringify({
-            ...plan,
-            billingBot,
-            period,
-          })
-        );
+      //
+      localStorage.setItem(
+        "selectedPlan",
+        JSON.stringify({
+          ...plan,
+          billingBot,
+          period,
+        })
+      );
       router.push("/pay/checkout");
     }
   };
@@ -237,149 +220,14 @@ export function Billing() {
     return dict[key] || key;
   };
 
-  const walletTransactions = [
-    {
-      id: "WT-001",
-      type: "deposit" as const,
-      amount: 3000000,
-      description: "واریز به کیف پول از طریق درگاه بانکی",
-      date: "2024-01-15",
-      status: "completed" as const,
-    },
-    {
-      id: "WT-002",
-      type: "withdraw" as const,
-      amount: 299000,
-      description: "خرید پلن پایه - پشتیبانی مشتریان",
-      date: "2024-01-10",
-      status: "completed" as const,
-    },
-    {
-      id: "WT-003",
-      type: "withdraw" as const,
-      amount: 799000,
-      description: "خرید پلن متوسط - فروش آنلاین",
-      date: "2024-01-08",
-      status: "completed" as const,
-    },
-    {
-      id: "WT-004",
-      type: "deposit" as const,
-      amount: 500000,
-      description: "واریز به کیف پول از طریق کارت به کارت",
-      date: "2024-01-05",
-      status: "pending" as const,
-    },
-    {
-      id: "WT-005",
-      type: "withdraw" as const,
-      amount: 1500000,
-      description: "خرید پلن سازمانی - ارتباط با مشتری",
-      date: "2024-01-02",
-      status: "completed" as const,
-    },
-  ];
-
-  const totalDeposit = walletTransactions
-    .filter((t) => t.type === "deposit" && t.status === "completed")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const totalWithdraw = walletTransactions
-    .filter((t) => t.type === "withdraw" && t.status === "completed")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  // تبدیل تاریخ فارسی به میلادی برای مقایسه
-
-  // فیلتر تراکنش‌ها
-  const filteredTransactions = transactions.filter((transaction) => {
-    // فیلتر نوع (پلن/کیف پول)
-    if (transactionFilter === "plan" && transaction.type !== "plan")
-      return false;
-    if (transactionFilter === "wallet" && transaction.type !== "wallet")
-      return false;
-
-    // فیلتر نوع تراکنش کیف پول (واریز/برداشت)
-    if (transaction.type === "wallet" && walletTypeFilter !== "all") {
-      if (
-        walletTypeFilter === "deposit" &&
-        transaction.walletType !== "deposit"
-      )
-        return false;
-      if (
-        walletTypeFilter === "withdraw" &&
-        transaction.walletType !== "withdraw"
-      )
-        return false;
-    }
-
-    // فیلتر تاریخ
-    if (dateFrom || dateTo) {
-      const transactionDate = transaction.date;
-      if (!transactionDate) return false;
-
-      if (dateFrom) {
-        const fromDate = new Date(dateFrom);
-        if (transactionDate < fromDate) return false;
-      }
-
-      if (dateTo) {
-        const toDate = new Date(dateTo);
-        toDate.setHours(23, 59, 59, 999); // انتهای روز
-        if (transactionDate > toDate) return false;
-      }
-    }
-
-    return true;
-  });
-  // console.log("filteredTransactions", filteredTransactions);
-
-  // پاکسازی فیلترها
-
   const handleUpgrade = (chatbot: any) => {
     setSelectedChatbot(chatbot);
     setIsCreditIncreaseModalOpen(true);
   };
 
-  // محاسبه قیمت بر اساس تعداد پیام (قیمت‌گذاری پله‌ای)
-  const calculateMessagePrice = (
-    count: number
-  ): { pricePerMessage: number; discount: number; discountPercent: number } => {
-    if (count >= 50000) {
-      return { pricePerMessage: 25, discount: 15, discountPercent: 15 }; // 15% تخفیف
-    } else if (count >= 20000) {
-      return { pricePerMessage: 30, discount: 10, discountPercent: 10 }; // 10% تخفیف
-    } else if (count >= 10000) {
-      return { pricePerMessage: 35, discount: 5, discountPercent: 5 }; // 5% تخفیف
-    } else if (count >= 5000) {
-      return { pricePerMessage: 40, discount: 0, discountPercent: 0 };
-    } else {
-      return { pricePerMessage: 50, discount: 0, discountPercent: 0 };
-    }
-  };
-
-  const getProgressColor = (percentage: number): string => {
-    if (percentage >= 90) return "#FF6B6B";
-    if (percentage >= 70) return "#FFA18E";
-    return "#65bcb6";
-  };
-
-  // محاسبه آمار کلی
-  // const totalChatbots = activeSubscrp.length;
-  // const totalCredit = activeSubscrp.reduce(
-  //   (sum, plan) => sum + (plan.totalCredit - plan.usedCredit),
-  //   0
-  // );
-  // const totalFileChars = activeSubscrp.reduce(
-  //   (sum, plan) => sum + (plan.totalFileChars - plan.usedFileChars),
-  //   0
-  // );
-  // const totalUsedCredit = activeSubscrp.reduce(
-  //   (sum, plan) => sum + plan.usedCredit,
-  //   0
-  // );
-
   return (
     <div className="min-h-screen flex bg-grey-50" dir="rtl">
+      {(isLoading || loading) && <PageLoader />}
       <main className="flex-1 p-8" role="main">
         <header className="mb-8">
           <div className="text-right">
@@ -390,27 +238,8 @@ export function Billing() {
           </div>
         </header>
 
-        {/* Credit Summary Cards */}
         <section className="mb-8" aria-label="خلاصه اعتبار">
-          <WalletCard
-            // balance={walletBalance}
-            totalDeposit={totalDeposit}
-            totalWithdraw={totalWithdraw}
-            transactions={walletTransactions}
-            onAddCredit={() => {
-              toast.success("افزایش موجودی", {
-                description: "به صفحه پرداخت منتقل می‌شوید...",
-                duration: 2000,
-              });
-              setTimeout(() => router.push("/dashboard?tab=billing"), 2000);
-            }}
-            onDownloadHistory={() => {
-              toast.success("دانلود تاریخچه", {
-                description: "فایل تاریخچه تراکنش‌ها در حال آماده‌سازی است",
-                duration: 3000,
-              });
-            }}
-          />
+          <WalletCard />
         </section>
 
         {/* Discount & Expiring Alert */}
@@ -458,7 +287,7 @@ export function Billing() {
                       {plan.daysRemaining <= maxDays ? (
                         <>
                           <strong className="text-red-600">
-                            {plan.daysRemaining} روز
+                            {plan.daysRemaining.toLocaleString("fa-IR")} روز
                           </strong>{" "}
                           دیگر منقضی می‌شود.
                         </>
