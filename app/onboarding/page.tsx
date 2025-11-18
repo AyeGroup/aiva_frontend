@@ -63,16 +63,13 @@ export default function OnboardingWizard() {
   });
   const totalSteps = steps.length;
 
-useEffect(() => {
-  const id = searchParams.get("id");
-
-  if (id === "new") {
-    // کار ایجاد بات جدید...
-
-    // حذف id=new از URL بدون ریلود شدن
-    router.replace("/dashboard?tab=onboarding");
-  }
-}, []);
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (id === "new") {
+      router.replace("/dashboard?tab=onboarding");
+    }
+  }, []);
+  
   // authentication
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");
@@ -536,7 +533,7 @@ useEffect(() => {
 
         {/* Ultra Clean Progress */}
         <div className="max-w-3xl mx-auto mb-16">
-          <div className="relative max-w-4xl mx-auto m-[0px] pt-[0px] pr-[0px] pb-[16px] pl-[0px]">
+          <div className="relative max-w-4xl mx-auto m-0 p-0 pb-4">
             {/* Background Line */}
             <div className="h-2 bg-grey-300 rounded-full" />
 
@@ -637,7 +634,7 @@ useEffect(() => {
                   icon="arrow-right"
                   iconPosition="right"
                   className={`${
-                    currentStep == 1 ? "!invisible" : ""
+                    currentStep == 1 ? "invisible!" : ""
                   } px-6 disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   قبلی

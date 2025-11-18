@@ -1,7 +1,6 @@
-"use client"
+"use client";
 import { Input } from "@/components/input";
-import { useState } from "react";
-import {  BotConfig } from "@/types/common";
+import { BotConfig } from "@/types/common";
 import { Settings, MessageSquare, Shield } from "lucide-react";
 import ToggleSetting from "@/components/toggle-setting";
 import ThreeLevelSlider from "@/components/ThreeLevelSlider";
@@ -10,8 +9,7 @@ interface WizardStep3Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
 }
-const AnswerLength=[ "short","medium","long"]
-  
+const AnswerLength = ["short", "medium", "long"];
 
 export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
   // const [behaviors, setBehaviors] = useState<BehaviorSettings>({
@@ -23,7 +21,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
   // });
 
   // const [sliderValue, setSliderValue] = useState(10);
-// console.log("ThreeLevelSlider imported!");
+  // console.log("ThreeLevelSlider imported!");
 
   // const handleBehaviorChange = (key: keyof BehaviorSettings, value: any) => {
   //   const updated = { ...behaviors, [key]: value };
@@ -151,7 +149,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
               // handleBehaviorChange("support_phone", e.target.value)
             }
             placeholder="شماره پشتیبانی را وارد کنید"
-            className="w-full text-sm rounded-2xl p-4 border !bg-white text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
+            className="w-full text-sm rounded-2xl p-4 border bg-white! text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary text-center!"
             maxLength={16}
           />
         </div>
@@ -159,4 +157,3 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
     </div>
   );
 }
-

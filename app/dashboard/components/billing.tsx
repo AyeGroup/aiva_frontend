@@ -47,7 +47,7 @@ export function Billing() {
   const [isLoading, setIsLoading] = useState(true);
   const [expiringPlan, setExpiringPlan] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
-  const [transactions, setTransactions] = useState<any[]>([]);
+  // const [transactions, setTransactions] = useState<any[]>([]);
   // const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
   const [periods, setPeriods] = useState<Record<string, "monthly" | "yearly">>(
     {}
@@ -118,28 +118,28 @@ export function Billing() {
     fetchAllData();
   }, [user?.token]);
 
-  useEffect(() => {
-    if (!user?.token) return;
+  // useEffect(() => {
+  //   if (!user?.token) return;
 
-    const fetchHistory = async () => {
-      setIsLoading(true);
+  //   const fetchHistory = async () => {
+  //     setIsLoading(true);
 
-      try {
-        const res = await axiosInstance.get(
-          API_ROUTES.FINANCIAL.TRANSACTION_ALL
-        );
+  //     try {
+  //       const res = await axiosInstance.get(
+  //         API_ROUTES.FINANCIAL.TRANSACTION_ALL
+  //       );
 
-        setTransactions(res.data?.data);
-        console.log("HISTORY :", res.data?.data);
-      } catch (apiError: any) {
-        console.warn("API fetch failed:", apiError);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       setTransactions(res.data?.data);
+  //       console.log("HISTORY :", res.data?.data);
+  //     } catch (apiError: any) {
+  //       console.warn("API fetch failed:", apiError);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchHistory();
-  }, [user?.token]);
+  //   fetchHistory();
+  // }, [user?.token]);
 
   const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
     return [
@@ -431,7 +431,7 @@ export function Billing() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <div
-                                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                                 style={{
                                   backgroundColor: `${planColor}20`,
                                 }}
