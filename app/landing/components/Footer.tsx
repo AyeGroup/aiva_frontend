@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="absolute inset-0">
         <Container />
       </div>
-
+ 
       {/* Footer Content */}
       <div className="relative w-full h-full flex items-center justify-center">
         <div className="w-full mx-auto px-24 py-12">
