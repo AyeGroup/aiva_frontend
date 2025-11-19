@@ -208,7 +208,7 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <div className="h-screen  bg-white !z-0" style={{ zIndex: 0 }}>
+    <div className="h-screen  bg-white z-0!" style={{ zIndex: 0 }}>
       {/* overflow-hidden */}
       <div className="flex h-screen">
         {/* Main Content */}
@@ -224,21 +224,19 @@ export default function Dashboard() {
                   </h1>
                 </div>
 
-                <div>
-                  <div className="flex">
-                    <button
-                      onClick={() => setIsStatsDrawerOpen(true)}
-                      className="plans-trigger-special"
-                      title="مشاهده پلن‌های پیشنهادی"
-                      aria-label="باز کردن پنل پلن‌ها"
-                    >
-                      <span className="plans-trigger-icon">
-                        <BarChart3 size={20} />
-                      </span>
-                      <span className="plans-trigger-text">پلن‌ها</span>
-                      <span className="plans-trigger-badge">جدید</span>
-                    </button>
-                  </div>
+                <div className="flex gap-3 ">
+                  <button
+                    onClick={() => setIsStatsDrawerOpen(true)}
+                    className="flex plans-trigger-special"
+                    title="مشاهده پلن‌های پیشنهادی"
+                    aria-label="باز کردن پنل پلن‌ها"
+                  >
+                    <span className="plans-trigger-icon">
+                      <BarChart3 size={20} />
+                    </span>
+                    <span className="plans-trigger-text">پلن‌ها</span>
+                    {/* <span className="plans-trigger-badge">جدید</span> */}
+                  </button>
                   <ChatbotSelector />
                 </div>
               </header>
@@ -521,7 +519,7 @@ export default function Dashboard() {
 
                 {/* Active Users Container */}
                 <div
-                  className="glass-effect rounded-[var(--radius-card)] p-6"
+                  className="glass-effect rounded-card p-6"
                   style={{
                     background: "#FEF9F6",
                     border: "2px solid transparent",

@@ -15,20 +15,13 @@ import { ChatbotList } from "../chatbot-list";
 import { Transactions } from "../Transactions";
 import { CreditIncreaseModal } from "./CreditIncrease";
 import { getDaysRemaining } from "@/utils/common";
-import {
-  AlertCircle,
-  X,
-  Bot,
-  Rocket,
-  Crown,
-  Star,
-  Gift,
-  Users,
-} from "lucide-react";
+import { AlertCircle, X, Bot } from "lucide-react";
 import {
   getFaNameByCode,
+  getPlanIcon,
   getPlanNameById,
   PLAN_COLORS_BYID,
+  translateFeature,
 } from "@/constants/plans";
 import PageLoader from "@/components/pageLoader";
 
@@ -36,7 +29,7 @@ export function Billing() {
   const { bots } = useBot();
   const { user, loading } = useAuth();
   const router = useRouter();
-  const maxDays = 31;
+  const maxDays = 7;
   const maxCredit = 85;
   const [showDiscountHint, setShowDiscountHint] = useState(true);
   const [billingBot, setBillingBot] = useState<BotConfig | null>(null);
@@ -163,23 +156,6 @@ export function Billing() {
     }));
   };
 
-  const getPlanIcon = (planCode: string) => {
-    switch (planCode.toUpperCase()) {
-      case "FREE":
-        return <Gift />;
-      case "BASIC":
-        return <Rocket />;
-      case "MEDIUM":
-        return <Crown />;
-      case "ADVANCE":
-        return <Star />;
-      case "ENTERPRISE":
-        return <Users />;
-      default:
-        return <Gift />;
-    }
-  };
-
   const handlePlanPurchase = (planName: string) => {
     if (!billingBot) {
       toast.info("لطفاً چت‌بات مورد نظر را انتخاب کنید");
@@ -213,24 +189,7 @@ export function Billing() {
     }
   };
 
-  const translateFeature = (key: string): string => {
-    const dict: Record<string, string> = {
-      base_stats: "آمار پایه",
-      choosing_llm: "انتخاب مدل هوش مصنوعی",
-      usage_reports: "گزارش مصرف",
-      upload_docs: "آپلود فایل",
-      chatbot_logo: "لوگوی چت‌بات اختصاصی",
-      advanced_stats: "آمار پیشرفته",
-      website_crawling: "خزش وب‌سایت",
-      qa_as_file: "سوال و پاسخ از فایل",
-      chatbot_greetings: "پیام خوش‌آمدگویی",
-      chatbot_k: "حافظه چت‌بات",
-      chatbot_emoji: "استفاده از ایموجی",
-      chatbot_support_phone: "پشتیبانی تلفنی",
-      chatbot_answer_length: "کنترل طول پاسخ",
-    };
-    return dict[key] || key;
-  };
+
 
   const handleUpgrade = (chatbot: any) => {
     setSelectedChatbot(chatbot);

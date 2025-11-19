@@ -1,3 +1,12 @@
+import {
+
+  Rocket,
+  Crown,
+  Star,
+  Gift,
+  Users,
+} from "lucide-react";
+
 export enum TRANSACTION_TYPE {
   INCREASE_WALLET = "increase_wallet",
   INCREASE_BALANCE = "increase_balance",
@@ -75,7 +84,40 @@ export function getFaNameByCode(
   const plan = PLANS.find((p) => p.code === code);
   return plan?.faName;
 }
-
+export   const translateFeature = (key: string): string => {
+  const dict: Record<string, string> = {
+    base_stats: "آمار پایه",
+    choosing_llm: "انتخاب مدل هوش مصنوعی",
+    usage_reports: "گزارش مصرف",
+    upload_docs: "آپلود فایل",
+    chatbot_logo: "لوگوی چت‌بات اختصاصی",
+    advanced_stats: "آمار پیشرفته",
+    website_crawling: "خزش وب‌سایت",
+    qa_as_file: "سوال و پاسخ از فایل",
+    chatbot_greetings: "پیام خوش‌آمدگویی",
+    chatbot_k: "حافظه چت‌بات",
+    chatbot_emoji: "استفاده از ایموجی",
+    chatbot_support_phone: "پشتیبانی تلفنی",
+    chatbot_answer_length: "کنترل طول پاسخ",
+  };
+  return dict[key] || key;
+};
+export const getPlanIcon = (planCode: string) => {
+  switch (planCode.toUpperCase()) {
+    case "FREE":
+      return <Gift />;
+    case "BASIC":
+      return <Rocket />;
+    case "MEDIUM":
+      return <Crown />;
+    case "ADVANCE":
+      return <Star />;
+    case "ENTERPRISE":
+      return <Users />;
+    default:
+      return <Gift />;
+  }
+};
 export const getPlanIdByCode = (code: string): number | undefined => {
   const plan = PLANS.find((p) => p.code === code);
   return plan?.id;

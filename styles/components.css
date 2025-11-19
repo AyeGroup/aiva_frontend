@@ -5949,3 +5949,93 @@ html[dir="rtl"] .code-actions {
     text-align: center;
   }
 }
+/* Special Plans Trigger Button - Eye Catching Teal */
+.plans-trigger-special {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #65bcb6 0%, #4da8a1 100%);
+  border: none;
+  border-radius: 14px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 14px rgba(101, 188, 182, 0.45),
+    0 1px 4px rgba(77, 168, 161, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  overflow: hidden;
+}
+
+.plans-trigger-special::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transition: left 0.5s ease;
+}
+
+.plans-trigger-special:hover::before {
+  left: 100%;
+}
+
+.plans-trigger-special:hover {
+  background: linear-gradient(135deg, #4da8a1 0%, #3d9189 100%);
+  box-shadow: 
+    0 6px 22px rgba(101, 188, 182, 0.55),
+    0 2px 8px rgba(77, 168, 161, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.plans-trigger-special:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 
+    0 2px 10px rgba(101, 188, 182, 0.35),
+    0 1px 4px rgba(77, 168, 161, 0.25);
+}
+.plans-trigger-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse-icon 2s ease-in-out infinite;
+}
+
+.plans-trigger-text {
+  position: relative;
+  z-index: 1;
+}
+
+.plans-trigger-badge {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  padding: 3px 8px;
+  background: linear-gradient(135deg, #FFA18E 0%, #FF8B73 100%);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(255, 161, 142, 0.5);
+  animation: badge-bounce 2s ease-in-out infinite;
+}
+
+@keyframes badge-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.05);
+  }
+}
+
+.plans-trigger-special:hover .plans-trigger-badge {
+  animation: badge-shake 0.5s ease-in-out;
+}
