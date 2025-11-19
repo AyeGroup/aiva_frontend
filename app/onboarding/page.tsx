@@ -8,6 +8,7 @@ import { Button } from "@/components/button";
 import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
+import { BarChart3 } from "lucide-react";
 import { AivaWhite } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WizardStep1 } from "./steps/step1";
@@ -17,6 +18,7 @@ import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { WizardStep6 } from "./steps/step6";
 import { ChatPreview } from "./chat-preview";
+import { StatsDrawer } from "../dashboard/stats-drawer";
 import { onboardingData } from "./onboarding.data";
 import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
@@ -35,6 +37,7 @@ export default function OnboardingWizard() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
 
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
@@ -517,7 +520,20 @@ export default function OnboardingWizard() {
               <AivaWhite />
             </div>
           </div>
-
+          <div className="absolute top-0 left-0">
+            <button
+              onClick={() => setIsStatsDrawerOpen(true)}
+              className="plans-trigger-special"
+              title="مشاهده پلن‌های پیشنهادی"
+              aria-label="باز کردن پنل پلن‌ها"
+            >
+              <span className="plans-trigger-icon">
+                <BarChart3 size={20} />
+              </span>
+              <span className="plans-trigger-text">پلن‌ها</span>
+              <span className="plans-trigger-badge">جدید</span>
+            </button>
+          </div>
           {!id ||
             (id === "new" && (
               <div className="text-grey-900 mb-4 font-bold text-lg text-center">
@@ -687,7 +703,11 @@ export default function OnboardingWizard() {
             </button>
           </div>
         )}
-      </div>
+      </div>{" "}
+      <StatsDrawer
+        isOpen={isStatsDrawerOpen}
+        onClose={() => setIsStatsDrawerOpen(false)}
+      />
     </main>
   );
 }

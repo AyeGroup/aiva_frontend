@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = useCallback(
     async (identity: string, password: string): Promise<LoginResponse> => {
       try {
-    console.log("AuthProvider> login ");
+        console.log("AuthProvider> login ");
         const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
           identity,
           password,
@@ -103,18 +103,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // ✅ useCallback برای logout
   const logout = useCallback(async () => {
     try {
-    console.log("AuthProvider> logout ");
+      console.log("AuthProvider> logout ");
 
-      await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
-    } catch {
+      // await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
       /* ignore logout errors */
-    } finally {
+      // } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       setUser(null);
       router.push("/auth/login");
-    }
+    } catch {}
   }, [router]);
 
   // ✅ useMemo برای جلوگیری از ساخت آبجکت جدید value

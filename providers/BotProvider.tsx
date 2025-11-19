@@ -14,7 +14,7 @@ import { useAuth } from "./AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { BotConfig } from "@/types/common";
 import axiosInstance from "@/lib/axiosInstance";
-console.log("✅ BotProvider rendered");
+// console.log("✅ BotProvider rendered");
 
 interface BotContextType {
   bots: BotConfig[];
@@ -33,7 +33,7 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
 
   // ✅ تابع fetchBots بدون currentBot در dependency
   const fetchBots = useCallback(async () => {
-    console.log("BotProvider> fetchBots", new Date().toISOString());
+    // console.log("BotProvider> fetchBots", new Date().toISOString());
     if (!user) return;
 
     try {
@@ -43,7 +43,7 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
         console.warn("Unexpected bots API response:", response);
         return;
       }
-      console.log("fetchBots");
+      // console.log("fetchBots");
 
       const userBots: BotConfig[] = response.data.data;
       setBots(userBots);
@@ -67,7 +67,7 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
 
   // ✅ useEffect فقط یک بار هنگام تغییر user اجرا میشه
   useEffect(() => {
-    console.log("BotProvider> useEffect");
+    // console.log("BotProvider> useEffect");
 
     if (user) {
       // ✅ فقط اگر قبلاً fetch نشده باشد
@@ -84,7 +84,7 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
 
   // ✅ تابع refreshBots هم بدون currentBot
   const refreshBots = useCallback(async () => {
-    console.log("BotProvider> refreshBots");
+    // console.log("BotProvider> refreshBots");
     if (!user) return;
 
     try {

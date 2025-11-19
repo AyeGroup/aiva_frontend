@@ -24,6 +24,8 @@ import {
   RightGo,
   User,
 } from "@/public/icons/AppIcons";
+import { BarChart3 } from "lucide-react";
+import { StatsDrawer } from "../stats-drawer";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -41,6 +43,7 @@ export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
   const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
+  const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const currentData = chartType === "users" ? usersData : chatsData;
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
@@ -89,25 +92,24 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
-
   useEffect(() => {
-  if (!user || !currentBot?.uuid) return;
-  if (isLoading) return; // تا وقتی در حال لود هست، دوباره فراخوانی نکن
-  fetchAllStatistics();
-}, [user?.id, currentBot?.uuid, timeRange]);
+    if (!user || !currentBot?.uuid) return;
+    if (isLoading) return; // تا وقتی در حال لود هست، دوباره فراخوانی نکن
+    fetchAllStatistics();
+  }, [user?.id, currentBot?.uuid, timeRange]);
 
-const fetchAllStatistics = async () => {
-  setIsLoading(true);
-  await Promise.all([
-    fetchUserTrend(timeRange),
-    fetchSessionTrend(timeRange),
-    fetchActiveUsers(),
-    fetchRecentSession(),
-    fetchFaqList(),
-  ]);
-  setIsLoading(false);
-};
- 
+  const fetchAllStatistics = async () => {
+    setIsLoading(true);
+    await Promise.all([
+      fetchUserTrend(timeRange),
+      fetchSessionTrend(timeRange),
+      fetchActiveUsers(),
+      fetchRecentSession(),
+      fetchFaqList(),
+    ]);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     if (currentBot) {
       // console.log("بات انتخاب شده:", currentBot.name);
@@ -221,7 +223,22 @@ const fetchAllStatistics = async () => {
                     میزکار
                   </h1>
                 </div>
+
                 <div>
+                  <div className="flex">
+                    <button
+                      onClick={() => setIsStatsDrawerOpen(true)}
+                      className="plans-trigger-special"
+                      title="مشاهده پلن‌های پیشنهادی"
+                      aria-label="باز کردن پنل پلن‌ها"
+                    >
+                      <span className="plans-trigger-icon">
+                        <BarChart3 size={20} />
+                      </span>
+                      <span className="plans-trigger-text">پلن‌ها</span>
+                      <span className="plans-trigger-badge">جدید</span>
+                    </button>
+                  </div>
                   <ChatbotSelector />
                 </div>
               </header>
@@ -452,6 +469,7 @@ const fetchAllStatistics = async () => {
                         تعداد گفتگوها
                       </button>
                     </div>
+
                     <GenericSelector
                       items={TIME_RANGES}
                       selectedValue={timeRange}
@@ -511,7 +529,7 @@ const fetchAllStatistics = async () => {
                   }}
                 >
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-4 gap-4">
-                    {activeUsers.slice(0,3).map((user, index) => {
+                    {activeUsers.slice(0, 3).map((user, index) => {
                       const color = colors[index % colors.length]; // انتخاب رنگ به ترتیب
                       return (
                         <div
@@ -616,6 +634,10 @@ const fetchAllStatistics = async () => {
               )}
             </div>
           </div>
+          <StatsDrawer
+            isOpen={isStatsDrawerOpen}
+            onClose={() => setIsStatsDrawerOpen(false)}
+          />
         </main>
       </div>
     </div>

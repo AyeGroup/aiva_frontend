@@ -1,0 +1,156 @@
+import Image from "next/image";
+import { API_BASE_URL } from "@/config";
+import { Delete, SendMessage } from "@/public/icons/AppIcons";
+import { useState, useEffect, useRef } from "react";
+import { useBot } from "@/providers/BotProvider";
+import axiosInstance from "@/lib/axiosInstance";
+import { API_ROUTES } from "@/constants/apiRoutes";
+
+interface ChatHistoryProps {
+  username: string;
+}
+
+interface Message {
+  id: string;
+  text: string;
+  isBot: boolean;
+  timestamp: Date;
+  type?: string;
+}
+
+export function ChatHistory({ username }: ChatHistoryProps) {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState<string>("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [showFaqs, setShowFaqs] = useState(true);
+  const { currentBot } = useBot();
+  const [history, setHistory] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!currentBot) return;
+    if (!username) return;
+    const fetchActiveUsers = async () => {
+      setIsLoading(true);
+
+      try {
+        const response = await axiosInstance.get(
+          API_ROUTES.PUBLIC.HISTORY(currentBot.uuid),
+          { params: { username: username } }
+        );
+
+        const data = response.data.data;
+        console.log("histr", data);
+        setHistory(data || []);
+      } catch (error) {
+        console.error("❌ خطا در دریافت داده کاربران:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchActiveUsers();
+  }, [currentBot, username]);
+
+  if (!currentBot) return;
+
+  return (
+    <div className="chat-preview-container">
+      {/* Single Column Layout: Live Chat Only */}
+      <div className="max-w-md mx-auto ">
+        <div
+          key={`${currentBot.primary_color}-${currentBot.name}-${currentBot.widget_position}-${currentBot.button_size}`}
+          className="absolute inset-0 bg-brand-primary/10 rounded-2xl opacity-0 pointer-events-none z-50"
+        ></div>
+
+        <div>
+          <div className="sticky top-0">
+            <div
+              className="w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-grey-200 flex flex-col overflow-hidden"
+              style={{
+                height: "600px",
+                background: `linear-gradient(135deg, white 0%, ${currentBot.accent_color}33 100%)`,
+              }}
+            >
+              {/* Chat Header */}
+              <div
+                className=" p-4 text-white flex items-center gap-4 backdrop-blur-sm "
+                style={{
+                  background: `linear-gradient(135deg, ${currentBot.primary_color} 0%, ${currentBot.primary_color}ee 100%)`,
+                  height: "80px",
+                }}
+              >
+                {/* Bot Avatar */}
+                <div className=" bg-white/20  rounded-full flex items-center justify-center p-1  overflow-hidden">
+                  <Image
+                    src={currentBot.logo_url || "/logo.png"}
+                    height={64}
+                    width={64}
+                    alt="آیوا"
+                    className="w-8 h-8 object-cover rounded-full"
+                  />
+                </div>
+
+                {/* Bot Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 justify-start">
+                    <h4 className="font-semibold truncate text-lg">
+                      {currentBot.name}
+                    </h4>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1 justify-start">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <p className="text-sm opacity-90">آنلاین و آماده پاسخ</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Messages Area */}
+              <div className="flex-1 p-6 space-y-4 overflow-y-auto bg-grey-50">
+                {history.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex items-end gap-3 ${
+                      message.role ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    {/* Message Bubble */}
+                    <div
+                      className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm text-right ${
+                        message.role
+                          ? `bg-white border border-grey-100 text-grey-800 rounded-sm`
+                          : `text-white  rounded-sm`
+                      }`}
+                      style={
+                        !message.role
+                          ? {
+                              background: currentBot.primary_color,
+                            }
+                          : {}
+                      }
+                      dir="rtl"
+                    >
+                      {message.content}
+                      <div
+                        className={`text-xs mt-1 opacity-70 text-right ${
+                          message.role ? "text-grey-500" : "text-white/70"
+                        }`}
+                      >
+                        {new Date(message.timestamp).toLocaleTimeString(
+                          "fa-IR",
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

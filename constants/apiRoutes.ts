@@ -18,7 +18,7 @@ export const API_ROUTES = {
       `${API_BASE_URL}/dashboard/message-heatmap/${bot_uuid}`,
     ACTIVE_USERS: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/active-users/${bot_uuid}`,
-    ACTIVE_USERS_PAGINATED: (bot_uuid: string) =>
+    ACTIVE_USERS_PAGINATED: (bot_uuid: string,page :number) =>
       `${API_BASE_URL}/dashboard/active-users-paginated/${bot_uuid}`,
     RECCENT_SESSION: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/recent-sessions/${bot_uuid}`,
@@ -101,5 +101,9 @@ export const API_ROUTES = {
       `${API_BASE_URL}/payment/verify/${payment_id}`,
     HISTORY: `${API_BASE_URL}/payment/history`,
     PRICING: `${API_BASE_URL}/payment/pricing`,
+  },
+
+  PUBLIC: {
+    HISTORY: (bot_uuid: string) => `${API_BASE_URL}/public/${bot_uuid}/history`,
   },
 };
