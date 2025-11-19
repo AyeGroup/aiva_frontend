@@ -5645,6 +5645,12 @@ html[dir="rtl"] .code-actions {
   flex-shrink: 0;
 }
 
+.plan-compact-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block; /* مهم برای وسط چین کامل */
+}
+
 .plan-compact-name {
   margin: 0 0 2px 0;
   color: var(--grey-900);

@@ -102,7 +102,7 @@ export function RecentChats({
         {chats.length > 0 ? (
           chats.map((chat, index) => (
             <ChatHistoryCard
-              key={chat.userId}
+              key={index}
               userId={chat.userId}
               // userName={`کاربر ${convertToPersian(index + 1)}`}
               // userName={chat.userName}

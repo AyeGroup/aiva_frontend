@@ -9,7 +9,7 @@ import { useBot } from "@/providers/BotProvider";
 import { Checkbox } from "@/components/checkbox";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import {  convertToPersian } from "@/utils/common";
+import { convertToPersian } from "@/utils/common";
 import { ArrowRight, Tag, Receipt, CreditCard } from "lucide-react";
 import {
   getFaNameByCode,
@@ -28,8 +28,8 @@ export default function Checkout() {
   const [nationalId, setNationalId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [invoice, setInvoice] = useState<any>(null);
-  const router = useRouter();
   const { currentBot } = useBot();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPlanAndInvoice = async () => {
@@ -81,7 +81,6 @@ export default function Checkout() {
 
     fetchPlanAndInvoice();
   }, [router]);
-
 
   const handleApplyDiscount = async () => {
     if (!discountCode.trim()) return;
@@ -225,7 +224,9 @@ export default function Checkout() {
                     </div>
                     <div className="text-left">
                       <p className="text-grey-900">
-                        {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان
+                        {(invoice?.amount_irr || "").toLocaleString("fa-IR")}{" "}
+                        تومان
+                        {/* {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان */}
                       </p>
                       <p className="text-grey-500 text-sm">
                         {SUBSCRIPTION_TYPES[selectedPlan.period]}
@@ -279,7 +280,8 @@ export default function Checkout() {
                 <div className="flex justify-between items-center">
                   <span className="text-grey-600">مبلغ پایه</span>
                   <span>
-                    {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان
+                    {/* {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان */}
+                    {(invoice?.amount_irr || "").toLocaleString("fa-IR")} تومان
                   </span>
                 </div>
                 {appliedDiscount > 0 && (

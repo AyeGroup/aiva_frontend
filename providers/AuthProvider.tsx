@@ -1,20 +1,11 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
+import PageLoader from "@/components/pageLoader";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import axios from "axios";
-import PageLoader from "@/components/pageLoader";
-import axiosInstance from "@/lib/axiosInstance";
-
-console.log("✅ AuthProvider rendered");
 
 interface User {
   id: number;
@@ -41,86 +32,84 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  console.log("AuthProvider> ", user);
 
-  // ✅ فقط یکبار ثبت listener
   useEffect(() => {
-    console.log("AuthProvider> useEffect ");
-    const handleLogout = () => router.push("/auth/login");
+    const handleLogout = () => {
+      router.push("/auth/login");
+    };
     window.addEventListener("auth-logout", handleLogout);
     return () => window.removeEventListener("auth-logout", handleLogout);
   }, [router]);
 
-  // ✅ دریافت اطلاعات از localStorage
   useEffect(() => {
-    console.log("AuthProvider> useEffect2 ");
-
     const token = localStorage.getItem("accessToken");
     const savedUser = localStorage.getItem("user");
-    if (token && savedUser) setUser(JSON.parse(savedUser));
+
+    if (token && savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+
     setLoading(false);
   }, []);
 
-  // ✅ useCallback برای جلوگیری از ساخت تابع جدید در هر رندر
-  const login = useCallback(
-    async (identity: string, password: string): Promise<LoginResponse> => {
-      try {
-        console.log("AuthProvider> login ");
-        const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
-          identity,
-          password,
-        });
-        const data = res.data.data;
-
-        const user: User = {
-          id: data.id,
-          name: data.name || "",
-          email: data.email,
-          phone: data.phone || identity,
-          token: data.access_token,
-        };
-
-        localStorage.setItem("accessToken", data.access_token);
-        localStorage.setItem("refreshToken", data.refresh_token);
-        localStorage.setItem("user", JSON.stringify(user));
-
-        setUser(user);
-        return { success: true, user };
-      } catch (err: any) {
-        const status = err.response?.status ?? null;
-        let message = "خطای ناشناخته از سرور";
-        if (status === 401) message = "اطلاعات ورود نادرست است";
-        else if (status === 403)
-          message = "لطفاً شماره موبایل خود را تایید کنید";
-        else if (err.message) message = err.message;
-
-        return { success: false, status, message };
-      }
-    },
-    []
-  );
-
-  // ✅ useCallback برای logout
-  const logout = useCallback(async () => {
+  // ✅ Login
+  const login = async (
+    identity: string,
+    password: string
+  ): Promise<LoginResponse> => {
     try {
-      console.log("AuthProvider> logout ");
+      const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
+        identity,
+        password,
+      });
+      // console.log("login res",res)
 
+      const data = res.data.data;
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
+
+      const user: User = {
+        id: data.id,
+        name: data.name || "",
+        email: data.email,
+        phone: data.phone || identity,
+        token: data.access_token,
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+
+      return { success: true, user };
+    } catch (err: any) {
+      console.error("Login error:", err);
+
+      const status = err.response?.status ?? null;
+      let message = "خطای ناشناخته از سرور";
+
+      if (status === 401) message = "اطلاعات ورود نادرست است";
+      else if (status === 403) message = "لطفاً شماره موبایل خود را تایید کنید";
+      else if (err.message) message = err.message;
+
+      return { success: false, status, message };
+    }
+  };
+
+  // ✅ Logout
+  const logout = async () => {
+    try {
       // await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
+    } catch {
       /* ignore logout errors */
-      // } finally {
+    } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       setUser(null);
       router.push("/auth/login");
-    } catch {}
-  }, [router]);
+    }
+  };
 
-  // ✅ useMemo برای جلوگیری از ساخت آبجکت جدید value
-  const value = useMemo(
-    () => ({ user, loading, login, logout }),
-    [user, loading, login, logout]
-  );
+  const value: AuthContextType = { user, loading, login, logout };
 
   return (
     <AuthContext.Provider value={value}>

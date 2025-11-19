@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
-import { X, Zap, Crown, Star, Building2 } from "lucide-react";
-import { API_ROUTES } from "@/constants/apiRoutes";
-import axiosInstance from "@/lib/axiosInstance";
-import { PlanCard } from "./plan-card";
-import { getFaNameByCode, getPlanIcon, translateFeature } from "@/constants/plans";
-import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
+import { useRouter } from "next/navigation";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import { PlanCardMenu } from "./plan-card-menu";
+import { useEffect, useState } from "react";
+import {
+  getFaNameByCode,
+  getPlanIcon,
+  translateFeature,
+} from "@/constants/plans";
+import axiosInstance from "@/lib/axiosInstance";
 
 interface StatsDrawerProps {
   isOpen: boolean;
@@ -18,16 +21,12 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
     "monthly"
   );
-  // const [billingPeriod, setBillingPeriod] = useState<
-  //   Record<string, "monthly" | "yearly">
-  // >({});
 
   const [plans, setPlans] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { currentBot } = useBot();
 
-  // Close drawer on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -39,7 +38,6 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
-  // Prevent body scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -77,6 +75,7 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
 
     fetchAllData();
   }, []);
+
   const handlePlanPurchase = (planName: string) => {
     const billingBot = currentBot;
     if (!billingBot) {
@@ -94,7 +93,9 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
     const plan = plans.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
-    console.log("ali:", plan);
+    console.log("plan:", plan);
+    console.log("billingBot:", billingBot);
+    console.log("billingPeriod:", billingPeriod);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
       //

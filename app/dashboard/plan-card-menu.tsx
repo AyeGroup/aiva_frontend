@@ -1,5 +1,4 @@
 import React from "react";
-import { Check, X } from "lucide-react";
 
 interface PlanFeature {
   text: string;
@@ -26,11 +25,9 @@ interface PlanCardProps {
 
 export function PlanCardMenu({
   name,
-  description,
   priceMonthly,
   priceYearly,
   period,
-  onPeriodChange,
   features,
   icon,
   featured = false,
@@ -46,27 +43,19 @@ export function PlanCardMenu({
 
   // انتخاب قیمت و متن دوره بر اساس period
   const price = period === "monthly" ? priceMonthly : priceYearly;
-  const periodLabel = period === "monthly" ? "ماهانه" : "سالانه";
 
   return (
     <article className={`plan-compact-card ${featured ? "featured" : ""}`}>
       {badgeText && <span className="plan-compact-badge">{badgeText}</span>}
 
       <div className="plan-compact-header">
-        {/* <div
-          className="plan-compact-icon size-4"
-          style={{ background: "var(--brand-secondary)" }}
-        >
-          {icon}
-        </div> */}
         <div
-          className="plan-compact-icon"
+          className="plan-compact-icon flex items-center justify-center"
           style={{
             background: "var(--bg-soft-peach)",
             color: "var(--brand-secondary)",
           }}
         >
-          {/* <icon size={16} style={{ color: "var(--brand-secondary)" }} /> */}
           <div className="size-4" style={{ color: "var(--brand-secondary)" }}>
             {icon}
           </div>
