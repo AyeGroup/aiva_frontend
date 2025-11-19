@@ -271,7 +271,7 @@ function Login() {
                 {isLoading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>در حالّ پردازش...</span>
+                    <span>در حال پردازش...</span>
                   </>
                 ) : (
                   <span>تایید</span>

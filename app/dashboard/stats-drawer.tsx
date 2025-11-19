@@ -7,6 +7,7 @@ import { getFaNameByCode, getPlanIcon, translateFeature } from "@/constants/plan
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
+import { PlanCardMenu } from "./plan-card-menu";
 
 interface StatsDrawerProps {
   isOpen: boolean;
@@ -187,9 +188,9 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
               تمام پلن‌ها
             </h3>
 
-            <div className=" grid  grid-cols-2  gap-8 px-6">
+            <div className="flex flex-col">
               {plans.map((plan, index) => (
-                <PlanCard
+                <PlanCardMenu
                   key={index}
                   name={getFaNameByCode(plan?.plan) || plan?.plan}
                   description=""

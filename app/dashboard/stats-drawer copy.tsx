@@ -127,9 +127,7 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
 
           {/* Plans Section */}
           <section className="stats-section" aria-labelledby="plans-heading">
-            <h3 id="plans-heading" className="section-title">
-              تمام پلن‌ها
-            </h3>
+           
 
             <div className="plans-compact">
               {/* Plan 1 - Basic */}
