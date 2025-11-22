@@ -146,7 +146,7 @@ function Article({
           preserveAspectRatio="none"
           viewBox="0 0 64 64"
         >
-          <g clipPath="url(#clip0_article)" id="Icon" opacity="0.5">
+          <g clipPath="url(#clip0_article)" id="Icon" opacity="0.1">
             <path
               d={svgPaths.p37ddc40}
               fill={`var(--fill-0, ${color})`}
@@ -239,7 +239,7 @@ function ContainerUsage() {
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-5 auto-rows-fr w-full">
+    <div className="grid grid-cols-3 gap-5 auto-rows-fr w-full">
       {usages.map((use, index) => (
         <Article
           key={index}
@@ -366,7 +366,7 @@ function ContainerIndustry() {
 
 function TabPanel({ activeTab }: TabPanelProps) {
   return (
-    <div className=" flex flex-col gap-2.5 h-[673.992px] items-center justify-centerw-full">
+    <div className=" flex flex-col gap-2.5   items-center justify-centerw-full">
       {activeTab === "industry" ? <ContainerIndustry /> : <ContainerUsage />}
     </div>
   );
@@ -400,11 +400,11 @@ function ContainerFooter() {
             <Icon37 />
           </div>
         </div>
-        <div className="h-6 relative shrink-0 w-[85.578px]" data-name="Text">
-          <p className="absolute  font-normal leading-6 left-0 text-4 text-nowrap text-white top-[-0.5px] whitespace-pre">
+        <a href="tel:09903202903" className="h-6 relative shrink-0">
+          <p className="font-normal leading-6 text-nowrap text-white ">
             مشاوره رایگان
           </p>
-        </div>
+        </a>
       </motion.div>
       <Icon38 />
     </div>

@@ -143,7 +143,8 @@ function ArticleItem({ title, desc, type, Icon }: ArticleProps) {
 
   return (
     <div
-      className={`flex flex-col gap-3 p-5 pt-8 rounded-2xl shadow w-full
+      className={`flex flex-col gap-3 p-5 pt-8 rounded-2xl shadow w-full  transition-all duration-300 cursor-pointer
+    hover:shadow-xl hover:scale-[1.02] relative my-2
       ${
         isSolution
           ? "border border-green-300 bg-white"

@@ -9,11 +9,11 @@ import { convertToPersian } from "@/utils/common";
 
 function CardContainer() {
   return (
-    <div className="  relative   w-full">
-      <Sec7_Icon />
+    <div className="relative w-full">
+      {/* <Sec7_Icon />
       <Sec7_Icon1 />
       <Sec7_Icon2 />
-      <Sec7_Icon3 />
+      <Sec7_Icon3 /> */}
     </div>
   );
 }

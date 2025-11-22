@@ -1,29 +1,16 @@
 "use client";
+import Link from "next/link";
+import { motion } from "motion/react";
 import {
-  Sec7_Icon,
-  Sec7_Icon1,
-  Sec7_Icon2,
-  Sec7_Icon3,
-  Sec7_Icon4,
   Sec7_Icon5,
   Sec7_Icon6,
   Sec7_Icon7,
   Sec7_Icon8,
 } from "@/public/icons/landing";
-import { motion } from "motion/react";
-import Link from "next/link";
 
 function Container() {
   return (
-    <div
-    // className="h-[712px] overflow-clip relative shrink-0 w-[1431px]"
-    // data-name="Container"
-    >
-      <Sec7_Icon />
-      <Sec7_Icon1 />
-      <Sec7_Icon2 />
-      <Sec7_Icon3 />
-      <Sec7_Icon4 />
+    <div>
       <Sec7_Icon5 />
     </div>
   );
@@ -41,7 +28,7 @@ function Interaction() {
     >
       <div
         aria-hidden="true"
-        className="absolute border-2 border-[#e8f6f5] border-solid inset-0 pointer-events-none rounded-[28px] shadow-[0px_8px_30px_0px_rgba(0,0,0,0.08)]"
+        className="absolute z-0  border-2 border-[#e8f6f5] border-solid inset-0 pointer-events-none rounded-[28px] shadow-[0px_8px_30px_0px_rgba(0,0,0,0.08)]"
       />
       <div className="flex flex-col items-end justify-center size-full">
         <div className="box-border content-stretch flex flex-col items-end justify-center p-[36px] relative w-full">
@@ -56,9 +43,9 @@ function Interaction() {
                 <div className="box-border content-stretch flex gap-[18px] items-center justify-end px-px py-0   text-right ">
                   <p className=" font-medium leading-[30px] relative shrink-0 text-[22px] text-gray-900 text-nowrap whitespace-pre">
                     رشد تعامل شبانه
-                  </p> 
+                  </p>
                   <p className=" font-normal leading-6 relative shrink-0 text-[#65bcb6] text-[16px] ">
-                   ۵۰٪+
+                    ۵۰٪+
                   </p>
                 </div>
                 <div
@@ -83,7 +70,7 @@ function Button() {
   return (
     <Link href="/onboarding">
       <motion.div
-        className="bg-[#65bcb6] box-border text-white flex gap-2 items-center justify-center rounded-lg shadow-[0px_12px_28px_0px_rgba(101,188,182,0.35)] p-4 w-full cursor-pointer"
+        className="bg-[#65bcb6] z-10 box-border text-white flex gap-2 items-center justify-center rounded-lg shadow-[0px_12px_28px_0px_rgba(101,188,182,0.35)] p-4 w-full cursor-pointer"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -183,28 +170,22 @@ function PerfectSale() {
   );
 }
 
-function CaseStudy() {
-  return (
-    <div className="w-full min-h-80 gap-8 flex items-stretch justify-center p-14">
-      <div className="w-full">
-        <ChatSample />
-      </div>
-
-      <div className="w-full">
-        <PerfectSale />
-      </div>
-    </div>
-  );
-}
-
 export default function Section7() {
   return (
     <div
-      className="bg-white content-stretch flex flex-col gap-2.5 items-start relative w-full min-h-[712px]"
+      className="bg-white pt-5  flex flex-col gap-3 items-start relative w-full"
       id="Interaction"
     >
       <Container />
-      <CaseStudy />
+      <div className="w-full min-h-80 gap-8 flex items-stretch justify-center p-14">
+        <div className="w-full">
+          <ChatSample />
+        </div>
+
+        <div className="w-full">
+          <PerfectSale />
+        </div>
+      </div>
     </div>
   );
 }

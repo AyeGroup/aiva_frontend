@@ -45,10 +45,10 @@ const SectionHeader = () => (
 
 export default function Contact() {
   return (
-    <section id="contact" className="bg-white relative size-full py-5 ">
+    <main id="contact" className="landing-page">
       <Header />
       <SectionHeader />
       <Footer />
-    </section>
+    </main>
   );
 }

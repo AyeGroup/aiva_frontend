@@ -2068,7 +2068,7 @@ export function Sec6_Icon21() {
 
 export function Sec7_Icon() {
   return (
-    <div className="absolute left-0  top-20" data-name="Icon">
+    <div className="absolute left-0 -top-4 w-full" >
       <svg
         className="block size-full"
         fill="none"
@@ -2097,7 +2097,7 @@ export function Sec7_Icon() {
 export function Sec7_Icon1() {
   return (
     <div
-      className="absolute h-[256px] left-0 top-[456px] w-[1431px]"
+      className="absolute left-10 top-10 w-full"
       data-name="Icon"
     >
       <svg
@@ -2122,7 +2122,7 @@ export function Sec7_Icon1() {
 export function Sec7_Icon2() {
   return (
     <div
-      className="absolute left-[1252.52px] size-[64px] top-[106.8px]"
+      className="absolute left-0 size-16 top-0"
       data-name="Icon"
     >
       <svg
@@ -2177,7 +2177,7 @@ export function Sec7_Icon2() {
 export function Sec7_Icon3() {
   return (
     <div
-      className="absolute left-[143.09px] size-[56px] top-[478px]"
+      className="absolute left-0 size-[56px] top-0"
       data-name="Icon"
     >
       <svg
@@ -2213,7 +2213,7 @@ export function Sec7_Icon3() {
 export function Sec7_Icon4() {
   return (
     <div
-      className="absolute left-[1104.81px] size-[40px] top-[284.8px]"
+      className="absolute left-0 size-[40px] top-0"
       data-name="Icon"
     >
       <svg
@@ -2238,7 +2238,7 @@ export function Sec7_Icon4() {
 export function Sec7_Icon5() {
   return (
     <div
-      className="absolute h-[128px] left-0 top-0 w-[1431px]"
+      className="absolute h-32 left-0 top-0 w-full"
       data-name="Icon"
     >
       <svg

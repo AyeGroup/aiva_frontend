@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 
 const menuItems = [
   { label: "خانه", href: "/", active: true },
@@ -17,13 +18,13 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between px-8 py-6 bg-white">
       {/* ✅ Logo */}
-      <div className="flex items-center gap-3 ali">
+      <Link href="/" className="flex items-center gap-3 ali">
         <Image src="/logo.png" alt="لوگوی آیوا" width={48} height={48} />
         <div className="text-right leading-tight">
           <p className="text-lg text-gray-900 font-semibold">آیوا</p>
           <p className="text-sm text-gray-600">دستیار هوشمند</p>
         </div>
-      </div>
+      </Link>
 
       {/* ✅ Menu */}
       <nav className="flex items-center gap-2">

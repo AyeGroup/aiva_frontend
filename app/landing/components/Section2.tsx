@@ -267,43 +267,24 @@ function Header() {
       className="content-stretch flex flex-col gap-6 items-center justify-center relative shrink-0 w-full"
       data-name="Header"
     >
-      <div
-        className="bg-[#e3f4f1] h-9 relative rounded shrink-0 w-[99.953px]"
-        data-name="Container"
-      >
-        <div
-          className="absolute h-5 left-4 top-2 w-[51.953px]"
-          data-name="Text"
-        >
-          <p className="absolute  font-medium leading-5 left-[26.5px] text-[#65bcb6] text-3.5 text-center text-nowrap top-0 translate-x-[-50%] whitespace-pre">
-            درباره آیوا
-          </p>
-        </div>
-        <div
-          className="absolute bg-[#65bcb6] content-stretch flex flex-col items-start left-[75.95px] rounded-[1.67772e+07px] size-2 top-3.5"
-          data-name="Container"
-        >
-          <div
-            className="bg-[#65bcb6] h-2 rounded-[1.67772e+07px] shrink-0 w-full"
-            data-name="Container"
-          />
-        </div>
+      <div className="flex items-center justify-center rounded-3xl bg-[#e7f3f1] border border-[rgba(101,188,182,0.15)] py-2 px-4 mx-auto">
+        <div className="bg-primary rounded-full w-2 h-2 ml-3"></div>
+        <span className="text-primary"> درباره آیوا</span>
       </div>
-      <div className="box-border content-stretch flex gap-2 items-center justify-center px-[503px] py-0 relative shrink-0">
-        <p className="  font-extrabold text-4xl  text-center text-gray-900 text-nowrap   whitespace-pre">
-          آیوا چیست؟
-        </p>
+
+      
+      <div className="  font-extrabold text-4xl  text-center text-gray-900 text-nowrap   whitespace-pre">
+        آیوا چیست؟
+    
       </div>
-      <div className="box-border content-stretch flex gap-2 items-center justify-center px-[111px] py-0 relative shrink-0">
-        <p className="text-center text-gray-600  ">
+      
+        <div className="text-center text-gray-600  ">
           چت‌بات هوشمند مبتنی بر AI که کسب‌وکار شما را متحول می‌کند
-        </p>
-      </div>
+        </div>
+       
     </div>
   );
 }
-
- 
 
 const articlesData = [
   {
@@ -396,7 +377,6 @@ function Articlea({
   );
 }
 
-
 interface IconCircleProps {
   color?: string;
 }
@@ -437,7 +417,7 @@ function ArticlesList() {
     </div>
   );
 }
- 
+
 function IconSarNakh() {
   return (
     <div>
@@ -690,7 +670,7 @@ function IconYekparche() {
           />
         </g>
         <defs>
-          <clipPath >
+          <clipPath>
             <rect fill="white" height="28" width="28" />
           </clipPath>
         </defs>
