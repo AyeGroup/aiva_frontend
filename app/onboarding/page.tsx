@@ -24,6 +24,8 @@ import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { headerData } from "@/components/header/header.data";
+import Image from "next/image";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -38,6 +40,7 @@ export default function OnboardingWizard() {
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
+  const { logo } = headerData;
 
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
@@ -511,16 +514,47 @@ export default function OnboardingWizard() {
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app">
-      {!id && <Header currentPage="onboarding" isOnboarding={true} />}
+      {/* {!id && <Header currentPage="onboarding" isOnboarding={true} />} */}
       <div className="container mx-auto px-6 py-6 relative z-10">
         {/* Clean Minimal Header */}
-        <div className="flex flex-col justify-center items-center mb-16">
-          <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
-            <div className="text-white w-7 h-7">
-              <AivaWhite />
-            </div>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <button
+              onClick={() => router.push("/landing")}
+              title={logo.title}
+              className="flex items-center gap-3 hover:opacity-80 animate-soft group"
+              aria-label="برگشت به صفحه اصلی"
+            >
+              {/* تصویر لوگو */}
+              {logo.image ? (
+                <Image
+                  src="/logo.png"
+                  width={50}
+                  height={40}
+                  alt="Logo"
+                  style={{ width: "auto", height: "40px" }}
+                />
+              ) : (
+                <div className="h-8 w-8 lg:h-10 lg:w-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                  <span className="text-white text-sm lg:text-lg">
+                    {logo.text?.charAt(0)}
+                  </span>
+                </div>
+              )}
+
+              {/* متن لوگو */}
+              <div className="flex flex-col gap-0.5">
+                <span className="text-grey-900 group-hover:text-brand-primary transition-colors leading-none text-right">
+                  {logo.text}
+                </span>
+                <span className="hidden sm:block text-grey-600 text-xs leading-none">
+                  دستیار هوشمند
+                </span>
+              </div>
+            </button>
           </div>
-          <div className="absolute top-4 left-4">
+          {/* <div className="absolute top-4 left-4"> */}
+          <div className="">
             <button
               onClick={() => setIsStatsDrawerOpen(true)}
               className="plans-trigger-special"
@@ -531,9 +565,28 @@ export default function OnboardingWizard() {
                 <BarChart3 size={20} />
               </span>
               <span className="plans-trigger-text">پلن‌ها</span>
-
             </button>
           </div>
+        </div>
+        <div className="flex flex-col justify-center items-center mb-16 -mt-4">
+          <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
+            <div className="text-white w-7 h-7">
+              <AivaWhite />
+            </div>
+          </div>
+          {/* <div className="absolute top-4 left-4">
+            <button
+              onClick={() => setIsStatsDrawerOpen(true)}
+              className="plans-trigger-special"
+              title="مشاهده پلن‌های پیشنهادی"
+              aria-label="باز کردن پنل پلن‌ها"
+            >
+              <span className="plans-trigger-icon">
+                <BarChart3 size={20} />
+              </span>
+              <span className="plans-trigger-text">پلن‌ها</span>
+            </button>
+          </div> */}
 
           <div className="text-grey-900 mb-4 font-bold text-lg text-center">
             {!id || id === "new" ? title : "ویرایش چت‌بات"}

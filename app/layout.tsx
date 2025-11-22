@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { AuthProvider } from "@/providers/AuthProvider";
-// import NProgressHandler from "@/components/NProgressHandler";
-import "@/styles/globals.css";
-import "@/styles/login.css";
 import { Toaster } from "sonner";
 import { BotProvider } from "@/providers/BotProvider";
-// import "nprogress/nprogress.css";
+import { AuthProvider } from "@/providers/AuthProvider";
+import "@/styles/login.css";
+import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: "دستیار هوشمند آیوا",
@@ -23,13 +21,12 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body>
-        {/* <NProgressHandler /> */}
+     
         <div className="app-shell">
           <div className="app-content">
             <AuthProvider>
               <BotProvider>{children}</BotProvider>
             </AuthProvider>
-            {/* <Toaster position="top-center" dir="rtl" richColors closeButton /> */}
             <Toaster
               position="top-center"
               richColors

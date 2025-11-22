@@ -42,6 +42,7 @@ export default function Checkout() {
       }
 
       const parsed = JSON.parse(planData);
+      console.log("parsed", parsed);
       setSelectedPlan(parsed);
 
       try {
@@ -50,11 +51,11 @@ export default function Checkout() {
         const invoicePayload = {
           purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
           // purpose: "subscription_purchase",
-          subscription_type: parsed.period,
+          subscription_type: parsed.billingPeriod,
           subscription_plan: getPlanIdByCode(parsed.plan),
 
           amount_irr:
-            parsed.period === "monthly"
+            parsed.billingPeriod === "monthly"
               ? parsed.price_monthly_irr
               : parsed.price_yearly_irr,
           chatbot_uuid: parsed?.billingBot?.uuid,
@@ -143,16 +144,16 @@ export default function Checkout() {
       setIsLoading(true);
 
       const invoicePayload = {
-        purpose: "subscription_purchase",
-        // purpose:TRANSACTION_TYPE.BUY_SUBSCRIPTION,
-
+        purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
+        company_name: companyName,
+        national_id: nationalId,
         amount_irr: invoice?.total_amount_irr,
         chatbot_uuid: currentBot?.uuid,
         subscription_plan: getPlanIdByCode(selectedPlan.plan),
-        subscription_type: selectedPlan.period,
+        subscription_type: selectedPlan.billingPeriod,
         description: selectedPlan.description,
       };
-      console.log("ALI", invoicePayload);
+
       const res = await axiosInstance.post(
         API_ROUTES.PAYMENT.INITIATE,
         invoicePayload
@@ -228,12 +229,14 @@ export default function Checkout() {
                     </div>
                     <div className="text-left">
                       <p className="text-grey-900">
-                        {(invoice?.amount_irr || "").toLocaleString("fa-IR")}{" "}
+                        {(invoice?.base_amount_irr || "").toLocaleString(
+                          "fa-IR"
+                        )}{" "}
                         تومان
                         {/* {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان */}
                       </p>
                       <p className="text-grey-500 text-sm">
-                        {SUBSCRIPTION_TYPES[selectedPlan.period]}
+                        {SUBSCRIPTION_TYPES[selectedPlan.billingPeriod]}
                       </p>
                     </div>
                   </div>
@@ -285,7 +288,8 @@ export default function Checkout() {
                   <span className="text-grey-600">مبلغ پایه</span>
                   <span>
                     {/* {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان */}
-                    {(invoice?.amount_irr || "").toLocaleString("fa-IR")} تومان
+                    {(invoice?.base_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                    تومان
                   </span>
                 </div>
                 {appliedDiscount > 0 && (
@@ -298,10 +302,11 @@ export default function Checkout() {
                 )}
                 <div className="flex justify-between items-center">
                   <span>
-                    مالیات ({convertToPersian(invoice.tax_percentage)}%)
+                    مالیات ({convertToPersian(invoice?.tax_percentage || "")}%)
                   </span>
                   <span>
-                    {invoice.tax_amount_irr.toLocaleString("fa-IR")} تومان
+                    {(invoice?.tax_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                    تومان
                   </span>
                 </div>
               </div>
@@ -338,7 +343,8 @@ export default function Checkout() {
               <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-gradient-to-br from-grey-50 to-white border-2 border-grey-200">
                 <span>مبلغ قابل پرداخت</span>
                 <span className="text-xl font-bold text-[#65BCB6]">
-                  {invoice.total_amount_irr.toLocaleString("fa-IR")} تومان
+                  {(invoice?.total_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                  تومان
                 </span>
               </div>
 

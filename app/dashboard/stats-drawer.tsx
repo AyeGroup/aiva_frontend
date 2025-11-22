@@ -11,6 +11,7 @@ import {
   translateFeature,
 } from "@/constants/plans";
 import axiosInstance from "@/lib/axiosInstance";
+import { ChatbotSelector } from "./chatbot-selector";
 
 interface StatsDrawerProps {
   isOpen: boolean;
@@ -155,7 +156,10 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
             <X size={20} />
           </button>
         </header>
-
+        <div className="flex items-center justify-center mt-3 gap-2">
+          <span>چت‌بات</span>
+          <ChatbotSelector />
+        </div>
         {/* Content */}
         <div className="stats-drawer-content">
           {/* Billing Period Toggle */}

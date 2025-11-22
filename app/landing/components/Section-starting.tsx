@@ -17,7 +17,7 @@ import Link from "next/link";
 
 function ContainerBg() {
   return (
-    <div className="h-[500px] w-full">
+    <div className="h-[500px] w-full pointer-events-none">
       <SecSart_Icon0 />
       <SecSart_Icon1 />
       <SecSart_Icon2 />
@@ -37,7 +37,7 @@ function ContainerBg() {
 export default function SectionStarting() {
   return (
     <div className="relative size-full" id="starting">
-      <div className="w-full bg-[#65bcb6]  flex flex-col gap-2 h-[500px] items-center justify-center p-24 relative">
+      <div className="w-full bg-[#65bcb6]  flex flex-col gap-2 h-[500px] items-center justify-center p-24 relative ">
         <ContainerBg />
         <p className="font-semibold text-4xl text-center text-white">
           آماده شروع هستید؟
@@ -48,17 +48,17 @@ export default function SectionStarting() {
         <div className="flex gap-8">
           <Link
             href="/onboarding"
-            className=" font-normal bg-white rounded-sm relative shrink-0 text-[#2d3748] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] py-4 px-6 text-nowrap whitespace-pre"
+            className="cursor-pointer font-normal bg-white rounded-sm relative shrink-0 text-[#2d3748] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] py-4 px-6 text-nowrap whitespace-pre"
           >
             شروع رایگان
           </Link>
 
-          <Link
-            href="#"
-            className="border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-[rgba(255,255,255,0.1)] py-4 px-6 "
+          <a
+            href="tel:09903202903"
+            className="cursor-pointer border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-[rgba(255,255,255,0.1)] py-4 px-6"
           >
             مشاوره رایگان
-          </Link>
+          </a>
         </div>
       </div>
     </div>

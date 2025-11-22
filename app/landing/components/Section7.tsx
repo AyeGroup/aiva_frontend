@@ -162,10 +162,10 @@ function PerfectSale() {
         transition={{ duration: 0.4 }}
       >
         <div className="bg-[#e3f4f1] py-2 px-6 rounded-3xl w-fit ">
-          <p className="flex items-center justify-start gap-2 font-medium   text-primary text-sm text-center text-nowrap ">
+          <div className="flex items-center justify-start gap-2 font-medium text-primary text-sm text-center text-nowrap ">
             <div className="bg-primary rounded-full w-2 h-2"></div>
             <span>یک فروش بی نقص</span>
-          </p>
+          </div>
         </div>
         <div className="font-semibold m-8 text-2xl text-gray-900 text-nowrap text-right whitespace-pre">
           یک گفت‌وگوی نیمه‌شب، یک فروش واقعی!

@@ -73,7 +73,7 @@ export function Billing() {
 
         setExpiringPlan(expiring);
 
-        console.log("expiringPlan", expiring);
+        // console.log("expiringPlan", expiring);
       } catch (error) {
         console.error("خطا در دریافت داده کاربران:", error);
       } finally {
@@ -99,7 +99,7 @@ export function Billing() {
         );
         setPlans(filteredPlans);
 
-        // console.log("allPlans :", allPlans);
+        console.log("allPlans :", allPlans);
         // console.log("filteredPlans :", filteredPlans);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
@@ -214,7 +214,7 @@ export function Billing() {
         </section>
 
         {/* Discount & Expiring Alert */}
-        {showDiscountHint && expiringPlan && (
+        {showDiscountHint && expiringPlan && expiringPlan.lentgh>0 && (
           <section className="mb-8" aria-label="هشدار و اطلاعیه‌ها">
             <Card className="p-0 overflow-hidden border-2 bg-[#FFA18E] mb-4">
               <div
@@ -559,7 +559,7 @@ export function Billing() {
               <PlanCard
                 key={index}
                 name={getFaNameByCode(plan?.plan) || plan?.plan}
-                description=""
+                description={plan?.description}
                 priceMonthly={Number(plan?.price_monthly_irr || 0)}
                 priceYearly={Number(plan?.price_yearly_irr || 0)}
                 period={periods[plan.plan] || "monthly"}

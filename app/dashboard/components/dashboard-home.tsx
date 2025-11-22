@@ -31,7 +31,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { bots, currentBot } = useBot();
-  const [isNew, setIsNew] = useState<boolean | null>(null);  
+  const [isNew, setIsNew] = useState<boolean | null>(null);
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChartLoading, setIsChartLoading] = useState(false);
@@ -83,10 +83,9 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
-  
   useEffect(() => {
     if (!user || !currentBot?.uuid) return;
-    // if (isLoading) return;  
+    // if (isLoading) return;
     fetchAllStatistics();
   }, [user?.id, currentBot?.uuid]);
 
@@ -512,13 +511,13 @@ export default function Dashboard() {
                     backgroundClip: "padding-box",
                   }}
                 >
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-4">
                     {activeUsers.slice(0, 3).map((user, index) => {
-                      const color = colors[index % colors.length]; // انتخاب رنگ به ترتیب
+                      const color = colors[index % colors.length];
                       return (
                         <div
                           key={index}
-                          className="relative bg-white rounded-lg p-4 pt-8 text-center shadow-sm hover-lift"
+                          className="relative bg-white  rounded-lg p-4 pt-8 text-center shadow-sm hover-lift"
                         >
                           <div
                             className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white font-bold"
@@ -529,19 +528,26 @@ export default function Dashboard() {
                               <User />
                             </div>
                           </div>
-
-                          <h4
-                            className="font-bold text-grey-900 mb-2 mt-2 truncate"
-                            // title={user.name}
-                          >
-                            {/* {user.name} */}
-                            کاربر شماره {convertToPersian(index + 1)}
-                          </h4>
-
-                          <p className="text-2xl font-semibold text-grey-900">
-                            {convertToPersian(user.session_count)}
+                          {user.name && (
+                            <div className="truncate font-semibold">
+                              {user.name}
+                            </div>
+                          )}
+                          {/* <div className="">e_tanha@yahoo.com</div>
+                          <div className="">09123262118 </div>{" "} */}
+                          {user.email && (
+                            <div className="truncate  font-semibold">
+                              {user.email}
+                            </div>
+                          )}
+                          {user.phone && (
+                            <div className="truncate  font-semibold">
+                              {user.phone}
+                            </div>
+                          )}
+                          <p className=" mt-1 text-grey-900">
+                            {convertToPersian(user.session_count)} گفتگو
                           </p>
-                          <p className="text-body-small text-grey-500">گفتگو</p>
                         </div>
                       );
                     })}

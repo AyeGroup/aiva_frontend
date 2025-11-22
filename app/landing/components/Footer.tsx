@@ -1,270 +1,113 @@
-import Image from "next/image";
-import Container from "./Container-icons";
-import { Instagram, Send, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { convertToPersian } from "@/utils/common";
+import { MapPin, Phone, Mail } from "lucide-react";
+
+function Container() {
+  return (
+    <div className="opacity-50 relative size-full" >
+      <div className="absolute left-0 top-0 w-full" >
+        <svg
+          className="block size-full"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 1431 96"
+        >
+          <g clipPath="url(#clip0_0_5662)" id="Icon" opacity="0.15">
+            <path
+              d="M0 47.9996C238.5 28.7996 477 28.7996 715.5 47.9996C954 67.1996 1192.5 67.1996 1431 47.9996"
+              id="Vector"
+              stroke="var(--stroke-0, #65BCB6)"
+              strokeWidth="2.13991"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_0_5662">
+              <rect fill="white" height="96" width="1431" />
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  );
+}
 
 export default function Footer() {
   return (
-    <div className="relative w-full bg-gray-900" style={{ height: "381px" }}>
+    <div className="relative w-full bg-gray-900">
       {/* Background Pattern */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0  pointer-events-none">
         <Container />
       </div>
- 
+
       {/* Footer Content */}
-      <div className="relative w-full h-full flex items-center justify-center">
-        <div className="w-full mx-auto px-24 py-12">
-          <div className="flex">
-            {/* Logo & Description */}
-            <div className="col-span-1 text-right">
-              <div className="flex items-center gap-2 mb-4   justify-start">
-                <Link href="/" className="flex items-center gap-3">
-                  <Image
-                    src="/logo.png"
-                    alt="آیوا"
-                    width={40}
-                    height={40}
-                    priority
-                  />
-                  <span className="text-white font-semibold text-xl" dir="rtl">
-                    آیوا
-                  </span>
-                </Link>
-              </div>
-              <p
-                className="text-gray-400 text-sm leading-6 text-right"
-                dir="rtl"
-              >
-                هوشمندترین چت‌بات برای کسب‌وکار شما
-              </p>
+      <div className=" w-full h-full flex flex-col items-center justify-center px-20 pt-4">
+        <div className="grid grid-cols-7 gap-12 py-8 text-gray-400">
+          {/* Logo & Description */}
+          <div className=" text-right col-span-2">
+            <div className="flex items-center gap-2 justify-start">
+              <Link href="/" className="flex items-center gap-3">
+                <Image
+                  src="/logo.png"
+                  alt="آیوا"
+                  width={40}
+                  height={40}
+                  priority
+                />
+                <span className="text-white font-semibold text-xl">آیوا</span>
+              </Link>
             </div>
-            <div className="grid grid-cols-4 grow gap-8 mr-20">
-              {/* پشتیبانی */}
-              <div className="col-span-1">
-                <h3
-                  className="text-white font-semibold mb-4 text-right"
-                  dir="rtl"
-                >
-                  پشتیبانی
-                </h3>
-                <ul className="space-y-3 text-right">
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      راهنمای استفاده
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      سوالات متداول
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      تیکت پشتیبانی
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      وضعیت سرویس
-                    </a>
-                  </li>
-                </ul>
-              </div>
+            <p className="text-gray-400 leading-6 text-right">
+              هوشمندترین چت‌بات برای کسب‌وکار شما
+            </p>
+          </div>
+          <div className="items-end flex pt-2 text-justify col-span-3">
+            خلاقیت یا آفرینندگی توان ساختن یا خلق نمودن چیزی نو است، راهکاری نو
+            برای حل یک مشکل، یک روش یا یک دستگاه نو، یا یک شیء یا فرم نو هنری.
+            «خلاقیت بشر تعریفی از قابلیت‌های اقتصاد، زندگی، فناوری، صنایع نو،
+            ثروت نو و کلیهٔ چیزهایی است که از یک اقتصاد خوب جریان می‌گیرند.
+          </div>
+          <div className="flex flex-col gap-y-4 justify-end col-span-2">
+            <div className="text-gray-100 text-lg mb-1">تماس با ما</div>
 
-              {/* شرکت */}
-              <div className="col-span-1">
-                <h3
-                  className="text-white font-semibold mb-4 text-right"
-                  dir="rtl"
-                >
-                  شرکت
-                </h3>
-                <ul className="space-y-3 text-right">
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      درباره ما
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      تماس با ما
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      فرصت‌های شغلی
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      حریم خصوصی
-                    </a>
-                  </li>
-                </ul>
-              </div>
+            <div className="flex justify-start items-center gap-2">
+              <MapPin size={20} className="text-gray-300" />
+              <span>تهران، آزادی، خیابان صادقی، پلاک ۳۳</span>
+            </div>
 
-              {/* منابع */}
-              <div className="col-span-1">
-                <h3
-                  className="text-white font-semibold mb-4 text-right"
-                  dir="rtl"
-                >
-                  منابع
-                </h3>
-                <ul className="space-y-3 text-right">
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      مستندات
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      راهنما
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      وبلاگ
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      API
-                    </a>
-                  </li>
-                </ul>
-              </div>
+            <div className="flex justify-start items-center gap-2">
+              <Phone size={20} className="text-gray-300" />
+              <a
+                href="tel:09903202903"
+                className="hover:text-gray-100 transition"
+              >
+                {convertToPersian("09903202903")}
+              </a>
+            </div>
 
-              {/* محصول */}
-              <div className="col-span-1">
-                <h3
-                  className="text-white font-semibold mb-4 text-right"
-                  dir="rtl"
-                >
-                  محصول
-                </h3>
-                <ul className="space-y-3 text-right">
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      ویژگی‌ها
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      قیمت‌گذاری
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      نمونه‌کارها
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors text-sm"
-                      dir="rtl"
-                    >
-                      آموزش‌ها
-                    </a>
-                  </li>
-                </ul>
-              </div>
+            <div className="flex justify-start items-center gap-2">
+              <Mail size={20} className="text-gray-300" />
+              <a
+                href="mailto:info@ayehgroup.com"
+                className="hover:text-gray-100 transition"
+              >
+                info@ayehgroup.com
+              </a>
             </div>
           </div>
+        </div>
 
-          {/* Bottom Section */}
-          <div className="mt-12 pt-8 border-t border-gray-800 flex items-center justify-between">
-            {/* Social Icons */}
-            <div className="flex items-center gap-4">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors flex items-center justify-center"
-              >
-                <Instagram className="w-5 h-5 text-gray-400" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors flex items-center justify-center"
-              >
-                <Send className="w-5 h-5 text-gray-400" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors flex items-center justify-center"
-              >
-                <Linkedin className="w-5 h-5 text-gray-400" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors flex items-center justify-center"
-              >
-                <Twitter className="w-5 h-5 text-gray-400" />
-              </a>
-            </div>
-            <p className="text-gray-500 text-sm" dir="rtl">
-              © ۲۰۲۴ آیوا. تمامی حقوق محفوظ است.
-            </p>
+        {/* Bottom Section */}
+        <div className="mt-2 w-full p-4 border-t border-gray-800 flex items-center justify-center">
+          <div className="flex items-center text-gray-500 text-sm">
+            © ۲۰۲۵ تمام حقوق سایت متعلق به
+            <Link
+              href="https://ayehgroup.com/"
+              className="mx-0.5 cursor-pointer"
+            >
+              <div>گروه آیه</div>
+            </Link>
+            است.
           </div>
         </div>
       </div>

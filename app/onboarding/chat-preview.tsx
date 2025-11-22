@@ -4,11 +4,12 @@ import { API_BASE_URL } from "@/config";
 import { onboardingData } from "./onboarding.data";
 import { Delete, SendMessage } from "@/public/icons/AppIcons";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/providers/AuthProvider";
 
 interface ChatPreviewProps {
   botConfig: BotConfig;
   currentStep: number;
-  isNew:boolean;
+  isNew: boolean;
 }
 
 interface Message {
@@ -19,13 +20,17 @@ interface Message {
   type?: string;
 }
 
-export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) {
+export function ChatPreview({
+  botConfig,
+  currentStep,
+  isNew,
+}: ChatPreviewProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isTyping, setIsTyping] = useState(false);
   const [showFaqs, setShowFaqs] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  const { user } = useAuth();
   useEffect(() => {
     const newMessages = getGreetingMessages();
     if (botConfig.greetings) setMessages(newMessages);
@@ -144,6 +149,7 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify(requestData),
       });
@@ -461,7 +467,7 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
                   <button
                     className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md disabled:opacity-50"
                     style={{ backgroundColor: botConfig.primary_color }}
-                    disabled={currentStep == 1}
+                    disabled={currentStep == 1 && isNew}
                     onClick={handleSend}
                   >
                     <SendMessage />
