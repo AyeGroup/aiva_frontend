@@ -14,8 +14,10 @@ import { ArrowRight, Tag, Receipt, CreditCard } from "lucide-react";
 import {
   getFaNameByCode,
   getPlanIdByCode,
+  PAYMENT_PURPOSE,
   PLAN_COLORS,
   SUBSCRIPTION_TYPES,
+  TRANSACTION_TYPE,
 } from "@/constants/plans";
 
 export default function Checkout() {
@@ -46,8 +48,8 @@ export default function Checkout() {
         setIsLoading(true);
         // ایجاد فاکتور در بک‌اند
         const invoicePayload = {
-          // purpose: TRANSACTION_TYPE.BUY_SUBSCRIPTION,
-          purpose: "subscription_purchase",
+          purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
+          // purpose: "subscription_purchase",
           subscription_type: parsed.period,
           subscription_plan: getPlanIdByCode(parsed.plan),
 
@@ -57,12 +59,14 @@ export default function Checkout() {
               : parsed.price_yearly_irr,
           chatbot_uuid: parsed?.billingBot?.uuid,
         };
-        console.log("invoice", invoicePayload);
+        console.log("invoice payload", invoicePayload);
+
         const res = await axiosInstance.post(
           API_ROUTES.PAYMENT.FACTOR,
           invoicePayload
         );
         const data = res.data;
+        console.log("invoice response", data);
 
         if (!data.success) {
           toast.error(data.message || "خطا در ایجاد فاکتور");

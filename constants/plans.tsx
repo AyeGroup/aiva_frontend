@@ -1,17 +1,16 @@
-import {
-
-  Rocket,
-  Crown,
-  Star,
-  Gift,
-  Users,
-} from "lucide-react";
+import { Rocket, Crown, Star, Gift, Users } from "lucide-react";
 
 export enum TRANSACTION_TYPE {
   INCREASE_WALLET = "increase_wallet",
   INCREASE_BALANCE = "increase_balance",
   BUY_SUBSCRIPTION = "buy_subscription",
   MESSAGE_COST = "message_cost",
+}
+
+export enum PAYMENT_PURPOSE {
+  BALANCE_INCREASE = "balance_increase",
+  SUBSCRIPTION_PURCHASE = "subscription_purchase",
+  WALLET_CHARGE = "wallet_charge",
 }
 
 export enum TRANSACTION_TITLE {
@@ -84,7 +83,7 @@ export function getFaNameByCode(
   const plan = PLANS.find((p) => p.code === code);
   return plan?.faName;
 }
-export   const translateFeature = (key: string): string => {
+export const translateFeature = (key: string): string => {
   const dict: Record<string, string> = {
     base_stats: "آمار پایه",
     choosing_llm: "انتخاب مدل هوش مصنوعی",

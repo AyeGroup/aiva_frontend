@@ -72,7 +72,7 @@ export default function OnboardingWizard() {
       router.replace("/dashboard?tab=onboarding");
     }
   }, []);
-  
+
   // authentication
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");
@@ -512,7 +512,7 @@ export default function OnboardingWizard() {
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app">
       {!id && <Header currentPage="onboarding" isOnboarding={true} />}
-      <div className="container mx-auto px-6 py-12 relative z-10">
+      <div className="container mx-auto px-6 py-6 relative z-10">
         {/* Clean Minimal Header */}
         <div className="flex flex-col justify-center items-center mb-16">
           <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
@@ -520,7 +520,7 @@ export default function OnboardingWizard() {
               <AivaWhite />
             </div>
           </div>
-          <div className="absolute top-0 left-0">
+          <div className="absolute top-4 left-4">
             <button
               onClick={() => setIsStatsDrawerOpen(true)}
               className="plans-trigger-special"
@@ -531,15 +531,14 @@ export default function OnboardingWizard() {
                 <BarChart3 size={20} />
               </span>
               <span className="plans-trigger-text">پلن‌ها</span>
-              <span className="plans-trigger-badge">جدید</span>
+
             </button>
           </div>
-          {!id ||
-            (id === "new" && (
-              <div className="text-grey-900 mb-4 font-bold text-lg text-center">
-                {title}
-              </div>
-            ))}
+
+          <div className="text-grey-900 mb-4 font-bold text-lg text-center">
+            {!id || id === "new" ? title : "ویرایش چت‌بات"}
+          </div>
+
           <div className="text-grey-700 max-w-lg mx-auto text-center">
             {!id || id === "new"
               ? subtitle

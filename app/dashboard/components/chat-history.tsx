@@ -1,37 +1,24 @@
 import Image from "next/image";
-import { API_BASE_URL } from "@/config";
-import { Delete, SendMessage } from "@/public/icons/AppIcons";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useBot } from "@/providers/BotProvider";
 import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import PageLoader from "@/components/pageLoader";
 
 interface ChatHistoryProps {
   username: string;
 }
 
-interface Message {
-  id: string;
-  text: string;
-  isBot: boolean;
-  timestamp: Date;
-  type?: string;
-}
 
 export function ChatHistory({ username }: ChatHistoryProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState<string>("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [showFaqs, setShowFaqs] = useState(true);
+
   const { currentBot } = useBot();
   const [history, setHistory] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!currentBot) return;
     if (!username) return;
     const fetchActiveUsers = async () => {
-      setIsLoading(true);
 
       try {
         const response = await axiosInstance.get(
@@ -45,7 +32,6 @@ export function ChatHistory({ username }: ChatHistoryProps) {
       } catch (error) {
         console.error("❌ خطا در دریافت داده کاربران:", error);
       } finally {
-        setIsLoading(false);
       }
     };
     fetchActiveUsers();
@@ -110,18 +96,18 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                   <div
                     key={message.id}
                     className={`flex items-end gap-3 ${
-                      message.role ? "justify-start" : "justify-end"
+                      message.role === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm text-right ${
-                        message.role
-                          ? `bg-white border border-grey-100 text-grey-800 rounded-sm`
-                          : `text-white  rounded-sm`
+                      className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm rounded-sm ${
+                        message.role === "user"
+                          ? `text-white`
+                          : `bg-white text-grey-800`
                       }`}
                       style={
-                        !message.role
+                        message.role === "user"
                           ? {
                               background: currentBot.primary_color,
                             }
@@ -131,8 +117,10 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                     >
                       {message.content}
                       <div
-                        className={`text-xs mt-1 opacity-70 text-right ${
-                          message.role ? "text-grey-500" : "text-white/70"
+                        className={`text-xs mt-1 opacity-70 ${
+                          message.role === "user"
+                            ? "text-white/70"
+                            : "text-grey-500"
                         }`}
                       >
                         {new Date(message.timestamp).toLocaleTimeString(

@@ -5,10 +5,11 @@ import { User } from "@/public/icons/AppIcons";
 import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { ChatHistory } from "./chat-history";
 import { ChatbotSelector } from "../chatbot-selector";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
-import { ChatHistory } from "./chat-history";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ActiveUsers() {
   const [users, setUsers] = useState<any[]>([]);
@@ -18,7 +19,6 @@ export default function ActiveUsers() {
   const [totalPages, setTotalPages] = useState(1);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
-
   const { currentBot } = useBot();
   const { user, loading } = useAuth();
 
@@ -95,11 +95,12 @@ export default function ActiveUsers() {
                         <User />
                       </div>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <h4 className="font-bold text-grey-900 my-2  truncate">
-                        کاربر شماره{" "}
-                        {convertToPersian(index + 1 + (page - 1) * 10)}
-                      </h4>
+                    <div className="flex justify-between items-center gap-3">
+                      <div className="flex-col font-bold text-grey-900 my-2  truncate">
+                        {user.email ? `ایمیل: ${user.email}` : ""}
+                        {user.name ? `نام: ${user.name}` : ""}
+                        {user.phone ? `تلفن: ${user.phone}` : ""}
+                      </div>
 
                       <p className="flex text-sm text-grey-500 gap-1">
                         {convertToPersian(user.session_count)}
@@ -112,33 +113,40 @@ export default function ActiveUsers() {
             </div>
 
             {/* صفحه بندی */}
-            <div className="flex justify-center items-center gap-4 mt-8">
-              <button
-                onClick={handlePrevPage}
-                disabled={!hasPrev}
-                className={`px-4 py-2 rounded-md ${
-                  hasPrev
-                    ? "bg-gray-200 hover:bg-gray-300"
-                    : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                صفحه قبلی
-              </button>
-              <span className="text-gray-700 font-medium">
-                صفحه {convertToPersian(page)} از {convertToPersian(totalPages)}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={!hasNext}
-                className={`px-4 py-2 rounded-md ${
-                  hasNext
-                    ? "bg-gray-200 hover:bg-gray-300"
-                    : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                صفحه بعدی
-              </button>
-            </div>
+            {totalPages && totalPages>1 && (
+              <div className="flex justify-center items-center gap-4 mt-8">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={!hasPrev}
+                  className={`px-4 py-2 rounded-md ${
+                    hasPrev
+                      ? "bg-gray-200 hover:bg-gray-300"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
+                >
+                  <ChevronRight />
+                </button>
+                <span className="text-gray-500">
+                   
+                  <span className="text-primary font-semibold ml-1">
+               
+                    {convertToPersian(page)}
+                  </span>
+                  از {convertToPersian(totalPages)}
+                </span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={!hasNext}
+                  className={`px-4 py-2 rounded-md ${
+                    hasNext
+                      ? "bg-gray-200 hover:bg-gray-300"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
+                >
+                  <ChevronLeft />
+                </button>
+              </div>
+            )}
           </div>
           <div className="w-1/2 rounded-lg p-4">
             <ChatHistory username={username} />

@@ -4,8 +4,10 @@ import PageLoader from "@/components/pageLoader";
 import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
+import { BarChart3 } from "lucide-react";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { RecentChats } from "../recent-chats";
+import { StatsDrawer } from "../stats-drawer";
 import { HeatmapChart } from "@/components/heatmap-chart";
 import { UpgradeBanner } from "../upgrade-banner";
 import { ActivityChart } from "@/components/activity-chart";
@@ -24,14 +26,12 @@ import {
   RightGo,
   User,
 } from "@/public/icons/AppIcons";
-import { BarChart3 } from "lucide-react";
-import { StatsDrawer } from "../stats-drawer";
 
 export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { bots, currentBot } = useBot();
-  const [isNew, setIsNew] = useState(true);
+  const [isNew, setIsNew] = useState<boolean | null>(null);  
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChartLoading, setIsChartLoading] = useState(false);
@@ -53,18 +53,9 @@ export default function Dashboard() {
     { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
 
-  //Authentication
-  useEffect(() => {
-    if (!user) {
-      router.push("/auth/login");
-      return;
-    }
-  }, [loading, user]);
-
   // user has a bot
   useEffect(() => {
     if (!bots) return;
-    // console.log
     if (bots && bots.length > 0) setIsNew(false);
     else setIsNew(true);
   }, [bots]);
@@ -92,11 +83,12 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
+  
   useEffect(() => {
     if (!user || !currentBot?.uuid) return;
-    if (isLoading) return; // تا وقتی در حال لود هست، دوباره فراخوانی نکن
+    // if (isLoading) return;  
     fetchAllStatistics();
-  }, [user?.id, currentBot?.uuid, timeRange]);
+  }, [user?.id, currentBot?.uuid]);
 
   const fetchAllStatistics = async () => {
     setIsLoading(true);
@@ -109,12 +101,6 @@ export default function Dashboard() {
     ]);
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    if (currentBot) {
-      // console.log("بات انتخاب شده:", currentBot.name);
-    }
-  }, [currentBot]);
 
   const fetchUserTrend = async (days: string) => {
     if (!currentBot) return;

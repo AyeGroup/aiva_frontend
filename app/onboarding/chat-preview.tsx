@@ -24,23 +24,23 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
   const [inputText, setInputText] = useState<string>("");
   const [isTyping, setIsTyping] = useState(false);
   const [showFaqs, setShowFaqs] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const newMessages = getGreetingMessages();
     if (botConfig.greetings) setMessages(newMessages);
   }, []);
 
- useEffect(() => {
-   if (botConfig.greetings) {
-     setMessages(getGreetingMessages());
-     setShowFaqs(true);
-   } else {
-     setMessages((prev) =>
-       prev.filter((msg) => !msg.id.startsWith("greeting"))
-     );
-   }
- }, [botConfig.greetings, botConfig.tone]);
-
+  useEffect(() => {
+    if (botConfig.greetings) {
+      setMessages(getGreetingMessages());
+      setShowFaqs(true);
+    } else {
+      setMessages((prev) =>
+        prev.filter((msg) => !msg.id.startsWith("greeting"))
+      );
+    }
+  }, [botConfig.greetings, botConfig.tone]);
 
   const handleClear = () => {
     setMessages([]);
@@ -120,6 +120,14 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
 
     setIsTyping(false);
   };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]); // هر وقت messages تغییر کرد، scroll کن
 
   async function callChatbotAPIWithSSE(message: string) {
     const apiUrl = `${API_BASE_URL}/public/${botConfig.uuid}/chat`;
@@ -379,6 +387,7 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
                         )}
                       </div>
                     </div>
+                    <div ref={messagesEndRef} />
                   </div>
                 ))}
 
@@ -428,8 +437,6 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
               )}
               {/* Input Area */}
               <div className="px-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
-               
-
                 <div className="flex items-center py-4 gap-3">
                   <textarea
                     ref={textareaRef}
