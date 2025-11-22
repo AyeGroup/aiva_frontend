@@ -8,6 +8,7 @@ const persianToEnglishDigits: Record<string, string> = {
   '۱': '1', 
   '۲': '2',
   '۳': '3',
+  
   '۴': '4',
   '۵': '5',
   '۶': '6',

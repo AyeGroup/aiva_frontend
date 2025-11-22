@@ -81,21 +81,6 @@ function TabList({ activeTab, setActiveTab }: TabListProps) {
   return (
     <motion.div className="flex items-center w-full justify-center my-3">
       <div className="w-fit flex p-1  bg-gray-100   rounded-xl">
-        <div
-          onClick={() => setActiveTab("usage")}
-          className={`h-12 relative rounded-xl shrink-0   cursor-pointer transition-all
-            ${activeTab === "usage" ? "bg-white shadow" : ""}`}
-        >
-          <div className="h-12 relative flex items-center px-6">
-            <p
-              className={`font-medium text-4 whitespace-nowrap transition-all
-                ${activeTab === "usage" ? "text-gray-900" : "text-gray-500"}`}
-            >
-              براساس کاربرد
-            </p>
-          </div>
-        </div>
-
         {/* Tab 2 */}
         <div
           onClick={() => setActiveTab("industry")}
@@ -110,6 +95,20 @@ function TabList({ activeTab, setActiveTab }: TabListProps) {
                 }`}
             >
               براساس صنعت
+            </p>
+          </div>
+        </div>
+        <div
+          onClick={() => setActiveTab("usage")}
+          className={`h-12 relative rounded-xl shrink-0   cursor-pointer transition-all
+            ${activeTab === "usage" ? "bg-white shadow" : ""}`}
+        >
+          <div className="h-12 relative flex items-center px-6">
+            <p
+              className={`font-medium text-4 whitespace-nowrap transition-all
+                ${activeTab === "usage" ? "text-gray-900" : "text-gray-500"}`}
+            >
+              براساس کاربرد
             </p>
           </div>
         </div>
@@ -662,12 +661,14 @@ function Container() {
   );
 }
 
-
 export default function Section4() {
   const [activeTab, setActiveTab] = useState<"industry" | "usage">("industry");
 
   return (
-    <div id="crafts" className=" w-full flex flex-col relative  bg-linear-to-b from-[#ffffff] gap-2.5 items-center to-[#ffffff] via-50% via-[#f9fafb]">
+    <div
+      id="crafts"
+      className=" w-full flex flex-col relative  bg-linear-to-b from-[#ffffff] gap-2.5 items-center to-[#ffffff] via-50% via-[#f9fafb]"
+    >
       {/* Container روی همه چیز قرار می‌گیرد */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Container />

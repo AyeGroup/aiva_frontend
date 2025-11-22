@@ -86,12 +86,12 @@ function BackgroundDecorations() {
 
 export default function Section1() {
   return (
-    <section id="intro" className="w-full flex justify-center items-center px-16 py-30">
+    <section id="intro" className="w-full   flex justify-center items-center px-16 py-30">
       <BackgroundDecorations />
 
       <div className="container mx-auto flex flex-col lg:flex-row gap-10">
         {/* ستون چپ 7/12 */}
-        <div className="lg:w-7/12 flex flex-col gap-8">
+        <div className="lg:w-7/12 flex flex-col gap-8 ">
           <div>
             <div className="bg-[#e3f4f1] rounded-full inline-flex items-center gap-2 px-4 py-2">
               <div className="h-2 w-2 bg-[#65bcb6] rounded-full" />
@@ -129,9 +129,8 @@ export default function Section1() {
           </div>
         </div>
 
-        {/* ستون چپ   */}
         {/* ستون چپ */}
-        <div className="lg:w-5/12 bg-white rounded-2xl shadow-lg relative border border-gray-200">
+        <div className="lg:w-5/12 rounded-2xl shadow-lg relative border border-gray-200">
           {/* دکمه پیش نمایش */}
           <div className="absolute -top-6 -right-6 z-10">
             <div className="flex items-center gap-2 bg-[#65bcb6] text-white text-sm m-1 px-4 py-2 rounded-full shadow">

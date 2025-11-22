@@ -48,7 +48,7 @@ export function AnimatedChat() {
   }, []);
 
   return (
-    <div className="w-full h-full bg-white border min-h-full rounded-2xl relative flex flex-col overflow-hidden">
+    <div className="w-full h-[440px] bg-white border  rounded-2xl relative flex flex-col overflow-hidden">
       {/* Header */}
       <div className="flex flex-col px-4 py-3 bg-gradient-to-r from-[#65BCB6] to-[#FFA18E] rounded-t-2xl">
         <span className="font-medium text-white text-right">آیوا</span>

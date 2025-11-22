@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const menuItems = [
   { label: "خانه", href: "/", active: true },
-  { label: "ویژگی‌ها", href: "/#features", badge: "جدید" },
+  { label: "ویژگی‌ها", href: "/#features"},// badge: "جدید" 
   { label: "نحوه کار", href: "/#launch" },
   // { label: "نمونه کارها", href: "#section4" },
   { label: "قیمت‌گذاری", href: "/#pricing" },
@@ -27,7 +27,7 @@ export default function Header() {
 
       {/* ✅ Menu */}
       <nav className="flex items-center gap-2">
-        {menuItems.map(({ label, href, badge, active }) => (
+        {menuItems.map(({ label, href, active }) => (
           <a
             key={href}
             href={href}
@@ -39,11 +39,11 @@ export default function Header() {
               }`}
               >
             {label}
-            {badge && (
+            {/* {badge && (
               <span className="bg-[#e67e7e] text-white text-xs px-2 -mt-2 rounded-full">
                 {badge}
               </span>
-            )}
+            )} */}
           </a>
         ))}
       </nav>

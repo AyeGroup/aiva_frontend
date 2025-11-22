@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { cubicBezier } from "motion/react";
 import { useState, useEffect } from "react";
 import { Sec7_Icon, Sec7_Icon1, Sec7_Icon2, Sec7_Icon3, Sec7_Icon4, Sec7_Icon5, Sec7_Icon6, Sec7_Icon8 } from "@/public/icons/landing";
+import { convertToPersian } from "@/utils/common";
 
 
 function CardContainer() {
@@ -110,7 +111,7 @@ function Article({
               className={`w-6 h-6 rounded-full text-sm shadow-[0px_4px_12px_0px_rgba(0,0,0,0.2)]  p-1 font-semibold text-white flex justify-center items-center`}
               style={{ backgroundColor: color }}
             >
-              {step + 1}
+              {convertToPersian(step + 1)}
             </div>
           </div>
 
@@ -165,7 +166,7 @@ const articlesData = [
     icon: <Sec7_Icon6 />,
     title: "آموزش",
     description: "منابع و اطلاعات کسب‌وکار خود را آپلود کنید",
-    duration: "2 دقیقه",
+    duration: "۲ دقیقه",
   },
   {
     step: 2,
@@ -173,7 +174,7 @@ const articlesData = [
     icon: <Sec7_Icon5 />,
     title: "شخصی‌سازی",
     description: "ظاهر و رفتار چت‌بات را مطابق برند خود تنظیم کنید",
-    duration: "5 دقیقه",
+    duration: "۵ دقیقه",
   },
   {
     step: 3,
