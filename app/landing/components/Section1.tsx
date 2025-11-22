@@ -86,7 +86,7 @@ function BackgroundDecorations() {
 
 export default function Section1() {
   return (
-    <section id="intro" className="w-full   flex justify-center items-center px-16 py-30">
+    <section id="intro" className="w-full   flex justify-center items-center px-16 pt-24 pb-10">
       <BackgroundDecorations />
 
       <div className="container mx-auto flex flex-col lg:flex-row gap-10">

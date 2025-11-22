@@ -566,7 +566,7 @@ function ContainerBackground() {
 }
 function Container() {
   return (
-    <div className="h-[1252px] w-full absolute z-10 top-0 left-0 overflow-clip">
+    <div className=" pointer-events-none w-full absolute z-10 top-0 left-0 overflow-clip">
       <svg
         className="block size-full"
         fill="none"
@@ -670,7 +670,8 @@ export default function Section4() {
       className=" w-full flex flex-col relative  bg-linear-to-b from-[#ffffff] gap-2.5 items-center to-[#ffffff] via-50% via-[#f9fafb]"
     >
       {/* Container روی همه چیز قرار می‌گیرد */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      {/* <div className="absolute inset-0 z-0 pointer-events-none"> */}
+      <div className="  ">
         <Container />
       </div>
 

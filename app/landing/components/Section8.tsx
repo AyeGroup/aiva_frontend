@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "motion/react";
 import svgPaths from "../svg/svg-65vfizetex";
-import Pricing10 from "./Pricing";
+import Pricing from "./Pricing";
 
  
 function BackgroundContainer() {
@@ -100,7 +100,7 @@ export default function Section8() {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <Pricing10 />
+        <Pricing />
       </motion.div>
     </div>
   );

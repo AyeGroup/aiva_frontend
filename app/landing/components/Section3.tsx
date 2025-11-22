@@ -3,7 +3,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { cubicBezier } from "motion/react";
 import { useState, useEffect } from "react";
-import { Sec7_Icon, Sec7_Icon1, Sec7_Icon2, Sec7_Icon3, Sec7_Icon4, Sec7_Icon5, Sec7_Icon6, Sec7_Icon8 } from "@/public/icons/landing";
+import { Sec3_Icon1, Sec3_Icon4, Sec3_Icon5, Sec3_Icon6, Sec3_Icon7, Sec3_Icon8, Sec7_Icon, Sec7_Icon1, Sec7_Icon2, Sec7_Icon3, Sec7_Icon4, Sec7_Icon5, Sec7_Icon6, Sec7_Icon8 } from "@/public/icons/landing";
 import { convertToPersian } from "@/utils/common";
 
 
@@ -155,7 +155,7 @@ const articlesData = [
   {
     step: 0,
     color: "#65BCB6",
-    icon: <Sec7_Icon8 />,
+    icon: <Sec3_Icon8 />,
     title: "ثبت‌نام",
     description: "حساب کاربری خود را در کمتر از ۳۰ ثانیه ایجاد کنید",
     duration: "۳۰ ثانیه",
@@ -163,7 +163,7 @@ const articlesData = [
   {
     step: 1,
     color: "#52D4A0",
-    icon: <Sec7_Icon6 />,
+    icon: <Sec3_Icon6 />,
     title: "آموزش",
     description: "منابع و اطلاعات کسب‌وکار خود را آپلود کنید",
     duration: "۲ دقیقه",
@@ -171,7 +171,7 @@ const articlesData = [
   {
     step: 2,
     color: "#ffa18e",
-    icon: <Sec7_Icon5 />,
+    icon: <Sec3_Icon5 />,
     title: "شخصی‌سازی",
     description: "ظاهر و رفتار چت‌بات را مطابق برند خود تنظیم کنید",
     duration: "۵ دقیقه",
@@ -179,7 +179,7 @@ const articlesData = [
   {
     step: 3,
     color: "#B07CC6",
-    icon: <Sec7_Icon4 />,
+    icon: <Sec3_Icon4 />,
     title: "راه‌اندازی",
     description: "چت‌بات را روی وب‌سایت یا اپلیکیشن خود نصب کنید",
     duration: "۲ دقیقه",
@@ -358,7 +358,7 @@ export default function Section3() {
     >
       <CardContainer />
 
-      <div className="box-border flex flex-col gap-[58px] items-center justify-center p-16 w-full">
+      <div className="box-border flex flex-col gap-16 items-center justify-center px-24 w-full">
         <Header />
         <Card activeStep={activeStep} />
         <Liner activeStep={activeStep} />

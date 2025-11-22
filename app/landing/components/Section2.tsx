@@ -2,8 +2,6 @@
 import { motion } from "motion/react";
 import svgPaths from "../svg/svg-jdf94yeg6v";
 import PhoneAndCustomer1 from "./PhoneAndCustomer1";
-import { ReactNode } from "react";
-import { Learning } from "@/public/icons/landing";
 
 function Icon() {
   return (
