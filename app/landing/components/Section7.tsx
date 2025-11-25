@@ -65,7 +65,7 @@ function Button() {
 }
 
 function ThreeDots() {
-  return <div className="bg-[#65bcb6] rounded-[4px] size-[8px]" />;
+  return <div className="bg-[#65bcb6] rounded-[4px] size-2" />;
 }
 
 function ChatSample() {
@@ -140,7 +140,7 @@ function PerfectSale() {
 
 export default function Section7() {
   return (
-    <div id="Interaction" className="bg-white py-5 px-8 lg:px-24 flex flex-col gap-3 w-full">
+    <div id="Interaction" className="bg-white py-5 px-8 lg:px-24 flex flex-col gap-3 w-full relative">
       <Sec7_Icon5 />
 
       <div className="w-full flex flex-col-reverse md:flex-row gap-8 items-stretch justify-center p-6 md:p-14">

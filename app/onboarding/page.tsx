@@ -1,16 +1,17 @@
 "use client";
+import Image from "next/image";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
-import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
 import { BarChart3 } from "lucide-react";
 import { AivaWhite } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { headerData } from "@/components/header/header.data";
 import { WizardStep1 } from "./steps/step1";
 import { WizardStep2 } from "./steps/step2";
 import { WizardStep3 } from "./steps/step3";
@@ -24,23 +25,21 @@ import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { headerData } from "@/components/header/header.data";
-import Image from "next/image";
 
 export default function OnboardingWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const { refreshBots, setCurrentBot } = useBot();
+  const { logo } = headerData;
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
+  const { refreshBots, setCurrentBot } = useBot();
   const [currentStep, setCurrentStep] = useState(1);
   const [maxReachedStep, setMaxReachedStep] = useState(1);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
-  const { logo } = headerData;
 
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",

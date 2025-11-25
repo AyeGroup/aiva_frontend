@@ -11,21 +11,6 @@ import {
 } from "@/public/icons/landing";
 import { translateFeature } from "@/constants/plans";
 
-// Pricing Plan Type
-// type PricingPlan = {
-//   id: string;
-//   name: string;
-//   nameEn: string;
-//   price: string;
-//   color: string;
-//   bgColor: string;
-//   icon: React.ReactNode;
-//   features: string[];
-//   isPopular?: boolean;
-//   buttonText: string;
-//   buttonVariant: "primary" | "secondary";
-// };
-
 const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
   return [
     ...plan.features.map((f: string) => ({

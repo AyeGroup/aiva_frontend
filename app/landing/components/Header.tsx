@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 const menuItems = [
-  { label: "خانه", href: "/", active: true },
+  { label: "خانه", href: "/" },
   { label: "ویژگی‌ها", href: "/#features" },
   { label: "نحوه کار", href: "/#launch" },
   { label: "قیمت‌گذاری", href: "/#pricing" },
@@ -20,7 +20,7 @@ export default function Header() {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <header className="bg-white border-b border-gray-200">
+    <header className="bg-white border-gray-200">
       <div className="flex items-center justify-between px-4 sm:px-8 py-4 sm:py-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -41,16 +41,16 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-2">
-          {menuItems.map(({ label, href, active }) => (
+          {menuItems.map(({ label, href }) => (
             <a
               key={href}
               href={href}
-              className={`px-3 py-2 rounded-2xl transition-all duration-200 text-sm whitespace-nowrap
-                ${
-                  active
-                    ? "bg-gray-100 text-[#65bcb6]"
-                    : "text-gray-700 hover:text-[#65bcb6]"
-                }`}
+              className="px-3 py-2 rounded-2xl transition-all duration-200 text-sm whitespace-nowrap text-gray-700 hover:text-[#65bcb6]"
+              // ${
+              //   active
+              //     ? "bg-gray-100 text-[#65bcb6]"
+              //     : "text-gray-700 hover:text-[#65bcb6]"
+              // }`}
             >
               {label}
             </a>
@@ -120,17 +120,17 @@ export default function Header() {
       {/* Mobile Menu */}
       {isOpen && (
         <nav className="md:hidden bg-gray-50 border-t border-gray-200 px-4 py-4 flex flex-col gap-2">
-          {menuItems.map(({ label, href, active }) => (
+          {menuItems.map(({ label, href }) => (
             <a
               key={href}
               href={href}
               onClick={closeMenu}
-              className={`px-4 py-3 rounded-lg transition-all duration-200 text-right
-                ${
-                  active
-                    ? "bg-gray-100 text-[#65bcb6]"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-[#65bcb6]"
-                }`}
+              className="px-4 py-3 rounded-lg transition-all duration-200 text-right text-gray-700 hover:bg-gray-100 hover:text-[#65bcb6]"
+              // ${
+              //   active
+              //     ? "bg-gray-100 text-[#65bcb6]"
+              //     : "text-gray-700 hover:bg-gray-100 hover:text-[#65bcb6]"
+              // }`}
             >
               {label}
             </a>

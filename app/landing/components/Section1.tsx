@@ -1,8 +1,8 @@
 "use client";
 import svgPaths2 from "../svg/svg-2ojg9bngif";
+import { Tik } from "@/public/icons/landing";
 import { motion } from "motion/react";
 import { AnimatedChat } from "./AnimatedChat";
-import { Tik } from "@/public/icons/landing";
 
 function BackgroundDecorations() {
   return (

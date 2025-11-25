@@ -46,7 +46,7 @@ const BackgroundIcon2 = () => (
 );
 
 const BackgroundIcon3 = () => (
-  <div className="absolute h-[626px] left-[358px] top-[32px] w-[748px]">
+  <div className="absolute h-[626px] left-[358px] top-8 w-[748px]">
     <svg
       className="block size-full"
       fill="none"
@@ -67,7 +67,7 @@ const BackgroundIcon3 = () => (
 );
 
 const BackgroundIcon4 = () => (
-  <div className="absolute h-[128px] left-0 top-[576.39px] w-[1431px]">
+  <div className="absolute h-32 left-0 top-[576.39px] w-[1431px]">
     <svg
       className="block size-full"
       fill="none"
@@ -98,7 +98,7 @@ const BackgroundDecorations = () => (
 );
 
 const SecurityIcon = () => (
-  <div className="h-[32px] overflow-clip relative shrink-0 w-full">
+  <div className="h-8 overflow-clip relative shrink-0 w-full">
     <div className="absolute inset-[8.33%_12.5%_66.67%_12.5%]">
       <div className="absolute inset-[-20.83%_-6.94%]">
         <svg
@@ -157,7 +157,7 @@ const SecurityIcon = () => (
 );
 
 const WebsiteIcon = () => (
-  <div className="h-[32px] overflow-clip relative shrink-0 w-full">
+  <div className="h-8 overflow-clip relative shrink-0 w-full">
     <div className="absolute inset-[16.67%_10.06%_57.98%_64.58%]">
       <div className="absolute inset-[-20.539%]">
         <svg
@@ -216,7 +216,7 @@ const WebsiteIcon = () => (
 );
 
 const AccessIcon = () => (
-  <div className="h-[32px] overflow-clip relative shrink-0 w-full">
+  <div className="h-8 overflow-clip relative shrink-0 w-full">
     <div className="absolute inset-[8.33%_16.67%_8.32%_16.67%]">
       <div className="absolute inset-[-6.25%_-7.81%]">
         <svg
@@ -257,7 +257,7 @@ const AccessIcon = () => (
 );
 
 const DataIcon = () => (
-  <div className="h-[32px] overflow-clip relative shrink-0 w-full">
+  <div className="h-8 overflow-clip relative shrink-0 w-full">
     <div className="absolute inset-[45.83%_12.5%_8.33%_12.5%]">
       <div className="absolute inset-[-11.36%_-6.94%]">
         <svg

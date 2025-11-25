@@ -49,7 +49,7 @@ const STEPS_DATA = [
   },
 ];
 
-const PROGRESS_WIDTHS = [225, 450, 675, 900];
+// const PROGRESS_WIDTHS = [225, 450, 675, 900];
 const TAB_COLORS = ["#65BCB6", "#52D4A0", "#ffa18e", "#B07CC6"];
 
 const cardVariants = {
