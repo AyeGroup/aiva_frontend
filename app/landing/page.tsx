@@ -16,8 +16,8 @@ import Section8 from "./components/Section8";
 import { usePathname } from "next/navigation";
 
 export default function App() {
-    const pathname = usePathname();
- useEffect(() => {
+  const pathname = usePathname();
+  useEffect(() => {
     if (window.location.hash) {
       const id = window.location.hash.replace("#", "");
       const element = document.getElementById(id);
@@ -37,7 +37,7 @@ export default function App() {
       <Section2 />
       <Section3 />
       <Section4 />
-      <Section5 /> 
+      <Section5 />
       <Section6 />
       <Section7 />
       <Section8 />

@@ -5,6 +5,7 @@ import svgPaths3 from "@app/landing/svg/svg-2dmtneq5en";
 import svgPaths6 from "@app/landing/svg/svg-gcyltdwgwo";
 import svgPathsFaq from "@app/landing/svg/svg-m5kcbvnqsq";
 import svgPathsStart from "@app/landing/svg/svg-c8s8h124u2";
+import svgPathsPlan from "@app/landing/svg/svg-f338pva7p3";
 
 export function Sec3_Icon() {
   return (
@@ -2837,6 +2838,594 @@ export function SecSart_Icon10() {
     </div>
   );
 }
+
+
+// Pricing Icon Components
+export const RocketIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M14 2.33333L25.6667 14L14 25.6667L2.33333 14L14 2.33333Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const DiamondIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M14 4.66667L21 11.6667L14 23.3333L7 11.6667L14 4.66667Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const StarIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M14 2.33333L17.5 12.25H28L19.75 18.0833L23.3333 28L14 21.5833L4.66667 28L8.25 18.0833L0 12.25H10.5L14 2.33333Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const DocumentIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M7 2.33333H21V25.6667H7V2.33333Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M11.6667 7H16.3333M11.6667 11.6667H16.3333M11.6667 16.3333H16.3333M11.6667 21H16.3333"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const CrownIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M2.33333 9.33333L7 14L14 7L21 14L25.6667 9.33333L23.3333 21H4.66667L2.33333 9.33333Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+
+
+export function PlanImage() {
+  return (
+    <div className="absolute w-1/3 left-0 bottom-10">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 472 524"
+      >
+        <g id="3333 1">
+          <path
+            d={svgPathsPlan.pa006f00}
+            fill="var(--fill-0, #FFE2B9)"
+            id="Vector"
+          />
+          <path
+            d={svgPathsPlan.p26d43e00}
+            fill="var(--fill-0, #FEDBAA)"
+            id="Vector_2"
+          />
+          <path
+            d={svgPathsPlan.p2a022980}
+            fill="var(--fill-0, #FEDBAA)"
+            id="Vector_3"
+          />
+          <path
+            d={svgPathsPlan.p1d1d89f0}
+            fill="var(--fill-0, #3E9896)"
+            id="Vector_4"
+          />
+          <path
+            d={svgPathsPlan.p5695e00}
+            fill="var(--fill-0, #80C4A4)"
+            id="Vector_5"
+          />
+          <path
+            d={svgPathsPlan.p20268e00}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_6"
+          />
+          <path
+            d={svgPathsPlan.p1a4e8580}
+            fill="var(--fill-0, #ED7163)"
+            id="Vector_7"
+          />
+          <path
+            d={svgPathsPlan.p1cd73ac0}
+            fill="var(--fill-0, #D0F6FC)"
+            id="Vector_8"
+          />
+          <path
+            d={svgPathsPlan.p3cd3eb80}
+            fill="var(--fill-0, #0D93B2)"
+            id="Vector_9"
+          />
+          <path
+            d={svgPathsPlan.pbd84f00}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_10"
+          />
+          <path
+            d={svgPathsPlan.p16f00400}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_11"
+          />
+          <path
+            d={svgPathsPlan.p2fb1f5f0}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_12"
+          />
+          <path
+            d={svgPathsPlan.p18ed1300}
+            fill="var(--fill-0, #20111D)"
+            id="Vector_13"
+          />
+          <path
+            d={svgPathsPlan.p36be7d00}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_14"
+          />
+          <path
+            d={svgPathsPlan.p10f1d900}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_15"
+          />
+          <path
+            d={svgPathsPlan.p3745a300}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_16"
+          />
+          <path
+            d={svgPathsPlan.p1027b500}
+            fill="var(--fill-0, black)"
+            id="Vector_17"
+          />
+          <path
+            d={svgPathsPlan.p1b0e5200}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_18"
+          />
+          <path
+            d={svgPathsPlan.p116ac900}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_19"
+          />
+          <path
+            d={svgPathsPlan.p3c61ea00}
+            fill="var(--fill-0, black)"
+            id="Vector_20"
+          />
+          <path
+            d={svgPathsPlan.p171ec320}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_21"
+          />
+          <path
+            d={svgPathsPlan.p2c702300}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_22"
+          />
+          <path
+            d={svgPathsPlan.p3e565500}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_23"
+          />
+          <path
+            d={svgPathsPlan.p583e2b0}
+            fill="var(--fill-0, black)"
+            id="Vector_24"
+          />
+          <path
+            d={svgPathsPlan.pb1ba680}
+            fill="var(--fill-0, black)"
+            id="Vector_25"
+          />
+          <path
+            d={svgPathsPlan.p1c79fe80}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_26"
+          />
+          <path
+            d={svgPathsPlan.p1c9d6e00}
+            fill="var(--fill-0, black)"
+            id="Vector_27"
+          />
+          <path
+            d={svgPathsPlan.p8b8ea00}
+            fill="var(--fill-0, black)"
+            id="Vector_28"
+          />
+          <path
+            d={svgPathsPlan.p6cabbb0}
+            fill="var(--fill-0, black)"
+            id="Vector_29"
+          />
+          <path
+            d={svgPathsPlan.p2a9c6a00}
+            fill="var(--fill-0, #000100)"
+            id="Vector_30"
+          />
+          <path
+            d={svgPathsPlan.p35a43780}
+            fill="var(--fill-0, #000100)"
+            id="Vector_31"
+          />
+          <path
+            d={svgPathsPlan.p1c6ba00}
+            fill="var(--fill-0, black)"
+            id="Vector_32"
+          />
+          <path
+            d={svgPathsPlan.p14e3e500}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_33"
+          />
+          <path
+            d={svgPathsPlan.p188f2600}
+            fill="var(--fill-0, #ED7163)"
+            id="Vector_34"
+          />
+          <path
+            d={svgPathsPlan.p49d9340}
+            fill="var(--fill-0, #D0F6FC)"
+            id="Vector_35"
+          />
+          <path
+            d={svgPathsPlan.p1ff38f00}
+            fill="var(--fill-0, #0D93B2)"
+            id="Vector_36"
+          />
+          <path
+            d={svgPathsPlan.p3e617800}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_37"
+          />
+          <path
+            d={svgPathsPlan.p239c0600}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_38"
+          />
+          <path
+            d={svgPathsPlan.p28d1be00}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_39"
+          />
+          <path
+            d={svgPathsPlan.p3fae9700}
+            fill="var(--fill-0, #20111D)"
+            id="Vector_40"
+          />
+          <path
+            d={svgPathsPlan.p187fa180}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_41"
+          />
+          <path
+            d={svgPathsPlan.p31237c80}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_42"
+          />
+          <path
+            d={svgPathsPlan.p876e200}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_43"
+          />
+          <path
+            d={svgPathsPlan.p1cb1ab70}
+            fill="var(--fill-0, black)"
+            id="Vector_44"
+          />
+          <path
+            d={svgPathsPlan.p22527480}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_45"
+          />
+          <path
+            d={svgPathsPlan.p166f5080}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_46"
+          />
+          <path
+            d={svgPathsPlan.p279da129}
+            fill="var(--fill-0, black)"
+            id="Vector_47"
+          />
+          <path
+            d={svgPathsPlan.p1cc71200}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_48"
+          />
+          <path
+            d={svgPathsPlan.p20cae1f0}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_49"
+          />
+          <path
+            d={svgPathsPlan.p174dfb00}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_50"
+          />
+          <path
+            d={svgPathsPlan.p2c855580}
+            fill="var(--fill-0, black)"
+            id="Vector_51"
+          />
+          <path
+            d={svgPathsPlan.p3bc2e330}
+            fill="var(--fill-0, black)"
+            id="Vector_52"
+          />
+          <path
+            d={svgPathsPlan.p3a5ad750}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_53"
+          />
+          <path
+            d={svgPathsPlan.p362d970}
+            fill="var(--fill-0, black)"
+            id="Vector_54"
+          />
+          <path
+            d={svgPathsPlan.p3428c3c0}
+            fill="var(--fill-0, black)"
+            id="Vector_55"
+          />
+          <path
+            d={svgPathsPlan.p1df51e80}
+            fill="var(--fill-0, black)"
+            id="Vector_56"
+          />
+          <path
+            d={svgPathsPlan.p401c570}
+            fill="var(--fill-0, #000100)"
+            id="Vector_57"
+          />
+          <path
+            d={svgPathsPlan.p3f4c1ef0}
+            fill="var(--fill-0, #000100)"
+            id="Vector_58"
+          />
+          <path
+            d={svgPathsPlan.p1d1b0d80}
+            fill="var(--fill-0, black)"
+            id="Vector_59"
+          />
+          <path
+            d={svgPathsPlan.p1c7cff00}
+            fill="var(--fill-0, #F7597F)"
+            id="Vector_60"
+          />
+          <path
+            d={svgPathsPlan.p11f12e00}
+            fill="var(--fill-0, #F86A8C)"
+            id="Vector_61"
+          />
+          <path
+            d={svgPathsPlan.p6e6dac0}
+            fill="var(--fill-0, white)"
+            id="Vector_62"
+          />
+          <path
+            d={svgPathsPlan.p1562e600}
+            fill="var(--fill-0, white)"
+            id="Vector_63"
+          />
+          <path
+            d={svgPathsPlan.p34379800}
+            fill="var(--fill-0, white)"
+            id="Vector_64"
+          />
+          <path
+            d={svgPathsPlan.p1bdcc000}
+            fill="var(--fill-0, white)"
+            id="Vector_65"
+          />
+          <path
+            d={svgPathsPlan.p19dbd900}
+            fill="var(--fill-0, white)"
+            id="Vector_66"
+          />
+          <path
+            d={svgPathsPlan.p2531c800}
+            fill="var(--fill-0, white)"
+            id="Vector_67"
+          />
+          <path
+            d={svgPathsPlan.p1b452a80}
+            fill="var(--fill-0, white)"
+            id="Vector_68"
+          />
+          <path
+            d={svgPathsPlan.p3ace1f00}
+            fill="var(--fill-0, white)"
+            id="Vector_69"
+          />
+          <path
+            d={svgPathsPlan.p3d268480}
+            fill="var(--fill-0, white)"
+            id="Vector_70"
+          />
+          <path
+            d={svgPathsPlan.p4031f40}
+            fill="var(--fill-0, white)"
+            id="Vector_71"
+          />
+          <path
+            d={svgPathsPlan.p1e363780}
+            fill="var(--fill-0, white)"
+            id="Vector_72"
+          />
+          <path
+            d={svgPathsPlan.p6eb5800}
+            fill="var(--fill-0, white)"
+            id="Vector_73"
+          />
+          <path
+            d={svgPathsPlan.p263f400}
+            fill="var(--fill-0, white)"
+            id="Vector_74"
+          />
+          <path
+            d={svgPathsPlan.p33313a80}
+            fill="var(--fill-0, white)"
+            id="Vector_75"
+          />
+          <path
+            d={svgPathsPlan.p2671fc00}
+            fill="var(--fill-0, white)"
+            id="Vector_76"
+          />
+          <path
+            d={svgPathsPlan.p39153540}
+            fill="var(--fill-0, white)"
+            id="Vector_77"
+          />
+          <path
+            d={svgPathsPlan.p25c56900}
+            fill="var(--fill-0, white)"
+            id="Vector_78"
+          />
+          <path
+            d={svgPathsPlan.p35830e00}
+            fill="var(--fill-0, white)"
+            id="Vector_79"
+          />
+          <path
+            d={svgPathsPlan.p44091c0}
+            fill="var(--fill-0, white)"
+            id="Vector_80"
+          />
+          <path
+            d={svgPathsPlan.p397c3780}
+            fill="var(--fill-0, white)"
+            id="Vector_81"
+          />
+          <path
+            d={svgPathsPlan.p2883a4f0}
+            fill="var(--fill-0, white)"
+            id="Vector_82"
+          />
+          <path
+            d={svgPathsPlan.p2b065400}
+            fill="var(--fill-0, white)"
+            id="Vector_83"
+          />
+          <path
+            d={svgPathsPlan.p16d6ca00}
+            fill="var(--fill-0, #FECC86)"
+            id="Vector_84"
+          />
+          <path
+            d={svgPathsPlan.p163a3800}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_85"
+          />
+          <path
+            d={svgPathsPlan.pfd1800}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_86"
+          />
+          <path
+            d={svgPathsPlan.p1e6e1e00}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_87"
+          />
+          <path
+            d={svgPathsPlan.p38483b00}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_88"
+          />
+          <path
+            d={svgPathsPlan.p67aef80}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_89"
+          />
+          <path
+            d={svgPathsPlan.p1d109180}
+            fill="var(--fill-0, #1D1D1B)"
+            id="Vector_90"
+          />
+          <path
+            d={svgPathsPlan.p12186680}
+            fill="var(--fill-0, white)"
+            id="Vector_91"
+          />
+          <path
+            d={svgPathsPlan.p189637a0}
+            fill="var(--fill-0, #5AB3BF)"
+            id="Vector_92"
+          />
+          <path
+            d={svgPathsPlan.p34031900}
+            fill="var(--fill-0, white)"
+            id="Vector_93"
+          />
+          <path
+            d={svgPathsPlan.p343bcc80}
+            fill="var(--fill-0, white)"
+            id="Vector_94"
+          />
+          <path
+            d={svgPathsPlan.p215dce80}
+            fill="var(--fill-0, white)"
+            id="Vector_95"
+          />
+          <path
+            d={svgPathsPlan.p429e00}
+            fill="var(--fill-0, #6095AB)"
+            id="Vector_96"
+          />
+          <path
+            d={svgPathsPlan.p316475d2}
+            fill="var(--fill-0, #6095AB)"
+            id="Vector_97"
+          />
+          <path
+            d={svgPathsPlan.p34abe780}
+            fill="var(--fill-0, #CC154A)"
+            id="Vector_98"
+          />
+          <path
+            d={svgPathsPlan.p25994fc0}
+            fill="var(--fill-0, #F7597F)"
+            id="Vector_99"
+          />
+          <path
+            d={svgPathsPlan.p6158980}
+            fill="var(--fill-0, #F7597F)"
+            id="Vector_100"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 // export const   = () => {
 //   return (
 

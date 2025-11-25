@@ -8,7 +8,7 @@ import imgImage from "@/public/images/man.png";
 function Icon() {
   return (
     <motion.div
-      className="absolute left-[1260.52px] size-[56px] top-[160.44px]"
+      className="absolute left-[1260.52px] size-14 top-[160.44px]"
       data-name="Icon"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 0.3, scale: [0.8, 1.1, 0.8] }}
@@ -286,7 +286,7 @@ function TabAmazon({
         transition={{ duration: 0.4 }}
       >
         <div className="absolute bg-[#65bcb6] content-stretch flex items-center justify-center left-[71.29px] rounded-[1.67772e+07px] size-[48px] top-0">
-          <svg className="size-[28px]" fill="none" viewBox="0 0 28 28">
+          <svg className="size-7" fill="none" viewBox="0 0 28 28">
             <path
               d={navSvgPaths.p3d33f9c0}
               stroke="white"
@@ -307,7 +307,7 @@ function TabAmazon({
           </p>
         </div>
         <motion.div
-          className="absolute bg-[#65bcb6] h-[2px] left-0 rounded-[1.67772e+07px] top-[54px] w-[119.29px]"
+          className="absolute bg-[#65bcb6] h-0.5 left-0 rounded-[1.67772e+07px] top-[54px] w-[119.29px]"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.3 }}
@@ -319,7 +319,7 @@ function TabAmazon({
 
   return (
     <motion.div
-      className="content-stretch flex gap-[12px] h-[48px] items-center opacity-40 relative shrink-0 cursor-pointer"
+      className="content-stretch flex gap-3 h-12 items-center opacity-40 relative shrink-0 cursor-pointer"
       data-name="Tab"
       onClick={onClick}
       whileHover={{ scale: 1.05, opacity: 1 }}
