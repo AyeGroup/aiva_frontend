@@ -60,7 +60,7 @@ export default function PaymentFailed() {
           {/* Error Message */}
           <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 text-right">
             <div className="flex items-start gap-3 mb-4">
-              <AlertTriangle className="w-6 h-6 text-red-700 flex-shrink-0 mt-1" />
+              <AlertTriangle className="w-6 h-6 text-red-700 shrink-0 mt-1" />
               <div>
                 <h3 className="text-red-900 mb-2">دلایل احتمالی خطا:</h3>
                 <ul className="space-y-2 text-red-700 text-sm">
@@ -114,7 +114,7 @@ export default function PaymentFailed() {
           <div className="mt-8 pt-6 border-t border-grey-200">
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
               <div className="flex items-start gap-3 text-right">
-                <Phone className="w-5 h-5 text-blue-700 flex-shrink-0 mt-0.5" />
+                <Phone className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-blue-900 mb-1">نیاز به کمک دارید؟</h4>
                   <p className="text-blue-800 text-sm mb-2">

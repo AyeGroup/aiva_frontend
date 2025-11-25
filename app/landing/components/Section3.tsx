@@ -77,7 +77,7 @@ function Header() {
     >
       {/* Badge */}
       <div className="flex items-center justify-center rounded-3xl bg-[rgba(101,188,182,0.08)] border border-[rgba(101,188,182,0.15)] py-2 px-3 mx-auto gap-2">
-        <div className="bg-[#65bcb6] rounded-full w-2 h-2 flex-shrink-0" />
+        <div className="bg-[#65bcb6] rounded-full w-2 h-2 shrink-0" />
         <span className="text-[#65bcb6] text-xs sm:text-sm whitespace-nowrap">
           فرآیند ساده
         </span>

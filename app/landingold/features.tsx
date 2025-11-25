@@ -200,7 +200,7 @@ export function Features() {
           >
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               {/* Avatar */}
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <div
                   className="relative w-20 h-20 rounded-full overflow-hidden"
                   style={{

@@ -251,7 +251,7 @@ function Login() {
 
               {/* Terms and conditions info */}
               <div className="flex items-start gap-2 p-4 bg-grey-50 rounded-lg">
-                <div className="flex-shrink-0 mt-0.5"></div>
+                <div className="shrink-0 mt-0.5"></div>
                 <p className="text-grey-600 text-right text-sm">
                   استفاده از آیوا به معنی پذیرش{" "}
                   <button className="hover:opacity-80 text-base active:opacity-60 text-primary">

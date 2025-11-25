@@ -265,7 +265,7 @@ const PricingCard = ({ plan }: { plan: PricingPlan }) => {
           {plan.features.map((feature, index) => (
             <li key={index} className="flex items-start gap-3 text-right">
               <div
-                className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
                 style={{ backgroundColor: plan.bgColor, color: plan.color }}
               >
                 <Check className="w-3.5 h-3.5" strokeWidth={2.5} />

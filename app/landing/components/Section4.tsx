@@ -378,7 +378,7 @@ function ContainerFooter() {
         className="bg-[#65bcb6] hover:bg-[#58aaa5] text-white flex items-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-colors shadow-md hover:shadow-lg whitespace-nowrap"
       >
         {/* Icon - Rotated */}
-        <div className="flex-shrink-0 rotate-180">
+        <div className="shrink-0 rotate-180">
           <Icon37 />
         </div>
         <span>مشاوره رایگان</span>

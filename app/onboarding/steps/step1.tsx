@@ -37,7 +37,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
     >
       {/* Header */}
       <div className="flex items-start gap-4 px-0 py-3">
-        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center shrink-0">
           <StepBigStar />
         </div>
         <div className="flex-1">

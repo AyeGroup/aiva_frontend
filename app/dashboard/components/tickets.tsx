@@ -77,7 +77,7 @@ export function Tickets() {
         <main className="flex-1 overflow-hidden">
           <div className="h-full flex flex-col">
             {/* Header */}
-            <header className="flex-shrink-0 bg-bg-surface border-b border-border-soft px-8 py-6">
+            <header className="shrink-0 bg-bg-surface border-b border-border-soft px-8 py-6">
               <div className="flex items-start justify-between">
                 <div className="text-right">
                   <h1 className="text-grey-900 mb-2"> تیکت‌های پشتیبانی</h1>
@@ -123,7 +123,7 @@ export function Tickets() {
 
             {/* Stats Cards - Only show in list view */}
             {view === "list" && (
-              <section className="flex-shrink-0 bg-white border-b border-grey-300">
+              <section className="shrink-0 bg-white border-b border-grey-300">
                 <div className="px-8 py-9">
                   <div className="gap-6 grid grid-cols-[repeat(4,_minmax(0px,_1fr))] w-full">
                     {/* کل تیکت‌ها */}
@@ -333,7 +333,7 @@ export function Tickets() {
                             <div className="space-y-3">
                               <div className="flex items-center justify-between gap-6">
                                 {/* شناسه تیکت */}
-                                <div className="flex-shrink-0">
+                                <div className="shrink-0">
                                   <div className="px-4 py-2 bg-brand-primary/10 rounded-lg">
                                     <span className="text-brand-primary font-mono text-xs">
                                       {ticket.id}
@@ -349,7 +349,7 @@ export function Tickets() {
                                 </div>
 
                                 {/* زمان آخرین بروزرسانی */}
-                                <div className="flex-shrink-0 flex items-center gap-2 text-grey-500">
+                                <div className="shrink-0 flex items-center gap-2 text-grey-500">
                                   <div className="w-4 h-4">
                                     <TicketPend />
                                   </div>
@@ -377,7 +377,7 @@ export function Tickets() {
                                 </div>
 
                                 {/* آیکون فلش */}
-                                <div className="flex-shrink-0">
+                                <div className="shrink-0">
                                   <div className="w-5 h-5 text-gray-500">
                                     <Back />
                                   </div>

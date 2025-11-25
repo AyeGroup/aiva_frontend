@@ -23,10 +23,7 @@ export default function Header() {
     <header className="bg-white border-b border-gray-200">
       <div className="flex items-center justify-between px-4 sm:px-8 py-4 sm:py-6">
         {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 sm:gap-3 flex-shrink-0"
-        >
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Image
             src="/logo.png"
             alt="لوگوی آیوا"

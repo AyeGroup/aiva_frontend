@@ -29,7 +29,7 @@ function Header() {
     <div className="flex flex-col gap-4 sm:gap-6 items-center justify-center w-full px-4">
       {/* Badge */}
       <div className="flex items-center justify-center rounded-3xl bg-[#e7f3f1] border border-[rgba(101,188,182,0.15)] py-2 px-4">
-        <div className="bg-[#65bcb6] rounded-full w-2 h-2 ml-3 flex-shrink-0" />
+        <div className="bg-[#65bcb6] rounded-full w-2 h-2 ml-3 shrink-0" />
         <span className="text-[#65bcb6] text-xs sm:text-sm whitespace-nowrap">
           درباره آیوا
         </span>
@@ -261,7 +261,7 @@ export default function Section2() {
               <ArticlesList />
             </div>
 
-             <div className="w-full sm:w-96 mx-auto lg:mx-0 lg:w-auto flex-shrink-0">
+             <div className="w-full sm:w-96 mx-auto lg:mx-0 lg:w-auto shrink-0">
               <PhoneAndCustomer1 />
             </div>
           </div> */}

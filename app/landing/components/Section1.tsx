@@ -115,7 +115,7 @@ export default function Section1() {
           {/* Badge */}
           <div>
             <div className="bg-[#e3f4f1] rounded-full inline-flex items-center gap-2 px-3 sm:px-4 py-2">
-              <div className="h-2 w-2 bg-[#65bcb6] rounded-full flex-shrink-0" />
+              <div className="h-2 w-2 bg-[#65bcb6] rounded-full shrink-0" />
               <div className="text-[#65bcb6] text-xs sm:text-sm font-medium whitespace-nowrap">
                 جدیدترین فناوری هوش مصنوعی
               </div>
@@ -150,7 +150,7 @@ export default function Section1() {
             {/* Preview Badge */}
             <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 z-20">
               <div className="flex items-center gap-2 bg-[#65bcb6] text-white text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-full shadow-lg">
-                <div className="bg-white rounded-full w-2 h-2 flex-shrink-0" />
+                <div className="bg-white rounded-full w-2 h-2 shrink-0" />
                 <span className="whitespace-nowrap">پیش نمایش</span>
               </div>
             </div>

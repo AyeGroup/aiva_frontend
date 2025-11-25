@@ -223,7 +223,7 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
           {mapFeatures(plan).map((feature, index) => (
             <li key={index} className="flex items-start gap-3 text-right">
               <div
-                className="w-5 h-5 text-primary bg-primary/20  rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                className="w-5 h-5 text-primary bg-primary/20  rounded-full flex items-center justify-center shrink-0 mt-0.5"
                 // style={{
                 //   backgroundColor: pricingPlans[index]?.bgColor,
                 //   color: pricingPlans[index]?.color,

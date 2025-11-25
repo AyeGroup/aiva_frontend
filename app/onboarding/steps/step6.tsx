@@ -158,7 +158,7 @@ export function WizardStep6({
       {/* Header */}
       <div className="flex items-start gap-4 px-0 py-3">
         {loading && <PageLoader />}
-        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center shrink-0">
           <div className="w-8 h-8 text-primary">
             <Appearance />
           </div>

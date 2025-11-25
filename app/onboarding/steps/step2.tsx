@@ -40,15 +40,15 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
-useEffect(() => {
-  if (!user?.token || !botConfig?.uuid) return;
+  useEffect(() => {
+    if (!user?.token || !botConfig?.uuid) return;
 
-  const fetchData = async () => {
-    await loadQa(botConfig.uuid);
-  };
+    const fetchData = async () => {
+      await loadQa(botConfig.uuid);
+    };
 
-  fetchData();
-}, [user?.token, botConfig?.uuid]);
+    fetchData();
+  }, [user?.token, botConfig?.uuid]);
 
   const loadOnboardingData = async () => {
     try {
@@ -354,7 +354,7 @@ useEffect(() => {
 
   const removeItem = async (item: KnowledgeItem) => {
     setIsLoading(true);
-    console.log("ali",item)
+    console.log("ali", item);
     try {
       let res;
       if (item.type === "qa_pair" && item.qa_id) {
@@ -392,7 +392,7 @@ useEffect(() => {
       {/* Header */}
       <div className="flex items-start gap-4 px-[0px] py-[12px]">
         {(loading || isLoading) && <PageLoader />}
-        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 ">
+        <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center shrink-0 ">
           <div className="w-8 h-8 text-brand-primary">
             <Tick />
           </div>
@@ -416,7 +416,7 @@ useEffect(() => {
 
         <div className="relative z-10">
           <div className="flex items-start gap-4 m-[0px]">
-            <div className="w-12 h-12 bg-brand-amber rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+            <div className="w-12 h-12 bg-brand-amber rounded-xl flex items-center justify-center shrink-0 shadow-lg">
               <Info />
             </div>
             <div className="flex-1">
@@ -438,7 +438,7 @@ useEffect(() => {
       <div className="bg-gradient-to-br from-brand-primary/10 to-bg-soft-mint border-2 border-brand-primary/30 rounded-2xl mb-8 relative overflow-hidden py-2 px-6">
         <div className="relative z-10">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+            <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center shrink-0 shadow-lg">
               <Clock className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
@@ -789,7 +789,7 @@ useEffect(() => {
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3 flex-1">
-                      <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 border border-brand-primary/20">
+                      <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center shrink-0 border border-brand-primary/20">
                         <IconComponent className="w-4 h-4 text-brand-primary" />
                       </div>
 
@@ -836,7 +836,7 @@ useEffect(() => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex items-center gap-1 flex-shrink-0 mr-2">
+                    <div className="flex items-center gap-1 shrink-0 mr-2">
                       <button
                         onClick={() => startEditing(item)}
                         //elham
@@ -899,12 +899,12 @@ useEffect(() => {
           </li>
 
           <li className="flex items-start gap-2 p-2 bg-bg-surface rounded-lg border border-brand-amber/20">
-            <Clock className="w-4 h-4 text-brand-amber flex-shrink-0 mt-0.5" />
+            <Clock className="w-4 h-4 text-brand-amber shrink-0 mt-0.5" />
             دانش جدید ابتدا «در حال بررسی» است و پس از پردازش «اعمال» می‌شود
           </li>
 
           <li className="flex items-start gap-2 p-2 bg-bg-surface rounded-lg border border-success/20">
-            <CheckCircle className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
+            <CheckCircle className="w-4 h-4 text-success shrink-0 mt-0.5" />
             تنها محتوای «اعمال شده» در پاسخ‌های دستیار استفاده می‌شود
           </li>
         </ul>

@@ -73,7 +73,7 @@ function Header() {
     >
       {/* Badge */}
       <div className="inline-flex items-center gap-2 bg-white rounded-full px-3 sm:px-4 py-2 border border-[rgba(101,188,182,0.15)]">
-        <div className="w-2 h-2 rounded-full bg-[#65bcb6] flex-shrink-0" />
+        <div className="w-2 h-2 rounded-full bg-[#65bcb6] shrink-0" />
         <p className="text-xs sm:text-sm font-medium text-[#65bcb6] whitespace-nowrap">
           ویژگی‌های آیوا
         </p>
@@ -135,9 +135,7 @@ function ArticleItem({ title, desc, type, Icon }: ArticleProps) {
       {/* Content */}
       <div className="flex items-start gap-3 pt-2">
         {/* Icon */}
-        <div
-          className={`flex-shrink-0 p-2 sm:p-3 rounded-lg border-2 ${iconBg}`}
-        >
+        <div className={`shrink-0 p-2 sm:p-3 rounded-lg border-2 ${iconBg}`}>
           <div className="w-5 h-5 sm:w-6 sm:h-6">
             <Icon />
           </div>
@@ -269,7 +267,7 @@ function FooterNote() {
     >
       <div className="flex gap-3 sm:gap-4">
         {/* Icon */}
-        <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[rgba(101,188,182,0.1)] flex items-center justify-center text-lg sm:text-xl">
+        <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[rgba(101,188,182,0.1)] flex items-center justify-center text-lg sm:text-xl">
           💡
         </div>
 
@@ -302,8 +300,7 @@ export default function Section6() {
           <div className="w-full">
             <ComparisonGrid />
             <div className="flex justify-center ">
-
-            <FooterNote />
+              <FooterNote />
             </div>
           </div>
         </div>

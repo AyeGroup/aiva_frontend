@@ -399,7 +399,7 @@ export function Upgrade() {
                         className="flex items-start gap-3 text-grey-700 text-sm transition-all hover:translate-x-1"
                       >
                         <div
-                          className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                          className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
                           style={{ backgroundColor: `${plan.color}20` }}
                         >
                           <Check
