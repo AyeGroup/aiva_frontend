@@ -4,7 +4,7 @@ import svgPaths from "../svg/svg-65vfizetex";
 import Pricing from "./Pricing";
 
  
-function BackgroundContainer() {
+function BackgroundContainer1() {
   return (
     <div className="absolute h-[1831.39px] left-0 overflow-clip top-0 w-full pointer-events-none">
       {/* Various decorative background icons */}
@@ -87,10 +87,106 @@ function BackgroundContainer() {
     </div>
   );
 }
+function BackgroundContainer() {
+  return (
+    <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
+      {/* Icon 1 */}
+      <div
+        className="
+        absolute opacity-25
+        left-10 top-40 size-14
+        sm:left-20 sm:top-56 sm:size-16
+        md:left-[135.8px] md:top-[272.28px] md:size-[72.567px]
+      "
+      >
+        <svg className="block size-full" fill="none" viewBox="0 0 73 73">
+          <path d={svgPaths.p1cbe1b00} stroke="#FFA18E" strokeWidth="6" />
+          <path d="M21 21H21.2" stroke="#FFA18E" strokeWidth="6" />
+        </svg>
+      </div>
+
+      {/* Icon 2 */}
+      <div
+        className="
+        absolute opacity-25
+        right-10 top-[900px] size-10
+        sm:right-20 sm:top-[1100px] sm:size-12 
+        md:left-[1231.91px] md:top-[1317.55px] md:size-14 md:opacity-30
+      "
+      >
+        <svg className="block size-full" fill="none" viewBox="0 0 56 56">
+          <path d="M28 2V54" stroke="#52D4A0" strokeWidth="4" />
+          <path d={svgPaths.p1d61d980} stroke="#52D4A0" strokeWidth="4" />
+        </svg>
+      </div>
+
+      {/* Icon 3 */}
+      <div
+        className="
+        absolute opacity-25 
+        left-5 top-64 size-12
+        sm:left-16 sm:top-72 sm:size-14
+        md:left-[114.48px] md:top-[274.7px] md:size-16
+      "
+      >
+        <svg className="block size-full" fill="none" viewBox="0 0 64 64">
+          <path d={svgPaths.p17e3d400} stroke="#52D4A0" strokeWidth="1.28" />
+        </svg>
+      </div>
+
+      {/* Icon 4 */}
+      <div
+        className="
+        absolute opacity-20 
+        right-10 top-[1000px] size-16
+        sm:right-20 sm:top-[1200px] sm:size-20
+        md:left-[1207.91px] md:top-[1385.12px] md:size-20 md:opacity-25
+      "
+      >
+        <svg className="block size-full" fill="none" viewBox="0 0 80 80">
+          <path
+            d="M40 8L72 40L40 72L8 40Z"
+            stroke="#B07CC6"
+            strokeWidth="1.6"
+          />
+        </svg>
+      </div>
+
+      {/* Icon 5 */}
+      <div
+        className="
+        absolute opacity-10 
+        right-0 top-[500px] size-20
+        sm:right-10 sm:top-[600px] sm:size-24
+        md:left-[1120.35px] md:top-[640.98px] md:size-24 md:opacity-15
+      "
+      >
+        <svg className="block size-full" fill="none" viewBox="0 0 96 96">
+          <path d={svgPaths.p3853cd80} stroke="#4460F7" strokeWidth="1.92" />
+        </svg>
+      </div>
+
+      {/* Top Wave */}
+      <div className="absolute top-0 left-0 w-full h-24 opacity-30 md:opacity-25">
+        <svg className="block size-full" fill="none" viewBox="0 0 1431 128">
+          <path d={svgPaths.pa67000} stroke="#65BCB6" strokeWidth="5" />
+        </svg>
+      </div>
+
+      {/* Bottom Wave */}
+      <div className="absolute bottom-20 left-0 w-full h-32 opacity-30 md:opacity-25">
+        <svg className="block size-full" fill="none" viewBox="0 0 1431 160">
+          <path d={svgPaths.paee7380} stroke="#FFA18E" strokeWidth="10" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 
 export default function Section8() {
   return (
-    <div className="relative w-full bg-linear-to-b from-[rgba(235,242,254,0.8)] via-[#ffffff] via-50% to-[rgba(235,242,254,0.8)]" style={{ minHeight: '1832px' }}>
+    <div className="relative w-full bg-linear-to-b from-[rgba(235,242,254,0.8)] via-[#ffffff] via-50% to-[rgba(235,242,254,0.8)]"  >
       <BackgroundContainer />
       
       <motion.div 

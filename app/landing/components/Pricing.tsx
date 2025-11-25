@@ -318,8 +318,8 @@ export default function PricingPage() {
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
           {/* {pricingPlans.map((plan) => ( */}
-          {plans.map((plan,index) => (
-            <PricingCard key={index} plan={plan} index={index}/>
+          {plans.map((plan, index) => (
+            <PricingCard key={index} plan={plan} index={index} />
           ))}
         </div>
       </div>

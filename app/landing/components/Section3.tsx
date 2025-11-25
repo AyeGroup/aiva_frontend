@@ -2,22 +2,70 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { cubicBezier } from "motion/react";
-import { useState, useEffect } from "react";
-import { Sec3_Icon1, Sec3_Icon4, Sec3_Icon5, Sec3_Icon6, Sec3_Icon7, Sec3_Icon8, Sec7_Icon, Sec7_Icon1, Sec7_Icon2, Sec7_Icon3, Sec7_Icon4, Sec7_Icon5, Sec7_Icon6, Sec7_Icon8 } from "@/public/icons/landing";
 import { convertToPersian } from "@/utils/common";
+import { useState, useEffect } from "react";
+import {
+  Sec3_Icon4,
+  Sec3_Icon5,
+  Sec3_Icon6,
+  Sec3_Icon8,
+} from "@/public/icons/landing";
 
+// Constants
+const STEP_INTERVAL = 3000; // ms
+const TOTAL_STEPS = 4;
+const STEPS_DATA = [
+  {
+    step: 0,
+    color: "#65BCB6",
+    icon: <Sec3_Icon8 />,
+    title: "ثبت‌نام",
+    description: "حساب کاربری خود را در کمتر از ۳۰ ثانیه ایجاد کنید",
+    duration: "۳۰ ثانیه",
+  },
+  {
+    step: 1,
+    color: "#52D4A0",
+    icon: <Sec3_Icon6 />,
+    title: "آموزش",
+    description: "منابع و اطلاعات کسب‌وکار خود را آپلود کنید",
+    duration: "۲ دقیقه",
+  },
+  {
+    step: 2,
+    color: "#ffa18e",
+    icon: <Sec3_Icon5 />,
+    title: "شخصی‌سازی",
+    description: "ظاهر و رفتار چت‌بات را مطابق برند خود تنظیم کنید",
+    duration: "۵ دقیقه",
+  },
+  {
+    step: 3,
+    color: "#B07CC6",
+    icon: <Sec3_Icon4 />,
+    title: "راه‌اندازی",
+    description: "چت‌بات را روی وب‌سایت یا اپلیکیشن خود نصب کنید",
+    duration: "۲ دقیقه",
+  },
+];
 
-function CardContainer() {
-  return (
-    <div className="relative w-full">
-      {/* <Sec7_Icon />
-      <Sec7_Icon1 />
-      <Sec7_Icon2 />
-      <Sec7_Icon3 /> */}
-    </div>
-  );
-}
+const PROGRESS_WIDTHS = [225, 450, 675, 900];
+const TAB_COLORS = ["#65BCB6", "#52D4A0", "#ffa18e", "#B07CC6"];
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 50, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.6,
+      ease: cubicBezier(0.25, 0.1, 0.25, 1),
+    },
+  },
+};
+
+// ============ Header Component ============
 function Header() {
   return (
     <motion.div
@@ -25,39 +73,30 @@ function Header() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.8 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="flex flex-col justify-center text-center gap-8 w-full"
+      className="flex flex-col justify-center text-center gap-4 sm:gap-6 lg:gap-8 w-full px-4"
     >
-      <div className="flex items-center justify-center rounded-3xl bg-[rgba(101,188,182,0.08)] border border-[rgba(101,188,182,0.15)] py-2 px-3 mx-auto">
-        <div className="bg-primary rounded-full w-2 h-2 ml-3"></div>
-        <span className="text-primary">فرآیند ساده</span>
+      {/* Badge */}
+      <div className="flex items-center justify-center rounded-3xl bg-[rgba(101,188,182,0.08)] border border-[rgba(101,188,182,0.15)] py-2 px-3 mx-auto gap-2">
+        <div className="bg-[#65bcb6] rounded-full w-2 h-2 flex-shrink-0" />
+        <span className="text-[#65bcb6] text-xs sm:text-sm whitespace-nowrap">
+          فرآیند ساده
+        </span>
       </div>
-      <p className="font-extrabold text-center text-gray-900">
+
+      {/* Title */}
+      <p className="font-extrabold text-2xl sm:text-3xl lg:text-4xl text-gray-900">
         آیوا را در ۴ مرحله ساده راه‌اندازی کنید
       </p>
-      <p className="text-center text-gray-600">
+
+      {/* Subtitle */}
+      <p className="text-center text-gray-600 text-sm sm:text-base">
         از ثبت‌نام تا اولین گفت‌وگو، تنها چند دقیقه فاصله دارید
       </p>
     </motion.div>
   );
 }
 
-const cardVariants = {
-  hidden: {
-    opacity: 0,
-    y: 50,
-    scale: 0.9,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.6,
-      ease: cubicBezier(0.25, 0.1, 0.25, 1), // ✅ درست و معادل ease قبلی
-    },
-  },
-};
-
+// ============ Article/Card Component ============
 interface ArticleProps {
   isActive: boolean;
   icon: React.ReactNode;
@@ -150,42 +189,7 @@ function Article({
     </div>
   );
 }
-
-const articlesData = [
-  {
-    step: 0,
-    color: "#65BCB6",
-    icon: <Sec3_Icon8 />,
-    title: "ثبت‌نام",
-    description: "حساب کاربری خود را در کمتر از ۳۰ ثانیه ایجاد کنید",
-    duration: "۳۰ ثانیه",
-  },
-  {
-    step: 1,
-    color: "#52D4A0",
-    icon: <Sec3_Icon6 />,
-    title: "آموزش",
-    description: "منابع و اطلاعات کسب‌وکار خود را آپلود کنید",
-    duration: "۲ دقیقه",
-  },
-  {
-    step: 2,
-    color: "#ffa18e",
-    icon: <Sec3_Icon5 />,
-    title: "شخصی‌سازی",
-    description: "ظاهر و رفتار چت‌بات را مطابق برند خود تنظیم کنید",
-    duration: "۵ دقیقه",
-  },
-  {
-    step: 3,
-    color: "#B07CC6",
-    icon: <Sec3_Icon4 />,
-    title: "راه‌اندازی",
-    description: "چت‌بات را روی وب‌سایت یا اپلیکیشن خود نصب کنید",
-    duration: "۲ دقیقه",
-  },
-];
-
+// ============ Cards Container ============
 function Card({ activeStep }: { activeStep: number }) {
   return (
     <motion.div
@@ -195,15 +199,12 @@ function Card({ activeStep }: { activeStep: number }) {
       variants={{
         hidden: {},
         visible: {
-          transition: {
-            staggerChildren: 0.15,
-            delayChildren: 0.1,
-          },
+          transition: { staggerChildren: 0.1, delayChildren: 0.1 },
         },
       }}
-      className="flex gap-6 items-center justify-center w-full relative shrink-0 px-8"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 w-full px-4"
     >
-      {articlesData.map(({ step, ...props }) => (
+      {STEPS_DATA.map(({ step, ...props }) => (
         <motion.div key={step} variants={cardVariants}>
           <Article isActive={activeStep === step} step={step} {...props} />
         </motion.div>
@@ -212,158 +213,113 @@ function Card({ activeStep }: { activeStep: number }) {
   );
 }
 
-// Timeline
-function Container27() {
-  return (
-    <div className="absolute bg-gray-200 h-0.5 right-0 rounded-[1px] top-0 w-[900px]" />
-  );
-}
-
-function Container28({ activeStep }: { activeStep: number }) {
-  const progressColors = ["#65BCB6", "#52D4A0", "#ffa18e", "#B07CC6"];
-  const progressWidths = [225, 450, 675, 900];
-
+// ============ Progress Indicator ============
+function ProgressBar({ activeStep }: { activeStep: number }) {
   return (
     <motion.div
-      className="absolute h-0.5 right-0 rounded-[1px] top-0"
-      style={{
-        backgroundColor: progressColors[activeStep],
-        boxShadow: `0px 0px 12px 0px ${progressColors[activeStep]}66`,
-      }}
-      animate={{
-        width: progressWidths[activeStep],
-      }}
-      transition={{
-        duration: 0.5,
-        ease: "easeInOut",
-      }}
+      className="h-1 rounded-full"
+      style={{ backgroundColor: TAB_COLORS[activeStep] }}
+      animate={{ width: `${((activeStep + 1) / TOTAL_STEPS) * 100}%` }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
     />
   );
 }
 
-function Container29({ activeStep }: { activeStep: number }) {
+function ProgressIndicators({ activeStep }: { activeStep: number }) {
   return (
-    <div className="h-0.5 relative shrink-0 w-[900px]">
-      <Container27 />
-      <Container28 activeStep={activeStep} />
-    </div>
-  );
-}
-
-function TabList({ activeStep }: { activeStep: number }) {
-  // ترتیب رنگ‌ها از راست به چپ: ثبت‌نام، آموزش، شخصی‌سازی، راه‌اندازی
-  const tabColors = ["#65BCB6", "#52D4A0", "#ffa18e", "#B07CC6"];
-
-  return (
-    <div
-      className="content-stretch flex gap-3 h-3 items-center justify-center relative shrink-0 w-[1232px]"
-      data-name="Tab List"
-    >
-      {[0, 1, 2, 3].map((index) => (
-        <div
+    <div className="flex gap-2 items-center justify-center px-4">
+      {TAB_COLORS.map((color, index) => (
+        <motion.div
           key={index}
-          className={`relative rounded-[6px] shrink-0 transition-all duration-500 ${
-            activeStep === index
-              ? "w-8 h-3 shadow-[0px_2px_8px_0px_rgba(0,0,0,0.15)]"
-              : "size-3 bg-gray-200"
-          }`}
-          style={{
-            backgroundColor:
-              activeStep === index ? tabColors[index] : undefined,
+          className="rounded-md transition-all duration-500"
+          animate={{
+            flex: activeStep === index ? 1.5 : 1,
+            height: activeStep === index ? 12 : 12,
           }}
-          data-name="Tab"
-        >
-          <div className="bg-clip-padding border-0 border-transparent border-solid box-border size-full" />
-        </div>
+          style={{
+            backgroundColor: activeStep === index ? color : "#e5e7eb",
+          }}
+        />
       ))}
     </div>
   );
 }
 
-function Liner({ activeStep }: { activeStep: number }) {
+function Progression({ activeStep }: { activeStep: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.8 }}
       transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-      className="content-stretch flex flex-col gap-6 items-center justify-center relative shrink-0 w-full"
-      data-name="liner"
+      className="flex flex-col gap-4 items-center justify-center w-full px-4"
     >
-      <Container29 activeStep={activeStep} />
-      <TabList activeStep={activeStep} />
+      <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
+        <ProgressBar activeStep={activeStep} />
+      </div>
+      <ProgressIndicators activeStep={activeStep} />
     </motion.div>
   );
 }
 
-function CTA() {
-  return (
-    <div className="content-stretch flex gap-3 items-center ">
-      <span> کل فرآیند کمتر از</span>
-      <span className=" text-[#65bcb6] font-bold"> ۱۰ دقیقه</span>
-      <span> زمان می‌برد</span>
-    </div>
-  );
-}
-
-function Button() {
-  return (
-    <Link href="/onboarding"  >
-      <div
-        className="bg-[#65bcb6] cursor-pointer rounded-2xl text-white px-8 py-4 inline-block text-center"
-        data-name="Button"
-      >
-        شروع رایگان
-      </div>  
-    </Link>
-  );
-}
-
-function ContainerFooter() {
+// ============ CTA Section ============
+function CTASection() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.8 }}
       transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-      className="relative shrink-0 w-full"
+      className="flex flex-col items-center justify-center w-full gap-6 px-4"
     >
-      <div className="flex flex-col items-center justify-center w-full gap-6">
-        <CTA />
-        <Button />
+      {/* CTA Text */}
+      <div className="flex flex-wrap items-center justify-center gap-2 text-center text-sm sm:text-base">
+        <span>کل فرآیند کمتر از</span>
+        <span className="text-[#65bcb6] font-bold">۱۰ دقیقه</span>
+        <span>زمان می‌برد</span>
       </div>
+
+      {/* CTA Button */}
+      <Link href="/onboarding">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-[#65bcb6] hover:bg-[#58aaa5] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl lg:rounded-2xl font-semibold text-sm sm:text-base transition-colors"
+        >
+          شروع رایگان
+        </motion.button>
+      </Link>
     </motion.div>
   );
 }
 
+// ============ Main Section ============
 export default function Section3() {
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % 4);
-    }, 3000); // تغییر هر 3 ثانیه
+      setActiveStep((prev) => (prev + 1) % TOTAL_STEPS);
+    }, STEP_INTERVAL);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <motion.div
+    <motion.section
       id="launch"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className=" content-stretch flex flex-col gap-2 p-10 items-start relative w-full"
+      className="w-full flex flex-col gap-8 sm:gap-12 lg:gap-16 py-12 sm:py-16 lg:py-16 px-10 lg:p-24"
     >
-      <CardContainer />
-
-      <div className="box-border flex flex-col gap-16 items-center justify-center px-24 w-full">
+      <div className="max-w-7xl mx-auto flex flex-col gap-8 sm:gap-10 lg:gap-16 w-full">
         <Header />
         <Card activeStep={activeStep} />
-        <Liner activeStep={activeStep} />
-        <ContainerFooter />
+        <Progression activeStep={activeStep} />
+        <CTASection />
       </div>
-    </motion.div>
+    </motion.section>
   );
 }

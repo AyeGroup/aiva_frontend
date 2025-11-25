@@ -1,12 +1,450 @@
 import { motion } from "motion/react";
 import svgPaths from "@app/landing/svg/svg-sayy2jojyo";
-import svgPaths7 from "@app/landing/svg/svg-kwkm5bjjwl";
+import svgPaths2 from "@app/landing/svg/svg-jdf94yeg6v";
 import svgPaths3 from "@app/landing/svg/svg-2dmtneq5en";
 import svgPaths6 from "@app/landing/svg/svg-gcyltdwgwo";
+import svgPaths7 from "@app/landing/svg/svg-kwkm5bjjwl";
 import svgPathsFaq from "@app/landing/svg/svg-m5kcbvnqsq";
 import svgPathsStart from "@app/landing/svg/svg-c8s8h124u2";
 import svgPathsPlan from "@app/landing/svg/svg-f338pva7p3";
 
+
+export function Sec2_Icon() {
+  return (
+    <motion.div
+      className="absolute left-[114.48px] size-16 top-[196.73px]"
+      data-name="Icon"
+      animate={{
+        y: [0, -20, 0],
+        x: [0, 10, 0],
+      }}
+      transition={{
+        duration: 8,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 64 64"
+      >
+        <g id="Icon" opacity="0.25">
+          <path
+            d={svgPaths2.p152db200}
+            id="Vector"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="5.33333"
+          />
+          <path
+            d={svgPaths2.p2ad26680}
+            id="Vector_2"
+            opacity="0.952107"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="5.33333"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+
+export function Sec2_Icon1() {
+  return (
+    <motion.div
+      className="absolute left-[1231.91px] size-14 top-[927.67px]"
+      data-name="Icon"
+      animate={{
+        rotate: [0, 180, 360],
+        scale: [1, 1.1, 1],
+      }}
+      transition={{
+        duration: 15,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 56 56"
+      >
+        <g id="Icon" opacity="0.25">
+          <path
+            d={svgPaths2.p19d60f80}
+            id="Vector"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="4.66667"
+          />
+          <path
+            d={svgPaths2.p77b1b80}
+            id="Vector_2"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="4.66667"
+          />
+          <path
+            d={svgPaths2.p1ebcb6be}
+            id="Vector_3"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="4.66667"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+
+export function Sec2_Icon2() {
+  return (
+    <motion.div
+      className="absolute left-[1168.35px] size-12 top-[524.62px]"
+      data-name="Icon"
+      animate={{
+        y: [0, 15, 0],
+        rotate: [0, -5, 5, 0],
+      }}
+      transition={{
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 48 48"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPaths2.p1f337080}
+            fill="var(--fill-0, #4460F7)"
+            id="Vector"
+          />
+          <path
+            d="M24 32V24"
+            id="Vector_2"
+            stroke="var(--stroke-0, white)"
+            strokeWidth="4"
+          />
+          <path
+            d="M24 16H24.02"
+            id="Vector_3"
+            opacity="0.904215"
+            stroke="var(--stroke-0, white)"
+            strokeWidth="4"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+
+export function Sec2_Icon3() {
+  return (
+    <motion.div
+      className="absolute left-[171.72px] size-[40px] top-[1074.83px]"
+      data-name="Icon"
+      animate={{
+        scale: [1, 1.2, 1],
+        rotate: [0, 90, 0],
+      }}
+      transition={{
+        duration: 10,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 40 40"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPaths2.p19a01780}
+            id="Vector"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeWidth="3.33333"
+          />
+          <path
+            d={svgPaths2.p15663e00}
+            id="Vector_2"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeWidth="3.33333"
+          />
+          <path
+            d={svgPaths2.p3911f600}
+            id="Vector_3"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeWidth="3.33333"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+export function Sec2_IconSarNakh() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths2.p1fa66600}
+            stroke="#4460F7"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p190dabf0}
+            stroke="#4460F7"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p2a9abe70}
+            stroke="#4460F7"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+export function Sec2_IconYadgiri() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        viewBox="0 0 28 28"
+        preserveAspectRatio="none"
+      >
+        <g clipPath="url(#clip4)">
+          <path
+            d="M14 21V5.8"
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p3536b5c0}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.pf30d500}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p395f4600}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p3fb109e0}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.pcb4cbe0}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p164ec400}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p1031f00}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip4">
+            <rect fill="white" width="28" height="28" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+export function Sec2_IconAmniat() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths2.p1a3063b0}
+            stroke="#FF8970"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec2_IconPoshtibani() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g clipPath="url(#clip2)">
+          <path
+            d={svgPaths2.p1fa66600}
+            stroke="#52D4A0"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p1d189680}
+            stroke="#52D4A0"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M2.33333 14H25.6667"
+            stroke="#52D4A0"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip2">
+            <rect fill="white" width="28" height="28" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec2_IconTahlil() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths2.pb26ca00}
+            stroke="#B07CC6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.9"
+          />
+          <path
+            d="M21 19.8333V10.5"
+            stroke="#B07CC6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.9"
+          />
+          <path
+            d="M15.1667 19.8333V5.83333"
+            stroke="#B07CC6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.9"
+          />
+          <path
+            d="M9.33333 19.8333V16.3333"
+            stroke="#B07CC6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.9"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec2_IconYekparche() {
+  return (
+    <div>
+      <svg
+        // className="block size-full"
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g clipPath="url(#clip0_0_6208)" id="Icon">
+          <path
+            d={svgPaths2.p14dfe880}
+            id="Vector"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="3"
+          />
+          <path
+            d={svgPaths2.p1aefb400}
+            id="Vector_2"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="3"
+          />
+        </g>
+        <defs>
+          <clipPath>
+            <rect fill="white" height="28" width="28" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
 export function Sec3_Icon() {
   return (
     <div

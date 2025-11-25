@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import svgPaths from "../svg/svg-4hsgpptxrd";
 import navSvgPaths from "../svg/svg-9zbz1ttp0b";
-import imgImage from "@/public/images/man.png";
+ 
 
 function Icon() {
   return (

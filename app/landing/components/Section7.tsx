@@ -1,3 +1,4 @@
+// Refactored Section7 with improved responsive behavior
 "use client";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -8,57 +9,35 @@ import {
   Sec7_Icon8,
 } from "@/public/icons/landing";
 
-function Container() {
-  return (
-    <div>
-      <Sec7_Icon5 />
-    </div>
-  );
-}
-
 function Interaction() {
   return (
     <motion.div
-      className="bg-white relative rounded-[28px] shrink-0 my-3 w-full"
-      data-name="Article"
+      className="bg-white relative rounded-2xl my-3 w-full"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: 0.4 }}
     >
-      <div
-        aria-hidden="true"
-        className="absolute z-0  border-2 border-[#e8f6f5] border-solid inset-0 pointer-events-none rounded-[28px] shadow-[0px_8px_30px_0px_rgba(0,0,0,0.08)]"
-      />
-      <div className="flex flex-col items-end justify-center size-full">
-        <div className="box-border content-stretch flex flex-col items-end justify-center p-[36px] relative w-full">
-          <div className="content-stretch flex gap-5 items-center justify-end relative shrink-0 w-full">
-            <div className="bg-[#e8f6f5] rounded-lg shrink-0 size-14">
-              <div className="bg-clip-padding border-0 border-transparent border-solid box-border content-stretch flex items-center justify-center relative size-14">
-                <Sec7_Icon6 />
-              </div>
+      <div className="absolute inset-0 rounded-2xl border-2 border-[#e8f6f5] shadow-md pointer-events-none" />
+
+      <div className="flex flex-col items-end p-6">
+        <div className="flex gap-4 items-center w-full justify-end flex-wrap">
+          <div className="bg-[#e8f6f5] rounded-lg size-14 flex items-center justify-center">
+            <Sec7_Icon6 />
+          </div>
+
+          <div className="flex flex-col gap-2 text-right max-w-full">
+            <div className="flex gap-4 items-center">
+              <p className="text-[20px] md:text-[22px] font-medium text-gray-900 whitespace-nowrap">
+                رشد تعامل شبانه
+              </p>
+              <p className="text-[16px] text-[#65bcb6]">۵۰٪+</p>
             </div>
-            <div>
-              <div className="bg-clip-padding border-0 border-transparent border-solid box-border content-stretch flex flex-col gap-2 items-start  ">
-                <div className="box-border content-stretch flex gap-[18px] items-center justify-end px-px py-0   text-right ">
-                  <p className=" font-medium leading-[30px] relative shrink-0 text-[22px] text-gray-900 text-nowrap whitespace-pre">
-                    رشد تعامل شبانه
-                  </p>
-                  <p className=" font-normal leading-6 relative shrink-0 text-[#65bcb6] text-[16px] ">
-                    ۵۰٪+
-                  </p>
-                </div>
-                <div
-                  className="h-[52px] relative shrink-0 w-[436px]"
-                  data-name="Paragraph"
-                >
-                  <p className="absolute  font-medium leading-[26px] left-[440.16px] text-[16px] text-gray-600 text-right top-[-0.5px] translate-x-[-100%] w-[421px]">
-                    در ۳ ماه اول، تعامل شبانه ۵۰٪ افزایش پیدا کرد و رضایت مشتری
-                    به ۹۷٪ رسید.
-                  </p>
-                </div>
-              </div>
-            </div>
+
+            <p className="text-gray-600 leading-6 text-[15px] md:text-[16px] max-w-xs md:max-w-md">
+              در ۳ ماه اول، تعامل شبانه ۵۰٪ افزایش پیدا کرد و رضایت مشتری به ۹۷٪
+              رسید.
+            </p>
           </div>
         </div>
       </div>
@@ -68,9 +47,9 @@ function Interaction() {
 
 function Button() {
   return (
-    <Link href="/onboarding">
+    <Link href="/onboarding" className="block w-full">
       <motion.div
-        className="bg-[#65bcb6] z-10 box-border text-white flex gap-2 items-center justify-center rounded-lg shadow-[0px_12px_28px_0px_rgba(101,188,182,0.35)] p-4 w-full cursor-pointer"
+        className="bg-[#65bcb6] text-white flex gap-2 items-center justify-center rounded-lg shadow-lg p-4 w-full cursor-pointer"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -86,48 +65,37 @@ function Button() {
 }
 
 function ThreeDots() {
-  return (
-    <div
-      className="bg-[#65bcb6] relative rounded-[4px] shrink-0 size-[8px]"
-      data-name="Container"
-    >
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid box-border size-[8px]" />
-    </div>
-  );
+  return <div className="bg-[#65bcb6] rounded-[4px] size-[8px]" />;
 }
 
 function ChatSample() {
   return (
-    <div className="h-full">
-      {" "}
-      {/* مهم */}
+    <div className="h-full w-full">
       <motion.div
-        className="bg-[#ffa18e] h-full items-stretch p-10 rounded-3xl shadow-[0px_20px_60px_0px_rgba(255,161,142,0.25)] flex flex-col"
+        className="bg-[#ffa18e] p-6 gap-y-8 md:p-10 rounded-3xl shadow-xl flex flex-col h-full"
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        {/* بخش اول - چپ */}
-        <div className="flex items-center text-sm text-white rounded-full bg-[#ffffff33] px-6 py-3 my-3 w-fit mr-auto">
-          <div className="text-white w-4 h-4 ml-3">
+        {/* بخش اول */}
+        <div className="flex items-center text-sm text-white rounded-full bg-white/20 px-5 py-2 w-fit mr-auto">
+          <div className="ml-2 w-4 h-4">
             <Sec7_Icon8 />
           </div>
           <span>۲:۳۰ صبح</span>
         </div>
 
-        {/* بخش دوم - چپ */}
-        <div className="text-gray-900 bg-white rounded-3xl py-4 px-7 my-4 text-right w-fit mr-auto">
+        {/* پیام 1 */}
+        <div className="bg-white text-right text-gray-900 rounded-3xl py-4 px-6 my-4 w-fit max-w-[85%] mr-auto">
           سلام! XL موجوده؟
-          <div className="p-3 text-xs text-gray-500 whitespace-pre text-left">
-            ۲:۳۰
-          </div>
+          <div className="text-xs text-gray-500 mt-2 text-left">۲:۳۰</div>
         </div>
 
-        {/* بخش سوم - راست */}
-        <div className="flex justify-end bg-white my-6 p-4 rounded-4xl w-fit ml-auto">
-          <div className="flex gap-2 h-2 w-fit">
-            {[...Array(3).keys()].map((_, i) => (
+        {/* تایپینگ */}
+        <div className="flex justify-start my-4 w-full">
+          <div className="flex gap-2 bg-white p-3 rounded-3xl shadow-sm">
+            {[0, 1, 2].map((i) => (
               <ThreeDots key={i} />
             ))}
           </div>
@@ -139,32 +107,32 @@ function ChatSample() {
 
 function PerfectSale() {
   return (
-    <div>
+    <div className="w-full">
       <motion.div
-        className=" "
-        data-name="Container"
         initial={{ opacity: 0, scale: 0.8 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
       >
-        <div className="bg-[#e3f4f1] py-2 px-6 rounded-3xl w-fit ">
-          <div className="flex items-center justify-start gap-2 font-medium text-primary text-sm text-center text-nowrap ">
-            <div className="bg-primary rounded-full w-2 h-2"></div>
+        <div className="bg-[#e3f4f1] py-2 px-5 rounded-3xl w-fit mx-auto md:mx-0">
+          <div className="flex items-center gap-2 text-primary text-sm font-medium">
+            <div className="bg-primary w-2 h-2 rounded-full"></div>
             <span>یک فروش بی نقص</span>
           </div>
         </div>
-        <div className="font-semibold m-8 text-2xl text-gray-900 text-nowrap text-right whitespace-pre">
+
+        <h3 className="font-semibold mt-6 text-xl md:text-2xl text-gray-900 text-right">
           یک گفت‌وگوی نیمه‌شب، یک فروش واقعی!
-        </div>
-        <div className=" font-medium leading-[30px] relative shrink-0   text-gray-600 text-right  ">
+        </h3>
+
+        <p className="text-gray-600 leading-7 text-right mt-4 text-[15px] md:text-[16px]">
           فروشگاه آنلاین‌کالا قبلاً مشکل داشت که مشتریان شبانه پاسخ نمی‌گرفتند و
           سفارش‌ها از دست می‌رفت. بعد از راه‌اندازی چت‌بات RagBuilder، حتی ساعت
-          ۳ صبح هم مشتری‌ها می‌تونند سایز، رنگ و موجودی رو چک کنند.
-        </div>
+          ۳ صبح هم مشتری‌ها می‌تونند سایز، رنگ و موجودی را چک کنند.
+        </p>
       </motion.div>
-      <Interaction />
 
+      <Interaction />
       <Button />
     </div>
   );
@@ -172,17 +140,15 @@ function PerfectSale() {
 
 export default function Section7() {
   return (
-    <div
-      className="bg-white pt-5  flex flex-col gap-3 items-start relative w-full"
-      id="Interaction"
-    >
-      <Container />
-      <div className="w-full min-h-80 gap-8 flex items-stretch justify-center p-14">
-        <div className="w-full">
+    <div id="Interaction" className="bg-white py-5 px-8 lg:px-24 flex flex-col gap-3 w-full">
+      <Sec7_Icon5 />
+
+      <div className="w-full flex flex-col-reverse md:flex-row gap-8 items-stretch justify-center p-6 md:p-14">
+        <div className="w-full md:w-1/2">
           <ChatSample />
         </div>
 
-        <div className="w-full">
+        <div className="w-full md:w-1/2">
           <PerfectSale />
         </div>
       </div>
