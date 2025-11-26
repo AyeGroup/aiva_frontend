@@ -4,12 +4,191 @@ import { Tik } from "@/public/icons/landing";
 import { motion } from "motion/react";
 import { AnimatedChat } from "./AnimatedChat";
 
+
+function BackgroundDecorations2() {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none"
+      data-name="BackgroundDecorations"
+    >
+      {/* <BackgroundIcon /> */}
+      <BackgroundIcon1 />
+      <BackgroundIcon2 />
+      <BackgroundIcon3 />
+    </div>
+  );
+}
+
+function BackgroundIcon() {
+  return (
+    <motion.div
+      className="absolute left-[214.65px] size-[80px] top-0"
+      data-name="Icon"
+      animate={{
+        y: [0, -20, 0],
+        rotate: [0, 5, 0, -5, 0],
+      }}
+      transition={{
+        duration: 8,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 80 80"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d="M40 8L72 72H8L40 8Z"
+            fill="var(--fill-0, #B07CC6)"
+            id="Vector"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+
+function BackgroundIcon1() {
+  return (
+    <div
+      className="absolute h-[400px] left-1 top-0 w-[600px]"
+      data-name="Icon"
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 600 400"
+      >
+        <defs>
+          <clipPath id="clip0_0_6266">
+            <rect fill="white" height="400" width="600" />
+          </clipPath>
+        </defs>
+        <g clipPath="url(#clip0_0_6266)" id="Icon" opacity="0.25">
+          <motion.g
+            animate={{
+              x: [0, 15, 0, -15, 0],
+              y: [0, -10, 0, 10, 0],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <path
+              d={svgPaths2.p81e7400}
+              id="Vector"
+              stroke="#65BCB6"
+              strokeWidth="2"
+            />
+          </motion.g>
+          <motion.g
+            animate={{
+              x: [0, -15, 0, 15, 0],
+              y: [0, 10, 0, -10, 0],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <path
+              d={svgPaths2.p27f4bc00}
+              id="Vector_2"
+              stroke="#FFA18E"
+              strokeWidth="2"
+            />
+          </motion.g>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function BackgroundIcon2() {
+  return (
+    <motion.div
+      className="absolute left-[1282px] size-[96px] top-[19px]"
+      data-name="Icon"
+      animate={{
+        rotate: [0, 360],
+        scale: [1, 1.1, 1],
+      }}
+      transition={{
+        duration: 15,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 96 96"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPaths2.p283c7e80}
+            fill="var(--fill-0, #65BCB6)"
+            id="Vector"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+
+function BackgroundIcon3() {
+  return (
+    <motion.div
+      className="absolute left-[913px] size-[64px] top-[142px]"
+      data-name="Icon"
+      animate={{
+        rotate: [0, -10, 0, 10, 0],
+        y: [0, -15, 0, 15, 0],
+        scale: [1, 1.05, 1],
+      }}
+      transition={{
+        duration: 10,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 64 64"
+      >
+        <g clipPath="url(#clip0_0_6908)" id="Icon" opacity="0.3">
+          <path
+            d={svgPaths2.pff02b00}
+            fill="var(--fill-0, #FFA18E)"
+            id="Vector"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_0_6908">
+            <rect fill="white" height="64" width="64" />
+          </clipPath>
+        </defs>
+      </svg>
+    </motion.div>
+  );
+}
 function BackgroundDecorations() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Triangle - Bottom Left */}
       <motion.div
-        className="absolute left-[5%] sm:left-[18%] bottom-[10%] sm:top-[80%] w-12 sm:w-20 h-12 sm:h-20"
+        className="absolute left-[5%] sm:left-[18%] -bottom-[50%] sm:top-[80%] w-12 sm:w-20 h-12 sm:h-20"
         animate={{ y: [0, -20, 0], rotate: [0, 5, 0, -5, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       >
@@ -21,7 +200,7 @@ function BackgroundDecorations() {
       </motion.div>
 
       {/* Center SVG Paths - Hidden on small screens */}
-      <div className="hidden sm:block absolute left-1/2 top-1/2 w-96 sm:w-[600px] h-64 sm:h-[400px] -translate-x-1/2 -translate-y-1/2">
+      <div className="hidden sm:block absolute left-2/3 top-2/3 w-96 sm:w-[600px] h-64 sm:h-[400px] -translate-x-1/2 -translate-y-1/2">
         <svg fill="none" viewBox="0 0 600 400" className="w-full h-full">
           <defs>
             <clipPath id="clip0">
@@ -49,7 +228,7 @@ function BackgroundDecorations() {
 
       {/* Rotating Circle - Top Right - Hidden on mobile */}
       <motion.div
-        className="hidden sm:block absolute right-[5%] sm:right-[15%] top-[5%] sm:top-[10%] w-16 sm:w-24 h-16 sm:h-24"
+        className="hidden sm:block absolute right-[5%] sm:right-[15%] top-[5%] sm:-top-1 w-16 sm:w-24 h-16 sm:h-24"
         animate={{ rotate: [0, 360], scale: [1, 1.1, 1] }}
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
       >
@@ -65,7 +244,7 @@ function BackgroundDecorations() {
 
       {/* Animated Shape - Center Left - Hidden on mobile */}
       <motion.div
-        className="hidden sm:block absolute left-1/2 top-1/3 w-12 sm:w-16 h-12 sm:h-16 -translate-x-1/2"
+        className="hidden sm:block absolute left-1/2 top-1/5 w-12 sm:w-16 h-12 sm:h-16 -translate-x-1/2"
         animate={{
           rotate: [0, -10, 0, 10, 0],
           y: [0, -15, 0, 15, 0],

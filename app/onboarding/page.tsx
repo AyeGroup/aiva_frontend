@@ -25,6 +25,7 @@ import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import FloatSideMenu from "./FloatSideMenu";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -65,6 +66,9 @@ export default function OnboardingWizard() {
     greetings: true,
     use_emoji: false,
     support_phone: "",
+    require_user_phone: false,
+    require_user_name: false,
+    require_user_email: false,
   });
   const totalSteps = steps.length;
 
@@ -309,6 +313,9 @@ export default function OnboardingWizard() {
     formData.append("language", botConfig.language);
     formData.append("description", botConfig.description);
     formData.append("guidelines", botConfig.guidelines);
+    formData.append("require_user_email", String(botConfig.require_user_email));
+    formData.append("require_user_name", String(botConfig.require_user_name));
+    formData.append("require_user_phone", String(botConfig.require_user_phone));
 
     try {
       let res;
@@ -516,6 +523,7 @@ export default function OnboardingWizard() {
       {/* {!id && <Header currentPage="onboarding" isOnboarding={true} />} */}
       <div className="container mx-auto px-6 py-6 relative z-10">
         {/* Clean Minimal Header */}
+        <FloatSideMenu />
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <button
@@ -597,7 +605,6 @@ export default function OnboardingWizard() {
               : "پس از اعمال تغییرات، کد نصب را مجدد در سایت خود قرار دهید."}
           </div>
         </div>
-
         {/* Ultra Clean Progress */}
         <div className="max-w-3xl mx-auto mb-16">
           <div className="relative max-w-4xl mx-auto m-0 p-0 pb-4">
@@ -682,7 +689,6 @@ export default function OnboardingWizard() {
             </div>
           </div>
         </div>
-
         {/* Content Area */}
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-3 gap-8">
@@ -739,7 +745,6 @@ export default function OnboardingWizard() {
             </div>
           </div>
         </div>
-
         {/* Clean Exit Link */}
         {!id && (
           <div className="text-center mt-16">

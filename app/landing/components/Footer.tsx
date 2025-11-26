@@ -1,17 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { convertToPersian } from "@/utils/common";
 import { MapPin, Phone, Mail } from "lucide-react";
 
-function Container() {
+const Container = () => {
   return (
-    <div className="opacity-50 relative size-full" >
-      <div className="absolute left-0 top-0 w-full" >
+    <div className="opacity-50 relative size-full">
+      <div className="absolute left-0 top-0 w-full h-24">
         <svg
           className="block size-full"
           fill="none"
           preserveAspectRatio="none"
           viewBox="0 0 1431 96"
+          aria-hidden="true"
         >
           <g clipPath="url(#clip0_0_5662)" id="Icon" opacity="0.15">
             <path
@@ -30,21 +33,22 @@ function Container() {
       </div>
     </div>
   );
-}
+};
 
 export default function Footer() {
   return (
-    <div className="relative w-full bg-gray-900">
+    <footer className="relative w-full px-10 bg-gray-900">
       {/* Background Pattern */}
-      <div className="absolute inset-0  pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <Container />
       </div>
 
       {/* Footer Content */}
-      <div className=" w-full h-full flex flex-col items-center justify-center px-20 pt-4">
-        <div className="grid grid-cols-7 gap-12 py-8 text-gray-400">
+      <div className="relative z-10 w-full flex flex-col items-center px-4 sm:px-6 md:px-8 lg:px-20 pt-4">
+        {/* Main Grid - Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-6 sm:gap-8 md:gap-10 lg:gap-12 py-8 md:py-12 text-gray-400 w-full">
           {/* Logo & Description */}
-          <div className=" text-right col-span-2">
+          <div className="text-right col-span-1 sm:col-span-2 lg:col-span-2">
             <div className="flex items-center gap-2 justify-start">
               <Link href="/" className="flex items-center gap-3">
                 <Image
@@ -54,42 +58,55 @@ export default function Footer() {
                   height={40}
                   priority
                 />
-                <span className="text-white font-semibold text-xl">آیوا</span>
+                <span className="text-white font-semibold text-lg sm:text-xl">
+                  آیوا
+                </span>
               </Link>
             </div>
-            <p className="text-gray-400 leading-6 text-right">
+            <p className="text-gray-400 leading-6 text-right text-sm sm:text-base mt-2">
               هوشمندترین چت‌بات برای کسب‌وکار شما
             </p>
           </div>
-          <div className="items-end flex pt-2 text-justify col-span-3">
-            خلاقیت یا آفرینندگی توان ساختن یا خلق نمودن چیزی نو است، راهکاری نو
-            برای حل یک مشکل، یک روش یا یک دستگاه نو، یا یک شیء یا فرم نو هنری.
-            «خلاقیت بشر تعریفی از قابلیت‌های اقتصاد، زندگی، فناوری، صنایع نو،
-            ثروت نو و کلیهٔ چیزهایی است که از یک اقتصاد خوب جریان می‌گیرند.
-          </div>
-          <div className="flex flex-col gap-y-4 justify-end col-span-2">
-            <div className="text-gray-100 text-lg mb-1">تماس با ما</div>
 
-            <div className="flex justify-start items-center gap-2">
-              <MapPin size={20} className="text-gray-300" />
-              <span>تهران، آزادی، خیابان صادقی، پلاک ۳۳</span>
+          {/* Description */}
+          <div className="text-justify lg:pt-10 col-span-1 sm:col-span-2 lg:col-span-3 text-sm sm:text-base">
+            <p className="leading-6">
+              خلاقیت یا آفرینندگی توان ساختن یا خلق نمودن چیزی نو است، راهکاری
+              نو برای حل یک مشکل، یک روش یا یک دستگاه نو، یا یک شیء یا فرم نو
+              هنری. «خلاقیت بشر تعریفی از قابلیت‌های اقتصاد، زندگی، فناوری،
+              صنایع نو، ثروت نو و کلیهٔ چیزهایی است که از یک اقتصاد خوب جریان
+              می‌گیرند.
+            </p>
+          </div>
+
+          {/* Contact Info */}
+          <div className="flex flex-col gap-y-3 sm:gap-y-4 col-span-1 sm:col-span-2 lg:col-span-2">
+            <div className="text-gray-100 text-base sm:text-lg font-semibold">
+              تماس با ما
             </div>
 
-            <div className="flex justify-start items-center gap-2">
-              <Phone size={20} className="text-gray-300" />
+            <div className="flex items-center gap-2 text-sm sm:text-base">
+              <MapPin size={18} className="text-gray-300 flex-shrink-0" />
+              <span className="text-right">
+                تهران، آزادی، خیابان صادقی، پلاک ۳۳
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-sm sm:text-base">
+              <Phone size={18} className="text-gray-300 flex-shrink-0" />
               <a
                 href="tel:09903202903"
-                className="hover:text-gray-100 transition"
+                className="hover:text-gray-100 transition duration-200"
               >
                 {convertToPersian("09903202903")}
               </a>
             </div>
 
-            <div className="flex justify-start items-center gap-2">
-              <Mail size={20} className="text-gray-300" />
+            <div className="flex items-center gap-2 text-sm sm:text-base">
+              <Mail size={18} className="text-gray-300 flex-shrink-0" />
               <a
                 href="mailto:info@ayehgroup.com"
-                className="hover:text-gray-100 transition"
+                className="hover:text-gray-100 transition duration-200 break-all sm:break-normal"
               >
                 info@ayehgroup.com
               </a>
@@ -98,19 +115,19 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-2 w-full p-4 border-t border-gray-800 flex items-center justify-center">
-          <div className="flex items-center text-gray-500 text-sm">
-            © ۲۰۲۵ تمام حقوق سایت متعلق به
+        <div className="mt-4 sm:mt-6 md:mt-8 w-full p-4 border-t border-gray-800 flex items-center justify-center">
+          <div className="flex  items-center justify-center text-gray-500 text-xs sm:text-sm gap-1">
+            <span>© ۲۰۲۵ تمام حقوق سایت متعلق به</span>
             <Link
               href="https://ayehgroup.com/"
-              className="mx-0.5 cursor-pointer"
+              className="text-gray-400 hover:text-gray-100 transition duration-200 font-semibold mx-0.5"
             >
-              <div>گروه آیه</div>
+              گروه آیه
             </Link>
-            است.
+            <span>است.</span>
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

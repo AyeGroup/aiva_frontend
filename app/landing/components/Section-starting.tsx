@@ -37,12 +37,12 @@ function ContainerBg() {
 export default function SectionStarting() {
   return (
     <div className="relative size-full" id="starting">
-      <div className="w-full bg-[#65bcb6]  flex flex-col gap-2 h-[500px] items-center justify-center p-24 relative ">
+      <div className="w-full bg-[#65bcb6]  flex flex-col gap-2 lg:gap-5 h-[400px] lg:h-[450px] items-center justify-center p-10 lg:p-24 relative ">
         <ContainerBg />
-        <p className="font-semibold text-4xl text-center text-white">
+        <p className="font-semibold text-3xl lg:text-4xl leading-10 text-center text-white">
           آماده شروع هستید؟
         </p>
-        <p className="font-medium  my-8 text-[rgba(255,255,255,0.95)] text-center text-nowrap  ">
+        <p className="font-medium  my-8 text-[rgba(255,255,255,0.95)] text-center lg:text-nowrap  ">
           آیوا را رایگان امتحان کنید و تفاوت را در همان روز اول احساس کنید
         </p>
         <div className="flex gap-8">

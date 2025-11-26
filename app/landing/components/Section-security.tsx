@@ -216,7 +216,7 @@ const WebsiteIcon = () => (
 );
 
 const AccessIcon = () => (
-  <div className="h-8 overflow-clip relative shrink-0 w-full">
+  <div className="h-[32px] overflow-clip relative shrink-0 w-full">
     <div className="absolute inset-[8.33%_16.67%_8.32%_16.67%]">
       <div className="absolute inset-[-6.25%_-7.81%]">
         <svg
@@ -257,7 +257,7 @@ const AccessIcon = () => (
 );
 
 const DataIcon = () => (
-  <div className="h-8 overflow-clip relative shrink-0 w-full">
+  <div className="h-[32px] overflow-clip relative shrink-0 w-full">
     <div className="absolute inset-[45.83%_12.5%_8.33%_12.5%]">
       <div className="absolute inset-[-11.36%_-6.94%]">
         <svg
@@ -414,11 +414,11 @@ export default function SecuritySection() {
       <BackgroundDecorations />
 
       {/* Main content */}
-      <div className=" flex flex-col gap-16 items-start p-24">
+      <div className=" flex flex-col gap-16 items-start px-12 lg:p-24">
         <SectionHeader />
 
         {/* Feature cards grid */}
-        <div className="gap-6 grid grid-cols-4 w-full bg-white z-20">
+        <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full bg-white z-20">
           {features.map((feature) => (
             <FeatureCard key={feature.id} data={feature} />
           ))}
