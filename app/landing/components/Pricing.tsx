@@ -9,7 +9,7 @@ import {
   PlanImage,
   RocketIcon,
 } from "@/public/icons/landing";
-import { translateFeature } from "@/constants/plans";
+import { getPlanIcon, translateFeature } from "@/constants/plans";
 
 const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
   return [
@@ -32,7 +32,9 @@ const pricingPlans: any[] = [
     price: "۱۵۰,۰۰۰",
     color: "#0891B2",
     bgColor: "#e7f5f3",
-    icon: <RocketIcon className="w-7 h-7" />,
+    // icon: <RocketIcon className="w-7 h-7" />,
+    icon: getPlanIcon("FREE"),
+
     features: [
       "۵۰ پیام ماهانه",
       "اتصال وب‌سایت به سایت",
@@ -49,7 +51,8 @@ const pricingPlans: any[] = [
     price: "۷۵۰,۰۰۰",
     color: "#52D4A0",
     bgColor: "#e9faf2",
-    icon: <DiamondIcon className="w-7 h-7" />,
+    // icon: <DiamondIcon className="w-7 h-7" />,
+    icon: getPlanIcon("BASIC"),
     features: [
       "۱۰۰۰ پیام ماهانه",
       "ابزاری اختصاصی چت‌بات",
@@ -68,7 +71,9 @@ const pricingPlans: any[] = [
     price: "۱,۸۵۰,۰۰۰",
     color: "#65BCB6",
     bgColor: "#e3f3f0",
-    icon: <StarIcon className="w-7 h-7" />,
+    // icon: <StarIcon className="w-7 h-7" />,
+    icon: getPlanIcon("MEDIUM"),
+
     features: [
       "۳۰۰۰ پیام ماهانه",
       "تعیین رفتار چت‌بات",
@@ -90,7 +95,8 @@ const pricingPlans: any[] = [
     price: "۶,۵۵۵,۰۰۰",
     color: "#7C3AED",
     bgColor: "#f0edfc",
-    icon: <CrownIcon className="w-7 h-7" />,
+    // icon: <CrownIcon className="w-7 h-7" />,
+    icon: getPlanIcon("ADVANCE"),
     features: [
       "۱۰۰۰۰ پیام ماهانه",
       "انتخاب مدل GPT 4o (سانتاکس)",
@@ -111,7 +117,8 @@ const pricingPlans: any[] = [
     price: "توافقی",
     color: "#6366F1",
     bgColor: "#ebeffc",
-    icon: <DocumentIcon className="w-7 h-7" />,
+    // icon: <DocumentIcon className="w-7 h-7" />,
+    icon: getPlanIcon("ENTERPRISE"),
     features: [
       "پیام نامحدود و منابع دانش نامحدود",
       "API اختصاصی و اتوماسیون (Zapier، Make)",
@@ -257,7 +264,7 @@ export default function PricingPage() {
 
         // setPlans(res.data?.data?.subscription_plans ?? []);
         const allPlans = res.data?.data?.subscription_plans ?? [];
-       
+
         setPlans(allPlans);
 
         console.log("allPlans :", allPlans);

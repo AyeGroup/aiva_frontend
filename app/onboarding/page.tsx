@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import PageLoader from "@/components/pageLoader";
+import FloatSideMenu from "./FloatSideMenu";
 import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
@@ -25,7 +26,7 @@ import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import FloatSideMenu from "./FloatSideMenu";
+import { getPlanCodeById, PlanCode } from "@/constants/plans";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -41,6 +42,8 @@ export default function OnboardingWizard() {
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeSubscrp, setActiveSubscrp] = useState<PlanCode>("FREE");
 
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
@@ -167,6 +170,32 @@ export default function OnboardingWizard() {
 
     fetchBotData();
   }, [user?.token, id]);
+
+  //get active subscription
+  useEffect(() => {
+    if (!user) return;
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        let subsc: PlanCode = "FREE";
+        if (id && id.length > 3) {
+          const response = await axiosInstance.get(
+            API_ROUTES.FINANCIAL.SUBSCRIPTION(id)
+          );
+          if (response && response.status === 200)
+            subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
+          //  subsc =getPlanCodeById( response.data.data.plan);
+        }
+        console.log("active plan",subsc)
+        setActiveSubscrp(subsc);
+      } catch (error) {
+        console.error("خطا در دریافت داده کاربران:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [user]);
 
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
@@ -514,7 +543,7 @@ export default function OnboardingWizard() {
     }
   };
 
-  if (loading) return <PageLoader />;
+  if (loading || isLoading) return <PageLoader />;
   if (!user) return null;
   const showButton = !id || id === "new" || currentStep < totalSteps;
 
@@ -523,7 +552,7 @@ export default function OnboardingWizard() {
       {/* {!id && <Header currentPage="onboarding" isOnboarding={true} />} */}
       <div className="container mx-auto px-6 py-6 relative z-10">
         {/* Clean Minimal Header */}
-        <FloatSideMenu />
+        <FloatSideMenu currentPlan={activeSubscrp} />
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <button

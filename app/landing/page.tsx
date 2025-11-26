@@ -14,6 +14,7 @@ import Section8 from "./components/Section8";
 import SectionFAQ from "./components/Section-faq";
 import SectionSecurity from "./components/Section-security";
 import SectionStarting from "./components/Section-starting";
+import GoToTopButton from "./components/GoToTopButton";
 
 export default function App() {
   const pathname = usePathname();
@@ -45,6 +46,7 @@ export default function App() {
       <SectionFAQ />
       <SectionStarting />
       <Footer />
+      <GoToTopButton />
     </main>
   );
 }

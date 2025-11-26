@@ -23,33 +23,8 @@ export enum TRANSACTION_TITLE {
 export const getTransactionTitle = (type: keyof typeof TRANSACTION_TITLE) => {
   return TRANSACTION_TITLE[type] || "";
 };
-
-//  const getTransactionTitle = (type: string) =>
-//    type === TRANSACTION_TYPE.BUY_SUBSCRIPTION
-//      ? "خرید پلن"
-//      : type === TRANSACTION_TYPE.INCREASE_WALLET
-//      ? "افزایش موجودی کیف پول"
-//      : type === TRANSACTION_TYPE.INCREASE_BALANCE
-//      ? "افزایش اعنبار"
-//      : "نا مشخص";
-
-// export const TRANSACTION_TITLE: Record<string, string> = {
-//   increase_wallet: "افزایش موجودی",
-//   increase_balance: "افزایش بالانس",
-//   buy_subscription: "خرید پلن",
-//   message_cost: "هزینه پیام",
-// };
-
-// export const getTransactionTitle = (type: string): string  => {
-
-//   if (type == "increase_wallet") return "افزایش موجودی";
-//   else if (type == "increase_balance") return "افزایش بالانس";
-//   else if (type == "buy_subscription") return "خرید پلن";
-//   else if (type == "message_cost") return "هزینه پیام";
-//   else return "";
-// };
-
-type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
+ 
+export type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
 
 interface PlanInfo {
   code: PlanCode;
