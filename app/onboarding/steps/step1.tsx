@@ -1,13 +1,11 @@
 import { Input } from "@/components/input";
-import { Select } from "@/components/select";
 import { useState } from "react";
-import { BotConfig, SelectorItem } from "@/types/common";
-import { onboardingData } from "../onboarding.data";
-import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
-import { Dropdown } from "@/components/dropdown";
-import { GenericSelector } from "@/components/selector";
-import ToggleSetting from "@/components/toggle-setting";
 import { ToggleSmall } from "@/components/toggleSmall";
+import { onboardingData } from "../onboarding.data";
+import { GenericSelector } from "@/components/selector";
+import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
+import { BotConfig, SelectorItem } from "@/types/common";
+import { FormInput, InfoIcon, LockIcon } from "lucide-react";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -16,12 +14,13 @@ interface WizardStep1Props {
 
 export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
   type GuidelineCategory = keyof typeof onboardingData.GroupGuidelines;
+  const canEditRequiredFields = false;
 
-  const categories = Object.keys(
-    onboardingData.GroupGuidelines
-  ) as GuidelineCategory[];
+  // const categories = Object.keys(
+    // onboardingData.GroupGuidelines
+  // ) as GuidelineCategory[];
 
-  const [activeTab, setActiveTab] = useState<GuidelineCategory>(categories[0]);
+  // const [activeTab, setActiveTab] = useState<GuidelineCategory>(categories[0]);
 
   const languageOptions: SelectorItem[] = onboardingData.languages
     // .filter((lang) => !lang.disabled)
@@ -29,13 +28,13 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
       value: lang.code,
       disabled: lang.disabled,
       label: lang.name,
-      id: lang.code, // اختیاری است
+      id: lang.code,  
     }));
 
   return (
     <div
       className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg "
-      dir="rtl"
+ 
     >
       {/* Header */}
       <div className="flex items-start gap-4 px-0 py-3">
@@ -166,7 +165,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
             </div>
           </div>
 
-          <div className=" ">
+          {/* <div className=" ">
             <div className="text-grey-900 font-normal mb-3">
               فیلدهای ضروری ورود کاربران 
             </div>
@@ -198,6 +197,85 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                   })
                 }
               />
+            </div>
+          </div> */}
+
+          <div className="py-3">
+            <div className="text-grey-900 font-normal mb-3 flex items-center gap-2">
+              <FormInput className="text-primary" /> فیلدهای ضروری ورود کاربران
+              {!canEditRequiredFields && (
+                <div className="flex items-center -mt-2 gap-1 text-xs text-grey-500">
+                  <InfoIcon className="w-3 h-3" />
+                  <span>این قابلیت مخصوص پلن Pro است</span>
+                </div>
+              )}
+            </div>
+
+            <div
+              className={`flex items-center gap-10 m-4 ${
+                !canEditRequiredFields ? "opacity-50" : ""
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <ToggleSmall
+                  label="نام"
+                  checked={botConfig.require_user_name}
+                  onChange={() =>
+                    canEditRequiredFields &&
+                    updateConfig({
+                      require_user_name: !botConfig.require_user_name,
+                    })
+                  }
+                  disabled={!canEditRequiredFields}
+                />
+                {!canEditRequiredFields && (
+                  <LockIcon
+                    className="w-4 h-4 text-grey-500"
+                    // title="فقط در پلن Pro"
+                  />
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <ToggleSmall
+                  label="تلفن"
+                  checked={botConfig.require_user_phone}
+                  onChange={() =>
+                    canEditRequiredFields &&
+                    updateConfig({
+                      require_user_phone: !botConfig.require_user_phone,
+                    })
+                  }
+                  disabled={!canEditRequiredFields}
+                />
+                {!canEditRequiredFields && (
+                  <LockIcon
+                    className="w-4 h-4 text-grey-500"
+                    // title="فقط در پلن Pro"
+                  />
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <ToggleSmall
+                  label="ایمیل"
+                  checked={botConfig.require_user_email}
+                  onChange={() =>
+                    canEditRequiredFields &&
+                    updateConfig({
+                      require_user_email: !botConfig.require_user_email,
+                    })
+                  }
+                  disabled={!canEditRequiredFields}
+                />
+                {!canEditRequiredFields && (
+                  <LockIcon
+                    className="w-4 h-4 text-grey-500"
+
+                    // title="فقط در پلن Pro"
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>

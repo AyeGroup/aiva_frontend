@@ -22,6 +22,7 @@ import {
   CheckCircle,
   AlertTriangle,
   Edit2,
+  Lock,
 } from "lucide-react";
 
 interface WizardStep2Props {
@@ -39,7 +40,20 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const uploadLimits = {
+    FREE: 0,
+    BASIC: 10,
+    MEDIUM: 50,
+    ADVANCE: 120,
+    ENTERPRISE: Infinity,
+  };
 
+  // const userPlan = "FREE"; // مثلا "BASIC" یا "MEDIUM"
+  // const userPlan = "BASIC"; // مثلا "BASIC" یا "MEDIUM"
+  // const maxFiles = userPlan === "MEDIUM" ? 50 : userPlan === "BASIC" ? 10 : 0;
+  const maxFiles = 10;
+
+  const isDisabled = true;
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
 
@@ -642,39 +656,123 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             )}
 
             {selectedType === "file" && isAdding && (
+              // <div>
+              //   <label className="block text-grey-900 mb-2">آپلود فایل</label>
+              //   <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">
+              //     {selectedFile ? (
+              //       <div>{selectedFile.name}</div>
+              //     ) : (
+              //       <div>
+              //         <Upload className="w-8 h-8 text-grey-400 mx-auto mb-4" />
+              //         <p className="text-grey-600 mb-4">
+              //           فایل خود را اینجا بکشید یا کلیک کنید
+              //         </p>
+              //       </div>
+              //     )}
+              //     <input
+              //       type="file"
+              //       onChange={handleFileUpload}
+              //       accept=".pdf,.doc,.docx,.txt"
+              //       className="hidden"
+              //       id="file-upload"
+              //     />
+              //     <Button
+              //       variant="secondary"
+              //       size="sm"
+              //       onClick={() =>
+              //         document.getElementById("file-upload")?.click()
+              //       }
+              //     >
+              //       انتخاب فایل
+              //     </Button>
+              //     <p className="text-grey-500 mt-2 text-body-small">
+              //       پشتیبانی از فرمت‌های PDF، Word و متن ساده
+              //     </p>
+              //   </div>
+              // </div>
               <div>
-                <label className="block text-grey-900 mb-2">آپلود فایل</label>
-                <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">
+                <label className="block text-grey-900 mb-2 flex items-center gap-2">
+                  آپلود فایل
+                  {isDisabled && (
+                    <span className="flex items-center gap-1 text-xs text-grey-500">
+                      <Lock className="w-3 h-3" />
+                      مخصوص پلن پایه و بالاتر
+                    </span>
+                  )}
+                  {!isDisabled && (
+                    <span className="text-xs text-grey-600">
+                      (حداکثر {maxFiles} فایل)
+                    </span>
+                  )}
+                </label>
+
+                <div
+                  className={`border-2 border-dashed rounded-lg p-8 text-center ${
+                    isDisabled
+                      ? "border-grey-300 opacity-50 cursor-not-allowed"
+                      : "border-grey-300"
+                  }`}
+                  onClick={() =>
+                    !isDisabled &&
+                    document.getElementById("file-upload")?.click()
+                  }
+                >
                   {selectedFile ? (
                     <div>{selectedFile.name}</div>
                   ) : (
                     <div>
                       <Upload className="w-8 h-8 text-grey-400 mx-auto mb-4" />
                       <p className="text-grey-600 mb-4">
-                        فایل خود را اینجا بکشید یا کلیک کنید
+                        {isDisabled
+                          ? "این قابلیت در پلن رایگان غیرفعال است"
+                          : "فایل خود را اینجا بکشید یا کلیک کنید"}
                       </p>
                     </div>
                   )}
+
                   <input
                     type="file"
-                    onChange={handleFileUpload}
                     accept=".pdf,.doc,.docx,.txt"
+                    onChange={(e) => {
+                      if (!isDisabled) handleFileUpload(e);
+                    }}
                     className="hidden"
                     id="file-upload"
+                    disabled={isDisabled}
                   />
+
                   <Button
                     variant="secondary"
                     size="sm"
+                    disabled={isDisabled}
+                    className={
+                      isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                    }
                     onClick={() =>
+                      !isDisabled &&
                       document.getElementById("file-upload")?.click()
                     }
                   >
                     انتخاب فایل
                   </Button>
+
                   <p className="text-grey-500 mt-2 text-body-small">
                     پشتیبانی از فرمت‌های PDF، Word و متن ساده
                   </p>
                 </div>
+
+                {/* {!isDisabled && uploadedFiles.length > 0 && (
+                  <p className="text-xs text-grey-600 mt-2">
+                    تعداد فایل‌های آپلود‌شده: {uploadedFiles.length} از{" "}
+                    {maxFiles}
+                  </p>
+                )}
+
+                {!isDisabled && uploadedFiles.length >= maxFiles && (
+                  <p className="text-xs text-danger mt-2">
+                    به حداکثر تعداد فایل‌های مجاز در پلن {userPlan} رسیده‌اید
+                  </p>
+                )} */}
               </div>
             )}
           </div>

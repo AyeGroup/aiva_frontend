@@ -186,7 +186,7 @@ export default function OnboardingWizard() {
             subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
           //  subsc =getPlanCodeById( response.data.data.plan);
         }
-        console.log("active plan",subsc)
+        console.log("active plan", subsc);
         setActiveSubscrp(subsc);
       } catch (error) {
         console.error("خطا در دریافت داده کاربران:", error);
@@ -550,7 +550,7 @@ export default function OnboardingWizard() {
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app">
       {/* {!id && <Header currentPage="onboarding" isOnboarding={true} />} */}
-      <div className="container mx-auto px-6 py-6 relative z-10">
+      <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-6 relative z-10">
         {/* Clean Minimal Header */}
         <FloatSideMenu currentPlan={activeSubscrp} />
         <div className="flex justify-between items-center">
@@ -610,19 +610,6 @@ export default function OnboardingWizard() {
               <AivaWhite />
             </div>
           </div>
-          {/* <div className="absolute top-4 left-4">
-            <button
-              onClick={() => setIsStatsDrawerOpen(true)}
-              className="plans-trigger-special"
-              title="مشاهده پلن‌های پیشنهادی"
-              aria-label="باز کردن پنل پلن‌ها"
-            >
-              <span className="plans-trigger-icon">
-                <BarChart3 size={20} />
-              </span>
-              <span className="plans-trigger-text">پلن‌ها</span>
-            </button>
-          </div> */}
 
           <div className="text-grey-900 mb-4 font-bold text-lg text-center">
             {!id || id === "new" ? title : "ویرایش چت‌بات"}
@@ -720,10 +707,10 @@ export default function OnboardingWizard() {
         </div>
         {/* Content Area */}
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-6">
             {/* Step Content */}
-            <div className="lg:col-span-2">
-              <Card className="p-8 border border-grey-200 bg-white rounded-xl shadow-lg">
+            <div className="lg:col-span-2 ">
+              <Card className="p-8  border border-grey-200 bg-white rounded-xl shadow-lg">
                 <div className="animate-soft">{renderCurrentStep()}</div>
               </Card>
 
@@ -763,8 +750,8 @@ export default function OnboardingWizard() {
             </div>
 
             {/* Preview Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="top-8  w-full h-[700px]">
+            <div className="lg:col-span-1 ">
+              <div className="top-8 sticky w-full h-[800px]">
                 <ChatPreview
                   currentStep={currentStep}
                   botConfig={botConfig}

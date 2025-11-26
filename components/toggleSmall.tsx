@@ -4,9 +4,10 @@ interface ToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label?: string;
+  disabled?:boolean;
 }
 
-export function ToggleSmall({ checked, onChange, label }: ToggleProps) {
+export function ToggleSmall({ checked, onChange, label,disabled=false }: ToggleProps) {
   const id = useId();
 
   const handleToggle = () => {
@@ -18,6 +19,7 @@ export function ToggleSmall({ checked, onChange, label }: ToggleProps) {
       <button
         type="button"
         role="switch"
+        disabled={disabled}
         aria-checked={checked}
         aria-labelledby={label ? `${id}-label` : undefined}
         onClick={handleToggle}

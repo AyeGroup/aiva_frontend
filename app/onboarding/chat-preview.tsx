@@ -296,8 +296,10 @@ export function ChatPreview({
           </div>
         </div>
 
-        <p className="text-grey-600 text-sm text-right">
-          تغییرات شما بلافاصله در چت‌بات نمایش داده می‌شود
+        <p className="text-grey-900 bg-white rounded-sm p-2 shadow text-sm text-right ">
+          {/* تغییرات شما بلافاصله در چت‌بات نمایش داده می‌شود */}
+          تغییرات را اعمال کرده و نتیجه را همین‌جا مشاهده کنید، تا تنظیمات
+          دقیق‌تری ایجاد کنید.
         </p>
       </div>
 
