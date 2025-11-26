@@ -1,11 +1,450 @@
 import { motion } from "motion/react";
 import svgPaths from "@app/landing/svg/svg-sayy2jojyo";
-import svgPaths7 from "@app/landing/svg/svg-kwkm5bjjwl";
+import svgPaths2 from "@app/landing/svg/svg-jdf94yeg6v";
 import svgPaths3 from "@app/landing/svg/svg-2dmtneq5en";
 import svgPaths6 from "@app/landing/svg/svg-gcyltdwgwo";
+import svgPaths7 from "@app/landing/svg/svg-kwkm5bjjwl";
 import svgPathsFaq from "@app/landing/svg/svg-m5kcbvnqsq";
 import svgPathsStart from "@app/landing/svg/svg-c8s8h124u2";
+import svgPathsPlan from "@app/landing/svg/svg-f338pva7p3";
 
+
+export function Sec2_Icon() {
+  return (
+    <motion.div
+      className="absolute left-[114.48px] size-16 top-[196.73px]"
+      data-name="Icon"
+      animate={{
+        y: [0, -20, 0],
+        x: [0, 10, 0],
+      }}
+      transition={{
+        duration: 8,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 64 64"
+      >
+        <g id="Icon" opacity="0.25">
+          <path
+            d={svgPaths2.p152db200}
+            id="Vector"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="5.33333"
+          />
+          <path
+            d={svgPaths2.p2ad26680}
+            id="Vector_2"
+            opacity="0.952107"
+            stroke="var(--stroke-0, #65BCB6)"
+            strokeWidth="5.33333"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+
+export function Sec2_Icon1() {
+  return (
+    <motion.div
+      className="absolute left-[1231.91px] size-14 top-[927.67px]"
+      data-name="Icon"
+      animate={{
+        rotate: [0, 180, 360],
+        scale: [1, 1.1, 1],
+      }}
+      transition={{
+        duration: 15,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 56 56"
+      >
+        <g id="Icon" opacity="0.25">
+          <path
+            d={svgPaths2.p19d60f80}
+            id="Vector"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="4.66667"
+          />
+          <path
+            d={svgPaths2.p77b1b80}
+            id="Vector_2"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="4.66667"
+          />
+          <path
+            d={svgPaths2.p1ebcb6be}
+            id="Vector_3"
+            stroke="var(--stroke-0, #FFA18E)"
+            strokeWidth="4.66667"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+
+export function Sec2_Icon2() {
+  return (
+    <motion.div
+      className="absolute left-[1168.35px] size-12 top-[524.62px]"
+      data-name="Icon"
+      animate={{
+        y: [0, 15, 0],
+        rotate: [0, -5, 5, 0],
+      }}
+      transition={{
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 48 48"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPaths2.p1f337080}
+            fill="var(--fill-0, #4460F7)"
+            id="Vector"
+          />
+          <path
+            d="M24 32V24"
+            id="Vector_2"
+            stroke="var(--stroke-0, white)"
+            strokeWidth="4"
+          />
+          <path
+            d="M24 16H24.02"
+            id="Vector_3"
+            opacity="0.904215"
+            stroke="var(--stroke-0, white)"
+            strokeWidth="4"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+
+export function Sec2_Icon3() {
+  return (
+    <motion.div
+      className="absolute left-[171.72px] size-[40px] top-[1074.83px]"
+      data-name="Icon"
+      animate={{
+        scale: [1, 1.2, 1],
+        rotate: [0, 90, 0],
+      }}
+      transition={{
+        duration: 10,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 40 40"
+      >
+        <g id="Icon" opacity="0.3">
+          <path
+            d={svgPaths2.p19a01780}
+            id="Vector"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeWidth="3.33333"
+          />
+          <path
+            d={svgPaths2.p15663e00}
+            id="Vector_2"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeWidth="3.33333"
+          />
+          <path
+            d={svgPaths2.p3911f600}
+            id="Vector_3"
+            stroke="var(--stroke-0, #B07CC6)"
+            strokeWidth="3.33333"
+          />
+        </g>
+      </svg>
+    </motion.div>
+  );
+}
+export function Sec2_IconSarNakh() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths2.p1fa66600}
+            stroke="#4460F7"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p190dabf0}
+            stroke="#4460F7"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p2a9abe70}
+            stroke="#4460F7"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+export function Sec2_IconYadgiri() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        viewBox="0 0 28 28"
+        preserveAspectRatio="none"
+      >
+        <g clipPath="url(#clip4)">
+          <path
+            d="M14 21V5.8"
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p3536b5c0}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.pf30d500}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p395f4600}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p3fb109e0}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.pcb4cbe0}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p164ec400}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p1031f00}
+            stroke="#65BCB6"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip4">
+            <rect fill="white" width="28" height="28" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+export function Sec2_IconAmniat() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths2.p1a3063b0}
+            stroke="#FF8970"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec2_IconPoshtibani() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g clipPath="url(#clip2)">
+          <path
+            d={svgPaths2.p1fa66600}
+            stroke="#52D4A0"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={svgPaths2.p1d189680}
+            stroke="#52D4A0"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M2.33333 14H25.6667"
+            stroke="#52D4A0"
+            strokeWidth="2.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip2">
+            <rect fill="white" width="28" height="28" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec2_IconTahlil() {
+  return (
+    <div>
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g id="Icon">
+          <path
+            d={svgPaths2.pb26ca00}
+            stroke="#B07CC6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.9"
+          />
+          <path
+            d="M21 19.8333V10.5"
+            stroke="#B07CC6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.9"
+          />
+          <path
+            d="M15.1667 19.8333V5.83333"
+            stroke="#B07CC6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.9"
+          />
+          <path
+            d="M9.33333 19.8333V16.3333"
+            stroke="#B07CC6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.9"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function Sec2_IconYekparche() {
+  return (
+    <div>
+      <svg
+        // className="block size-full"
+        className="w-6 h-6"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 28 28"
+      >
+        <g clipPath="url(#clip0_0_6208)" id="Icon">
+          <path
+            d={svgPaths2.p14dfe880}
+            id="Vector"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="3"
+          />
+          <path
+            d={svgPaths2.p1aefb400}
+            id="Vector_2"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="3"
+          />
+        </g>
+        <defs>
+          <clipPath>
+            <rect fill="white" height="28" width="28" />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  );
+}
 export function Sec3_Icon() {
   return (
     <div
@@ -2068,7 +2507,7 @@ export function Sec6_Icon21() {
 
 export function Sec7_Icon() {
   return (
-    <div className="absolute left-0  top-20" data-name="Icon">
+    <div className="absolute left-0 -top-4 w-full" >
       <svg
         className="block size-full"
         fill="none"
@@ -2097,7 +2536,7 @@ export function Sec7_Icon() {
 export function Sec7_Icon1() {
   return (
     <div
-      className="absolute h-[256px] left-0 top-[456px] w-[1431px]"
+      className="absolute left-10 top-10 w-full"
       data-name="Icon"
     >
       <svg
@@ -2122,7 +2561,7 @@ export function Sec7_Icon1() {
 export function Sec7_Icon2() {
   return (
     <div
-      className="absolute left-[1252.52px] size-[64px] top-[106.8px]"
+      className="absolute left-0 size-16 top-0"
       data-name="Icon"
     >
       <svg
@@ -2177,7 +2616,7 @@ export function Sec7_Icon2() {
 export function Sec7_Icon3() {
   return (
     <div
-      className="absolute left-[143.09px] size-[56px] top-[478px]"
+      className="absolute left-0 size-[56px] top-0"
       data-name="Icon"
     >
       <svg
@@ -2213,7 +2652,7 @@ export function Sec7_Icon3() {
 export function Sec7_Icon4() {
   return (
     <div
-      className="absolute left-[1104.81px] size-[40px] top-[284.8px]"
+      className="absolute left-0 size-[40px] top-0"
       data-name="Icon"
     >
       <svg
@@ -2238,7 +2677,7 @@ export function Sec7_Icon4() {
 export function Sec7_Icon5() {
   return (
     <div
-      className="absolute h-[128px] left-0 top-0 w-[1431px]"
+      className="absolute h-32 left-0 top-0 w-full"
       data-name="Icon"
     >
       <svg
@@ -2837,6 +3276,594 @@ export function SecSart_Icon10() {
     </div>
   );
 }
+
+
+// Pricing Icon Components
+export const RocketIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M14 2.33333L25.6667 14L14 25.6667L2.33333 14L14 2.33333Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const DiamondIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M14 4.66667L21 11.6667L14 23.3333L7 11.6667L14 4.66667Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const StarIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M14 2.33333L17.5 12.25H28L19.75 18.0833L23.3333 28L14 21.5833L4.66667 28L8.25 18.0833L0 12.25H10.5L14 2.33333Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const DocumentIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M7 2.33333H21V25.6667H7V2.33333Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M11.6667 7H16.3333M11.6667 11.6667H16.3333M11.6667 16.3333H16.3333M11.6667 21H16.3333"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const CrownIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 28 28">
+    <path
+      d="M2.33333 9.33333L7 14L14 7L21 14L25.6667 9.33333L23.3333 21H4.66667L2.33333 9.33333Z"
+      stroke="currentColor"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+
+
+export function PlanImage() {
+  return (
+    <div className="absolute w-1/3 left-0 bottom-10">
+      <svg
+        className="block size-full"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 472 524"
+      >
+        <g id="3333 1">
+          <path
+            d={svgPathsPlan.pa006f00}
+            fill="var(--fill-0, #FFE2B9)"
+            id="Vector"
+          />
+          <path
+            d={svgPathsPlan.p26d43e00}
+            fill="var(--fill-0, #FEDBAA)"
+            id="Vector_2"
+          />
+          <path
+            d={svgPathsPlan.p2a022980}
+            fill="var(--fill-0, #FEDBAA)"
+            id="Vector_3"
+          />
+          <path
+            d={svgPathsPlan.p1d1d89f0}
+            fill="var(--fill-0, #3E9896)"
+            id="Vector_4"
+          />
+          <path
+            d={svgPathsPlan.p5695e00}
+            fill="var(--fill-0, #80C4A4)"
+            id="Vector_5"
+          />
+          <path
+            d={svgPathsPlan.p20268e00}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_6"
+          />
+          <path
+            d={svgPathsPlan.p1a4e8580}
+            fill="var(--fill-0, #ED7163)"
+            id="Vector_7"
+          />
+          <path
+            d={svgPathsPlan.p1cd73ac0}
+            fill="var(--fill-0, #D0F6FC)"
+            id="Vector_8"
+          />
+          <path
+            d={svgPathsPlan.p3cd3eb80}
+            fill="var(--fill-0, #0D93B2)"
+            id="Vector_9"
+          />
+          <path
+            d={svgPathsPlan.pbd84f00}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_10"
+          />
+          <path
+            d={svgPathsPlan.p16f00400}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_11"
+          />
+          <path
+            d={svgPathsPlan.p2fb1f5f0}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_12"
+          />
+          <path
+            d={svgPathsPlan.p18ed1300}
+            fill="var(--fill-0, #20111D)"
+            id="Vector_13"
+          />
+          <path
+            d={svgPathsPlan.p36be7d00}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_14"
+          />
+          <path
+            d={svgPathsPlan.p10f1d900}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_15"
+          />
+          <path
+            d={svgPathsPlan.p3745a300}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_16"
+          />
+          <path
+            d={svgPathsPlan.p1027b500}
+            fill="var(--fill-0, black)"
+            id="Vector_17"
+          />
+          <path
+            d={svgPathsPlan.p1b0e5200}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_18"
+          />
+          <path
+            d={svgPathsPlan.p116ac900}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_19"
+          />
+          <path
+            d={svgPathsPlan.p3c61ea00}
+            fill="var(--fill-0, black)"
+            id="Vector_20"
+          />
+          <path
+            d={svgPathsPlan.p171ec320}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_21"
+          />
+          <path
+            d={svgPathsPlan.p2c702300}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_22"
+          />
+          <path
+            d={svgPathsPlan.p3e565500}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_23"
+          />
+          <path
+            d={svgPathsPlan.p583e2b0}
+            fill="var(--fill-0, black)"
+            id="Vector_24"
+          />
+          <path
+            d={svgPathsPlan.pb1ba680}
+            fill="var(--fill-0, black)"
+            id="Vector_25"
+          />
+          <path
+            d={svgPathsPlan.p1c79fe80}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_26"
+          />
+          <path
+            d={svgPathsPlan.p1c9d6e00}
+            fill="var(--fill-0, black)"
+            id="Vector_27"
+          />
+          <path
+            d={svgPathsPlan.p8b8ea00}
+            fill="var(--fill-0, black)"
+            id="Vector_28"
+          />
+          <path
+            d={svgPathsPlan.p6cabbb0}
+            fill="var(--fill-0, black)"
+            id="Vector_29"
+          />
+          <path
+            d={svgPathsPlan.p2a9c6a00}
+            fill="var(--fill-0, #000100)"
+            id="Vector_30"
+          />
+          <path
+            d={svgPathsPlan.p35a43780}
+            fill="var(--fill-0, #000100)"
+            id="Vector_31"
+          />
+          <path
+            d={svgPathsPlan.p1c6ba00}
+            fill="var(--fill-0, black)"
+            id="Vector_32"
+          />
+          <path
+            d={svgPathsPlan.p14e3e500}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_33"
+          />
+          <path
+            d={svgPathsPlan.p188f2600}
+            fill="var(--fill-0, #ED7163)"
+            id="Vector_34"
+          />
+          <path
+            d={svgPathsPlan.p49d9340}
+            fill="var(--fill-0, #D0F6FC)"
+            id="Vector_35"
+          />
+          <path
+            d={svgPathsPlan.p1ff38f00}
+            fill="var(--fill-0, #0D93B2)"
+            id="Vector_36"
+          />
+          <path
+            d={svgPathsPlan.p3e617800}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_37"
+          />
+          <path
+            d={svgPathsPlan.p239c0600}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_38"
+          />
+          <path
+            d={svgPathsPlan.p28d1be00}
+            fill="var(--fill-0, #86C9D9)"
+            id="Vector_39"
+          />
+          <path
+            d={svgPathsPlan.p3fae9700}
+            fill="var(--fill-0, #20111D)"
+            id="Vector_40"
+          />
+          <path
+            d={svgPathsPlan.p187fa180}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_41"
+          />
+          <path
+            d={svgPathsPlan.p31237c80}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_42"
+          />
+          <path
+            d={svgPathsPlan.p876e200}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_43"
+          />
+          <path
+            d={svgPathsPlan.p1cb1ab70}
+            fill="var(--fill-0, black)"
+            id="Vector_44"
+          />
+          <path
+            d={svgPathsPlan.p22527480}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_45"
+          />
+          <path
+            d={svgPathsPlan.p166f5080}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_46"
+          />
+          <path
+            d={svgPathsPlan.p279da129}
+            fill="var(--fill-0, black)"
+            id="Vector_47"
+          />
+          <path
+            d={svgPathsPlan.p1cc71200}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_48"
+          />
+          <path
+            d={svgPathsPlan.p20cae1f0}
+            fill="var(--fill-0, #FE9F73)"
+            id="Vector_49"
+          />
+          <path
+            d={svgPathsPlan.p174dfb00}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_50"
+          />
+          <path
+            d={svgPathsPlan.p2c855580}
+            fill="var(--fill-0, black)"
+            id="Vector_51"
+          />
+          <path
+            d={svgPathsPlan.p3bc2e330}
+            fill="var(--fill-0, black)"
+            id="Vector_52"
+          />
+          <path
+            d={svgPathsPlan.p3a5ad750}
+            fill="var(--fill-0, #F78A5E)"
+            id="Vector_53"
+          />
+          <path
+            d={svgPathsPlan.p362d970}
+            fill="var(--fill-0, black)"
+            id="Vector_54"
+          />
+          <path
+            d={svgPathsPlan.p3428c3c0}
+            fill="var(--fill-0, black)"
+            id="Vector_55"
+          />
+          <path
+            d={svgPathsPlan.p1df51e80}
+            fill="var(--fill-0, black)"
+            id="Vector_56"
+          />
+          <path
+            d={svgPathsPlan.p401c570}
+            fill="var(--fill-0, #000100)"
+            id="Vector_57"
+          />
+          <path
+            d={svgPathsPlan.p3f4c1ef0}
+            fill="var(--fill-0, #000100)"
+            id="Vector_58"
+          />
+          <path
+            d={svgPathsPlan.p1d1b0d80}
+            fill="var(--fill-0, black)"
+            id="Vector_59"
+          />
+          <path
+            d={svgPathsPlan.p1c7cff00}
+            fill="var(--fill-0, #F7597F)"
+            id="Vector_60"
+          />
+          <path
+            d={svgPathsPlan.p11f12e00}
+            fill="var(--fill-0, #F86A8C)"
+            id="Vector_61"
+          />
+          <path
+            d={svgPathsPlan.p6e6dac0}
+            fill="var(--fill-0, white)"
+            id="Vector_62"
+          />
+          <path
+            d={svgPathsPlan.p1562e600}
+            fill="var(--fill-0, white)"
+            id="Vector_63"
+          />
+          <path
+            d={svgPathsPlan.p34379800}
+            fill="var(--fill-0, white)"
+            id="Vector_64"
+          />
+          <path
+            d={svgPathsPlan.p1bdcc000}
+            fill="var(--fill-0, white)"
+            id="Vector_65"
+          />
+          <path
+            d={svgPathsPlan.p19dbd900}
+            fill="var(--fill-0, white)"
+            id="Vector_66"
+          />
+          <path
+            d={svgPathsPlan.p2531c800}
+            fill="var(--fill-0, white)"
+            id="Vector_67"
+          />
+          <path
+            d={svgPathsPlan.p1b452a80}
+            fill="var(--fill-0, white)"
+            id="Vector_68"
+          />
+          <path
+            d={svgPathsPlan.p3ace1f00}
+            fill="var(--fill-0, white)"
+            id="Vector_69"
+          />
+          <path
+            d={svgPathsPlan.p3d268480}
+            fill="var(--fill-0, white)"
+            id="Vector_70"
+          />
+          <path
+            d={svgPathsPlan.p4031f40}
+            fill="var(--fill-0, white)"
+            id="Vector_71"
+          />
+          <path
+            d={svgPathsPlan.p1e363780}
+            fill="var(--fill-0, white)"
+            id="Vector_72"
+          />
+          <path
+            d={svgPathsPlan.p6eb5800}
+            fill="var(--fill-0, white)"
+            id="Vector_73"
+          />
+          <path
+            d={svgPathsPlan.p263f400}
+            fill="var(--fill-0, white)"
+            id="Vector_74"
+          />
+          <path
+            d={svgPathsPlan.p33313a80}
+            fill="var(--fill-0, white)"
+            id="Vector_75"
+          />
+          <path
+            d={svgPathsPlan.p2671fc00}
+            fill="var(--fill-0, white)"
+            id="Vector_76"
+          />
+          <path
+            d={svgPathsPlan.p39153540}
+            fill="var(--fill-0, white)"
+            id="Vector_77"
+          />
+          <path
+            d={svgPathsPlan.p25c56900}
+            fill="var(--fill-0, white)"
+            id="Vector_78"
+          />
+          <path
+            d={svgPathsPlan.p35830e00}
+            fill="var(--fill-0, white)"
+            id="Vector_79"
+          />
+          <path
+            d={svgPathsPlan.p44091c0}
+            fill="var(--fill-0, white)"
+            id="Vector_80"
+          />
+          <path
+            d={svgPathsPlan.p397c3780}
+            fill="var(--fill-0, white)"
+            id="Vector_81"
+          />
+          <path
+            d={svgPathsPlan.p2883a4f0}
+            fill="var(--fill-0, white)"
+            id="Vector_82"
+          />
+          <path
+            d={svgPathsPlan.p2b065400}
+            fill="var(--fill-0, white)"
+            id="Vector_83"
+          />
+          <path
+            d={svgPathsPlan.p16d6ca00}
+            fill="var(--fill-0, #FECC86)"
+            id="Vector_84"
+          />
+          <path
+            d={svgPathsPlan.p163a3800}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_85"
+          />
+          <path
+            d={svgPathsPlan.pfd1800}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_86"
+          />
+          <path
+            d={svgPathsPlan.p1e6e1e00}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_87"
+          />
+          <path
+            d={svgPathsPlan.p38483b00}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_88"
+          />
+          <path
+            d={svgPathsPlan.p67aef80}
+            fill="var(--fill-0, #EFA348)"
+            id="Vector_89"
+          />
+          <path
+            d={svgPathsPlan.p1d109180}
+            fill="var(--fill-0, #1D1D1B)"
+            id="Vector_90"
+          />
+          <path
+            d={svgPathsPlan.p12186680}
+            fill="var(--fill-0, white)"
+            id="Vector_91"
+          />
+          <path
+            d={svgPathsPlan.p189637a0}
+            fill="var(--fill-0, #5AB3BF)"
+            id="Vector_92"
+          />
+          <path
+            d={svgPathsPlan.p34031900}
+            fill="var(--fill-0, white)"
+            id="Vector_93"
+          />
+          <path
+            d={svgPathsPlan.p343bcc80}
+            fill="var(--fill-0, white)"
+            id="Vector_94"
+          />
+          <path
+            d={svgPathsPlan.p215dce80}
+            fill="var(--fill-0, white)"
+            id="Vector_95"
+          />
+          <path
+            d={svgPathsPlan.p429e00}
+            fill="var(--fill-0, #6095AB)"
+            id="Vector_96"
+          />
+          <path
+            d={svgPathsPlan.p316475d2}
+            fill="var(--fill-0, #6095AB)"
+            id="Vector_97"
+          />
+          <path
+            d={svgPathsPlan.p34abe780}
+            fill="var(--fill-0, #CC154A)"
+            id="Vector_98"
+          />
+          <path
+            d={svgPathsPlan.p25994fc0}
+            fill="var(--fill-0, #F7597F)"
+            id="Vector_99"
+          />
+          <path
+            d={svgPathsPlan.p6158980}
+            fill="var(--fill-0, #F7597F)"
+            id="Vector_100"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 // export const   = () => {
 //   return (
 
