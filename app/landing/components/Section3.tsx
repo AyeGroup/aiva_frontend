@@ -138,7 +138,7 @@ function Article({
         <div className="flex flex-col items-center gap-7 pb-px pt-8 px-4 w-full relative">
           {/* Icon */}
 
-          <div className="h-16 relative shrink-0 w-60">
+          <div className="h-16 relative shrink-0 w-60  lg:w-full ">
             <div
               className="absolute flex items-center justify-center left-[88px] rounded-xl size-16 top-0"
               style={{ backgroundColor: "rgba(101,188,182,0.1)", color }}

@@ -288,7 +288,10 @@ function FooterNote() {
 // ============ Main Section ============
 export default function Section6() {
   return (
-    <section id="features" className="relative w-full overflow-hidden">
+    <section
+      id="features"
+      className="relative w-full overflow-hidden px-8 md:px-12 lg:px-20"
+    >
       <BackgroundContainer />
 
       <div className="relative z-10 flex flex-col items-center justify-center w-full py-12 sm:py-16 lg:py-24 px-4">

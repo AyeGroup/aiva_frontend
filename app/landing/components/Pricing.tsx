@@ -257,12 +257,10 @@ export default function PricingPage() {
 
         // setPlans(res.data?.data?.subscription_plans ?? []);
         const allPlans = res.data?.data?.subscription_plans ?? [];
-        const filteredPlans = allPlans.filter(
-          (p: any) => p.plan?.toLowerCase() !== "free"
-        );
-        setPlans(filteredPlans);
+       
+        setPlans(allPlans);
 
-        console.log("allPlans :", filteredPlans);
+        console.log("allPlans :", allPlans);
         // console.log("filteredPlans :", filteredPlans);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
@@ -275,7 +273,7 @@ export default function PricingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen py-16 px-24" id="pricing">
+    <div className="min-h-screen py-16 px-12 lg:px-24" id="pricing">
       <PlanImage />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -289,7 +287,7 @@ export default function PricingPage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
             پلنی که با کسب‌وکارت همساز باشه انتخاب کن
           </h1>
 

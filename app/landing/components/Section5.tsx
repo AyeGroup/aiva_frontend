@@ -706,7 +706,7 @@ export default function SuccessStoriesSection() {
   const [activeBrand, setActiveBrand] = useState("nike");
 
   return (
-    <section className="relative w-full bg-linear-to-b from-gray-50 to-white pt-12 md:pt-16 lg:pt-20 px-4 md:px-6 lg:px-20 overflow-hidden">
+    <section className="relative w-full bg-linear-to-b from-gray-50 to-white pt-12 md:pt-16 lg:pt-20 px-8 md:px-12 lg:px-20 pb-8 md:pb-0 overflow-hidden">
       <DecorativeIcons />
 
       <div className="relative z-10 flex flex-col gap-6 items-center max-w-full">
