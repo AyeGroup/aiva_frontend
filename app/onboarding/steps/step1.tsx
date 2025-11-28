@@ -32,10 +32,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
     }));
 
   return (
-    <div
-      className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg "
- 
-    >
+    <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg ">
       {/* Header */}
       <div className="flex items-start gap-4 px-0 py-3">
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center shrink-0">
@@ -165,11 +162,16 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
             </div>
           </div>
 
-          {/* <div className=" ">
-            <div className="text-grey-900 font-normal mb-3">
-              فیلدهای ضروری ورود کاربران 
+          <div className="p-4 rounded-xl border-2 border-primary/20 ">
+            <div className="flex gap-2 text-grey-900 font-normal mb-3">
+              <FormInput className="text-primary" />
+              فیلدهای ضروری ورود کاربران
             </div>
-            <div className="flex items-center gap-10 m-4">
+            <div className="text-sm text-gray-600 mr-3 ">
+
+              فیلدهای ضروری که در ابتدای چت از کاربران دریافت می‌شود.
+            </div>
+            <div className="flex items-center gap-12 m-4">
               <ToggleSmall
                 label="نام"
                 checked={botConfig.require_user_name}
@@ -198,9 +200,9 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 }
               />
             </div>
-          </div> */}
+          </div>
 
-          <div className="py-3">
+          {/* <div className="py-3">
             <div className="text-grey-900 font-normal mb-3 flex items-center gap-2">
               <FormInput className="text-primary" /> فیلدهای ضروری ورود کاربران
               {!canEditRequiredFields && (
@@ -277,7 +279,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

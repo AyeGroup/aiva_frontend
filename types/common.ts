@@ -106,6 +106,12 @@ export interface PurchaseHistory {
   status: "success" | "failed" | "pending";
   invoiceUrl?: string;
 }
+export interface PricingContextType {
+  plans: Plan[] | null;
+  currentPlan: string | null;
+  setCurrentPlan: (p: string) => void;
+  featureMinPlan: Record<string, string>;
+}
 
 export interface Plan {
   id: string;

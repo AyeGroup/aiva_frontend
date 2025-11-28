@@ -24,6 +24,7 @@ import {
   Edit2,
   Lock,
 } from "lucide-react";
+import { useFeatureAccess } from "@/providers/PricingContext";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
