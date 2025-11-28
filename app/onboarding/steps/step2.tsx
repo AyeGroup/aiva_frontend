@@ -22,9 +22,10 @@ import {
   CheckCircle,
   AlertTriangle,
   Edit2,
+  FileStack,
 } from "lucide-react";
 import LockFeature from "../LockFeature";
-import { useFeatureAccess } from "@/providers/PricingContext";
+import { useFeatureAccess, useUploadLimits } from "@/providers/PricingContext";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -41,23 +42,11 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const uploadLimits = {
-    FREE: 0,
-    BASIC: 10,
-    MEDIUM: 50,
-    ADVANCE: 120,
-    ENTERPRISE: Infinity,
-  };
   const can_website_crawling = useFeatureAccess("website_crawling");
   const can_qa_as_file = useFeatureAccess("qa_as_file");
   const can_upload_docs = useFeatureAccess("upload_docs");
+  const fileCount = useUploadLimits();
 
-  // const userPlan = "FREE"; // مثلا "BASIC" یا "MEDIUM"
-  // const userPlan = "BASIC"; // مثلا "BASIC" یا "MEDIUM"
-  // const maxFiles = userPlan === "MEDIUM" ? 50 : userPlan === "BASIC" ? 10 : 0;
-  const maxFiles = 10;
-
-  const isDisabled = true;
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
 
@@ -68,18 +57,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     fetchData();
   }, [user?.token, botConfig?.uuid]);
 
-  const loadOnboardingData = async () => {
-    try {
-      const savedData = localStorage.getItem("aiva-onboarding-data");
-      if (!savedData) return;
-
-      const parsedData = JSON.parse(savedData);
-      await loadQa(parsedData.botConfig?.uuid);
-    } catch (error) {
-      console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
-    }
-  };
-
+ 
   const loadQa = async (botUuid: string) => {
     if (!botUuid) return;
     setIsLoading(true);
@@ -241,9 +219,18 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
         setSelectedFile(null);
       }
       await loadQa(botConfig.uuid);
-    } catch (err) {
+    } catch (err: any) {
       console.error("  خطا در ذخیره آیتم:", err);
-      toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
+      const backendMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.response?.data?.msg;
+
+      if (backendMessage) {
+        toast.error(backendMessage);
+      } else {
+        toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -310,7 +297,6 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   };
 
   const startAdding = (type: string) => {
-    // console.log("add type", type);
     setSelectedType(type);
     setIsAdding(true);
     setIsEditing(false);
@@ -403,9 +389,9 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   };
 
   return (
-    <div className="space-y-8 bg-bg-surface px-[20px] py-[16px] border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]">
+    <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]">
       {/* Header */}
-      <div className="flex items-start gap-4 px-[0px] py-[12px]">
+      <div className="flex items-start gap-4 px-0 py-3">
         {(loading || isLoading) && <PageLoader />}
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center shrink-0 ">
           <div className="w-8 h-8 text-brand-primary">
@@ -426,11 +412,11 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       <div className="space-y-4 mb-8"></div>
 
       {/* Important Notice */}
-      <div className="bg-gradient-to-br from-brand-amber/10 to-sharp-amber/10 border-2 border-brand-amber/30 rounded-2xl mb-[32px] relative overflow-hidden mt-[0px] mr-[0px] ml-[0px] px-[24px] py-[12px]">
+      <div className="bg-linear-to-br from-brand-amber/10 to-sharp-amber/10 border-2 border-brand-amber/30 rounded-2xl mb-[32px] relative overflow-hidden mt-[0px] mr-[0px] ml-[0px] px-[24px] py-[12px]">
         {/* Background Pattern */}
 
         <div className="relative z-10">
-          <div className="flex items-start gap-4 m-[0px]">
+          <div className="flex items-start gap-4 m-0">
             <div className="w-12 h-12 bg-brand-amber rounded-xl flex items-center justify-center shrink-0 shadow-lg">
               <Info />
             </div>
@@ -450,7 +436,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       </div>
 
       {/* Processing Time Notice */}
-      <div className="bg-gradient-to-br from-brand-primary/10 to-bg-soft-mint border-2 border-brand-primary/30 rounded-2xl mb-8 relative overflow-hidden py-2 px-6">
+      <div className="bg-linear-to-br from-brand-primary/10 to-bg-soft-mint border-2 border-brand-primary/30 rounded-2xl mb-8 relative overflow-hidden py-2 px-6">
         <div className="relative z-10">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center shrink-0 shadow-lg">
@@ -539,6 +525,15 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             {selectedType === "file" && !can_upload_docs && (
               <LockFeature feature="upload_docs" />
             )}
+            {selectedType === "file" && can_upload_docs && (
+              // <FileStack size={10} />
+              <div className="flex items-start -mt-3 gap-1 border h-fit border-gray-100 py-1 px-2 rounded-xl bg-gray-50 shadow">
+                <FileStack className="text-secondary size-4 " strokeWidth={3} />
+
+                <div className="text-gray-500 text-xs">{`حداکثر ${fileCount} فایل می‌توانید آپلود کنید`}</div>
+              </div>
+            )}
+
             <Button
               variant="tertiary"
               size="sm"
@@ -549,7 +544,15 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
           </div>
 
           <div className="space-y-4">
-            <div>
+            <div
+              className={`${
+                (selectedType === "file" && !can_upload_docs) ||
+                (selectedType === "website" && !can_website_crawling) ||
+                (selectedType === "qa_pair" && !can_qa_as_file)
+                  ? "pointer-events-none opacity-50"
+                  : ""
+              }`}
+            >
               <label className="block text-grey-900 mb-2 text-right">
                 {selectedType === "qa_pair" ? (
                   <div>
@@ -567,12 +570,16 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                   setNewItem((prev) => ({ ...prev, title: e.target.value }))
                 }
                 placeholder="عنوان مناسب برای این محتوا"
-                className="w-full !bg-white"
+                className="w-full bg-white!"
               />
             </div>
 
             {selectedType === "qa_pair" && (
-              <div>
+              <div
+                className={`${
+                  !can_qa_as_file ? "pointer-events-none opacity-50" : ""
+                }`}
+              >
                 <label className="block text-grey-900 mb-2 text-right">
                   پاسخ
                   <span className="text-brand-primary mr-1">*</span>
@@ -626,26 +633,12 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
               </div>
             )}
 
-            {selectedType === "qa_pair1" && (
-              <div>
-                <label className="block text-grey-900 mb-2">
-                  محتوا
-                  <span className="text-brand-primary mr-1">*</span>
-                </label>
-                <textarea
-                  value={newItem.content || ""}
-                  onChange={(e) =>
-                    setNewItem((prev) => ({ ...prev, content: e.target.value }))
-                  }
-                  placeholder="اطلاعات مفصل درباره کسب‌وکار، محصولات، خدمات یا سایر موضوعات مرتبط..."
-                  rows={8}
-                  className="w-full px-4 py-3 border border-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-colors resize-none"
-                />
-              </div>
-            )}
-
             {selectedType === "website" && isAdding && (
-              <div>
+              <div
+                className={`${
+                  !can_website_crawling ? "pointer-events-none opacity-50" : ""
+                }`}
+              >
                 <label className="block text-grey-900 mb-2">
                   آدرس وب
                   <span className="text-brand-primary mr-1">*</span>
@@ -667,7 +660,11 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             )}
 
             {selectedType === "file" && isAdding && (
-              <div>
+              <div
+                className={`${
+                  !can_upload_docs ? "pointer-events-none opacity-50" : ""
+                }`}
+              >
                 <label className="block text-grey-900 mb-2">آپلود فایل</label>
                 <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">
                   {selectedFile ? (

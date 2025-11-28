@@ -135,3 +135,26 @@ export const useFeatureRequiredPlan = (feature: string) => {
   const { featureMinPlan } = usePricing();
   return featureMinPlan[feature] ?? "FREE";
 };
+
+
+export const useUploadLimits = () => {
+  const { currentPlan } = usePricing();
+  if (!currentPlan) return 0;
+console.log("ddddd",currentPlan)
+  switch (currentPlan) {
+    case "FREE":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_FREE);
+    case "BASIC":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_BASIC);
+    case "MEDIUM":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_MEDIUM);
+    case "ADVANCE":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ADVANCE);
+    case "ENTERPRISE":
+      return process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ENTERPRISE === "Infinity"
+        ? Infinity
+        : Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ENTERPRISE);
+    default:
+      return 0;
+  }
+};
