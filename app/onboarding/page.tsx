@@ -32,6 +32,7 @@ export default function OnboardingWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const isNew = !id || id === "new";
   const { logo } = headerData;
   const { user, loading } = useAuth();
   const { title, subtitle, steps } = onboardingData;
@@ -74,7 +75,7 @@ export default function OnboardingWizard() {
     require_user_email: false,
   });
   const totalSteps = steps.length;
-
+  console.log("isnew", isNew);
   useEffect(() => {
     const id = searchParams.get("id");
     if (id === "new") {
@@ -532,7 +533,8 @@ export default function OnboardingWizard() {
   const saveCaption = () => {
     if (isSaving) return "در حال ذخیره...";
 
-    if (!id || id === "new") {
+    // if (!id || id === "new") {
+    if (isNew) {
       // console.log("is new");
       return currentStep === totalSteps ? "اتمام و شروع" : "بعدی";
     } else {
@@ -545,14 +547,15 @@ export default function OnboardingWizard() {
 
   if (loading || isLoading) return <PageLoader />;
   if (!user) return null;
-  const showButton = !id || id === "new" || currentStep < totalSteps;
+  // const showButton = !id || id === "new" || currentStep < totalSteps;
+  const showButton = isNew || currentStep < totalSteps;
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app">
       {/* {!id && <Header currentPage="onboarding" isOnboarding={true} />} */}
       <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-6 relative z-10">
         {/* Clean Minimal Header */}
-        <FloatSideMenu currentPlan={activeSubscrp} />
+        {isNew && <FloatSideMenu currentPlan={activeSubscrp} />}
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <button
@@ -590,6 +593,7 @@ export default function OnboardingWizard() {
             </button>
           </div>
           {/* <div className="absolute top-4 left-4"> */}
+         {!isNew && (
           <div className="">
             <button
               onClick={() => setIsStatsDrawerOpen(true)}
@@ -603,8 +607,9 @@ export default function OnboardingWizard() {
               <span className="plans-trigger-text">پلن‌ها</span>
             </button>
           </div>
+         )}
         </div>
-        <div className="flex flex-col justify-center items-center mb-16 -mt-4">
+        <div className="flex flex-col justify-center items-center mb-10 -mt-4">
           <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
             <div className="text-white w-7 h-7">
               <AivaWhite />
@@ -612,11 +617,11 @@ export default function OnboardingWizard() {
           </div>
 
           <div className="text-grey-900 mb-4 font-bold text-lg text-center">
-            {!id || id === "new" ? title : "ویرایش چت‌بات"}
+            {isNew ? title : "ویرایش چت‌بات"}
           </div>
 
-          <div className="text-grey-700 max-w-lg mx-auto text-center">
-            {!id || id === "new"
+          <div className="text-grey-700 mx-auto text-center">
+            {isNew
               ? subtitle
               : "پس از اعمال تغییرات، کد نصب را مجدد در سایت خود قرار دهید."}
           </div>
@@ -755,7 +760,7 @@ export default function OnboardingWizard() {
                 <ChatPreview
                   currentStep={currentStep}
                   botConfig={botConfig}
-                  isNew={!id || id === "new"}
+                  isNew={isNew}
                 />
               </div>
             </div>
@@ -775,11 +780,13 @@ export default function OnboardingWizard() {
             </button>
           </div>
         )}
-      </div>{" "}
-      <StatsDrawer
-        isOpen={isStatsDrawerOpen}
-        onClose={() => setIsStatsDrawerOpen(false)}
-      />
+      </div>
+     
+        <StatsDrawer
+          isOpen={isStatsDrawerOpen}
+          onClose={() => setIsStatsDrawerOpen(false)}
+        />
+      
     </main>
   );
 }

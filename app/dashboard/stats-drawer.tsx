@@ -4,24 +4,30 @@ import { useBot } from "@/providers/BotProvider";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { PlanCardMenu } from "./plan-card-menu";
-import { useEffect, useState } from "react";
+import { ChatbotSelector } from "./chatbot-selector";
+import { useEffect, useRef, useState } from "react";
 import {
   getFaNameByCode,
   getPlanIcon,
   translateFeature,
 } from "@/constants/plans";
 import axiosInstance from "@/lib/axiosInstance";
-import { ChatbotSelector } from "./chatbot-selector";
 
 interface StatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  selectedPlan?: string;
 }
 
-export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
+export function StatsDrawer({
+  isOpen,
+  onClose,
+  selectedPlan,
+}: StatsDrawerProps) {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
     "monthly"
   );
+  const planRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [plans, setPlans] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +44,18 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen && selectedPlan) {
+      // Wait for drawer open animation
+      setTimeout(() => {
+        const el = planRefs.current[selectedPlan.toLowerCase()];
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 350); // matches CSS transition of drawer
+    }
+  }, [isOpen, selectedPlan]);
 
   useEffect(() => {
     if (isOpen) {
@@ -156,13 +174,13 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
             <X size={20} />
           </button>
         </header>
-        <div className="flex items-center justify-center mt-3 gap-2">
-          <span>چت‌بات</span>
-          <ChatbotSelector />
-        </div>
         {/* Content */}
         <div className="stats-drawer-content">
           {/* Billing Period Toggle */}
+          <div className="flex items-center justify-center my-2 gap-2">
+            <span>چت‌بات</span>
+            <ChatbotSelector />
+          </div>
           <div className="billing-toggle-wrapper">
             <button
               type="button"
@@ -195,22 +213,30 @@ export function StatsDrawer({ isOpen, onClose }: StatsDrawerProps) {
 
             <div className="flex flex-col">
               {plans.map((plan, index) => (
-                <PlanCardMenu
+                <div
                   key={index}
-                  name={getFaNameByCode(plan?.plan) || plan?.plan}
-                  description=""
-                  priceMonthly={Number(plan?.price_monthly_irr || 0)}
-                  priceYearly={Number(plan?.price_yearly_irr || 0)}
-                  period={billingPeriod}
-                  onPeriodChange={(p) => setBillingPeriod(p)}
-                  icon={getPlanIcon(plan.plan)}
-                  features={mapFeatures(plan)}
-                  onSelect={() => {
-                    handlePlanPurchase(plan.plan);
+                  ref={(el) => {
+                    planRefs.current[plan.plan.toLowerCase()] = el; // assign ref
+                    // no return statement! must be void
                   }}
-                  buttonText="خرید پلن"
-                  buttonVariant="secondary"
-                />
+                >
+                  <PlanCardMenu
+                    key={index}
+                    name={getFaNameByCode(plan?.plan) || plan?.plan}
+                    description=""
+                    priceMonthly={Number(plan?.price_monthly_irr || 0)}
+                    priceYearly={Number(plan?.price_yearly_irr || 0)}
+                    period={billingPeriod}
+                    onPeriodChange={(p) => setBillingPeriod(p)}
+                    icon={getPlanIcon(plan.plan)}
+                    features={mapFeatures(plan)}
+                    onSelect={() => {
+                      handlePlanPurchase(plan.plan);
+                    }}
+                    buttonText="خرید پلن"
+                    buttonVariant="secondary"
+                  />
+                </div>
               ))}
             </div>
           </section>
