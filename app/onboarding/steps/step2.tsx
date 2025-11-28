@@ -22,11 +22,10 @@ import {
   CheckCircle,
   AlertTriangle,
   Edit2,
- 
 } from "lucide-react";
 import LockFeature from "../LockFeature";
 import { useFeatureAccess } from "@/providers/PricingContext";
- 
+
 interface WizardStep2Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
@@ -530,7 +529,16 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                     (t) => t.id === selectedType
                   )?.title}
             </h3>
-            <LockFeature feature="website_crawling" />
+            {selectedType === "website" && !can_website_crawling && (
+              <LockFeature feature="website_crawling" />
+            )}
+            {selectedType === "qa_pair" && !can_qa_as_file && (
+              <LockFeature feature="qa_as_file" />
+            )}
+
+            {selectedType === "file" && !can_upload_docs && (
+              <LockFeature feature="upload_docs" />
+            )}
             <Button
               variant="tertiary"
               size="sm"

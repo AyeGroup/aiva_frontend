@@ -52,6 +52,7 @@ export default function Dashboard() {
     { value: "30d", label: "۳۰ روز اخیر", disable: false },
     { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
+  console.log("elham1");
 
   // user has a bot
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function Dashboard() {
 
   //statistic cover
   useEffect(() => {
+    console.log("elham : ",user,currentBot);
     if (!user) return;
     if (!currentBot?.uuid) return;
 
@@ -90,15 +92,31 @@ export default function Dashboard() {
   }, [user?.id, currentBot?.uuid]);
 
   const fetchAllStatistics = async () => {
+  console.log("elham")
     setIsLoading(true);
-    await Promise.all([
-      fetchUserTrend(timeRange),
-      fetchSessionTrend(timeRange),
-      fetchActiveUsers(),
-      fetchRecentSession(),
-      fetchFaqList(),
-    ]);
-    setIsLoading(false);
+
+    try {
+      const results = await Promise.allSettled([
+        fetchUserTrend(timeRange),
+        fetchSessionTrend(timeRange),
+        fetchActiveUsers(),
+        fetchRecentSession(),
+        fetchFaqList(),
+      ]);
+
+      // اگر خواستی نتیجه خطاها را لاگ بگیری:
+      results.forEach((r, i) => {
+        if (r.status === "rejected") {
+          console.error(`Error in promise ${i}`, r.reason);
+        }
+      });
+    } catch (err) {
+      // اینجا معمولاً اجرا نمی‌شود چون allSettled خطا پرتاب نمی‌کند
+      console.error("Unexpected error:", err);
+    } finally {
+      setIsLoading(false);
+      console.log("isloading",isLoading)
+    }
   };
 
   const fetchUserTrend = async (days: string) => {
