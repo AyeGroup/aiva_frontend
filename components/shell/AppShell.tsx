@@ -12,7 +12,6 @@ const Login = lazy(() => import("@/app/auth/login/page"));
 const Register = lazy(() => import("@/app/auth/register/page"));
 const OTPVerification = lazy(() => import("@/app/auth/verification/page"));
 
-
 const PageLoader = () => {
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -46,7 +45,7 @@ export default function AppShell({ page }: AppShellProps) {
         return <Login />;
       case "verification":
         return <OTPVerification />;
-     
+
       default:
         return <LandingPage />;
     }
@@ -62,7 +61,7 @@ export default function AppShell({ page }: AppShellProps) {
   ].includes(page);
 
   return (
-    <div className="app-shell" dir="rtl">
+    <div className="app-shell">
       {/* {showHeader && <Header currentPage={page} />} */}
       <Suspense fallback={<PageLoader />}>{renderPage()}</Suspense>
     </div>

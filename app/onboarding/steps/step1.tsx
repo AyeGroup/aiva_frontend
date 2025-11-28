@@ -71,7 +71,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 placeholder="مثال: آیوا، ربات مشاور"
                 className={`w-full ${
                   !botConfig.name || botConfig.name.length == 0
-                    ? "!border-red-400"
+                    ? "!border-red-300"
                     : ""
                 }`}
               />
@@ -116,7 +116,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
     text-base placeholder:text-sm placeholder:text-gray-400
     ${
       !botConfig.description || botConfig.description.length === 0
-        ? "!border-red-400"
+        ? "!border-red-300"
         : ""
     }`}
             />
@@ -150,7 +150,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
     text-base placeholder:text-sm placeholder:text-gray-400
     ${
       !botConfig.guidelines || botConfig.guidelines.length === 0
-        ? "!border-red-400"
+        ? "!border-red-300"
         : ""
     }`}
             />

@@ -88,10 +88,7 @@ export default function Invoice() {
 
   if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center text-grey-600"
-        dir="rtl"
-      >
+      <div className="min-h-screen flex items-center justify-center text-grey-600">
         در حال بارگذاری اطلاعات فاکتور...
       </div>
     );
@@ -146,7 +143,7 @@ export default function Invoice() {
   const trackingCode = searchParams.get("tracking");
 
   return (
-    <div className="min-h-screen bg-grey-50 py-12 px-4" dir="rtl">
+    <div className="min-h-screen bg-grey-50 py-12 px-4">
       <main className="max-w-2xl mx-auto" role="main">
         {/* Header */}
         <header className="mb-8 no-print flex justify-between items-center">

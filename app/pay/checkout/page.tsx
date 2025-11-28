@@ -184,7 +184,7 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-grey-50 py-12 px-4" dir="rtl">
+    <div className="min-h-screen bg-grey-50 py-12 px-4">
       <main className="max-w-4xl mx-auto">
         {/* {isPlanLoaded && <PageLoader />} */}
         {/* header */}

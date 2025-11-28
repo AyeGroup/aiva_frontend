@@ -1,13 +1,16 @@
-import axiosInstance from "@/lib/axiosInstance";
+"use client ";
+
 import Image from "next/image";
+import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
+import ColorPicker from "@/components/color-picker";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
+import { BotConfig } from "@/types/common";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { ColorSlider } from "@/components/ColorSlider";
 import { onboardingData } from "../onboarding.data";
-import { BotConfig, colorPalette } from "@/types/common";
+import { useFeatureAccess } from "@/providers/PricingContext";
 import { useState, useEffect, useRef } from "react";
 import {
   Appearance,
@@ -17,7 +20,7 @@ import {
   StepStar,
   StepUpload,
 } from "@/public/icons/AppIcons";
-import ColorPicker from "@/components/color-picker";
+import LockFeature from "../LockFeature";
 const colorPalette1 = [
   "#ec4899",
   "#8b5cf6",
@@ -42,11 +45,13 @@ export function WizardStep6({
   errors,
   setLogoFile,
 }: WizardStep6Props) {
-  const { user, loading } = useAuth();
+  // const { user, loading } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedTone, setSelectedTone] = useState(botConfig.tone);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const canUploadLogo = useFeatureAccess("chatbot_logo");
+  console.log("canUploadLogo: ", canUploadLogo);
 
   useEffect(() => {
     if (botConfig.logo_url) setPreview(botConfig.logo_url);
@@ -151,13 +156,10 @@ export function WizardStep6({
   };
 
   return (
-    <div
-      className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg "
-      dir="rtl"
-    >
+    <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg ">
       {/* Header */}
       <div className="flex items-start gap-4 px-0 py-3">
-        {loading && <PageLoader />}
+        {/* {loading && <PageLoader />} */}
         <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center shrink-0">
           <div className="w-8 h-8 text-primary">
             <Appearance />
@@ -339,83 +341,6 @@ export function WizardStep6({
               </div>
             </div>
           </div>
-
-          {/* accent Color old */}
-          {/* <div className="mt-6">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 bg-brand-primary/10 rounded-lg flex items-center justify-center">
-                <StepColor />
-              </div>
-              <h4 className="text-grey-900 text-sm font-bold">
-                رنگ پس‌زمینه چت
-              </h4>
-            </div>
-
-            <div className="flex flex-col">
-              <div className="my-2">انتخاب از طیف رنگ:</div>
-              <div className="flex w-full  my-3 justify-between">
-                <div className="flex">
-                  <div>رنگ انتخابی</div>
-                  <div
-                    className="mx-2 size-7 rounded-full"
-                    style={{ backgroundColor: botConfig.accent_color }}
-                  ></div>
-                </div>
-                <div>
-                  {colorPalette.map((color) => (
-                    <button
-                      key={color.value}
-                      onClick={() => {
-                        handleAccentColor(color.value);
-                        // setSelectedColorAccent(color.value);
-                      }}
-                      className="  rounded-full  size-8 mx-1 border-2 border-white shadow cursor-pointer"
-                      style={{ backgroundColor: color.value }}
-                      title={color.name}
-                    >
-                      <div
-                        aria-hidden="true"
-                        className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-2 shadow "
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="w-full p-1 space-y-4">
-                <ColorSlider
-                  value={botConfig.accent_color}
-                  onChange={handleAccentColor}
-                />
-              </div>
-              <div className="flex justify-between items-center my-4">
-                <div>کد رنگ دلخواه</div>
-                <div className="flex items-center">
-                  <input
-                    type="text"
-                    value={botConfig.accent_color}
-                    onChange={(e) => handleAccentColor(e.target.value)}
-                    placeholder="فرمت قابل قبول کد رنگ 6رقمی"
-                    dir="ltr"
-                    className={`w-64 p-2 mx-2 border-2 rounded-2xl   text-gray-900 bg-transparent outline-none  placeholder:text-gray-400 ${
-                      errors?.accent_color
-                        ? " border-red-500"
-                        : " border-primary"
-                    }`}
-                  />
-                  <div
-                    className="relative rounded-full size-8"
-                    style={{ backgroundColor: botConfig.accent_color }}
-                  >
-                    <div
-                      aria-hidden="true"
-                      className="absolute border-2 border-solid border-white inset-0 pointer-events-none rounded-full shadow"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
 
         {/* Chat Button Settings */}
@@ -571,10 +496,12 @@ export function WizardStep6({
             <div className="w-8 h-8 bg-brand-emerald/10 rounded-lg flex items-center justify-center">
               <StepLogin />
             </div>
-            <h3 className="text-grey-900">لوگوی چت‌بات </h3>
+            <h3 className="text-grey-900 cursor-not-allowed ">لوگوی چت‌بات </h3>
+            {!canUploadLogo && <LockFeature feature="chatbot_logo" />}
           </div>
           <Card
-            className="p-4 !border-0 hover:bg-grey-50 cursor-pointer text-center"
+            disable={!canUploadLogo}
+            className="p-4 border-0! hover:bg-grey-50  text-center"
             onClick={() => fileInputRef.current?.click()}
           >
             <input
@@ -583,7 +510,6 @@ export function WizardStep6({
               accept="image/png,image/jpeg,image/svg+xml"
               className="hidden"
               onChange={handleFileSelect}
-              // onChange={(e) => setLogoFile(e.target.files?.[0] || null)}
             />
 
             {preview ? (
@@ -591,7 +517,6 @@ export function WizardStep6({
                 <div className="w-16 h-16 mx-auto bg-grey-100 rounded-lg flex items-center justify-center overflow-hidden">
                   <Image
                     src={preview}
-                    // src="image.jpg?t=${new Date().getTime()}"
                     alt="لوگوی انتخاب شده"
                     className="w-full h-full object-contain"
                     width={64}
@@ -632,7 +557,7 @@ export function WizardStep6({
                   <StepUpload />
                 </div>
                 <div>
-                  <p className="text-grey-700 text-sm mb-1">آپلود لوگوی شرکت</p>
+                  <p className="text-grey-700 text-sm mb-1">آپلود لوگو</p>
                   <p className="text-grey-500 text-xs">
                     PNG، JPG یا SVG • حداکثر ۳ مگابایت
                   </p>

@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import { BotProvider } from "@/providers/BotProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { PricingProvider } from "@/providers/PricingContext";
+import type { Metadata } from "next";
 import "@/styles/login.css";
 import "@/styles/globals.css";
 
@@ -21,16 +22,16 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body>
-     
         <div className="app-shell">
           <div className="app-content">
             <AuthProvider>
-              <BotProvider>{children}</BotProvider>
+              <BotProvider>
+                <PricingProvider>{children}</PricingProvider>
+              </BotProvider>
             </AuthProvider>
             <Toaster
               position="top-center"
               richColors
-              dir="rtl"
               toastOptions={{
                 style: {
                   fontFamily: "Vazirmatn, sans-serif",

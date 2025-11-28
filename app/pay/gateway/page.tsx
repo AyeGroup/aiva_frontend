@@ -40,10 +40,7 @@ export default function PaymentGateway() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-grey-50 flex items-center justify-center py-12 px-4"
-      dir="rtl"
-    >
+    <div className="min-h-screen bg-grey-50 flex items-center justify-center py-12 px-4">
       <main className="max-w-2xl w-full" role="main">
         <div className="bg-white rounded-3xl shadow-xl p-8">
           {/* Header */}

@@ -5,6 +5,7 @@ import { onboardingData } from "./onboarding.data";
 import { Delete, SendMessage } from "@/public/icons/AppIcons";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/providers/AuthProvider";
+import { Info } from "lucide-react";
 
 interface ChatPreviewProps {
   botConfig: BotConfig;
@@ -296,11 +297,12 @@ export function ChatPreview({
           </div>
         </div>
 
-        <p className="text-grey-900 bg-white rounded-sm p-2 shadow text-sm text-right ">
+        <div className="flex items-start text-grey-900  rounded-sm p-2 shadow text-sm text-right border-2 border-secondary/30 mt-1 ">
           {/* تغییرات شما بلافاصله در چت‌بات نمایش داده می‌شود */}
-          تغییرات را اعمال کرده و نتیجه را همین‌جا مشاهده کنید، تا تنظیمات
+          <Info className="text-secondary ml-2 size-6" />
+          تغییرات را اعمال کرده و نتیجه را همین‌جا مشاهده کنید تا تنظیمات
           دقیق‌تری ایجاد کنید.
-        </p>
+        </div>
       </div>
 
       {/* Single Column Layout: Live Chat Only */}
@@ -378,7 +380,6 @@ export function ChatPreview({
                             }
                           : {}
                       }
-                      dir="rtl"
                     >
                       {message.text}
                       <div

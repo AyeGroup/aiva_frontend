@@ -160,7 +160,7 @@ export function StatsDrawer({
         {/* Header */}
         <header className="stats-drawer-header">
           <div>
-            <h2>پلن‌های پیشنهادی</h2>
+            <h2>تمام پلن‌ها</h2>
             <p className="stats-drawer-subtitle">
               انتخاب بهترین پلن برای نیازهای شما
             </p>
@@ -177,7 +177,7 @@ export function StatsDrawer({
         {/* Content */}
         <div className="stats-drawer-content">
           {/* Billing Period Toggle */}
-          <div className="flex items-center justify-center my-2 gap-2">
+          <div className="flex items-center justify-center mb-4 gap-2">
             <span>چت‌بات</span>
             <ChatbotSelector />
           </div>
@@ -207,9 +207,9 @@ export function StatsDrawer({
 
           {/* Plans Section */}
           <section className="stats-section" aria-labelledby="plans-heading">
-            <h3 id="plans-heading" className="section-title">
+            {/* <h3 id="plans-heading" className="section-title">
               تمام پلن‌ها
-            </h3>
+            </h3> */}
 
             <div className="flex flex-col">
               {plans.map((plan, index) => (

@@ -161,7 +161,7 @@ export function Upgrade() {
   };
 
   return (
-    <div className="min-h-screen flex bg-grey-50" dir="rtl">
+    <div className="min-h-screen flex bg-grey-50">
       {/* <Sidebar onNavigate={onNavigate} currentPage="billing" /> */}
       {(isLoading || loading) && <PageLoader />}
       <main className="flex-1 p-8" role="main">
@@ -535,7 +535,7 @@ export function Upgrade() {
         </section>
       </main>
 
-      {/* <Toaster position="top-center" dir="rtl" /> */}
+      {/* <Toaster position="top-center"  /> */}
     </div>
   );
 }

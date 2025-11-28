@@ -1,5 +1,4 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap'); */
- 
 
 @import "tailwindcss";
 @import "tailwindcss/preflight" @tailwind utilities;
@@ -49,7 +48,6 @@ body {
   --brand-emerald: #52d4a0;
   --brand-amber: #f59e0b;
   --brand-indigo: #6366f1;
- 
 
   /* Backgrounds - Enhanced Color Palette */
   --bg-app: #f6faf8;
@@ -191,7 +189,6 @@ body {
   --font-weight-display: 600;
   --font-weight-medium: 500;
   --font-weight-normal: 500;
- 
 
   /* Spacing (8pt Grid) */
   --space-1: 4px;
@@ -560,11 +557,11 @@ body {
 }
 
 /* RTL Support */
-html[dir="rtl"] {
+html[] {
   direction: rtl;
 }
 
-html[dir="rtl"] .ltr {
+html[] .ltr {
   direction: ltr;
   text-align: left;
 }

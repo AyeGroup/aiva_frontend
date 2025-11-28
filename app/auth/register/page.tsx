@@ -102,10 +102,10 @@ export default function Register() {
         return;
       }
     } catch (err: any) {
-        const serverMessage =
-          err?.response?.data?.message ||
-          err?.response?.data?.error ||
-          "یک خطای ناشناخته رخ داد.";
+      const serverMessage =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "یک خطای ناشناخته رخ داد.";
       setMessage(serverMessage);
       setIsLoading(false);
       return;
@@ -485,7 +485,7 @@ export default function Register() {
             </div>
 
             {/* OTP Inputs */}
-            <div className="flex justify-center gap-3 mb-6" dir="rtl">
+            <div className="flex justify-center gap-3 mb-6">
               {otp.map((digit, index) => (
                 <input
                   key={index}

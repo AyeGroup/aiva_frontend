@@ -70,7 +70,7 @@ export function Tickets() {
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-bg-shell" dir="rtl">
+    <div className="h-screen overflow-hidden bg-bg-shell">
       <div className="flex h-screen">
         {/* Main Content */}
         {(isLoading || loading) && <PageLoader />}

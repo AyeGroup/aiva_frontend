@@ -120,8 +120,6 @@ export const Transactions: React.FC = () => {
     currentPage * itemsPerPage
   );
 
-
-
   const hasActiveFilters = dateFrom !== "" || dateTo !== "";
 
   const handlePdf = async (transaction_id: string) => {
@@ -351,7 +349,7 @@ export const Transactions: React.FC = () => {
             </div>
           ) : (
             <>
-              <table className="w-full" dir="rtl">
+              <table className="w-full">
                 <thead>
                   <tr className="border-b border-grey-200 bg-grey-50">
                     <th className="px-6 py-4 text-right text-grey-600">نوع</th>

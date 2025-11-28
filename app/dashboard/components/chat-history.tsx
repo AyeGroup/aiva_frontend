@@ -9,9 +9,7 @@ interface ChatHistoryProps {
   username: string;
 }
 
-
 export function ChatHistory({ username }: ChatHistoryProps) {
-
   const { currentBot } = useBot();
   const [history, setHistory] = useState<any[]>([]);
 
@@ -19,7 +17,6 @@ export function ChatHistory({ username }: ChatHistoryProps) {
     if (!currentBot) return;
     if (!username) return;
     const fetchActiveUsers = async () => {
-
       try {
         const response = await axiosInstance.get(
           API_ROUTES.PUBLIC.HISTORY(currentBot.uuid),
@@ -113,7 +110,6 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                             }
                           : {}
                       }
-                      dir="rtl"
                     >
                       {message.content}
                       <div

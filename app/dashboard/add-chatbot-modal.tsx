@@ -368,7 +368,6 @@ export function AddChatbotModal({
                       }
                       placeholder="پاسخ مربوط به این سوال را وارد کنید..."
                       className="w-full p-3 rounded-lg border border-grey-200 focus:border-brand-primary transition-colors text-right resize-none h-20"
-                      dir="rtl"
                     />
                   </div>
                 </div>

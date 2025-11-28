@@ -189,15 +189,13 @@ export function Billing() {
     }
   };
 
-
-
   const handleUpgrade = (chatbot: any) => {
     setSelectedChatbot(chatbot);
     setIsCreditIncreaseModalOpen(true);
   };
 
   return (
-    <div className="min-h-screen flex bg-grey-50" dir="rtl">
+    <div className="min-h-screen flex bg-grey-50">
       {(isLoading || loading) && <PageLoader />}
       <main className="flex-1 p-8" role="main">
         <header className="mb-8">
@@ -214,7 +212,7 @@ export function Billing() {
         </section>
 
         {/* Discount & Expiring Alert */}
-        {showDiscountHint && expiringPlan && expiringPlan.lentgh>0 && (
+        {showDiscountHint && expiringPlan && expiringPlan.lentgh > 0 && (
           <section className="mb-8" aria-label="هشدار و اطلاعیه‌ها">
             <Card className="p-0 overflow-hidden border-2 bg-[#FFA18E] mb-4">
               <div
@@ -340,7 +338,7 @@ export function Billing() {
               </div>
             ) : (
               <div className="overflow-x-auto" style={{ direction: "rtl" }}>
-                <table className="w-full" dir="rtl">
+                <table className="w-full">
                   <thead>
                     <tr className="border-b border-grey-200">
                       <th className="px-4 py-3 text-right text-grey-600">

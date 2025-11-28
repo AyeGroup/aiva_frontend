@@ -322,7 +322,7 @@ function Login() {
         </div>
       </div>
 
-      {/* <Toaster position="top-center" dir="rtl" richColors closeButton /> */}
+      {/* <Toaster position="top-center"  richColors closeButton /> */}
     </div>
     //   </div>
     // </div>

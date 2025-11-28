@@ -1,3 +1,4 @@
+"use client";
 import {
   createContext,
   ReactNode,
@@ -8,17 +9,22 @@ import {
 import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { Plan, PricingContextType } from "@/types/common";
- 
+import { useBot } from "./BotProvider";
+import { getPlanCodeById } from "@/constants/plans";
 
 export const PricingContext = createContext<PricingContextType | null>(null);
 
 export const PricingProvider = ({ children }: { children: ReactNode }) => {
   const [plans, setPlans] = useState<Plan[] | null>(null);
   const [currentPlan, setCurrentPlan] = useState<string | null>(null);
-const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
-  {}
-);
+  const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
+    {}
+  );
+  const { currentBot } = useBot();
 
+  // -------------------------------
+  // 1) Load pricing ONCE
+  // -------------------------------
   useEffect(() => {
     const fetchPricing = async () => {
       try {
@@ -26,22 +32,47 @@ const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
 
         const allPlans = res.data?.data?.subscription_plans ?? [];
         setPlans(allPlans);
-
-        // Plan کاربر از بک میاد — اگر نبود پیشفرض Free
-        setCurrentPlan(res.data?.data?.user_plan ?? "FREE");
       } catch (error) {
         console.error("Pricing fetch failed:", error);
       }
     };
 
     fetchPricing();
-  }, []);
+  }, []); // فقط یک بار اجرا شود
 
+  // -------------------------------
+  // 2) Update user currentPlan WHEN bot changes
+  // -------------------------------
+  useEffect(() => {
+    const fetchUserPlan = async () => {
+      if (!currentBot?.uuid) {
+        setCurrentPlan("FREE");
+        return;
+      }
+
+      try {
+        const res = await axiosInstance.get(
+          API_ROUTES.FINANCIAL.SUBSCRIPTION(currentBot.uuid)
+        );
+
+        const myPlan = getPlanCodeById(res.data?.data?.plan) ?? "FREE";
+        setCurrentPlan(myPlan);
+      } catch (error) {
+        console.error("Failed to fetch user plan:", error);
+        setCurrentPlan("FREE");
+      }
+    };
+
+    fetchUserPlan();
+  }, [currentBot]); // با هر تغییر bot، دوباره اجرا می‌شود
+
+  // -------------------------------
+  // 3) Build feature → minPlan map
+  // -------------------------------
   useEffect(() => {
     if (!plans) return;
 
     const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
-
     const map: Record<string, string> = {};
 
     for (const plan of planOrder) {
@@ -50,7 +81,7 @@ const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
 
       p.features.forEach((feature) => {
         if (!map[feature]) {
-          map[feature] = plan; // اولین پلنی که feature را دارد = کمترین پلن لازم
+          map[feature] = plan;
         }
       });
     }
@@ -59,13 +90,12 @@ const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
   }, [plans]);
 
   return (
-    // <PricingContext.Provider value={{ plans, currentPlan, setCurrentPlan }}>
     <PricingContext.Provider
       value={{
         plans,
         currentPlan,
         setCurrentPlan,
-        featureMinPlan, // 🔥 اضافه شد
+        featureMinPlan,
       }}
     >
       {children}
@@ -73,9 +103,9 @@ const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
   );
 };
 
-// ------------------------------
-// ✨ اینجا کاستوم هوک تعریف می‌شود
-// ------------------------------
+// -----------------------------------------
+// HOOKS
+// -----------------------------------------
 
 export const usePricing = () => {
   const context = useContext(PricingContext);
@@ -86,6 +116,7 @@ export const usePricing = () => {
 
   return context;
 };
+
 export const useFeatureAccess = (feature: string) => {
   const { currentPlan, featureMinPlan } = usePricing();
 
@@ -98,4 +129,9 @@ export const useFeatureAccess = (feature: string) => {
   const minIndex = planOrder.indexOf(minPlan);
 
   return userIndex >= minIndex;
+};
+
+export const useFeatureRequiredPlan = (feature: string) => {
+  const { featureMinPlan } = usePricing();
+  return featureMinPlan[feature] ?? "FREE";
 };

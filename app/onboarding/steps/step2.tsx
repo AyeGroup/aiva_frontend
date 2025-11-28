@@ -22,10 +22,11 @@ import {
   CheckCircle,
   AlertTriangle,
   Edit2,
-  Lock,
+ 
 } from "lucide-react";
+import LockFeature from "../LockFeature";
 import { useFeatureAccess } from "@/providers/PricingContext";
-
+ 
 interface WizardStep2Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
@@ -48,6 +49,9 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
     ADVANCE: 120,
     ENTERPRISE: Infinity,
   };
+  const can_website_crawling = useFeatureAccess("website_crawling");
+  const can_qa_as_file = useFeatureAccess("qa_as_file");
+  const can_upload_docs = useFeatureAccess("upload_docs");
 
   // const userPlan = "FREE"; // مثلا "BASIC" یا "MEDIUM"
   // const userPlan = "BASIC"; // مثلا "BASIC" یا "MEDIUM"
@@ -400,10 +404,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   };
 
   return (
-    <div
-      className="space-y-8 bg-bg-surface px-[20px] py-[16px] border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]"
-      dir="rtl"
-    >
+    <div className="space-y-8 bg-bg-surface px-[20px] py-[16px] border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]">
       {/* Header */}
       <div className="flex items-start gap-4 px-[0px] py-[12px]">
         {(loading || isLoading) && <PageLoader />}
@@ -529,6 +530,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
                     (t) => t.id === selectedType
                   )?.title}
             </h3>
+            <LockFeature feature="website_crawling" />
             <Button
               variant="tertiary"
               size="sm"
@@ -657,123 +659,39 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
             )}
 
             {selectedType === "file" && isAdding && (
-              // <div>
-              //   <label className="block text-grey-900 mb-2">آپلود فایل</label>
-              //   <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">
-              //     {selectedFile ? (
-              //       <div>{selectedFile.name}</div>
-              //     ) : (
-              //       <div>
-              //         <Upload className="w-8 h-8 text-grey-400 mx-auto mb-4" />
-              //         <p className="text-grey-600 mb-4">
-              //           فایل خود را اینجا بکشید یا کلیک کنید
-              //         </p>
-              //       </div>
-              //     )}
-              //     <input
-              //       type="file"
-              //       onChange={handleFileUpload}
-              //       accept=".pdf,.doc,.docx,.txt"
-              //       className="hidden"
-              //       id="file-upload"
-              //     />
-              //     <Button
-              //       variant="secondary"
-              //       size="sm"
-              //       onClick={() =>
-              //         document.getElementById("file-upload")?.click()
-              //       }
-              //     >
-              //       انتخاب فایل
-              //     </Button>
-              //     <p className="text-grey-500 mt-2 text-body-small">
-              //       پشتیبانی از فرمت‌های PDF، Word و متن ساده
-              //     </p>
-              //   </div>
-              // </div>
               <div>
-                <label className="block text-grey-900 mb-2 flex items-center gap-2">
-                  آپلود فایل
-                  {isDisabled && (
-                    <span className="flex items-center gap-1 text-xs text-grey-500">
-                      <Lock className="w-3 h-3" />
-                      مخصوص پلن پایه و بالاتر
-                    </span>
-                  )}
-                  {!isDisabled && (
-                    <span className="text-xs text-grey-600">
-                      (حداکثر {maxFiles} فایل)
-                    </span>
-                  )}
-                </label>
-
-                <div
-                  className={`border-2 border-dashed rounded-lg p-8 text-center ${
-                    isDisabled
-                      ? "border-grey-300 opacity-50 cursor-not-allowed"
-                      : "border-grey-300"
-                  }`}
-                  onClick={() =>
-                    !isDisabled &&
-                    document.getElementById("file-upload")?.click()
-                  }
-                >
+                <label className="block text-grey-900 mb-2">آپلود فایل</label>
+                <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">
                   {selectedFile ? (
                     <div>{selectedFile.name}</div>
                   ) : (
                     <div>
                       <Upload className="w-8 h-8 text-grey-400 mx-auto mb-4" />
                       <p className="text-grey-600 mb-4">
-                        {isDisabled
-                          ? "این قابلیت در پلن رایگان غیرفعال است"
-                          : "فایل خود را اینجا بکشید یا کلیک کنید"}
+                        فایل خود را اینجا بکشید یا کلیک کنید
                       </p>
                     </div>
                   )}
-
                   <input
                     type="file"
+                    onChange={handleFileUpload}
                     accept=".pdf,.doc,.docx,.txt"
-                    onChange={(e) => {
-                      if (!isDisabled) handleFileUpload(e);
-                    }}
                     className="hidden"
                     id="file-upload"
-                    disabled={isDisabled}
                   />
-
                   <Button
                     variant="secondary"
                     size="sm"
-                    disabled={isDisabled}
-                    className={
-                      isDisabled ? "opacity-50 cursor-not-allowed" : ""
-                    }
                     onClick={() =>
-                      !isDisabled &&
                       document.getElementById("file-upload")?.click()
                     }
                   >
                     انتخاب فایل
                   </Button>
-
                   <p className="text-grey-500 mt-2 text-body-small">
                     پشتیبانی از فرمت‌های PDF، Word و متن ساده
                   </p>
                 </div>
-
-                {/* {!isDisabled && uploadedFiles.length > 0 && (
-                  <p className="text-xs text-grey-600 mt-2">
-                    تعداد فایل‌های آپلود‌شده: {uploadedFiles.length} از{" "}
-                    {maxFiles}
-                  </p>
-                )}
-
-                {!isDisabled && uploadedFiles.length >= maxFiles && (
-                  <p className="text-xs text-danger mt-2">
-                    به حداکثر تعداد فایل‌های مجاز در پلن {userPlan} رسیده‌اید
-                  </p>
-                )} */}
               </div>
             )}
           </div>

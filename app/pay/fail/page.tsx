@@ -35,10 +35,7 @@ export default function PaymentFailed() {
   ];
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12 px-4 flex items-center justify-center"
-      dir="rtl"
-    >
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12 px-4 flex items-center justify-center">
       <main className="max-w-2xl w-full" role="main">
         <Card className="p-8 text-center relative overflow-hidden">
           {/* Background Decoration */}
