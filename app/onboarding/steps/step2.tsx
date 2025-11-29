@@ -29,10 +29,10 @@ import { useFeatureAccess, useUploadLimits } from "@/providers/PricingContext";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
-  updateConfig: (updates: Partial<BotConfig>) => void;
+  // updateConfig: (updates: Partial<BotConfig>) => void;
 }
 
-export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
+export function WizardStep2({ botConfig }: WizardStep2Props) {
   const { user, loading } = useAuth();
   const [selectedType, setSelectedType] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
@@ -389,7 +389,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
   };
 
   return (
-    <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg pt-[8px] pr-[20px] pb-[16px] pl-[20px]">
+    <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg pt-2 pr-5 pb-4 pl-5">
       {/* Header */}
       <div className="flex items-start gap-4 px-0 py-3">
         {(loading || isLoading) && <PageLoader />}
@@ -412,7 +412,7 @@ export function WizardStep2({ botConfig, updateConfig }: WizardStep2Props) {
       <div className="space-y-4 mb-8"></div>
 
       {/* Important Notice */}
-      <div className="bg-linear-to-br from-brand-amber/10 to-sharp-amber/10 border-2 border-brand-amber/30 rounded-2xl mb-[32px] relative overflow-hidden mt-[0px] mr-[0px] ml-[0px] px-[24px] py-[12px]">
+      <div className="bg-linear-to-br from-brand-amber/10 to-sharp-amber/10 border-2 border-brand-amber/30 rounded-2xl mb-8 relative overflow-hidden mt-0 mr-0 ml-0 px-6 py-3">
         {/* Background Pattern */}
 
         <div className="relative z-10">

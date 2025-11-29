@@ -32,6 +32,7 @@ export function ChatPreview({
   const [showFaqs, setShowFaqs] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
+
   useEffect(() => {
     const newMessages = getGreetingMessages();
     if (botConfig.greetings) setMessages(newMessages);
@@ -46,7 +47,7 @@ export function ChatPreview({
         prev.filter((msg) => !msg.id.startsWith("greeting"))
       );
     }
-  }, [botConfig.greetings, botConfig.tone]);
+  }, [botConfig.greetings ]);
 
   const handleClear = () => {
     setMessages([]);
@@ -460,7 +461,7 @@ export function ChatPreview({
                     }}
                     rows={1}
                     placeholder="پیام خود را بنویسید..."
-                    className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm resize-none max-h-[80px] overflow-y-auto outline-none focus:outline-none focus:ring-0 focus:border-grey-300 scrollbar-none"
+                    className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm resize-none max-h-20 overflow-y-auto outline-none focus:outline-none focus:ring-0 focus:border-grey-300 scrollbar-none"
                     style={{
                       scrollbarWidth: "none",
                       msOverflowStyle: "none",

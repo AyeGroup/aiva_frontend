@@ -258,7 +258,7 @@ export default function Dashboard() {
 
             {/* آمار کلیدی امروز */}
             {!isNew && (
-              <div className=" !z-0 stats-hero-section bg-[#E3F4F1] p-8 rounded-3xl border-2 border-white/50 shadow-xl backdrop-blur-sm mb-8">
+              <div className=" z-0! stats-hero-section bg-[#E3F4F1] p-8 rounded-3xl border-2 border-white/50 shadow-xl backdrop-blur-sm mb-8">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-2xl font-bold text-grey-900 text-[20px]">
                     📊 آمار کلیدی
@@ -483,7 +483,7 @@ export default function Dashboard() {
                     />
                   </div>
                   <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2 px-[12px] py-[0px]">
+                    <div className="flex items-center justify-between mb-2 px-3 py-0">
                       <p className="text-body-small text-[rgba(166,166,166,1)] text-[14px]">
                         {chartType === "users"
                           ? "تعداد کاربران فعال در هر روز"

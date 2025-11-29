@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState, FC, ReactNode, useMemo } from "react";
+import { useState, FC } from "react";
 import svgPaths from "../svg/svg-4hsgpptxrd";
 import navSvgPaths from "../svg/svg-9zbz1ttp0b";
 import CustomerIcon from "./CustomerIcon";
@@ -322,7 +322,7 @@ const DecorativeIcons: FC = () => (
     </motion.div>
 
     <motion.div
-      className="absolute size-20 left-[114.48px] top-[80px]"
+      className="absolute size-20 left-[114.48px] top-20"
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 0.25, rotate: [0, 360] }}
       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -509,7 +509,7 @@ const Tab: FC<TabProps> = ({
       aria-pressed={isActive}
     >
       <div
-        className={`rounded-full p-2.5 flex-shrink-0 transition-colors duration-300 ${
+        className={`rounded-full p-2.5 shrink-0 transition-colors duration-300 ${
           isActive ? "bg-primary text-white" : "bg-gray-100 text-primary"
         }`}
       >
@@ -520,7 +520,7 @@ const Tab: FC<TabProps> = ({
       </span>
       {isActive && (
         <motion.div
-          className="absolute bottom-[-8px] left-0 h-0.5 bg-primary rounded-full w-full"
+          className="absolute -bottom-2 left-0 h-0.5 bg-primary rounded-full w-full"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.3 }}

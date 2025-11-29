@@ -79,7 +79,7 @@ export function Card({
     <div
       className={`${combinedClasses} ${
         disable ? "pointer-events-none opacity-50" : ""
-      } !border-2 !border-solid !border-grey-200`}
+      } border-2! border-solid! border-grey-200!`}
       style={style}
       onClick={onClick}
     >

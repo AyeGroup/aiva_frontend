@@ -1,11 +1,10 @@
 import { Input } from "@/components/input";
-import { useState } from "react";
 import { ToggleSmall } from "@/components/toggleSmall";
 import { onboardingData } from "../onboarding.data";
 import { GenericSelector } from "@/components/selector";
 import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
 import { BotConfig, SelectorItem } from "@/types/common";
-import { FormInput, InfoIcon, LockIcon } from "lucide-react";
+import { FormInput  } from "lucide-react";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -13,8 +12,8 @@ interface WizardStep1Props {
 }
 
 export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
-  type GuidelineCategory = keyof typeof onboardingData.GroupGuidelines;
-  const canEditRequiredFields = false;
+  // type GuidelineCategory = keyof typeof onboardingData.GroupGuidelines;
+  // const canEditRequiredFields = false;
 
   // const categories = Object.keys(
     // onboardingData.GroupGuidelines
@@ -71,7 +70,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
                 placeholder="مثال: آیوا، ربات مشاور"
                 className={`w-full ${
                   !botConfig.name || botConfig.name.length == 0
-                    ? "!border-red-300"
+                    ? "border-red-300!"
                     : ""
                 }`}
               />
@@ -116,7 +115,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
     text-base placeholder:text-sm placeholder:text-gray-400
     ${
       !botConfig.description || botConfig.description.length === 0
-        ? "!border-red-300"
+        ? "border-red-300!"
         : ""
     }`}
             />
@@ -150,7 +149,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
     text-base placeholder:text-sm placeholder:text-gray-400
     ${
       !botConfig.guidelines || botConfig.guidelines.length === 0
-        ? "!border-red-300"
+        ? "border-red-300!"
         : ""
     }`}
             />
