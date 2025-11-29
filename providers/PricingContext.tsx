@@ -136,11 +136,10 @@ export const useFeatureRequiredPlan = (feature: string) => {
   return featureMinPlan[feature] ?? "FREE";
 };
 
-
 export const useUploadLimits = () => {
   const { currentPlan } = usePricing();
   if (!currentPlan) return 0;
-console.log("ddddd",currentPlan)
+  console.log("pricingcontext currentPlan: ", currentPlan);
   switch (currentPlan) {
     case "FREE":
       return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_FREE);

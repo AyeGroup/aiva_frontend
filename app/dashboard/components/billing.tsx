@@ -173,7 +173,7 @@ export function Billing() {
     const plan = plans.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
-    console.log("ali:", plan);
+    // console.log("ali:", plan);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
       //

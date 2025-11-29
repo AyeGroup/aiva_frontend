@@ -52,7 +52,7 @@ export default function Dashboard() {
     { value: "30d", label: "۳۰ روز اخیر", disable: false },
     { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
-  console.log("elham1");
+  // console.log("elham1");
 
   // user has a bot
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function Dashboard() {
 
   //statistic cover
   useEffect(() => {
-    console.log("elham : ",user,currentBot);
+    // console.log("elham : ",user,currentBot);
     if (!user) return;
     if (!currentBot?.uuid) return;
 
@@ -92,7 +92,7 @@ export default function Dashboard() {
   }, [user?.id, currentBot?.uuid]);
 
   const fetchAllStatistics = async () => {
-  console.log("elham")
+  // console.log("elham")
     setIsLoading(true);
 
     try {

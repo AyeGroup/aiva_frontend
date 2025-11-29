@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { getPlanIcon } from "@/constants/plans";
 import { StatsDrawer } from "../dashboard/stats-drawer";
+import { usePricing } from "@/providers/PricingContext";
 
-export default function FloatSideMenu({
-  currentPlan,
-}: {
-  currentPlan: string;
-}) {
+export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<string >("BASIC");
-
+  const [selectedPlan, setSelectedPlan] = useState<string>("BASIC");
+  const { currentPlan } = usePricing();
+  console.log("currentPlan", currentPlan);
+  console.log("activePlan", activePlan);
   const menuItems = [
     { icon: getPlanIcon("FREE"), label: "آغازین", key: "FREE" },
     { icon: getPlanIcon("BASIC"), label: "پایه", key: "BASIC" },
@@ -76,8 +75,8 @@ export default function FloatSideMenu({
       <StatsDrawer
         isOpen={isStatsDrawerOpen}
         onClose={() => setIsStatsDrawerOpen(false)}
-        selectedPlan={selectedPlan} 
-/>
+        selectedPlan={selectedPlan}
+      />
     </>
   );
 }

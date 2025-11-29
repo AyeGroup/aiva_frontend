@@ -358,7 +358,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
   const removeItem = async (item: KnowledgeItem) => {
     setIsLoading(true);
-    console.log("ali", item);
+    // console.log("ali", item);
     try {
       let res;
       if (item.type === "qa_pair" && item.qa_id) {

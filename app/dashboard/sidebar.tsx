@@ -9,6 +9,7 @@ import { AddChatbotModal } from "./add-chatbot-modal";
 import { AddAccountModal } from "./add-account-modal";
 import { User, LogOut, ArrowLeft } from "lucide-react";
 import Image from "next/image";
+import { EditProfileModal, ProfileForm } from "./EditProfileModal";
 
 interface SidebarItemProps {
   label: string;
@@ -45,7 +46,7 @@ export function Sidebar({
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-
+ 
   // const { bots, currentBot, setCurrentBot } = useBot(); // ← دسترسی به بات‌ها
   const handleLogout = async () => {
     try {
@@ -170,10 +171,15 @@ export function Sidebar({
         onClose={() => setIsAddModalOpen(false)}
         onAdd={() => {}}
       />
-      <AddAccountModal
+      {/* <AddAccountModal
         isOpen={isAddAccountModalOpen}
         onClose={() => setIsAddAccountModalOpen(false)}
         onAdd={() => {}}
+      /> */}
+      <EditProfileModal
+        open={isAddAccountModalOpen}
+        onClose={() => setIsAddAccountModalOpen(false)}
+    
       />
     </aside>
   );

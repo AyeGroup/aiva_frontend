@@ -47,13 +47,13 @@ export function StatsDrawer({
 
   useEffect(() => {
     if (isOpen && selectedPlan) {
-      // Wait for drawer open animation
+    
       setTimeout(() => {
         const el = planRefs.current[selectedPlan.toLowerCase()];
         if (el) {
           el.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-      }, 350); // matches CSS transition of drawer
+      }, 350); 
     }
   }, [isOpen, selectedPlan]);
 
@@ -69,6 +69,7 @@ export function StatsDrawer({
     };
   }, [isOpen]);
 
+  //get pricing
   useEffect(() => {
     const fetchAllData = async () => {
       setIsLoading(true);
@@ -76,15 +77,12 @@ export function StatsDrawer({
       try {
         const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
 
-        // setPlans(res.data?.data?.subscription_plans ?? []);
         const allPlans = res.data?.data?.subscription_plans ?? [];
         const filteredPlans = allPlans.filter(
           (p: any) => p.plan?.toLowerCase() !== "free"
         );
         setPlans(filteredPlans);
 
-        // console.log("allPlans :", allPlans);
-        // console.log("filteredPlans :", filteredPlans);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
       } finally {

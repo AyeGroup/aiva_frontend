@@ -26,7 +26,8 @@ import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getPlanCodeById, PlanCode } from "@/constants/plans";
+import { getPlanCodeById, getPlanIcon, PlanCode } from "@/constants/plans";
+import { usePricing } from "@/providers/PricingContext";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function OnboardingWizard() {
   const isNew = !id || id === "new";
   const { logo } = headerData;
   const { user, loading } = useAuth();
+  const { currentPlan } = usePricing();
   const { title, subtitle, steps } = onboardingData;
   const { refreshBots, setCurrentBot } = useBot();
   const [currentStep, setCurrentStep] = useState(1);
@@ -45,7 +47,7 @@ export default function OnboardingWizard() {
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeSubscrp, setActiveSubscrp] = useState<PlanCode>("FREE");
-
+  const totalSteps = steps.length;
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
     name: "",
@@ -74,8 +76,8 @@ export default function OnboardingWizard() {
     require_user_name: false,
     require_user_email: false,
   });
-  const totalSteps = steps.length;
-  console.log("isnew", isNew);
+
+  //fix url in new mode
   useEffect(() => {
     const id = searchParams.get("id");
     if (id === "new") {
@@ -187,7 +189,7 @@ export default function OnboardingWizard() {
             subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
           //  subsc =getPlanCodeById( response.data.data.plan);
         }
-        console.log("active plan", subsc);
+        console.log("active SUBSCRIPTION: ", subsc);
         setActiveSubscrp(subsc);
       } catch (error) {
         console.error("خطا در دریافت داده کاربران:", error);
@@ -511,7 +513,7 @@ export default function OnboardingWizard() {
 
       case 3:
         return (
-          <WizardStep2 botConfig={botConfig} updateConfig={updateBotConfig} />
+          <WizardStep2 botConfig={botConfig}  />
         );
       case 4:
         return (
@@ -555,7 +557,7 @@ export default function OnboardingWizard() {
       {/* {!id && <Header currentPage="onboarding" isOnboarding={true} />} */}
       <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-6 relative z-10">
         {/* Clean Minimal Header */}
-        {isNew && <FloatSideMenu currentPlan={activeSubscrp} />}
+        {isNew && <FloatSideMenu activePlan={activeSubscrp} />}
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <button
@@ -612,7 +614,8 @@ export default function OnboardingWizard() {
         <div className="flex flex-col justify-center items-center mb-10 -mt-4">
           <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
             <div className="text-white w-7 h-7">
-              <AivaWhite />
+              {/* <AivaWhite /> */}
+              {getPlanIcon(currentPlan || "FREE")}
             </div>
           </div>
 
