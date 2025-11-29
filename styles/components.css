@@ -281,13 +281,13 @@
 }
 
 /* RTL Support */
-html[] .btn {
+/*  .btn {
   direction: ltr;
 }
 
-html[] .btn span {
+ .btn span {
   direction: rtl;
-}
+} */
 
 /* Focus States */
 .btn:focus-visible {
@@ -2015,11 +2015,11 @@ html[] .btn span {
 }
 
 /* RTL Support */
-html[] .input-base {
+ .input-base {
   text-align: right;
 }
 
-html[] .input-search {
+ .input-search {
   padding-left: var(--space-12);
   padding-right: var(--space-4);
 }
@@ -2393,7 +2393,7 @@ html[] .input-search {
 }
 
 /* RTL Support */
-html[] .radio-item {
+ .radio-item {
   flex-direction: row-reverse;
 } /* ========================================
    Modern Select Component - Enhanced Design
@@ -2684,34 +2684,34 @@ html[] .radio-item {
    RTL Support
 ======================================== */
 
-html[] .select-base {
+ .select-base {
   text-align: right;
   padding-right: var(--space-12);
   padding-left: var(--space-4);
 }
 
-html[] .select-icons {
+ .select-icons {
   right: var(--space-4);
   left: auto;
 }
 
-html[] .select-chevron-icon {
+ .select-chevron-icon {
   transform: rotate(0deg);
 }
 
-html[] .select-wrapper.select-focused .select-chevron-icon {
+ .select-wrapper.select-focused .select-chevron-icon {
   transform: rotate(180deg);
 }
 
-html[] .select-small {
+ .select-small {
   padding: var(--space-2) var(--space-3) var(--space-2) var(--space-10);
 }
 
-html[] .select-medium {
+ .select-medium {
   padding: var(--space-4) var(--space-4) var(--space-4) var(--space-12);
 }
 
-html[] .select-large {
+ .select-large {
   padding: var(--space-5) var(--space-5) var(--space-5) var(--space-14);
 }
 
@@ -3889,22 +3889,22 @@ html[] .select-large {
 }
 
 /* RTL Support */
-html[] .chat-message.user {
+ .chat-message.user {
   flex-direction: row;
   align-self: flex-start;
 }
 
-html[] .chat-message.bot {
+ .chat-message.bot {
   flex-direction: row-reverse;
   align-self: flex-end;
 }
 
-html[] .code-block {
+ .code-block {
   direction: ltr;
   text-align: left;
 }
 
-html[] .code-actions {
+ .code-actions {
   left: auto;
   right: var(--space-3);
 }

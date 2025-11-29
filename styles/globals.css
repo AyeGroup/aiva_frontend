@@ -1,7 +1,8 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap'); */
-
+ 
 @import "tailwindcss";
-@import "tailwindcss/preflight" @tailwind utilities;
+@import "tailwindcss/preflight";
+@tailwind utilities;
+/* @import "tailwindcss/preflight" @tailwind utilities; */
 @custom-variant dark (&:is(.dark *));
 
 @font-face {
@@ -555,16 +556,7 @@ body {
     }
   }
 }
-
-/* RTL Support */
-html[] {
-  direction: rtl;
-}
-
-html[] .ltr {
-  direction: ltr;
-  text-align: left;
-}
+ 
 
 /* Mobile Typography Adjustments */
 @media (max-width: 640px) {
