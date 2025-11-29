@@ -46,8 +46,8 @@ export default function DashboardPage() {
 
  
 
-  if (loading) return <PageLoader />;
-  if (!user) return null;
+  // if (loading) return <PageLoader />;
+  // if (!user) return null;
 
   return (
     <div className="flex min-h-screen">

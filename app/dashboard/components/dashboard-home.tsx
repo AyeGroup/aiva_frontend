@@ -86,7 +86,8 @@ export default function Dashboard() {
   }, [user, currentBot]);
 
   useEffect(() => {
-    if (!user || !currentBot?.uuid) return;
+    // if (!user || !currentBot?.uuid) return;
+    if (!user  ) return;
     // if (isLoading) return;
     fetchAllStatistics();
   }, [user?.id, currentBot?.uuid]);

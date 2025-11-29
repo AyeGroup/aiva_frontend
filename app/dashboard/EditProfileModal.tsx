@@ -19,8 +19,8 @@ export interface ProfileForm {
   full_name: string | null;
   company_name: string | null;
   company_role: string | null;
-  user_logo_url: string | null; // preview or server URL
-  user_logo_file: File | null; // actual file
+  user_logo_url: string | null; 
+  user_logo_file: File | null;  
 }
 
 interface EditProfileModalProps {
@@ -131,7 +131,7 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
               <div className="flex items-end gap-8 p-2">
                 {form.user_logo_url && (
                   <Image
-                    src={form.user_logo_url}
+                    src={form.user_logo_url || "/images/default-avatar.jpg"}
                     width={80}
                     height={80}
                     alt="پروفایل"
