@@ -43,7 +43,7 @@ export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
   const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
-  const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
+  // const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const currentData = chartType === "users" ? usersData : chatsData;
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
@@ -228,7 +228,7 @@ export default function Dashboard() {
                   </h1>
                 </div>
 
-                <div className="flex gap-3 ">
+                {/* <div className="flex gap-3 ">
                   <button
                     onClick={() => setIsStatsDrawerOpen(true)}
                     className="flex plans-trigger-special"
@@ -239,10 +239,9 @@ export default function Dashboard() {
                       <BarChart3 size={20} />
                     </span>
                     <span className="plans-trigger-text">پلن‌ها</span>
-                    {/* <span className="plans-trigger-badge">جدید</span> */}
                   </button>
                   <ChatbotSelector />
-                </div>
+                </div> */}
               </header>
 
               {isNew && (
@@ -643,10 +642,10 @@ export default function Dashboard() {
               )}
             </div>
           </div>
-          <StatsDrawer
+          {/* <StatsDrawer
             isOpen={isStatsDrawerOpen}
             onClose={() => setIsStatsDrawerOpen(false)}
-          />
+          /> */}
         </main>
       </div>
     </div>

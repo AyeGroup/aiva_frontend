@@ -43,7 +43,7 @@ export function Sidebar({
   router,
 }: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
+  // const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
  
@@ -67,7 +67,7 @@ export function Sidebar({
       {/* Header - User Profile */}
       <div className="px-6 py-6 text-center">
         <button
-          onClick={() => setIsAddAccountModalOpen(true)}
+          // onClick={() => setIsAddAccountModalOpen(true)}
           className="w-full flex flex-col items-center gap-3 group"
         >
           <div
@@ -176,11 +176,11 @@ export function Sidebar({
         onClose={() => setIsAddAccountModalOpen(false)}
         onAdd={() => {}}
       /> */}
-      <EditProfileModal
+      {/* <EditProfileModal
         open={isAddAccountModalOpen}
         onClose={() => setIsAddAccountModalOpen(false)}
     
-      />
+      /> */}
     </aside>
   );
 }
