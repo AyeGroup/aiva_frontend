@@ -4,7 +4,7 @@ import { onboardingData } from "../onboarding.data";
 import { GenericSelector } from "@/components/selector";
 import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
 import { BotConfig, SelectorItem } from "@/types/common";
-import { FormInput  } from "lucide-react";
+import { FormInput } from "lucide-react";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -16,7 +16,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
   // const canEditRequiredFields = false;
 
   // const categories = Object.keys(
-    // onboardingData.GroupGuidelines
+  // onboardingData.GroupGuidelines
   // ) as GuidelineCategory[];
 
   // const [activeTab, setActiveTab] = useState<GuidelineCategory>(categories[0]);
@@ -27,7 +27,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
       value: lang.code,
       disabled: lang.disabled,
       label: lang.name,
-      id: lang.code,  
+      id: lang.code,
     }));
 
   return (
@@ -167,7 +167,6 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
               فیلدهای ضروری ورود کاربران
             </div>
             <div className="text-sm text-gray-600 mr-3 ">
-
               فیلدهای ضروری که در ابتدای چت از کاربران دریافت می‌شود.
             </div>
             <div className="flex items-center gap-12 m-4">
@@ -200,85 +199,6 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
               />
             </div>
           </div>
-
-          {/* <div className="py-3">
-            <div className="text-grey-900 font-normal mb-3 flex items-center gap-2">
-              <FormInput className="text-primary" /> فیلدهای ضروری ورود کاربران
-              {!canEditRequiredFields && (
-                <div className="flex items-center -mt-2 gap-1 text-xs text-grey-500">
-                  <InfoIcon className="w-3 h-3" />
-                  <span>این قابلیت مخصوص پلن Pro است</span>
-                </div>
-              )}
-            </div>
-
-            <div
-              className={`flex items-center gap-10 m-4 ${
-                !canEditRequiredFields ? "opacity-50" : ""
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <ToggleSmall
-                  label="نام"
-                  checked={botConfig.require_user_name}
-                  onChange={() =>
-                    canEditRequiredFields &&
-                    updateConfig({
-                      require_user_name: !botConfig.require_user_name,
-                    })
-                  }
-                  disabled={!canEditRequiredFields}
-                />
-                {!canEditRequiredFields && (
-                  <LockIcon
-                    className="w-4 h-4 text-grey-500"
-                    // title="فقط در پلن Pro"
-                  />
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <ToggleSmall
-                  label="تلفن"
-                  checked={botConfig.require_user_phone}
-                  onChange={() =>
-                    canEditRequiredFields &&
-                    updateConfig({
-                      require_user_phone: !botConfig.require_user_phone,
-                    })
-                  }
-                  disabled={!canEditRequiredFields}
-                />
-                {!canEditRequiredFields && (
-                  <LockIcon
-                    className="w-4 h-4 text-grey-500"
-                    // title="فقط در پلن Pro"
-                  />
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <ToggleSmall
-                  label="ایمیل"
-                  checked={botConfig.require_user_email}
-                  onChange={() =>
-                    canEditRequiredFields &&
-                    updateConfig({
-                      require_user_email: !botConfig.require_user_email,
-                    })
-                  }
-                  disabled={!canEditRequiredFields}
-                />
-                {!canEditRequiredFields && (
-                  <LockIcon
-                    className="w-4 h-4 text-grey-500"
-
-                    // title="فقط در پلن Pro"
-                  />
-                )}
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

@@ -42,9 +42,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const can_website_crawling = useFeatureAccess("website_crawling");
-  const can_qa_as_file = useFeatureAccess("qa_as_file");
-  const can_upload_docs = useFeatureAccess("upload_docs");
+  // const can_website_crawling = useFeatureAccess("website_crawling");
+  // const can_qa_as_file = useFeatureAccess("qa_as_file");
+  // const can_upload_docs = useFeatureAccess("upload_docs");
   const fileCount = useUploadLimits();
 
   useEffect(() => {
@@ -515,7 +515,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                     (t) => t.id === selectedType
                   )?.title}
             </h3>
-            {selectedType === "website" && !can_website_crawling && (
+            {/* {selectedType === "website" && !can_website_crawling && (
               <LockFeature feature="website_crawling" />
             )}
             {selectedType === "qa_pair" && !can_qa_as_file && (
@@ -524,15 +524,15 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
             {selectedType === "file" && !can_upload_docs && (
               <LockFeature feature="upload_docs" />
-            )}
-            {selectedType === "file" && can_upload_docs && (
+            )} */}
+            {/* {selectedType === "file" && can_upload_docs && (
               // <FileStack size={10} />
               <div className="flex items-start -mt-3 gap-1 border h-fit border-gray-100 py-1 px-2 rounded-xl bg-gray-50 shadow">
                 <FileStack className="text-secondary size-4 " strokeWidth={3} />
 
                 <div className="text-gray-500 text-xs">{`حداکثر ${fileCount} فایل می‌توانید آپلود کنید`}</div>
               </div>
-            )}
+            )} */}
 
             <Button
               variant="tertiary"
@@ -545,13 +545,13 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
           <div className="space-y-4">
             <div
-              className={`${
-                (selectedType === "file" && !can_upload_docs) ||
-                (selectedType === "website" && !can_website_crawling) ||
-                (selectedType === "qa_pair" && !can_qa_as_file)
-                  ? "pointer-events-none opacity-50"
-                  : ""
-              }`}
+              // className={`${
+              //   (selectedType === "file" && !can_upload_docs) ||
+              //   (selectedType === "website" && !can_website_crawling) ||
+              //   (selectedType === "qa_pair" && !can_qa_as_file)
+              //     ? "pointer-events-none opacity-50"
+              //     : ""
+              // }`}
             >
               <label className="block text-grey-900 mb-2 text-right">
                 {selectedType === "qa_pair" ? (
@@ -576,9 +576,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
             {selectedType === "qa_pair" && (
               <div
-                className={`${
-                  !can_qa_as_file ? "pointer-events-none opacity-50" : ""
-                }`}
+                // className={`${
+                //   !can_qa_as_file ? "pointer-events-none opacity-50" : ""
+                // }`}
               >
                 <label className="block text-grey-900 mb-2 text-right">
                   پاسخ
@@ -635,9 +635,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
             {selectedType === "website" && isAdding && (
               <div
-                className={`${
-                  !can_website_crawling ? "pointer-events-none opacity-50" : ""
-                }`}
+                // className={`${
+                //   !can_website_crawling ? "pointer-events-none opacity-50" : ""
+                // }`}
               >
                 <label className="block text-grey-900 mb-2">
                   آدرس وب
@@ -661,9 +661,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
             {selectedType === "file" && isAdding && (
               <div
-                className={`${
-                  !can_upload_docs ? "pointer-events-none opacity-50" : ""
-                }`}
+                // className={`${
+                //   !can_upload_docs ? "pointer-events-none opacity-50" : ""
+                // }`}
               >
                 <label className="block text-grey-900 mb-2">آپلود فایل</label>
                 <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">

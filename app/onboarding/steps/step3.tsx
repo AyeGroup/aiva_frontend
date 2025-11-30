@@ -14,7 +14,7 @@ interface WizardStep3Props {
 const AnswerLength = ["short", "medium", "long"];
 
 export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
-  const can_advanced_stats = useFeatureAccess("advanced_stats");
+  // const can_advanced_stats = useFeatureAccess("advanced_stats");
 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg">
@@ -41,13 +41,13 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             <MessageSquare className="w-5 h-5 text-brand-primary" />
             میزان انطباق پاسخ با اسناد
           </h3>
-          {!can_advanced_stats && <LockFeature feature="advanced_stats" />}
+          {/* {!can_advanced_stats && <LockFeature feature="advanced_stats" />} */}
         </div>
 
         <div
-          className={`  ${
-            can_advanced_stats ? "" : "pointer-events-none opacity-50"
-          }`}
+        // className={`  ${
+        //   can_advanced_stats ? "" : "pointer-events-none opacity-50"
+        // }`}
         >
           <ThreeLevelSlider
             value={botConfig.k}
@@ -65,13 +65,14 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             <MessageSquare className="w-5 h-5 text-brand-primary" />
             حداکثر طول پاسخ
           </h3>
-          {!can_advanced_stats && <LockFeature feature="advanced_stats" />}
+          {/* {!can_advanced_stats && <LockFeature feature="advanced_stats" />} */}
         </div>
 
         <div
-          className={`grid grid-cols-3 gap-4 ${
-            can_advanced_stats ? "" : "pointer-events-none opacity-50"
-          }`}
+        className="grid grid-cols-3 gap-4 "
+        // className={`grid grid-cols-3 gap-4 ${
+        //   can_advanced_stats ? "" : "pointer-events-none opacity-50"
+        // }`}
         >
           {AnswerLength.map((length) => (
             <button
@@ -102,13 +103,13 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             <Shield className="w-5 h-5 text-brand-primary" />
             تنظیمات پیشرفته
           </h3>
-          {!can_advanced_stats && <LockFeature feature="advanced_stats" />}
+          {/* {!can_advanced_stats && <LockFeature feature="advanced_stats" />} */}
         </div>
         {/* Auto Greeting */}
         <div
-          className={`space-y-3 ${
-            can_advanced_stats ? "" : "pointer-events-none opacity-50"
-          }`}
+        // className={`space-y-3 ${
+        //   can_advanced_stats ? "" : "pointer-events-none opacity-50"
+        // }`}
         >
           <ToggleSetting
             label="خوشامدگویی خودکار"
@@ -125,10 +126,14 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           />
         </div>
         <div
-          className={`flex justify-between items-center ${
-            can_advanced_stats ? "" : "pointer-events-none opacity-50"
-          }`}
-        >  <div className="flex items-center text-gray-900">
+          // className={`flex justify-between items-center ${
+          //   can_advanced_stats ? "" : "pointer-events-none opacity-50"
+          // }`}
+
+          className="flex justify-between items-center "
+        >
+          {" "}
+          <div className="flex items-center text-gray-900">
             شماره تماس
             <span className="text-gray-400 text-xs pr-2">اختیاری</span>
           </div>

@@ -50,8 +50,8 @@ export function WizardStep6({
   const [selectedTone, setSelectedTone] = useState(botConfig.tone);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const canUploadLogo = useFeatureAccess("chatbot_logo");
-  console.log("canUploadLogo: ", canUploadLogo);
+  // const canUploadLogo = useFeatureAccess("chatbot_logo");
+  // console.log("canUploadLogo: ", canUploadLogo);
 
   useEffect(() => {
     if (botConfig.logo_url) setPreview(botConfig.logo_url);
@@ -497,10 +497,10 @@ export function WizardStep6({
               <StepLogin />
             </div>
             <h3 className="text-grey-900 cursor-not-allowed ">لوگوی چت‌بات </h3>
-            {!canUploadLogo && <LockFeature feature="chatbot_logo" />}
+            {/* {!canUploadLogo && <LockFeature feature="chatbot_logo" />} */}
           </div>
           <Card
-            disable={!canUploadLogo}
+            // disable={!canUploadLogo}
             className="p-4 border-0! hover:bg-grey-50  text-center"
             onClick={() => fileInputRef.current?.click()}
           >

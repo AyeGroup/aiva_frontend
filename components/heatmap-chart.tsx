@@ -78,7 +78,6 @@ export function HeatmapChart({
       className="w-full bg-white border border-grey-200 shadow-card"
       style={{
         padding: "16px",
-        padding: "16px",
         borderRadius: "20px",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
       }}
