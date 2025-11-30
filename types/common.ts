@@ -74,6 +74,7 @@ export interface BotConfig {
   require_user_name: boolean;
   require_user_email: boolean;
   bale_token?: string;
+  bale_enabled?: boolean;
   // -------------------برای آمار
   updated_at?: string;
   conversationsToday?: string;
