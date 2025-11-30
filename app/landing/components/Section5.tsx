@@ -63,7 +63,7 @@ const BRANDS_CONFIG: Record<string, BrandConfig> = {
       name: "آرش احمدی",
       role: "مدیر تجربه مشتری",
       company: "Nike",
-      image: "/images/samplecustomer.jpg",
+      image: "/images/samplecustomer7.jpg",
     },
   },
   amazon: {
@@ -92,10 +92,10 @@ const BRANDS_CONFIG: Record<string, BrandConfig> = {
     quoteData: {
       quote:
         "آیوا به ما کمک کرد تا حجم عظیمی از سوالات محصولات رو به صورت خودکار پاسخ بدیم و تجربه خرید مشتریان رو بهبود ببخشیم.",
-      name: "سارا کریمی",
+      name: "مانی کریمی",
       role: "مدیر خدمات مشتری",
       company: "Amazon",
-      image: "/images/samplecustomer.jpg",
+      image: "/images/samplecustomer2.jpg",
     },
   },
   adidas: {
@@ -131,7 +131,7 @@ const BRANDS_CONFIG: Record<string, BrandConfig> = {
       name: "رضا محمودی",
       role: "مدیر فروش دیجیتال",
       company: "Adidas",
-      image: "/images/samplecustomer.jpg",
+      image: "/images/samplecustomer3.jpg",
     },
   },
   microsoft: {
@@ -168,7 +168,7 @@ const BRANDS_CONFIG: Record<string, BrandConfig> = {
       name: "مهدی رضایی",
       role: "مدیر پشتیبانی فنی",
       company: "Microsoft",
-      image: "/images/samplecustomer.jpg",
+      image: "/images/samplecustomer5.jpg",
     },
   },
   zara: {
@@ -197,10 +197,10 @@ const BRANDS_CONFIG: Record<string, BrandConfig> = {
     quoteData: {
       quote:
         "مشتریان ما حالا می‌تونند با کمک آیوا ست‌های لباس مناسب پیدا کنن و راهنمایی سایز دریافت کنن. فروش به شکل چشمگیری افزایش یافت.",
-      name: "نگار امینی",
+      name: "سعید امینی",
       role: "مدیر تجارت الکترونیک",
       company: "Zara",
-      image: "/images/samplecustomer.jpg",
+      image: "/images/samplecustomer4.jpg",
     },
   },
   starbucks: {
@@ -234,10 +234,10 @@ const BRANDS_CONFIG: Record<string, BrandConfig> = {
     quoteData: {
       quote:
         "با آیوا، مشتریان می‌تونن قبل از رسیدن به کافی‌شاپ سفارش بدن و پیشنهادات شخصی‌سازی شده دریافت کنن. تجربه خرید کاملاً تغییر کرد.",
-      name: "امیر حسینی",
+      name: "مینا حسینی",
       role: "مدیر تجربه دیجیتال",
       company: "Starbucks",
-      image: "/images/samplecustomer.jpg",
+      image: "/images/samplecustomer1.jpg",
     },
   },
   apple: {
@@ -269,7 +269,7 @@ const BRANDS_CONFIG: Record<string, BrandConfig> = {
       name: "علی موسوی",
       role: "مدیر خدمات مشتری",
       company: "Apple",
-      image: "/images/samplecustomer.jpg",
+      image: "/images/samplecustomer6.jpg",
     },
   },
 };
