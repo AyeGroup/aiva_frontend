@@ -123,7 +123,7 @@ export function Upgrade() {
     const plan = plans.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
-    console.log("ali:", plan);
+    // console.log("ali:", plan);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
 
@@ -161,7 +161,7 @@ export function Upgrade() {
   };
 
   return (
-    <div className="min-h-screen flex bg-grey-50" dir="rtl">
+    <div className="min-h-screen flex bg-grey-50">
       {/* <Sidebar onNavigate={onNavigate} currentPage="billing" /> */}
       {(isLoading || loading) && <PageLoader />}
       <main className="flex-1 p-8" role="main">
@@ -222,7 +222,7 @@ export function Upgrade() {
 
         {/* Billing Period Toggle */}
         <section className="mb-8" aria-labelledby="plans-heading">
-          <div className="flex flex-col items-center text-center mb-[90px] mt-[0px] mr-[0px] ml-[0px]">
+          <div className="flex flex-col items-center text-center mb-[90px] mt-0 mr-0 ml-0">
             <h2 id="plans-heading" className="text-grey-900 mb-3">
               پلن مناسب خود را انتخاب کنید
             </h2>
@@ -230,12 +230,12 @@ export function Upgrade() {
               با پلن‌های متنوع ما، بهترین گزینه برای کسب‌وکار خود را پیدا کنید
             </p>
 
-            <div className="flex items-center gap-3 bg-gradient-to-br from-grey-50 to-white rounded-3xl p-1.5 border-2 border-grey-200 shadow-sm">
+            <div className="flex items-center gap-3 bg-linear-to-br from-grey-50 to-white rounded-3xl p-1.5 border-2 border-grey-200 shadow-sm">
               <button
                 onClick={() => setBillingPeriod("monthly")}
                 className={`px-6 py-3 rounded-2xl transition-all duration-300 ${
                   billingPeriod === "monthly"
-                    ? "bg-gradient-to-br from-brand-primary to-[#4da9a3] text-white shadow-lg scale-105"
+                    ? "bg-linear-to-br from-brand-primary to-[#4da9a3] text-white shadow-lg scale-105"
                     : "text-grey-600 hover:text-grey-900 hover:bg-grey-100"
                 }`}
                 title="پرداخت ماهانه"
@@ -246,7 +246,7 @@ export function Upgrade() {
                 onClick={() => setBillingPeriod("yearly")}
                 className={`px-6 py-3 rounded-2xl transition-all duration-300 flex items-center gap-2 ${
                   billingPeriod === "yearly"
-                    ? "bg-gradient-to-br from-brand-primary to-[#4da9a3] text-white shadow-lg scale-105"
+                    ? "bg-linear-to-br from-brand-primary to-[#4da9a3] text-white shadow-lg scale-105"
                     : "text-grey-600 hover:text-grey-900 hover:bg-grey-100"
                 }`}
                 title="پرداخت سالانه"
@@ -399,7 +399,7 @@ export function Upgrade() {
                         className="flex items-start gap-3 text-grey-700 text-sm transition-all hover:translate-x-1"
                       >
                         <div
-                          className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                          className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
                           style={{ backgroundColor: `${plan.color}20` }}
                         >
                           <Check
@@ -429,7 +429,7 @@ export function Upgrade() {
                     }}
                   >
                     {!plan.current && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover/btn:translate-x-[200%] transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover/btn:translate-x-[200%] transition-transform duration-700" />
                     )}
                     <span className="relative z-10">
                       {plan.current
@@ -535,7 +535,7 @@ export function Upgrade() {
         </section>
       </main>
 
-      {/* <Toaster position="top-center" dir="rtl" /> */}
+      {/* <Toaster position="top-center"  /> */}
     </div>
   );
 }

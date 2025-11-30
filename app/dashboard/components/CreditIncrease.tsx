@@ -7,7 +7,6 @@ import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { MessageCircle } from "lucide-react";
-import { TRANSACTION_TYPE } from "@/constants/plans";
 
 interface CreditIncreaseModalProps {
   isOpen: boolean;

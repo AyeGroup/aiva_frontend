@@ -1,72 +1,50 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  AlertCircle,
-  TrendingUp,
-  Download,
-  RefreshCw,
-  X,
-  MessageCircle,
-  FileText,
-  Bot,
-  Filter,
-  ChevronDown,
-  Share2,
-  Rocket,
-  Crown,
-  Star,
-  Gift,
-  Users,
-} from "lucide-react";
+import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { PlanCard } from "../plan-card";
+import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WalletCard } from "../wallet-card";
+import { ChatbotList } from "../chatbot-list";
+import { Transactions } from "../Transactions";
+import { CreditIncreaseModal } from "./CreditIncrease";
 import { getDaysRemaining } from "@/utils/common";
+import { AlertCircle, X, Bot } from "lucide-react";
 import {
   getFaNameByCode,
+  getPlanIcon,
   getPlanNameById,
   PLAN_COLORS_BYID,
+  translateFeature,
 } from "@/constants/plans";
-import axiosInstance from "@/lib/axiosInstance";
-import { CreditIncreaseModal } from "./CreditIncrease";
-import { Transactions } from "../Transactions";
-import { ChatbotList } from "../chatbot-list";
-import { BotConfig } from "@/types/common";
+import PageLoader from "@/components/pageLoader";
 
 export function Billing() {
   const { bots } = useBot();
   const { user, loading } = useAuth();
   const router = useRouter();
-  const maxDays = 31;
+  const maxDays = 7;
   const maxCredit = 85;
   const [showDiscountHint, setShowDiscountHint] = useState(true);
-  const [transactionFilter, setTransactionFilter] = useState<
-    "all" | "plan" | "wallet"
-  >("all");
-  const [walletTypeFilter, setWalletTypeFilter] = useState<
-    "all" | "deposit" | "withdraw"
-  >("all");
-  const [dateFrom, setDateFrom] = useState<string>("");
-  const [dateTo, setDateTo] = useState<string>("");
   const [billingBot, setBillingBot] = useState<BotConfig | null>(null);
-
   const [isCreditIncreaseModalOpen, setIsCreditIncreaseModalOpen] =
     useState(false);
   const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
   const [activeSubscrp, setActiveSubscrp] = useState<any[]>([]);
-  // const [selectedChatbotName, setSelectedChatbotName] = useState<string>("");
-  // const [messageCount, setMessageCount] = useState<string>("1000");
   const [isLoading, setIsLoading] = useState(true);
   const [expiringPlan, setExpiringPlan] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
+  // const [transactions, setTransactions] = useState<any[]>([]);
+  // const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
+  const [periods, setPeriods] = useState<Record<string, "monthly" | "yearly">>(
+    {}
+  );
 
   useEffect(() => {
     if (!user) return;
@@ -95,7 +73,7 @@ export function Billing() {
 
         setExpiringPlan(expiring);
 
-        console.log("expiringPlan", expiring);
+        // console.log("expiringPlan", expiring);
       } catch (error) {
         console.error("خطا در دریافت داده کاربران:", error);
       } finally {
@@ -121,7 +99,7 @@ export function Billing() {
         );
         setPlans(filteredPlans);
 
-        // console.log("allPlans :", allPlans);
+        console.log("allPlans :", allPlans);
         // console.log("filteredPlans :", filteredPlans);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
@@ -133,28 +111,28 @@ export function Billing() {
     fetchAllData();
   }, [user?.token]);
 
-  useEffect(() => {
-    if (!user?.token) return;
+  // useEffect(() => {
+  //   if (!user?.token) return;
 
-    const fetchHistory = async () => {
-      setIsLoading(true);
+  //   const fetchHistory = async () => {
+  //     setIsLoading(true);
 
-      try {
-        const res = await axiosInstance.get(
-          API_ROUTES.FINANCIAL.TRANSACTION_ALL
-        );
+  //     try {
+  //       const res = await axiosInstance.get(
+  //         API_ROUTES.FINANCIAL.TRANSACTION_ALL
+  //       );
 
-        setTransactions(res.data?.data);
-        console.log("HISTORY :", res.data?.data);
-      } catch (apiError: any) {
-        console.warn("API fetch failed:", apiError);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       setTransactions(res.data?.data);
+  //       console.log("HISTORY :", res.data?.data);
+  //     } catch (apiError: any) {
+  //       console.warn("API fetch failed:", apiError);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchHistory();
-  }, [user?.token]);
+  //   fetchHistory();
+  // }, [user?.token]);
 
   const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
     return [
@@ -168,21 +146,14 @@ export function Billing() {
       },
     ];
   };
-  const getPlanIcon = (planCode: string) => {
-    switch (planCode.toUpperCase()) {
-      case "FREE":
-        return <Gift />;
-      case "BASIC":
-        return <Rocket />;
-      case "MEDIUM":
-        return <Crown />;
-      case "ADVANCE":
-        return <Star />;
-      case "ENTERPRISE":
-        return <Users />;
-      default:
-        return <Gift />;
-    }
+  const handlePeriodChange = (
+    planCode: string,
+    newPeriod: "monthly" | "yearly"
+  ) => {
+    setPeriods((prev) => ({
+      ...prev,
+      [planCode]: newPeriod, // ثبت period مخصوص این پلن
+    }));
   };
 
   const handlePlanPurchase = (planName: string) => {
@@ -202,184 +173,30 @@ export function Billing() {
     const plan = plans.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
-    console.log("ali:", plan);
+    // console.log("ali:", plan);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
-      // 
-        localStorage.setItem(
-          "selectedPlan",
-          JSON.stringify({
-            ...plan,
-            billingBot,
-            period,
-          })
-        );
+      //
+      localStorage.setItem(
+        "selectedPlan",
+        JSON.stringify({
+          ...plan,
+          billingBot,
+          periods,
+        })
+      );
       router.push("/pay/checkout");
     }
   };
-
-  const translateFeature = (key: string): string => {
-    const dict: Record<string, string> = {
-      base_stats: "آمار پایه",
-      choosing_llm: "انتخاب مدل هوش مصنوعی",
-      usage_reports: "گزارش مصرف",
-      upload_docs: "آپلود فایل",
-      chatbot_logo: "لوگوی چت‌بات اختصاصی",
-      advanced_stats: "آمار پیشرفته",
-      website_crawling: "خزش وب‌سایت",
-      qa_as_file: "سوال و پاسخ از فایل",
-      chatbot_greetings: "پیام خوش‌آمدگویی",
-      chatbot_k: "حافظه چت‌بات",
-      chatbot_emoji: "استفاده از ایموجی",
-      chatbot_support_phone: "پشتیبانی تلفنی",
-      chatbot_answer_length: "کنترل طول پاسخ",
-    };
-    return dict[key] || key;
-  };
-
-  const walletTransactions = [
-    {
-      id: "WT-001",
-      type: "deposit" as const,
-      amount: 3000000,
-      description: "واریز به کیف پول از طریق درگاه بانکی",
-      date: "2024-01-15",
-      status: "completed" as const,
-    },
-    {
-      id: "WT-002",
-      type: "withdraw" as const,
-      amount: 299000,
-      description: "خرید پلن پایه - پشتیبانی مشتریان",
-      date: "2024-01-10",
-      status: "completed" as const,
-    },
-    {
-      id: "WT-003",
-      type: "withdraw" as const,
-      amount: 799000,
-      description: "خرید پلن متوسط - فروش آنلاین",
-      date: "2024-01-08",
-      status: "completed" as const,
-    },
-    {
-      id: "WT-004",
-      type: "deposit" as const,
-      amount: 500000,
-      description: "واریز به کیف پول از طریق کارت به کارت",
-      date: "2024-01-05",
-      status: "pending" as const,
-    },
-    {
-      id: "WT-005",
-      type: "withdraw" as const,
-      amount: 1500000,
-      description: "خرید پلن سازمانی - ارتباط با مشتری",
-      date: "2024-01-02",
-      status: "completed" as const,
-    },
-  ];
-
-  const totalDeposit = walletTransactions
-    .filter((t) => t.type === "deposit" && t.status === "completed")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const totalWithdraw = walletTransactions
-    .filter((t) => t.type === "withdraw" && t.status === "completed")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  // تبدیل تاریخ فارسی به میلادی برای مقایسه
-
-  // فیلتر تراکنش‌ها
-  const filteredTransactions = transactions.filter((transaction) => {
-    // فیلتر نوع (پلن/کیف پول)
-    if (transactionFilter === "plan" && transaction.type !== "plan")
-      return false;
-    if (transactionFilter === "wallet" && transaction.type !== "wallet")
-      return false;
-
-    // فیلتر نوع تراکنش کیف پول (واریز/برداشت)
-    if (transaction.type === "wallet" && walletTypeFilter !== "all") {
-      if (
-        walletTypeFilter === "deposit" &&
-        transaction.walletType !== "deposit"
-      )
-        return false;
-      if (
-        walletTypeFilter === "withdraw" &&
-        transaction.walletType !== "withdraw"
-      )
-        return false;
-    }
-
-    // فیلتر تاریخ
-    if (dateFrom || dateTo) {
-      const transactionDate = transaction.date;
-      if (!transactionDate) return false;
-
-      if (dateFrom) {
-        const fromDate = new Date(dateFrom);
-        if (transactionDate < fromDate) return false;
-      }
-
-      if (dateTo) {
-        const toDate = new Date(dateTo);
-        toDate.setHours(23, 59, 59, 999); // انتهای روز
-        if (transactionDate > toDate) return false;
-      }
-    }
-
-    return true;
-  });
-  // console.log("filteredTransactions", filteredTransactions);
-
-  // پاکسازی فیلترها
 
   const handleUpgrade = (chatbot: any) => {
     setSelectedChatbot(chatbot);
     setIsCreditIncreaseModalOpen(true);
   };
 
-  // محاسبه قیمت بر اساس تعداد پیام (قیمت‌گذاری پله‌ای)
-  const calculateMessagePrice = (
-    count: number
-  ): { pricePerMessage: number; discount: number; discountPercent: number } => {
-    if (count >= 50000) {
-      return { pricePerMessage: 25, discount: 15, discountPercent: 15 }; // 15% تخفیف
-    } else if (count >= 20000) {
-      return { pricePerMessage: 30, discount: 10, discountPercent: 10 }; // 10% تخفیف
-    } else if (count >= 10000) {
-      return { pricePerMessage: 35, discount: 5, discountPercent: 5 }; // 5% تخفیف
-    } else if (count >= 5000) {
-      return { pricePerMessage: 40, discount: 0, discountPercent: 0 };
-    } else {
-      return { pricePerMessage: 50, discount: 0, discountPercent: 0 };
-    }
-  };
-
-  const getProgressColor = (percentage: number): string => {
-    if (percentage >= 90) return "#FF6B6B";
-    if (percentage >= 70) return "#FFA18E";
-    return "#65bcb6";
-  };
-
-  // محاسبه آمار کلی
-  // const totalChatbots = activeSubscrp.length;
-  // const totalCredit = activeSubscrp.reduce(
-  //   (sum, plan) => sum + (plan.totalCredit - plan.usedCredit),
-  //   0
-  // );
-  // const totalFileChars = activeSubscrp.reduce(
-  //   (sum, plan) => sum + (plan.totalFileChars - plan.usedFileChars),
-  //   0
-  // );
-  // const totalUsedCredit = activeSubscrp.reduce(
-  //   (sum, plan) => sum + plan.usedCredit,
-  //   0
-  // );
-
   return (
-    <div className="min-h-screen flex bg-grey-50" dir="rtl">
+    <div className="min-h-screen flex bg-grey-50">
+      {(isLoading || loading) && <PageLoader />}
       <main className="flex-1 p-8" role="main">
         <header className="mb-8">
           <div className="text-right">
@@ -390,31 +207,12 @@ export function Billing() {
           </div>
         </header>
 
-        {/* Credit Summary Cards */}
         <section className="mb-8" aria-label="خلاصه اعتبار">
-          <WalletCard
-            // balance={walletBalance}
-            totalDeposit={totalDeposit}
-            totalWithdraw={totalWithdraw}
-            transactions={walletTransactions}
-            onAddCredit={() => {
-              toast.success("افزایش موجودی", {
-                description: "به صفحه پرداخت منتقل می‌شوید...",
-                duration: 2000,
-              });
-              setTimeout(() => router.push("/dashboard?tab=billing"), 2000);
-            }}
-            onDownloadHistory={() => {
-              toast.success("دانلود تاریخچه", {
-                description: "فایل تاریخچه تراکنش‌ها در حال آماده‌سازی است",
-                duration: 3000,
-              });
-            }}
-          />
+          <WalletCard />
         </section>
 
         {/* Discount & Expiring Alert */}
-        {showDiscountHint && expiringPlan && (
+        {showDiscountHint && expiringPlan && expiringPlan.lentgh > 0 && (
           <section className="mb-8" aria-label="هشدار و اطلاعیه‌ها">
             <Card className="p-0 overflow-hidden border-2 bg-[#FFA18E] mb-4">
               <div
@@ -458,7 +256,7 @@ export function Billing() {
                       {plan.daysRemaining <= maxDays ? (
                         <>
                           <strong className="text-red-600">
-                            {plan.daysRemaining} روز
+                            {plan.daysRemaining.toLocaleString("fa-IR")} روز
                           </strong>{" "}
                           دیگر منقضی می‌شود.
                         </>
@@ -540,7 +338,7 @@ export function Billing() {
               </div>
             ) : (
               <div className="overflow-x-auto" style={{ direction: "rtl" }}>
-                <table className="w-full" dir="rtl">
+                <table className="w-full">
                   <thead>
                     <tr className="border-b border-grey-200">
                       <th className="px-4 py-3 text-right text-grey-600">
@@ -590,7 +388,7 @@ export function Billing() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <div
-                                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                                 style={{
                                   backgroundColor: `${planColor}20`,
                                 }}
@@ -754,15 +552,16 @@ export function Billing() {
             </div>
           </div>
 
-          <div className="available-plans-grid">
+          <div className=" grid  grid-cols-2  gap-8 px-6">
             {plans.map((plan, index) => (
               <PlanCard
                 key={index}
                 name={getFaNameByCode(plan?.plan) || plan?.plan}
-                description=""
+                description={plan?.description}
                 priceMonthly={Number(plan?.price_monthly_irr || 0)}
                 priceYearly={Number(plan?.price_yearly_irr || 0)}
-                period={period}
+                period={periods[plan.plan] || "monthly"}
+                onPeriodChange={(p) => handlePeriodChange(plan.plan, p)}
                 icon={getPlanIcon(plan.plan)}
                 features={mapFeatures(plan)}
                 onSelect={() => {

@@ -3,19 +3,20 @@ import React, { useState, useEffect } from "react";
 import { useBot } from "@/providers/BotProvider";
 import { BotConfig } from "@/types/common";
 import { ChevronDown } from "lucide-react";
+import PageLoader from "@/components/pageLoader";
 
 export function ChatbotSelector() {
-  const { bots, currentBot, setCurrentBot, refreshBots } = useBot();
+  const { bots, currentBot, setCurrentBot } = useBot();
   const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [selectedChatbot, setSelectedChatbot] = useState<BotConfig | null>(
     null
   );
 
   useEffect(() => {
-    if (!bots || bots.length === 0) return;
-    setSelectedChatbot(currentBot);
-  }, [bots, currentBot]);
+    if (currentBot) {
+      setSelectedChatbot(currentBot);
+    }
+  }, [currentBot]);
 
   const handleSelect = (chatbot: BotConfig) => {
     setSelectedChatbot(chatbot);
@@ -23,23 +24,9 @@ export function ChatbotSelector() {
     setIsOpen(false);
   };
 
-  const loadBots = async () => {
-    setLoading(true);
-    try {
-      await refreshBots();
-    } catch (error) {
-      console.error("Failed to load bots:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!bots || bots.length === 0) {
-      loadBots();
-    }
-  }, []);
-
+  if (!currentBot && bots.length === 0) {
+    return <PageLoader />;
+  }
   if (!selectedChatbot) return null;
 
   return (

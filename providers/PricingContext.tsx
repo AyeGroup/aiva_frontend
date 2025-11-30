@@ -1,0 +1,159 @@
+"use client";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import axiosInstance from "@/lib/axiosInstance";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { Plan, PricingContextType } from "@/types/common";
+import { useBot } from "./BotProvider";
+import { getPlanCodeById } from "@/constants/plans";
+
+export const PricingContext = createContext<PricingContextType | null>(null);
+
+export const PricingProvider = ({ children }: { children: ReactNode }) => {
+  const [plans, setPlans] = useState<Plan[] | null>(null);
+  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
+  const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
+    {}
+  );
+  const { currentBot } = useBot();
+
+  // -------------------------------
+  // 1) Load pricing ONCE
+  // -------------------------------
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
+
+        const allPlans = res.data?.data?.subscription_plans ?? [];
+        setPlans(allPlans);
+      } catch (error) {
+        console.error("Pricing fetch failed:", error);
+      }
+    };
+
+    fetchPricing();
+  }, []); // فقط یک بار اجرا شود
+
+  // -------------------------------
+  // 2) Update user currentPlan WHEN bot changes
+  // -------------------------------
+  useEffect(() => {
+    const fetchUserPlan = async () => {
+      if (!currentBot?.uuid) {
+        setCurrentPlan("FREE");
+        return;
+      }
+
+      try {
+        const res = await axiosInstance.get(
+          API_ROUTES.FINANCIAL.SUBSCRIPTION(currentBot.uuid)
+        );
+
+        const myPlan = getPlanCodeById(res.data?.data?.plan) ?? "FREE";
+        setCurrentPlan(myPlan);
+      } catch (error) {
+        console.error("Failed to fetch user plan:", error);
+        setCurrentPlan("FREE");
+      }
+    };
+
+    fetchUserPlan();
+  }, [currentBot]); // با هر تغییر bot، دوباره اجرا می‌شود
+
+  // -------------------------------
+  // 3) Build feature → minPlan map
+  // -------------------------------
+  useEffect(() => {
+    if (!plans) return;
+
+    const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+    const map: Record<string, string> = {};
+
+    for (const plan of planOrder) {
+      const p = plans.find((x) => x.plan === plan);
+      if (!p) continue;
+
+      p.features.forEach((feature) => {
+        if (!map[feature]) {
+          map[feature] = plan;
+        }
+      });
+    }
+
+    setFeatureMinPlan(map);
+  }, [plans]);
+
+  return (
+    <PricingContext.Provider
+      value={{
+        plans,
+        currentPlan,
+        setCurrentPlan,
+        featureMinPlan,
+      }}
+    >
+      {children}
+    </PricingContext.Provider>
+  );
+};
+
+// -----------------------------------------
+// HOOKS
+// -----------------------------------------
+
+export const usePricing = () => {
+  const context = useContext(PricingContext);
+
+  if (!context) {
+    throw new Error("usePricing must be used inside PricingProvider");
+  }
+
+  return context;
+};
+
+export const useFeatureAccess = (feature: string) => {
+  const { currentPlan, featureMinPlan } = usePricing();
+
+  if (!currentPlan) return false;
+
+  const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+
+  const userIndex = planOrder.indexOf(currentPlan);
+  const minPlan = featureMinPlan[feature] ?? "FREE";
+  const minIndex = planOrder.indexOf(minPlan);
+
+  return userIndex >= minIndex;
+};
+
+export const useFeatureRequiredPlan = (feature: string) => {
+  const { featureMinPlan } = usePricing();
+  return featureMinPlan[feature] ?? "FREE";
+};
+
+export const useUploadLimits = () => {
+  const { currentPlan } = usePricing();
+  if (!currentPlan) return 0;
+  console.log("pricingcontext currentPlan: ", currentPlan);
+  switch (currentPlan) {
+    case "FREE":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_FREE);
+    case "BASIC":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_BASIC);
+    case "MEDIUM":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_MEDIUM);
+    case "ADVANCE":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ADVANCE);
+    case "ENTERPRISE":
+      return process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ENTERPRISE === "Infinity"
+        ? Infinity
+        : Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ENTERPRISE);
+    default:
+      return 0;
+  }
+};

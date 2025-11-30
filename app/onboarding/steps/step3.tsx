@@ -1,35 +1,20 @@
-"use client"
+"use client";
 import { Input } from "@/components/input";
-import { useState } from "react";
-import {  BotConfig } from "@/types/common";
+import { BotConfig } from "@/types/common";
 import { Settings, MessageSquare, Shield } from "lucide-react";
 import ToggleSetting from "@/components/toggle-setting";
 import ThreeLevelSlider from "@/components/ThreeLevelSlider";
+import LockFeature from "../LockFeature";
+import { useFeatureAccess } from "@/providers/PricingContext";
 
 interface WizardStep3Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
 }
-const AnswerLength=[ "short","medium","long"]
-  
+const AnswerLength = ["short", "medium", "long"];
 
 export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
-  // const [behaviors, setBehaviors] = useState<BehaviorSettings>({
-  //   k: 10,
-  //   maxResponseLength: "medium",
-  //   useGreeting: true,
-  //   useEmojis: false,
-  //   support_phone: "",
-  // });
-
-  const [sliderValue, setSliderValue] = useState(10);
-console.log("ThreeLevelSlider imported!");
-
-  // const handleBehaviorChange = (key: keyof BehaviorSettings, value: any) => {
-  //   const updated = { ...behaviors, [key]: value };
-  //   setBehaviors(updated);
-  //   updateConfig({ behaviors: updated });
-  // };
+  const can_advanced_stats = useFeatureAccess("advanced_stats");
 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg">
@@ -42,6 +27,7 @@ console.log("ThreeLevelSlider imported!");
           <h2 className="text-grey-900 mb-2 text-[24px] font-bold">
             تنظیمات پاسخ‌گویی
           </h2>
+
           <p className="text-grey-600">
             رفتار و قوانین پاسخ‌گویی چت‌بات خود را تنظیم کنید
           </p>
@@ -50,34 +36,47 @@ console.log("ThreeLevelSlider imported!");
 
       {/* Response Style */}
       <div className="space-y-4">
-        <h3 className="text-grey-900 font-semibold flex items-center gap-2">
-          <MessageSquare className="w-5 h-5 text-brand-primary" />
-          میزان انطباق پاسخ با اسناد
-        </h3>
-        {/* <ThreeLevelSlider value={sliderValue} onChange={setSliderValue} /> */}
-        <ThreeLevelSlider
-          value={sliderValue}
-          onChange={(val) => {
-            setSliderValue(val);
-            updateConfig({ k: val });
-          }}
-        />
+        <div className="flex">
+          <h3 className="text-grey-900 font-semibold flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-brand-primary" />
+            میزان انطباق پاسخ با اسناد
+          </h3>
+          {!can_advanced_stats && <LockFeature feature="advanced_stats" />}
+        </div>
+
+        <div
+          className={`  ${
+            can_advanced_stats ? "" : "pointer-events-none opacity-50"
+          }`}
+        >
+          <ThreeLevelSlider
+            value={botConfig.k}
+            onChange={(val) => {
+              updateConfig({ k: val });
+            }}
+          />
+        </div>
       </div>
 
       {/* Response Length */}
       <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <MessageSquare className="w-5 h-5 text-brand-primary" />
-          <h3 className="text-grey-900">حداکثر طول پاسخ</h3>
+        <div className="flex">
+          <h3 className="text-grey-900 font-semibold flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-brand-primary" />
+            حداکثر طول پاسخ
+          </h3>
+          {!can_advanced_stats && <LockFeature feature="advanced_stats" />}
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div
+          className={`grid grid-cols-3 gap-4 ${
+            can_advanced_stats ? "" : "pointer-events-none opacity-50"
+          }`}
+        >
           {AnswerLength.map((length) => (
             <button
               key={length}
               onClick={() => updateConfig({ answer_length: length })}
-              // onChange={(e) => updateConfig({ answer_length: e.target.value })}
-              // onClick={() => handleBehaviorChange("maxResponseLength", length)}
               className={`p-4 rounded-lg border-2 transition-all ${
                 botConfig.answer_length === String(length)
                   ? "border-brand-primary bg-brand-primary/5"
@@ -98,45 +97,38 @@ console.log("ThreeLevelSlider imported!");
 
       {/* Advanced Settings */}
       <div className="space-y-4">
-        <h3 className="text-grey-900 flex items-center gap-3">
-          <Shield className="w-5 h-5 text-brand-primary" />
-          تنظیمات پیشرفته
-        </h3>
-
-        <div className="space-y-3">
-          {/* Auto Greeting */}
+        <div className="flex">
+          <h3 className="text-grey-900 font-semibold flex items-center gap-2">
+            <Shield className="w-5 h-5 text-brand-primary" />
+            تنظیمات پیشرفته
+          </h3>
+          {!can_advanced_stats && <LockFeature feature="advanced_stats" />}
+        </div>
+        {/* Auto Greeting */}
+        <div
+          className={`space-y-3 ${
+            can_advanced_stats ? "" : "pointer-events-none opacity-50"
+          }`}
+        >
           <ToggleSetting
             label="خوشامدگویی خودکار"
             description="پیام خوشامد به صورت خودکار نمایش یابد"
             value={botConfig.greetings}
-            onToggle={
-              () => updateConfig({ greetings: !botConfig.greetings })
-              // handleBehaviorChange("useGreeting", !behaviors.useGreeting)
-            }
+            onToggle={() => updateConfig({ greetings: !botConfig.greetings })}
           />
 
-          {/* Use Emojis */}
           <ToggleSetting
             label="استفاده از ایموجی"
             description="ایموجی در پاسخ‌ها استفاده شود"
             value={botConfig.use_emoji}
-            onToggle={
-              () => updateConfig({ use_emoji: !botConfig.use_emoji })
-              // handleBehaviorChange("useEmojis", !behaviors.useEmojis)
-            }
+            onToggle={() => updateConfig({ use_emoji: !botConfig.use_emoji })}
           />
-
-          {/* <ToggleSetting
-            label="انتقال به پشتیبانی"
-            description="اگر پاسخی نیافت، کاربر به پشتیبانی راهنمایی شود"
-            value={behaviors.useSupport}
-            onToggle={() =>
-              handleBehaviorChange("useSupport", !behaviors.useSupport)
-            }
-          /> */}
         </div>
-        <div className="flex justify-between items-center ">
-          <div className="flex items-center text-gray-900">
+        <div
+          className={`flex justify-between items-center ${
+            can_advanced_stats ? "" : "pointer-events-none opacity-50"
+          }`}
+        >  <div className="flex items-center text-gray-900">
             شماره تماس
             <span className="text-gray-400 text-xs pr-2">اختیاری</span>
           </div>
@@ -151,7 +143,7 @@ console.log("ThreeLevelSlider imported!");
               // handleBehaviorChange("support_phone", e.target.value)
             }
             placeholder="شماره پشتیبانی را وارد کنید"
-            className="w-full text-sm rounded-2xl p-4 border !bg-white text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
+            className="w-full text-sm rounded-2xl p-4 border bg-white! text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary text-center!"
             maxLength={16}
           />
         </div>
@@ -159,4 +151,3 @@ console.log("ThreeLevelSlider imported!");
     </div>
   );
 }
-

@@ -70,7 +70,10 @@ export interface BotConfig {
   greetings: boolean;
   use_emoji: boolean;
   active: boolean;
-
+  require_user_phone: boolean;
+  require_user_name: boolean;
+  require_user_email: boolean;
+  bale_token?: string;
   // -------------------برای آمار
   updated_at?: string;
   conversationsToday?: string;
@@ -103,6 +106,12 @@ export interface PurchaseHistory {
   amount: string;
   status: "success" | "failed" | "pending";
   invoiceUrl?: string;
+}
+export interface PricingContextType {
+  plans: Plan[] | null;
+  currentPlan: string | null;
+  setCurrentPlan: (p: string) => void;
+  featureMinPlan: Record<string, string>;
 }
 
 export interface Plan {

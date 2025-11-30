@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Dialog } from "@/components/dialog";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Label } from "@/components/label";
@@ -9,7 +8,6 @@ import {
   Globe,
   Palette,
   CheckCircle,
-  MessageCircle,
   Trash2,
   HelpCircle,
 } from "lucide-react";
@@ -192,17 +190,17 @@ export function AddChatbotModal({
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center add-chatbot-modal"
+      className="fixed inset-0 z-9999 flex items-center justify-center add-chatbot-modal"
       style={{ isolation: "isolate" }}
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm z-[9998]"
+        className="absolute inset-0 bg-black/20 backdrop-blur-sm z-9998"
         onClick={handleClose}
       />
 
       {/* Modal */}
-      <div className="relative add-chatbot-modal-content bg-white rounded-3xl p-8 max-w-lg w-full mx-4 shadow-2xl border border-grey-200 z-[9999]">
+      <div className="relative add-chatbot-modal-content bg-white rounded-3xl p-8 max-w-lg w-full mx-4 shadow-2xl border border-grey-200 z-9999">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -368,7 +366,6 @@ export function AddChatbotModal({
                       }
                       placeholder="پاسخ مربوط به این سوال را وارد کنید..."
                       className="w-full p-3 rounded-lg border border-grey-200 focus:border-brand-primary transition-colors text-right resize-none h-20"
-                      dir="rtl"
                     />
                   </div>
                 </div>

@@ -12,6 +12,7 @@ interface CardProps {
   radius?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   hover?: boolean;
+  disable?:boolean
   onClick?: () => void;
 }
 
@@ -24,6 +25,7 @@ export function Card({
   padding = "md",
   radius = "lg",
   className = "",
+  disable = false,
   hover = false,
   onClick,
 }: CardProps) {
@@ -75,9 +77,11 @@ export function Card({
 
   return (
     <div
-      className={`${combinedClasses} !border-2 !border-solid !border-grey-200`}
+      className={`${combinedClasses} ${
+        disable ? "pointer-events-none opacity-50" : ""
+      } border-2! border-solid! border-grey-200!`}
       style={style}
-      onClick={onClick} 
+      onClick={onClick}
     >
       {title && (
         <div className="text-center mb-4">

@@ -4,8 +4,10 @@ import PageLoader from "@/components/pageLoader";
 import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
+import { BarChart3 } from "lucide-react";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { RecentChats } from "../recent-chats";
+import { StatsDrawer } from "../stats-drawer";
 import { HeatmapChart } from "@/components/heatmap-chart";
 import { UpgradeBanner } from "../upgrade-banner";
 import { ActivityChart } from "@/components/activity-chart";
@@ -29,7 +31,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { bots, currentBot } = useBot();
-  const [isNew, setIsNew] = useState(true);
+  const [isNew, setIsNew] = useState<boolean | null>(null);
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChartLoading, setIsChartLoading] = useState(false);
@@ -41,6 +43,7 @@ export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
   const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
+  const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const currentData = chartType === "users" ? usersData : chatsData;
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
@@ -49,25 +52,18 @@ export default function Dashboard() {
     { value: "30d", label: "۳۰ روز اخیر", disable: false },
     { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
-
-  //Authentication
-  useEffect(() => {
-    if (!user) {
-      router.push("/auth/login");
-      return;
-    }
-  }, [loading, user]);
+  // console.log("elham1");
 
   // user has a bot
   useEffect(() => {
     if (!bots) return;
-    // console.log
     if (bots && bots.length > 0) setIsNew(false);
     else setIsNew(true);
   }, [bots]);
 
   //statistic cover
   useEffect(() => {
+    // console.log("elham : ",user,currentBot);
     if (!user) return;
     if (!currentBot?.uuid) return;
 
@@ -89,30 +85,40 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
-
   useEffect(() => {
-  if (!user || !currentBot?.uuid) return;
-  if (isLoading) return; // تا وقتی در حال لود هست، دوباره فراخوانی نکن
-  fetchAllStatistics();
-}, [user?.id, currentBot?.uuid, timeRange]);
+    // if (!user || !currentBot?.uuid) return;
+    if (!user  ) return;
+    // if (isLoading) return;
+    fetchAllStatistics();
+  }, [user?.id, currentBot?.uuid]);
 
-const fetchAllStatistics = async () => {
-  setIsLoading(true);
-  await Promise.all([
-    fetchUserTrend(timeRange),
-    fetchSessionTrend(timeRange),
-    fetchActiveUsers(),
-    fetchRecentSession(),
-    fetchFaqList(),
-  ]);
-  setIsLoading(false);
-};
- 
-  useEffect(() => {
-    if (currentBot) {
-      // console.log("بات انتخاب شده:", currentBot.name);
+  const fetchAllStatistics = async () => {
+  // console.log("elham")
+    setIsLoading(true);
+
+    try {
+      const results = await Promise.allSettled([
+        fetchUserTrend(timeRange),
+        fetchSessionTrend(timeRange),
+        fetchActiveUsers(),
+        fetchRecentSession(),
+        fetchFaqList(),
+      ]);
+
+      // اگر خواستی نتیجه خطاها را لاگ بگیری:
+      results.forEach((r, i) => {
+        if (r.status === "rejected") {
+          console.error(`Error in promise ${i}`, r.reason);
+        }
+      });
+    } catch (err) {
+      // اینجا معمولاً اجرا نمی‌شود چون allSettled خطا پرتاب نمی‌کند
+      console.error("Unexpected error:", err);
+    } finally {
+      setIsLoading(false);
+      console.log("isloading",isLoading)
     }
-  }, [currentBot]);
+  };
 
   const fetchUserTrend = async (days: string) => {
     if (!currentBot) return;
@@ -206,7 +212,7 @@ const fetchAllStatistics = async () => {
   if (!user) return null;
 
   return (
-    <div className="h-screen  bg-white !z-0" style={{ zIndex: 0 }}>
+    <div className="h-screen  bg-white z-0!" style={{ zIndex: 0 }}>
       {/* overflow-hidden */}
       <div className="flex h-screen">
         {/* Main Content */}
@@ -221,7 +227,20 @@ const fetchAllStatistics = async () => {
                     میزکار
                   </h1>
                 </div>
-                <div>
+
+                <div className="flex gap-3 ">
+                  <button
+                    onClick={() => setIsStatsDrawerOpen(true)}
+                    className="flex plans-trigger-special"
+                    title="مشاهده پلن‌های پیشنهادی"
+                    aria-label="باز کردن پنل پلن‌ها"
+                  >
+                    <span className="plans-trigger-icon">
+                      <BarChart3 size={20} />
+                    </span>
+                    <span className="plans-trigger-text">پلن‌ها</span>
+                    {/* <span className="plans-trigger-badge">جدید</span> */}
+                  </button>
                   <ChatbotSelector />
                 </div>
               </header>
@@ -240,7 +259,7 @@ const fetchAllStatistics = async () => {
 
             {/* آمار کلیدی امروز */}
             {!isNew && (
-              <div className=" !z-0 stats-hero-section bg-[#E3F4F1] p-8 rounded-3xl border-2 border-white/50 shadow-xl backdrop-blur-sm mb-8">
+              <div className=" z-0! stats-hero-section bg-[#E3F4F1] p-8 rounded-3xl border-2 border-white/50 shadow-xl backdrop-blur-sm mb-8">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-2xl font-bold text-grey-900 text-[20px]">
                     📊 آمار کلیدی
@@ -452,6 +471,7 @@ const fetchAllStatistics = async () => {
                         تعداد گفتگوها
                       </button>
                     </div>
+
                     <GenericSelector
                       items={TIME_RANGES}
                       selectedValue={timeRange}
@@ -464,7 +484,7 @@ const fetchAllStatistics = async () => {
                     />
                   </div>
                   <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2 px-[12px] py-[0px]">
+                    <div className="flex items-center justify-between mb-2 px-3 py-0">
                       <p className="text-body-small text-[rgba(166,166,166,1)] text-[14px]">
                         {chartType === "users"
                           ? "تعداد کاربران فعال در هر روز"
@@ -503,20 +523,20 @@ const fetchAllStatistics = async () => {
 
                 {/* Active Users Container */}
                 <div
-                  className="glass-effect rounded-[var(--radius-card)] p-6"
+                  className="glass-effect rounded-card p-6"
                   style={{
                     background: "#FEF9F6",
                     border: "2px solid transparent",
                     backgroundClip: "padding-box",
                   }}
                 >
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-4 gap-4">
-                    {activeUsers.slice(0,3).map((user, index) => {
-                      const color = colors[index % colors.length]; // انتخاب رنگ به ترتیب
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-4">
+                    {activeUsers.slice(0, 3).map((user, index) => {
+                      const color = colors[index % colors.length];
                       return (
                         <div
                           key={index}
-                          className="relative bg-white rounded-lg p-4 pt-8 text-center shadow-sm hover-lift"
+                          className="relative bg-white  rounded-lg p-4 pt-8 text-center shadow-sm hover-lift"
                         >
                           <div
                             className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white font-bold"
@@ -527,19 +547,26 @@ const fetchAllStatistics = async () => {
                               <User />
                             </div>
                           </div>
-
-                          <h4
-                            className="font-bold text-grey-900 mb-2 mt-2 truncate"
-                            // title={user.name}
-                          >
-                            {/* {user.name} */}
-                            کاربر شماره {convertToPersian(index + 1)}
-                          </h4>
-
-                          <p className="text-2xl font-semibold text-grey-900">
-                            {convertToPersian(user.session_count)}
+                          {user.name && (
+                            <div className="truncate font-semibold">
+                              {user.name}
+                            </div>
+                          )}
+                          {/* <div className="">e_tanha@yahoo.com</div>
+                          <div className="">09123262118 </div>{" "} */}
+                          {user.email && (
+                            <div className="truncate  font-semibold">
+                              {user.email}
+                            </div>
+                          )}
+                          {user.phone && (
+                            <div className="truncate  font-semibold">
+                              {user.phone}
+                            </div>
+                          )}
+                          <p className=" mt-1 text-grey-900">
+                            {convertToPersian(user.session_count)} گفتگو
                           </p>
-                          <p className="text-body-small text-grey-500">گفتگو</p>
                         </div>
                       );
                     })}
@@ -616,6 +643,10 @@ const fetchAllStatistics = async () => {
               )}
             </div>
           </div>
+          <StatsDrawer
+            isOpen={isStatsDrawerOpen}
+            onClose={() => setIsStatsDrawerOpen(false)}
+          />
         </main>
       </div>
     </div>

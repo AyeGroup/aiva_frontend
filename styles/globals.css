@@ -1,6 +1,4 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap'); */
  
-
 @import "tailwindcss";
 @import "tailwindcss/preflight" @tailwind utilities;
 @custom-variant dark (&:is(.dark *));
@@ -49,7 +47,6 @@ body {
   --brand-emerald: #52d4a0;
   --brand-amber: #f59e0b;
   --brand-indigo: #6366f1;
- 
 
   /* Backgrounds - Enhanced Color Palette */
   --bg-app: #f6faf8;
@@ -557,16 +554,7 @@ body {
     }
   }
 }
-
-/* RTL Support */
-html[dir="rtl"] {
-  direction: rtl;
-}
-
-html[dir="rtl"] .ltr {
-  direction: ltr;
-  text-align: left;
-}
+ 
 
 /* Mobile Typography Adjustments */
 @media (max-width: 640px) {

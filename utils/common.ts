@@ -36,7 +36,8 @@ export const convertToEnglish = (str: string) => {
   return str.replace(/[۰-۹٠-٩]/g, (d) => numberMap[d] || d).replace(/,/g, "");
 };
 
- export const convertToPersian = (text: string | number): string => {
+export const convertToPersian = (text: string | number): string => {
+  if (!text || text===null) return"";
   const englishDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
 
@@ -86,22 +87,22 @@ export const convertNumbersToPersian = (text: string | number): string => {
 export const normalizeFileUrl = (path: string) => {
   if (!path) return "";
   return (
-    API_BASE_URL.replace("/api","") +
+    API_BASE_URL.replace("/api", "") +
     "/" +
     path
       .replace(/\\/g, "/") // همه \ را به / تبدیل کن
       .replace(/^(\.\/)?data\//, "") // حذف ./data/
   );
 };
- export function getDaysRemaining(targetDate: string | Date): number {
-   const target = new Date(targetDate);
-   const now = new Date();
+export function getDaysRemaining(targetDate: string | Date): number {
+  const target = new Date(targetDate);
+  const now = new Date();
 
-   // Calculate difference in milliseconds
-   const diffMs = target.getTime() - now.getTime();
+  // Calculate difference in milliseconds
+  const diffMs = target.getTime() - now.getTime();
 
-   // Convert milliseconds to days
-   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  // Convert milliseconds to days
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-   return diffDays;
- }
+  return diffDays;
+}

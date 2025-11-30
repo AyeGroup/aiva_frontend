@@ -78,6 +78,7 @@ export function HeatmapChart({
       className="w-full bg-white border border-grey-200 shadow-card"
       style={{
         padding: "16px",
+        padding: "16px",
         borderRadius: "20px",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
       }}
@@ -94,7 +95,7 @@ export function HeatmapChart({
           {subtitle && (
             <p
               className="text-grey-600"
-              style={{ fontSize: "12px", lineHeight: "1.4" }}
+              style={{ fontSize: "13px", lineHeight: "1.4" }}
             >
               {subtitle}
             </p>
@@ -136,28 +137,27 @@ export function HeatmapChart({
             const dayEn = englishDays[dayIndex];
             const hoursData = statisticHeatmap?.[dayEn] || [];
 
-            return (
+          return (
+            <div
+              key={dayIndex}
+              className="flex items-center"
+              style={{ gap: "2px" }}
+            >
               <div
-                key={dayIndex}
-                className="flex items-center"
-                style={{ gap: "3px" }}
+                className="flex items-center justify-end text-grey-700 flex-shrink-0 pl-1 text-right"
+                style={{
+                  width: "46px",
+                  height: "22px",
+                  fontSize: "11px",
+                  fontWeight: "500",
+                }}
               >
-                <div
-                  className="flex items-center justify-end text-grey-700 flex-shrink-0 text-right"
-                  style={{
-                    width: "46px",
-                    height: "22px",
-                    fontSize: "11px",
-                    fontWeight: "500",
-                    paddingRight: "4px",
-                  }}
-                >
-                  {dayFa}
-                </div>
-                <div className="flex" style={{ gap: "3px" }}>
-                  {HOURS.map((hour) => {
-                    const value = hoursData[hour] ?? 0;
-                    const color = getColorForValue(value);
+                {dayFa}
+              </div>
+              <div className="flex" style={{ gap: "3px" }}>
+                {HOURS.map((hour) => {
+                  const value = hoursData[hour] ?? 0;
+                  const color = getColorForValue(value);
 
                     return (
                       <div

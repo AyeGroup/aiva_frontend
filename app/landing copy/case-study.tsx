@@ -249,7 +249,7 @@ export function CaseStudy() {
               <div className="flex items-start gap-5">
                 {/* Icon */}
                 <div
-                  className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
+                  className="shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
                   style={{
                     background: "#E8F6F5",
                   }}

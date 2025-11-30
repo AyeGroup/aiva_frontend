@@ -6,8 +6,6 @@ import { Check, Sparkles, Zap, Rocket, Crown, Building2 } from "lucide-react";
 import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
 
-
-
 // آیکون‌ها و رنگ‌های هر پلن
 const planThemes = {
   free: {
@@ -114,7 +112,7 @@ export function Pricing() {
                   <header className="mb-6 text-right">
                     <div className="flex items-center justify-between mb-4 p-8 pb-0">
                       <div
-                        className="flex items-center justify-center w-14 h-14 rounded-2xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+                        className="flex items-center justify-center w-14 h-14 rounded-2xl shrink-0 transition-transform duration-300 group-hover:scale-110"
                         style={{
                           backgroundColor: theme.bg,
                         }}
@@ -132,7 +130,7 @@ export function Pricing() {
                       {/* برچسب محبوب */}
                       {isPopular && (
                         <div
-                          className="px-4 py-1.5 rounded-full shadow-md flex-shrink-0"
+                          className="px-4 py-1.5 rounded-full shadow-md shrink-0"
                           style={{
                             backgroundColor: theme.color,
                             animation:
@@ -226,7 +224,7 @@ export function Pricing() {
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
+                          className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
                           style={{
                             backgroundColor: theme.bg,
                           }}

@@ -8,16 +8,17 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
 } from "react";
 import { useAuth } from "./AuthProvider";
-import { API_ROUTES } from "@/constants/apiRoutes";
 import { BotConfig } from "@/types/common";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import axiosInstance from "@/lib/axiosInstance";
-console.log("✅ BotProvider rendered");
 
 interface BotContextType {
   bots: BotConfig[];
   currentBot: BotConfig | null;
+  loading: boolean;
   setCurrentBot: (bot: BotConfig) => void;
   refreshBots: () => Promise<void>;
 }
@@ -28,10 +29,10 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const [bots, setBots] = useState<BotConfig[]>([]);
   const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+  const hasFetchedRef = useRef(false);
 
-  // ✅ تابع fetchBots به صورت useCallback برای جلوگیری از ساخت مجدد
   const fetchBots = useCallback(async () => {
-    console.log("🐞 fetchBots called", new Date().toISOString());
     if (!user) return;
 
     try {
@@ -39,73 +40,80 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.status !== 200 || !response.data?.data) {
         console.warn("Unexpected bots API response:", response);
+        setLoading(false);
         return;
       }
-      console.log("fetchBots");
 
       const userBots: BotConfig[] = response.data.data;
       setBots(userBots);
 
-      // فقط اگر باتی وجود دارد
-      if (userBots.length > 0) {
-        // اگر currentBot هنوز انتخاب نشده یا از لیست حذف شده
-        if (!currentBot || !userBots.find((b) => b.uuid === currentBot.uuid)) {
-          setCurrentBot(userBots[0]);
+      setCurrentBot((prev) => {
+        if (userBots.length === 0) return null;
+
+        if (prev && userBots.find((b) => b.uuid === prev.uuid)) {
+          return prev;
         }
-      } else {
-        setCurrentBot(null);
-      }
+
+        return userBots[0];
+      });
     } catch (error) {
       console.error("Failed to fetch bots:", error);
+    } finally {
+      setLoading(false);
     }
-  }, [user, currentBot]);
+  }, [user]);
 
-  // ✅ اجرای اولیه هنگام ورود کاربر
   useEffect(() => {
-      console.log("useEffect");
-
     if (user) {
-      fetchBots();
-      console.log("after");
+      if (!hasFetchedRef.current) {
+        hasFetchedRef.current = true;
+        setLoading(true);
+        fetchBots();
+      }
     } else {
+      hasFetchedRef.current = false;
       setBots([]);
       setCurrentBot(null);
+      setLoading(false);
     }
   }, [user, fetchBots]);
 
-  // ✅ تابع refreshBots هم useCallback شود
   const refreshBots = useCallback(async () => {
-      console.log("refreshBots");
     if (!user) return;
+
     try {
+      setLoading(true);
       const response = await axiosInstance.get(API_ROUTES.BOTS.GET);
+
       if (response.status === 200 && response.data?.data) {
         const userBots: BotConfig[] = response.data.data;
         setBots(userBots);
 
-        if (userBots.length > 0) {
-          if (currentBot) {
-            const cbot = userBots.find((b) => b.uuid === currentBot.uuid);
-            if (cbot) setCurrentBot(cbot);
-            else setCurrentBot(userBots[0]);
-          } else setCurrentBot(userBots[0]);
-        } else setCurrentBot(null);
-      }
-    } catch (error) {
-      console.error("Failed to refresh bots:", error);
-    }
-  }, [user, currentBot]);
+        setCurrentBot((prev) => {
+          if (userBots.length === 0) return null;
 
-  // ✅ فقط زمانی value تغییر کند که واقعاً یکی از مقادیر تغییر کرده باشد
+          const found = prev
+            ? userBots.find((b) => b.uuid === prev.uuid)
+            : null;
+
+          return found || userBots[0];
+        });
+      }
+    } catch (err) {
+      console.error("Failed to refresh bots:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
   const value = useMemo(
-    () => ({ bots, currentBot, setCurrentBot, refreshBots }),
-    [bots, currentBot, refreshBots]
+    () => ({ bots, currentBot, loading, setCurrentBot, refreshBots }),
+    [bots, currentBot, loading, refreshBots]
   );
 
   return <BotContext.Provider value={value}>{children}</BotContext.Provider>;
 };
 
-// ✅ هوک مخصوص دسترسی به context
 export const useBot = () => {
   const context = useContext(BotContext);
   if (!context) throw new Error("useBot must be used within a BotProvider");

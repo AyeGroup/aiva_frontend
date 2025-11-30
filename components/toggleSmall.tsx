@@ -4,9 +4,10 @@ interface ToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label?: string;
+  disabled?:boolean;
 }
 
-export function ToggleSmall({ checked, onChange, label }: ToggleProps) {
+export function ToggleSmall({ checked, onChange, label,disabled=false }: ToggleProps) {
   const id = useId();
 
   const handleToggle = () => {
@@ -18,11 +19,12 @@ export function ToggleSmall({ checked, onChange, label }: ToggleProps) {
       <button
         type="button"
         role="switch"
+        disabled={disabled}
         aria-checked={checked}
         aria-labelledby={label ? `${id}-label` : undefined}
         onClick={handleToggle}
         className={`
-          relative w-12 h-6 rounded-full transition-colors duration-200
+          relative w-12 h-6 rounded-full cursor-pointer transition-colors duration-200
           ${checked ? "bg-primary" : "bg-gray-300"}
         `}
       >
@@ -38,7 +40,7 @@ export function ToggleSmall({ checked, onChange, label }: ToggleProps) {
       {label && (
         <label
           id={`${id}-label`}
-          className="select-none cursor-pointer"
+         className="pt-2 font-light text-base"
           onClick={handleToggle}
         >
           {label}

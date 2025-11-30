@@ -1,19 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
+import React, { useState } from "react";
 import { Input } from "@/components/input";
-import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { convertPersianToEnglishDigits } from "@/utils/common";
 import {
   LoginTopLef2,
   LoginTopLeft,
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
-import { convertPersianToEnglishDigits } from "@/utils/common";
-import Link from "next/link";
 
 function Login() {
   const router = useRouter();
@@ -213,7 +213,7 @@ function Login() {
                       setPhone(normalizedValue);
                     }}
                     placeholder="موبایل / ایمیل "
-                    className="w-full rounded-3xl pr-4 pl-4 py-6 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary !text-center"
+                    className="w-full rounded-3xl pr-4 pl-4 py-6 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary text-center!"
                     maxLength={32}
                   />
                 </div>
@@ -229,7 +229,7 @@ function Login() {
                     placeholder="رمز عبور"
                     onChange={handlePasswordChange}
                     // onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 !bg-white text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none !text-center !placeholder:text-center "
+                    className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 bg-white! text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none text-center! !placeholder:text-center "
                   />
                   {/* Password toggle button */}
                   <button
@@ -251,7 +251,7 @@ function Login() {
 
               {/* Terms and conditions info */}
               <div className="flex items-start gap-2 p-4 bg-grey-50 rounded-lg">
-                <div className="flex-shrink-0 mt-0.5"></div>
+                <div className="shrink-0 mt-0.5"></div>
                 <p className="text-grey-600 text-right text-sm">
                   استفاده از آیوا به معنی پذیرش{" "}
                   <button className="hover:opacity-80 text-base active:opacity-60 text-primary">
@@ -271,7 +271,7 @@ function Login() {
                 {isLoading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>در حالّ پردازش...</span>
+                    <span>در حال پردازش...</span>
                   </>
                 ) : (
                   <span>تایید</span>
@@ -295,7 +295,7 @@ function Login() {
           </div>
 
           {/* Back to Landing */}
-          <div className="flex justify-end mt-[24px] mr-[0px] mb-[0px] ml-[0px]">
+          <div className="flex justify-end mt-6 mr-0 mb-0 ml-0">
             <button
               onClick={() => router.push("/")}
               className="text-grey-600 hover:text-grey-800 text-sm font-medium transition-colors flex items-center gap-2 self-center text-center"
@@ -322,7 +322,7 @@ function Login() {
         </div>
       </div>
 
-      {/* <Toaster position="top-center" dir="rtl" richColors closeButton /> */}
+      {/* <Toaster position="top-center"  richColors closeButton /> */}
     </div>
     //   </div>
     // </div>

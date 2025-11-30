@@ -191,7 +191,7 @@ export default function Verification() {
   const contactType = phoneNumber ? "شماره موبایل" : " ایمیل ";
 
   return (
-    <main className="min-h-screen bg-bg-app" dir="rtl">
+    <main className="min-h-screen bg-bg-app">
       <div
         className="min-h-screen bg-white overflow-hidden relative"
         style={{

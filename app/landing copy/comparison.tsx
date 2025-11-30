@@ -116,7 +116,7 @@ export function Comparison() {
                   <div className="flex items-start gap-5 mt-3">
                     {/* Icon - Larger & More Prominent */}
                     <div
-                      className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-300 icon-wrapper"
+                      className="shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-300 icon-wrapper"
                       style={{
                         background: "rgba(239, 68, 68, 0.1)",
                         border: "2px solid rgba(239, 68, 68, 0.15)",
@@ -207,7 +207,7 @@ export function Comparison() {
 
                     {/* Icon - Larger & More Prominent */}
                     <div
-                      className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-300 icon-wrapper"
+                      className="shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-300 icon-wrapper"
                       style={{
                         background: "rgba(16, 185, 129, 0.1)",
                         border: "2px solid rgba(16, 185, 129, 0.15)",
@@ -248,7 +248,7 @@ export function Comparison() {
           >
             <div className="flex items-start gap-3 text-right">
               <div
-                className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+                className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
                 style={{
                   background: "rgba(101, 188, 182, 0.1)",
                   border: "1px solid rgba(101, 188, 182, 0.2)",

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 
 interface TabItem {
   id: string;
@@ -14,8 +14,8 @@ interface TabsProps {
   defaultTab?: string;
   activeTab?: string;
   onChange?: (tabId: string) => void;
-  variant?: 'default' | 'pills' | 'underline';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "default" | "pills" | "underline";
+  size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
 }
 
@@ -24,31 +24,37 @@ export function Tabs({
   defaultTab,
   activeTab,
   onChange,
-  variant = 'default',
-  size = 'md',
-  fullWidth = false
+  variant = "default",
+  size = "md",
+  fullWidth = false,
 }: TabsProps) {
   const [internalActiveTab, setInternalActiveTab] = useState(
-    activeTab || defaultTab || tabs[0]?.id || ''
+    activeTab || defaultTab || tabs[0]?.id || ""
   );
-  
+
   const tabsRef = useRef<HTMLDivElement>(null);
   const [focusedTabIndex, setFocusedTabIndex] = useState(0);
 
   const currentActiveTab = activeTab || internalActiveTab;
-  const activeTabContent = tabs.find(tab => tab.id === currentActiveTab)?.content;
+  const activeTabContent = tabs.find(
+    (tab) => tab.id === currentActiveTab
+  )?.content;
 
   const handleTabChange = (tabId: string) => {
-    const tab = tabs.find(t => t.id === tabId);
+    const tab = tabs.find((t) => t.id === tabId);
     if (tab?.disabled) return;
-    
+
     setInternalActiveTab(tabId);
     onChange?.(tabId);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent, tabId: string, index: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent,
+    tabId: string,
+    index: number
+  ) => {
     switch (e.key) {
-      case 'ArrowRight':
+      case "ArrowRight":
         e.preventDefault();
         const nextIndex = (index + 1) % tabs.length;
         const nextTab = tabs[nextIndex];
@@ -57,8 +63,8 @@ export function Tabs({
           handleTabChange(nextTab.id);
         }
         break;
-        
-      case 'ArrowLeft':
+
+      case "ArrowLeft":
         e.preventDefault();
         const prevIndex = index === 0 ? tabs.length - 1 : index - 1;
         const prevTab = tabs[prevIndex];
@@ -67,20 +73,23 @@ export function Tabs({
           handleTabChange(prevTab.id);
         }
         break;
-        
-      case 'Home':
+
+      case "Home":
         e.preventDefault();
-        const firstTab = tabs.find(tab => !tab.disabled);
+        const firstTab = tabs.find((tab) => !tab.disabled);
         if (firstTab) {
           const firstIndex = tabs.indexOf(firstTab);
           setFocusedTabIndex(firstIndex);
           handleTabChange(firstTab.id);
         }
         break;
-        
-      case 'End':
+
+      case "End":
         e.preventDefault();
-        const lastTab = tabs.slice().reverse().find(tab => !tab.disabled);
+        const lastTab = tabs
+          .slice()
+          .reverse()
+          .find((tab) => !tab.disabled);
         if (lastTab) {
           const lastIndex = tabs.indexOf(lastTab);
           setFocusedTabIndex(lastIndex);
@@ -91,50 +100,54 @@ export function Tabs({
   };
 
   const sizeClasses = {
-    sm: 'px-3 py-2 text-body-small',
-    md: 'px-4 py-3',
-    lg: 'px-6 py-4'
+    sm: "px-3 py-2 text-body-small",
+    md: "px-4 py-3",
+    lg: "px-6 py-4",
   };
 
   const getTabClasses = (tab: TabItem, index: number) => {
     const isActive = tab.id === currentActiveTab;
     const isFocused = index === focusedTabIndex;
-    
+
     const baseClasses = `
       relative flex items-center gap-2 focus:outline-none
       ${sizeClasses[size]}
-      ${fullWidth ? 'flex-1 justify-center' : ''}
-      ${tab.disabled 
-        ? 'opacity-50 cursor-not-allowed' 
-        : 'cursor-pointer hover:bg-bg-soft-mint'
+      ${fullWidth ? "flex-1 justify-center" : ""}
+      ${
+        tab.disabled
+          ? "opacity-50 cursor-not-allowed"
+          : "cursor-pointer hover:bg-bg-soft-mint"
       }
     `;
 
     const variantClasses = {
       default: `
         border-b-2 rounded-t-lg
-        ${isActive 
-          ? 'border-brand-primary bg-bg-surface text-brand-primary' 
-          : 'border-transparent text-grey-600 hover:text-grey-900'
+        ${
+          isActive
+            ? "border-brand-primary bg-bg-surface text-brand-primary"
+            : "border-transparent text-grey-600 hover:text-grey-900"
         }
-        ${isFocused ? 'ring-2 ring-brand-primary/20' : ''}
+        ${isFocused ? "ring-2 ring-brand-primary/20" : ""}
       `,
       pills: `
         rounded-xl
-        ${isActive 
-          ? 'bg-brand-primary text-white shadow-sm' 
-          : 'text-grey-600 hover:text-grey-900'
+        ${
+          isActive
+            ? "bg-brand-primary text-white shadow-sm"
+            : "text-grey-600 hover:text-grey-900"
         }
-        ${isFocused ? 'ring-2 ring-brand-primary/20' : ''}
+        ${isFocused ? "ring-2 ring-brand-primary/20" : ""}
       `,
       underline: `
         border-b-2 pb-3
-        ${isActive 
-          ? 'border-brand-primary text-brand-primary' 
-          : 'border-transparent text-grey-600 hover:text-grey-900 hover:border-grey-300'
+        ${
+          isActive
+            ? "border-brand-primary text-brand-primary"
+            : "border-transparent text-grey-600 hover:text-grey-900 hover:border-grey-300"
         }
-        ${isFocused ? 'ring-2 ring-brand-primary/20' : ''}
-      `
+        ${isFocused ? "ring-2 ring-brand-primary/20" : ""}
+      `,
     };
 
     return `${baseClasses} ${variantClasses[variant]}`;
@@ -143,13 +156,13 @@ export function Tabs({
   const getTabListClasses = () => {
     const baseClasses = `
       flex border-b border-border-soft
-      ${fullWidth ? 'w-full' : 'w-auto'}
+      ${fullWidth ? "w-full" : "w-auto"}
     `;
 
     const variantClasses = {
-      default: 'bg-bg-soft-mint rounded-t-xl',
-      pills: 'bg-bg-soft-mint rounded-xl p-1 gap-1',
-      underline: 'bg-transparent'
+      default: "bg-bg-soft-mint rounded-t-xl",
+      pills: "bg-bg-soft-mint rounded-xl p-1 gap-1",
+      underline: "bg-transparent",
     };
 
     return `${baseClasses} ${variantClasses[variant]}`;
@@ -179,22 +192,18 @@ export function Tabs({
             onKeyDown={(e) => handleKeyDown(e, tab.id, index)}
             title={tab.label}
           >
-            {tab.icon && (
-              <span className="flex-shrink-0">
-                {tab.icon}
-              </span>
-            )}
-            
-            <span className="truncate">
-              {tab.label}
-            </span>
-            
+            {tab.icon && <span className="shrink-0">{tab.icon}</span>}
+
+            <span className="truncate">{tab.label}</span>
+
             {tab.badge && (
-              <span className="
+              <span
+                className="
                 bg-brand-secondary text-white text-caption
                 px-2 py-1 rounded-full min-w-[20px] h-5
-                flex items-center justify-center flex-shrink-0
-              ">
+                flex items-center justify-center shrink-0
+              "
+              >
                 {tab.badge}
               </span>
             )}

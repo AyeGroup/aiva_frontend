@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 
 interface DropdownOption {
   value: string;
@@ -28,20 +28,20 @@ export function Dropdown({
   searchable = false,
   clearable = false,
   error,
-  label
+  label,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  
+
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
-  const selectedOption = options.find(option => option.value === value);
-  
-  const filteredOptions = searchable 
-    ? options.filter(option => 
+  const selectedOption = options.find((option) => option.value === value);
+
+  const filteredOptions = searchable
+    ? options.filter((option) =>
         option.label.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : options;
@@ -49,30 +49,30 @@ export function Dropdown({
   const toggleDropdown = () => {
     if (disabled) return;
     setIsOpen(!isOpen);
-    setSearchQuery('');
+    setSearchQuery("");
     setFocusedIndex(-1);
   };
 
   const selectOption = (optionValue: string) => {
     onChange(optionValue);
     setIsOpen(false);
-    setSearchQuery('');
+    setSearchQuery("");
     buttonRef.current?.focus();
   };
 
   const clearSelection = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onChange('');
+    onChange("");
     setIsOpen(false);
   };
 
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) return;
-    
+
     switch (e.key) {
-      case 'Enter':
-      case 'Space':
+      case "Enter":
+      case "Space":
         if (!isOpen) {
           setIsOpen(true);
         } else if (focusedIndex >= 0) {
@@ -80,26 +80,26 @@ export function Dropdown({
         }
         e.preventDefault();
         break;
-        
-      case 'Escape':
+
+      case "Escape":
         setIsOpen(false);
         buttonRef.current?.focus();
         break;
-        
-      case 'ArrowDown':
+
+      case "ArrowDown":
         if (!isOpen) {
           setIsOpen(true);
         } else {
-          setFocusedIndex(prev => 
+          setFocusedIndex((prev) =>
             prev < filteredOptions.length - 1 ? prev + 1 : 0
           );
         }
         e.preventDefault();
         break;
-        
-      case 'ArrowUp':
+
+      case "ArrowUp":
         if (isOpen) {
-          setFocusedIndex(prev => 
+          setFocusedIndex((prev) =>
             prev > 0 ? prev - 1 : filteredOptions.length - 1
           );
         }
@@ -111,23 +111,22 @@ export function Dropdown({
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <div className="space-y-2">
-      {label && (
-        <label className="block text-grey-700">
-          {label}
-        </label>
-      )}
-      
+      {label && <label className="block text-grey-700">{label}</label>}
+
       <div ref={dropdownRef} className="relative">
         <button
           ref={buttonRef}
@@ -139,15 +138,20 @@ export function Dropdown({
             w-full flex items-center justify-between
             bg-bg-surface border-2 rounded-xl p-4
             text-right focus:outline-none
-            ${disabled 
-              ? 'opacity-50 cursor-not-allowed border-grey-200' 
-              : isOpen 
-                ? 'border-brand-primary' 
+            ${
+              disabled
+                ? "opacity-50 cursor-not-allowed border-grey-200"
+                : isOpen
+                ? "border-brand-primary"
                 : error
-                  ? 'border-danger hover:border-danger/70'
-                  : 'border-border-soft hover:border-grey-400'
+                ? "border-danger hover:border-danger/70"
+                : "border-border-soft hover:border-grey-400"
             }
-            ${error ? 'focus:border-danger focus:ring-danger/20' : 'focus:border-brand-primary focus:ring-brand-primary/20'}
+            ${
+              error
+                ? "focus:border-danger focus:ring-danger/20"
+                : "focus:border-brand-primary focus:ring-brand-primary/20"
+            }
             focus:ring-4
           `}
           aria-haspopup="listbox"
@@ -157,16 +161,18 @@ export function Dropdown({
         >
           <div className="flex items-center gap-3 flex-1 min-w-0">
             {selectedOption?.icon && (
-              <span className="flex-shrink-0">
-                {selectedOption.icon}
-              </span>
+              <span className="shrink-0">{selectedOption.icon}</span>
             )}
-            <span className={`truncate ${selectedOption ? 'text-grey-900' : 'text-grey-500'}`}>
+            <span
+              className={`truncate ${
+                selectedOption ? "text-grey-900" : "text-grey-500"
+              }`}
+            >
               {selectedOption?.label || placeholder}
             </span>
           </div>
-          
-          <div className="flex items-center gap-2 flex-shrink-0">
+
+          <div className="flex items-center gap-2 shrink-0">
             {clearable && value && !disabled && (
               <button
                 type="button"
@@ -175,18 +181,24 @@ export function Dropdown({
                 title="پاک کردن انتخاب"
                 aria-label="پاک کردن انتخاب"
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
                 </svg>
               </button>
             )}
-            
-            <svg 
-              className={`w-5 h-5 text-grey-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
-              fill="currentColor" 
+
+            <svg
+              className={`w-5 h-5 text-grey-400 transition-transform ${
+                isOpen ? "rotate-180" : ""
+              }`}
+              fill="currentColor"
               viewBox="0 0 24 24"
             >
-              <path d="M7.41 8.84L12 13.42l4.59-4.58L18 10.25l-6 6-6-6z"/>
+              <path d="M7.41 8.84L12 13.42l4.59-4.58L18 10.25l-6 6-6-6z" />
             </svg>
           </div>
         </button>
@@ -205,7 +217,7 @@ export function Dropdown({
                 />
               </div>
             )}
-            
+
             <ul
               ref={listRef}
               role="listbox"
@@ -220,31 +232,38 @@ export function Dropdown({
                   <li key={option.value}>
                     <button
                       type="button"
-                      onClick={() => !option.disabled && selectOption(option.value)}
+                      onClick={() =>
+                        !option.disabled && selectOption(option.value)
+                      }
                       disabled={option.disabled}
                       className={`
                         w-full flex items-center gap-3 px-4 py-3 text-right
-                        ${option.disabled 
-                          ? 'opacity-50 cursor-not-allowed' 
-                          : 'hover:bg-bg-soft-mint cursor-pointer'
+                        ${
+                          option.disabled
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:bg-bg-soft-mint cursor-pointer"
                         }
-                        ${focusedIndex === index ? 'bg-bg-soft-mint' : ''}
-                        ${value === option.value ? 'bg-brand-primary/10 text-brand-primary font-medium' : 'text-grey-900'}
+                        ${focusedIndex === index ? "bg-bg-soft-mint" : ""}
+                        ${
+                          value === option.value
+                            ? "bg-brand-primary/10 text-brand-primary font-medium"
+                            : "text-grey-900"
+                        }
                       `}
                       role="option"
                       aria-selected={value === option.value}
                     >
                       {option.icon && (
-                        <span className="flex-shrink-0">
-                          {option.icon}
-                        </span>
+                        <span className="shrink-0">{option.icon}</span>
                       )}
-                      <span className="flex-1 truncate">
-                        {option.label}
-                      </span>
+                      <span className="flex-1 truncate">{option.label}</span>
                       {value === option.value && (
-                        <svg className="w-5 h-5 text-brand-primary flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        <svg
+                          className="w-5 h-5 text-brand-primary shrink-0"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                         </svg>
                       )}
                     </button>
@@ -255,7 +274,7 @@ export function Dropdown({
           </div>
         )}
       </div>
-      
+
       {error && (
         <p className="text-danger text-body-small" role="alert">
           {error}

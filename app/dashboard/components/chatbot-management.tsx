@@ -14,13 +14,9 @@ import { convertToPersian } from "@/utils/common";
 import {
   Edit3,
   Trash2,
-  Settings,
   Eye,
   MoreVertical,
-  Palette,
   MessageSquare,
-  Save,
-  X,
   Plus,
 } from "lucide-react";
 import { useBot } from "@/providers/BotProvider";
@@ -185,7 +181,7 @@ export function ChatbotManagement() {
               <div className="text-right">
                 <h1 className="text-grey-900 mb-2">مدیریت چت‌بات‌ها</h1>
                 <p className="text-grey-600">
-                  مدیریت و ویرایش تمام چت‌بات‌های آیوا
+                  مدیریت و ویرایش چت‌بات‌ها  
                 </p>
               </div>
 
@@ -276,7 +272,7 @@ export function ChatbotManagement() {
                       <div className="flex items-center gap-4">
                         {/* Status Indicator */}
                         <div
-                          className="w-4 h-4 rounded-full flex-shrink-0"
+                          className="w-4 h-4 rounded-full shrink-0"
                           style={{ backgroundColor: chatbot.primary_color }}
                         />
 

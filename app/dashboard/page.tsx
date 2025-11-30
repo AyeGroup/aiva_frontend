@@ -1,18 +1,17 @@
 "use client";
 
+import PageLoader from "@/components/pageLoader";
+import ActiveUsers from "./components/activeusers";
 import DashboardHome from "./components/dashboard-home";
-import { JSX, useEffect } from "react";
+import OnboardingWizard from "../onboarding/page";
 import { Sidebar } from "./sidebar";
 import { Tickets } from "./components/tickets";
+import { Upgrade } from "./components/upgrade";
 import { Billing } from "./components/billing";
-import { BotProvider } from "@/providers/BotProvider";
+import { useAuth } from "@/providers/AuthProvider";
+import { JSX, useEffect } from "react";
 import { ChatbotManagement } from "./components/chatbot-management";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAuth } from "@/providers/AuthProvider";
-import PageLoader from "@/components/pageLoader";
-import OnboardingWizard from "../onboarding/page";
-import ActiveUsers from "./components/activeusers";
-import { Upgrade } from "./components/upgrade";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -45,26 +44,18 @@ export default function DashboardPage() {
     }
   }, [loading, user, router]);
 
-  // useEffect(() => {
-  //   const returnUrl = localStorage.getItem("returnUrl");
-  //   if (returnUrl) {
-  //     router.push(returnUrl);
-  //     localStorage.removeItem("returnUrl");
-  //   }
-  // }, [loading, user, router]);
+ 
 
-  if (loading) return <PageLoader />;
-  if (!user) return null;
+  // if (loading) return <PageLoader />;
+  // if (!user) return null;
 
   return (
-    <BotProvider>
-      <div className="flex min-h-screen">
-        <Sidebar currentPage={currentPage} router={router} />
+    <div className="flex min-h-screen">
+      <Sidebar currentPage={currentPage} router={router} />
 
-        <main className="flex-1 bg-gray-50">
-          {pages[currentPage] || <DashboardHome />}
-        </main>
-      </div>
-    </BotProvider>
+      <main className="flex-1 bg-gray-50">
+        {pages[currentPage] || <DashboardHome />}
+      </main>
+    </div>
   );
 }

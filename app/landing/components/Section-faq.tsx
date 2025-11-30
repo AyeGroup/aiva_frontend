@@ -117,13 +117,13 @@ const FAQSection: React.FC = () => {
         <footer className="text-center">
           <p className="text-base text-gray-600 mb-6">سؤال دیگری دارید؟</p>
           <div className="flex items-center justify-center gap-4">
-            <a
+            {/* <a
               href="/contact"
               className="flex items-center gap-2 text-base text-gray-700 hover:text-teal-600 transition-colors cursor-pointer"
             >
               <span>مستندات کامل</span>
               <span>←</span>
-            </a>
+            </a> */}
             <a
               href="/contact"
               className="flex items-center gap-2 text-base text-gray-700 hover:text-teal-600 transition-colors cursor-pointer"

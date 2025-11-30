@@ -33,10 +33,7 @@ export default function PaymentSuccess() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 py-12 px-4 flex items-center justify-center"
-      dir="rtl"
-    >
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 py-12 px-4 flex items-center justify-center">
       <main className="max-w-2xl w-full" role="main">
         <Card className="p-8 text-center relative overflow-hidden">
           {/* Background Decoration */}
@@ -63,15 +60,15 @@ export default function PaymentSuccess() {
           <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200">
             <div className="space-y-3 text-right">
               <div className="flex items-center gap-3 text-green-700">
-                <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 shrink-0" />
                 <span>اشتراک شما با موفقیت فعال شد</span>
               </div>
               <div className="flex items-center gap-3 text-green-700">
-                <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 shrink-0" />
                 <span>ایمیل تأیید برای شما ارسال شد</span>
               </div>
               <div className="flex items-center gap-3 text-green-700">
-                <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 shrink-0" />
                 <span>فاکتور در بخش سوابق خرید قابل مشاهده است</span>
               </div>
             </div>

@@ -1,18 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import axiosInstance from "@/lib/axiosInstance";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-// import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
+import { convertPersianToEnglishDigits } from "@/utils/common";
 import { LoginTopLeft, RegisterTopLeft } from "@/public/icons/AppIcons";
 import { englishToPersian, cleanPhoneNumber } from "@/utils/number-utils";
-import { convertPersianToEnglishDigits } from "@/utils/common";
 import Link from "next/link";
 import Image from "next/image";
+import axiosInstance from "@/lib/axiosInstance";
 
 type RegisterStep = "signup" | "otp" | "success" | "password";
 
@@ -95,27 +94,20 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      const { data, status } = await axiosInstance.post(
-        API_ROUTES.AUTH.REGISTER,
-        formData
-      );
+      const res = await axiosInstance.post(API_ROUTES.AUTH.REGISTER, formData);
 
-      if (status !== 200) {
-        // console.log("1");
-        setMessage(data?.message || "در ثبت اطلاعات خطایی رخ داد.");
+      if (res.status !== 200) {
+        setMessage(res.data?.message || "در ثبت اطلاعات خطایی رخ داد.");
         setIsLoading(false);
         return;
       }
     } catch (err: any) {
-      // if (axiosInstance.isAxiosError(err)) {
-      // setMessage(
-      // err.response?.data?.message || "در ثبت اطلاعات خطایی رخ داد."
-      // );
-      // } else {
-      setMessage("یک خطای ناشناخته رخ داد.");
-      // }
+      const serverMessage =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "یک خطای ناشناخته رخ داد.";
+      setMessage(serverMessage);
       setIsLoading(false);
-      // console.log("2");
       return;
     }
 
@@ -493,7 +485,7 @@ export default function Register() {
             </div>
 
             {/* OTP Inputs */}
-            <div className="flex justify-center gap-3 mb-6" dir="rtl">
+            <div className="flex justify-center gap-3 mb-6">
               {otp.map((digit, index) => (
                 <input
                   key={index}

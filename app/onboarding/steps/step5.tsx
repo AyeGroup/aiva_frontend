@@ -3,14 +3,17 @@
 import Image from "next/image";
 import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
+import { toast } from "sonner";
+import { Input } from "@/components/input";
+import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { Install } from "@/public/icons/AppIcons";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
 import { Copy, Globe, CheckCircle2, BarChart3, HelpCircle } from "lucide-react";
-import { convertToPersian } from "@/utils/common";
 
 interface WizardStep5Props {
   botConfig: BotConfig;
@@ -21,7 +24,11 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
   const [copied, setCopied] = useState(false);
   const [installCode, setInstallCode] = useState("");
   const [isloading, setIsLoading] = useState(false);
-  const { user, loading } = useAuth();
+  const [isSaving, setIsSaving] = useState(false);
+  const [baleToken, setBaleToken] = useState<string>(
+    botConfig?.bale_token || ""
+  );
+  const { loading } = useAuth();
 
   useEffect(() => {
     const fetchCode = async () => {
@@ -60,13 +67,31 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
     }
   };
 
-  const copyToClipboard1 = async () => {
+  const handleBaleLink = async () => {
+    if (!baleToken || baleToken.length === 0) return;
+    setIsSaving(true);
     try {
-      await navigator.clipboard.writeText(installCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
+      const formData = new FormData();
+      formData.append("uuid", botConfig.uuid);
+      formData.append("bale_token", baleToken);
+console.log("1",formData)
+      const res = await axiosInstance.put(
+        `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
+        formData
+      );
+      console.log("2",res)
+      if (res.data.success) toast.success("اطلاعات ثبت شد");
+      else toast.error("خطا در ثبت اطلاعات");
+    } catch (error: any) {
+      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || "خطایی در ذخیره رخ داده است.";
+
+      toast.info(errorMessage);
+
+      return false;
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -145,13 +170,43 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
             </div>
             <div className="bg-white border-2 border-brand-primary rounded-[20px] h-[120px] relative flex items-center justify-center">
               <div className="flex flex-col items-center text-center">
-                <Globe className="w-[24px] h-[24px] text-brand-primary mb-[6px]" />
-                <p className="text-base text-grey-900 mb-[4px]">
-                  HTML/JavaScript
-                </p>
+                <Globe className="w-6 h-6 text-brand-primary mb-1.5" />
+                <p className="text-base text-grey-900 mb-1">HTML/JavaScript</p>
                 <p className="text-base text-grey-600">برای اکثر سایت‌ها</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Bale */}
+        <div className="border-2 border-[#d1d5db] p-6 rounded-2xl">
+          <div className="flex gap-2 m-2">
+            <Image src="/icons/bale.svg" alt="bale" width={16} height={16} />
+            بله
+          </div>
+          <div className="flex justify-start items-center gap-3 ">
+            <div className="flex items-center text-gray-900">
+              توکن ربات بله را وارد کنید
+            </div>
+            <Input
+              id="bale_code"
+              type="text"
+              value={baleToken || ""}
+              onChange={(e) => setBaleToken(e.target.value)}
+              className="w-full text-sm rounded-2xl p-4 border bg-white! text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary text-center!"
+              maxLength={200}
+            />
+          </div>
+          <div className="text-left mt-4">
+            <Button
+              variant="primary"
+              onClick={handleBaleLink}
+              icon="arrow-right"
+              iconPosition="right"
+              className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSaving ? "در حال ثبت" : "ثبت"}
+            </Button>
           </div>
         </div>
         <div className="border-2 border-[#d1d5db] p-6 rounded-2xl">
@@ -173,9 +228,9 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                     title="کپی کردن کد"
                   >
                     {copied ? (
-                      <CheckCircle2 className="w-[16px] h-[16px] text-success" />
+                      <CheckCircle2 className="w-4 h-4 text-success" />
                     ) : (
-                      <Copy className="w-[16px] h-[16px] text-brand-primary" />
+                      <Copy className="w-4 h-4 text-brand-primary" />
                     )}
                   </button>
                 </div>
@@ -209,23 +264,24 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
               </ol>
 
               <div className="bg-brand-tertiary/10 border border-brand-tertiary/20 rounded-[20px] p-[17px] h-[82px]">
-                <p className="text-base text-brand-tertiary leading-[24px] text-right">
+                <p className="text-base text-brand-tertiary leading-6 text-right">
                   💡 نکته: پس از نصب، ممکن است تا چند دقیقه طول بکشد تا دستیار
                   در سایت شما فعال شود.
                 </p>
               </div>
             </div>
           </div>
-        </div>{" "}
+        </div>
+
         {/* Next Steps Cards */}
         <div className="grid grid-cols-2 gap-6">
           {/* Dashboard Card */}
-          <div className="bg-white rounded-[20px] border-2 border-grey-300 p-6 flex flex-col gap-[16px] items-center justify-start">
+          <div className="bg-white rounded-[20px] border-2 border-grey-300 p-6 flex flex-col gap-4 items-center justify-start">
             <div className="flex items-center gap-3">
               <BarChart3 className="w-5 h-5 text-brand-primary" />
               <span className="text-base text-grey-900">مرحله بعد</span>
             </div>
-            <p className="text-base text-grey-600 text-center leading-[24px]">
+            <p className="text-base text-grey-600 text-center leading-6">
               مدیریت و بهبود عملکرد دستیار از طریق داشبورد
             </p>
             <button
@@ -244,7 +300,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
               <span className="text-base text-grey-900">پشتیبانی</span>
             </div>
             <div className="flex-1">
-              <p className="text-base text-grey-600 text-right leading-[24px]">
+              <p className="text-base text-grey-600 text-right leading-6">
                 تیم پشتیبانی آیوا آماده کمک به شماست
               </p>
             </div>

@@ -1,15 +1,18 @@
 "use client";
+import Image from "next/image";
 import PageLoader from "@/components/pageLoader";
+import FloatSideMenu from "./FloatSideMenu";
 import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
-import { Header } from "@/components/header/header";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
+import { BarChart3 } from "lucide-react";
 import { AivaWhite } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { headerData } from "@/components/header/header.data";
 import { WizardStep1 } from "./steps/step1";
 import { WizardStep2 } from "./steps/step2";
 import { WizardStep3 } from "./steps/step3";
@@ -17,25 +20,34 @@ import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { WizardStep6 } from "./steps/step6";
 import { ChatPreview } from "./chat-preview";
+import { StatsDrawer } from "../dashboard/stats-drawer";
 import { onboardingData } from "./onboarding.data";
 import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getPlanCodeById, getPlanIcon, PlanCode } from "@/constants/plans";
+import { usePricing } from "@/providers/PricingContext";
 
 export default function OnboardingWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const id = searchParams?.get("id");
-  const { refreshBots, setCurrentBot } = useBot();
+  const id = searchParams.get("id");
+  const isNew = !id || id === "new";
+  const { logo } = headerData;
   const { user, loading } = useAuth();
+  const { currentPlan } = usePricing();
   const { title, subtitle, steps } = onboardingData;
+  const { refreshBots, setCurrentBot } = useBot();
   const [currentStep, setCurrentStep] = useState(1);
   const [maxReachedStep, setMaxReachedStep] = useState(1);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeSubscrp, setActiveSubscrp] = useState<PlanCode>("FREE");
+  const totalSteps = steps.length;
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
     name: "",
@@ -60,19 +72,19 @@ export default function OnboardingWizard() {
     greetings: true,
     use_emoji: false,
     support_phone: "",
+    require_user_phone: false,
+    require_user_name: false,
+    require_user_email: false,
   });
-  const totalSteps = steps.length;
 
-useEffect(() => {
-  const id = searchParams.get("id");
+  //fix url in new mode
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (id === "new") {
+      router.replace("/dashboard?tab=onboarding");
+    }
+  }, []);
 
-  if (id === "new") {
-    // کار ایجاد بات جدید...
-
-    // حذف id=new از URL بدون ریلود شدن
-    router.replace("/dashboard?tab=onboarding");
-  }
-}, []);
   // authentication
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");
@@ -161,6 +173,32 @@ useEffect(() => {
 
     fetchBotData();
   }, [user?.token, id]);
+
+  //get active subscription
+  useEffect(() => {
+    if (!user) return;
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        let subsc: PlanCode = "FREE";
+        if (id && id.length > 3) {
+          const response = await axiosInstance.get(
+            API_ROUTES.FINANCIAL.SUBSCRIPTION(id)
+          );
+          if (response && response.status === 200)
+            subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
+          //  subsc =getPlanCodeById( response.data.data.plan);
+        }
+        console.log("active SUBSCRIPTION: ", subsc);
+        setActiveSubscrp(subsc);
+      } catch (error) {
+        console.error("خطا در دریافت داده کاربران:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [user]);
 
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
@@ -307,6 +345,9 @@ useEffect(() => {
     formData.append("language", botConfig.language);
     formData.append("description", botConfig.description);
     formData.append("guidelines", botConfig.guidelines);
+    formData.append("require_user_email", String(botConfig.require_user_email));
+    formData.append("require_user_name", String(botConfig.require_user_name));
+    formData.append("require_user_phone", String(botConfig.require_user_phone));
 
     try {
       let res;
@@ -472,7 +513,7 @@ useEffect(() => {
 
       case 3:
         return (
-          <WizardStep2 botConfig={botConfig} updateConfig={updateBotConfig} />
+          <WizardStep2 botConfig={botConfig}  />
         );
       case 4:
         return (
@@ -494,7 +535,8 @@ useEffect(() => {
   const saveCaption = () => {
     if (isSaving) return "در حال ذخیره...";
 
-    if (!id || id === "new") {
+    // if (!id || id === "new") {
+    if (isNew) {
       // console.log("is new");
       return currentStep === totalSteps ? "اتمام و شروع" : "بعدی";
     } else {
@@ -505,38 +547,91 @@ useEffect(() => {
     }
   };
 
-  if (loading) return <PageLoader />;
+  if (loading || isLoading) return <PageLoader />;
   if (!user) return null;
-  const showButton = !id || id === "new" || currentStep < totalSteps;
+  // const showButton = !id || id === "new" || currentStep < totalSteps;
+  const showButton = isNew || currentStep < totalSteps;
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app">
-      {!id && <Header currentPage="onboarding" isOnboarding={true} />}
-      <div className="container mx-auto px-6 py-12 relative z-10">
+      {/* {!id && <Header currentPage="onboarding" isOnboarding={true} />} */}
+      <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-6 relative z-10">
         {/* Clean Minimal Header */}
-        <div className="flex flex-col justify-center items-center mb-16">
+        {isNew && <FloatSideMenu activePlan={activeSubscrp} />}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <button
+              onClick={() => router.push("/landing")}
+              title={logo.title}
+              className="flex items-center gap-3 hover:opacity-80 animate-soft group"
+              aria-label="برگشت به صفحه اصلی"
+            >
+              {/* تصویر لوگو */}
+              {logo.image ? (
+                <Image
+                  src="/logo.png"
+                  width={50}
+                  height={40}
+                  alt="Logo"
+                  style={{ width: "auto", height: "40px" }}
+                />
+              ) : (
+                <div className="h-8 w-8 lg:h-10 lg:w-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                  <span className="text-white text-sm lg:text-lg">
+                    {logo.text?.charAt(0)}
+                  </span>
+                </div>
+              )}
+
+              {/* متن لوگو */}
+              <div className="flex flex-col gap-0.5">
+                <span className="text-grey-900 group-hover:text-brand-primary transition-colors leading-none text-right">
+                  {logo.text}
+                </span>
+                <span className="hidden sm:block text-grey-600 text-xs leading-none">
+                  دستیار هوشمند
+                </span>
+              </div>
+            </button>
+          </div>
+          {/* <div className="absolute top-4 left-4"> */}
+         {!isNew && (
+          <div className="">
+            <button
+              onClick={() => setIsStatsDrawerOpen(true)}
+              className="plans-trigger-special"
+              title="مشاهده پلن‌های پیشنهادی"
+              aria-label="باز کردن پنل پلن‌ها"
+            >
+              <span className="plans-trigger-icon">
+                <BarChart3 size={20} />
+              </span>
+              <span className="plans-trigger-text">پلن‌ها</span>
+            </button>
+          </div>
+         )}
+        </div>
+        <div className="flex flex-col justify-center items-center mb-10 -mt-4">
           <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
             <div className="text-white w-7 h-7">
-              <AivaWhite />
+              {/* <AivaWhite /> */}
+              {getPlanIcon(currentPlan || "FREE")}
             </div>
           </div>
 
-          {!id ||
-            (id === "new" && (
-              <div className="text-grey-900 mb-4 font-bold text-lg text-center">
-                {title}
-              </div>
-            ))}
-          <div className="text-grey-700 max-w-lg mx-auto text-center">
-            {!id || id === "new"
+          <div className="text-grey-900 mb-4 font-bold text-lg text-center">
+            {isNew ? title : "ویرایش چت‌بات"}
+          </div>
+
+          <div className="text-grey-700 mx-auto text-center">
+            {isNew
               ? subtitle
               : "پس از اعمال تغییرات، کد نصب را مجدد در سایت خود قرار دهید."}
           </div>
         </div>
-
         {/* Ultra Clean Progress */}
         <div className="max-w-3xl mx-auto mb-16">
-          <div className="relative max-w-4xl mx-auto m-[0px] pt-[0px] pr-[0px] pb-[16px] pl-[0px]">
+          <div className="relative max-w-4xl mx-auto m-0 p-0 pb-4">
             {/* Background Line */}
             <div className="h-2 bg-grey-300 rounded-full" />
 
@@ -618,13 +713,12 @@ useEffect(() => {
             </div>
           </div>
         </div>
-
         {/* Content Area */}
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-6">
             {/* Step Content */}
-            <div className="lg:col-span-2">
-              <Card className="p-8 border border-grey-200 bg-white rounded-xl shadow-lg">
+            <div className="lg:col-span-2 ">
+              <Card className="p-8  border border-grey-200 bg-white rounded-xl shadow-lg">
                 <div className="animate-soft">{renderCurrentStep()}</div>
               </Card>
 
@@ -637,7 +731,7 @@ useEffect(() => {
                   icon="arrow-right"
                   iconPosition="right"
                   className={`${
-                    currentStep == 1 ? "!invisible" : ""
+                    currentStep == 1 ? "invisible!" : ""
                   } px-6 disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   قبلی
@@ -664,18 +758,17 @@ useEffect(() => {
             </div>
 
             {/* Preview Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="top-8  w-full h-[700px]">
+            <div className="lg:col-span-1 ">
+              <div className="top-8 sticky w-full h-[800px]">
                 <ChatPreview
                   currentStep={currentStep}
                   botConfig={botConfig}
-                  isNew={!id || id === "new"}
+                  isNew={isNew}
                 />
               </div>
             </div>
           </div>
         </div>
-
         {/* Clean Exit Link */}
         {!id && (
           <div className="text-center mt-16">
@@ -691,6 +784,12 @@ useEffect(() => {
           </div>
         )}
       </div>
+     
+        <StatsDrawer
+          isOpen={isStatsDrawerOpen}
+          onClose={() => setIsStatsDrawerOpen(false)}
+        />
+      
     </main>
   );
 }

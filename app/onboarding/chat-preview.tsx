@@ -4,11 +4,13 @@ import { API_BASE_URL } from "@/config";
 import { onboardingData } from "./onboarding.data";
 import { Delete, SendMessage } from "@/public/icons/AppIcons";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/providers/AuthProvider";
+import { Info } from "lucide-react";
 
 interface ChatPreviewProps {
   botConfig: BotConfig;
   currentStep: number;
-  isNew:boolean;
+  isNew: boolean;
 }
 
 interface Message {
@@ -19,28 +21,33 @@ interface Message {
   type?: string;
 }
 
-export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) {
+export function ChatPreview({
+  botConfig,
+  currentStep,
+  isNew,
+}: ChatPreviewProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isTyping, setIsTyping] = useState(false);
   const [showFaqs, setShowFaqs] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const newMessages = getGreetingMessages();
     if (botConfig.greetings) setMessages(newMessages);
   }, []);
 
- useEffect(() => {
-   if (botConfig.greetings) {
-     setMessages(getGreetingMessages());
-     setShowFaqs(true);
-   } else {
-     setMessages((prev) =>
-       prev.filter((msg) => !msg.id.startsWith("greeting"))
-     );
-   }
- }, [botConfig.greetings, botConfig.tone]);
-
+  useEffect(() => {
+    if (botConfig.greetings) {
+      setMessages(getGreetingMessages());
+      setShowFaqs(true);
+    } else {
+      setMessages((prev) =>
+        prev.filter((msg) => !msg.id.startsWith("greeting"))
+      );
+    }
+  }, [botConfig.greetings ]);
 
   const handleClear = () => {
     setMessages([]);
@@ -121,6 +128,14 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
     setIsTyping(false);
   };
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]); // هر وقت messages تغییر کرد، scroll کن
+
   async function callChatbotAPIWithSSE(message: string) {
     const apiUrl = `${API_BASE_URL}/public/${botConfig.uuid}/chat`;
 
@@ -136,6 +151,7 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify(requestData),
       });
@@ -282,9 +298,12 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
           </div>
         </div>
 
-        <p className="text-grey-600 text-sm text-right">
-          تغییرات شما بلافاصله در چت‌بات نمایش داده می‌شود
-        </p>
+        <div className="flex items-start text-grey-900  rounded-sm p-2 shadow text-sm text-right border-2 border-secondary/30 mt-1 ">
+          {/* تغییرات شما بلافاصله در چت‌بات نمایش داده می‌شود */}
+          <Info className="text-secondary ml-2 size-6" />
+          تغییرات را اعمال کرده و نتیجه را همین‌جا مشاهده کنید تا تنظیمات
+          دقیق‌تری ایجاد کنید.
+        </div>
       </div>
 
       {/* Single Column Layout: Live Chat Only */}
@@ -362,7 +381,6 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
                             }
                           : {}
                       }
-                      dir="rtl"
                     >
                       {message.text}
                       <div
@@ -379,6 +397,7 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
                         )}
                       </div>
                     </div>
+                    <div ref={messagesEndRef} />
                   </div>
                 ))}
 
@@ -428,8 +447,6 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
               )}
               {/* Input Area */}
               <div className="px-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
-               
-
                 <div className="flex items-center py-4 gap-3">
                   <textarea
                     ref={textareaRef}
@@ -444,7 +461,7 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
                     }}
                     rows={1}
                     placeholder="پیام خود را بنویسید..."
-                    className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm resize-none max-h-[80px] overflow-y-auto outline-none focus:outline-none focus:ring-0 focus:border-grey-300 scrollbar-none"
+                    className="flex-1 px-4 py-3 bg-grey-50 border border-grey-200 rounded-2xl text-sm resize-none max-h-20 overflow-y-auto outline-none focus:outline-none focus:ring-0 focus:border-grey-300 scrollbar-none"
                     style={{
                       scrollbarWidth: "none",
                       msOverflowStyle: "none",
@@ -454,7 +471,7 @@ export function ChatPreview({ botConfig, currentStep,isNew }: ChatPreviewProps) 
                   <button
                     className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md disabled:opacity-50"
                     style={{ backgroundColor: botConfig.primary_color }}
-                    disabled={currentStep == 1}
+                    disabled={currentStep == 1 && isNew}
                     onClick={handleSend}
                   >
                     <SendMessage />
