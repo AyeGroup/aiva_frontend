@@ -25,11 +25,13 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
   const [installCode, setInstallCode] = useState("");
   const [isloading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [baleToken, setBaleToken] = useState<string>(
-    botConfig?.bale_token || ""
-  );
-  const { loading } = useAuth();
+  const [baleToken, setBaleToken] = useState<string>("");
+const [isBaleEditing, setIsBaleEditing] = useState(!botConfig?.bale_enabled);
 
+
+  const { loading } = useAuth();
+console.log("isBaleEditing: ", isBaleEditing);
+console.log("bale_enabled: ", botConfig?.bale_enabled);
   useEffect(() => {
     const fetchCode = async () => {
       try {
@@ -74,12 +76,12 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
       const formData = new FormData();
       formData.append("uuid", botConfig.uuid);
       formData.append("bale_token", baleToken);
-console.log("1",formData)
+      console.log("1", formData);
       const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
         formData
       );
-      console.log("2",res)
+      console.log("2", res);
       if (res.data.success) toast.success("اطلاعات ثبت شد");
       else toast.error("خطا در ثبت اطلاعات");
     } catch (error: any) {
@@ -184,7 +186,38 @@ console.log("1",formData)
             <Image src="/icons/bale.svg" alt="bale" width={16} height={16} />
             بله
           </div>
-          <div className="flex justify-start items-center gap-3 ">
+          <div className="flex flex-col gap-3">
+            {/* اگر توکن ذخیره شده و در حالت ویرایش نیست */}
+            {botConfig.bale_enabled && !isBaleEditing ? (
+              <div className="flex items-center justify-between p-4 border rounded-2xl bg-gray-100">
+                <div className="text-gray-700 text-sm">
+                  توکن ربات بله ثبت شده است
+                </div>
+
+                <button
+                  onClick={() => setIsBaleEditing(true)}
+                  className="text-brand-primary text-sm underline"
+                >
+                  ویرایش
+                </button>
+              </div>
+            ) : (
+              <div className="flex justify-start items-center gap-3">
+                <div className="flex items-center text-gray-900">
+                  توکن ربات بله را وارد کنید
+                </div>
+                <Input
+                  id="bale_code"
+                  type="text"
+                  value={baleToken || ""}
+                  onChange={(e) => setBaleToken(e.target.value)}
+                  className="w-full text-sm rounded-2xl p-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr border-grey-300 focus:border-brand-primary text-center"
+                  maxLength={200}
+                />
+              </div>
+            )}
+          </div>
+          {/* <div className="flex justify-start items-center gap-3 ">
             <div className="flex items-center text-gray-900">
               توکن ربات بله را وارد کنید
             </div>
@@ -196,18 +229,20 @@ console.log("1",formData)
               className="w-full text-sm rounded-2xl p-4 border bg-white! text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary text-center!"
               maxLength={200}
             />
-          </div>
-          <div className="text-left mt-4">
-            <Button
-              variant="primary"
-              onClick={handleBaleLink}
-              icon="arrow-right"
-              iconPosition="right"
-              className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSaving ? "در حال ثبت" : "ثبت"}
-            </Button>
-          </div>
+          </div> */}
+          { isBaleEditing && (
+            <div className="text-left mt-4">
+              <Button
+                variant="primary"
+                onClick={handleBaleLink}
+                icon="arrow-right"
+                iconPosition="right"
+                className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSaving ? "در حال ثبت" : "ثبت"}
+              </Button>
+            </div>
+          )}
         </div>
         <div className="border-2 border-[#d1d5db] p-6 rounded-2xl">
           <div className=" mb-8">کد نصب</div>

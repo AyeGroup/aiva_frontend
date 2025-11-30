@@ -72,6 +72,8 @@ export default function OnboardingWizard() {
     greetings: true,
     use_emoji: false,
     support_phone: "",
+    bale_enabled:false,
+    bale_token:"",
     require_user_phone: false,
     require_user_name: false,
     require_user_email: false,
