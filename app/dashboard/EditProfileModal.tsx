@@ -14,13 +14,14 @@ import {
   DialogTitle,
 } from "@/components/dialog";
 import { User } from "lucide-react";
+import { toast } from "sonner";
 
 export interface ProfileForm {
   full_name: string | null;
   company_name: string | null;
   company_role: string | null;
-  user_logo_url: string | null; 
-  user_logo_file: File | null;  
+  user_logo_url: string | null;
+  user_logo_file: File | null;
 }
 
 interface EditProfileModalProps {
@@ -29,6 +30,7 @@ interface EditProfileModalProps {
 }
 
 export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<ProfileForm>({
     full_name: "",
     company_name: "",
@@ -37,11 +39,7 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
     user_logo_file: null,
   });
 
-  const [loading, setLoading] = useState(false);
-
-  // ------------------------------------------------------
   // Load data when modal opens
-  // ------------------------------------------------------
   useEffect(() => {
     if (!open) return;
 
@@ -68,9 +66,7 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
     fetchProfile();
   }, [open]);
 
-  // ------------------------------------------------------
   // Upload Logo
-  // ------------------------------------------------------
   const handleLogoUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -82,9 +78,7 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
     }));
   };
 
-  // ------------------------------------------------------
   // Save changes
-  // ------------------------------------------------------
   const handleSave = async () => {
     try {
       const formData = new FormData();
@@ -100,9 +94,11 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
       await axiosInstance.put(API_ROUTES.USER.UPDATE, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      toast.success("اطلاعات با موفقیت ذخیره شد.");
 
       onClose();
     } catch (err) {
+      toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
       console.error("Error saving profile:", err);
     }
   };
