@@ -26,12 +26,13 @@ import {
   RightGo,
   User,
 } from "@/public/icons/AppIcons";
+import NewUserIntro from "../NewUserIntro";
 
 export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { bots, currentBot } = useBot();
-  const [isNew, setIsNew] = useState<boolean | null>(null);
+  const { bots, currentBot, botLoading } = useBot();
+  const [isNew, setIsNew] = useState<boolean>(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChartLoading, setIsChartLoading] = useState(false);
@@ -43,7 +44,7 @@ export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
   const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
-  // const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
+  const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const currentData = chartType === "users" ? usersData : chatsData;
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";
@@ -52,18 +53,19 @@ export default function Dashboard() {
     { value: "30d", label: "۳۰ روز اخیر", disable: false },
     { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
-  // console.log("elham1");
 
-  // user has a bot
   useEffect(() => {
-    if (!bots) return;
-    if (bots && bots.length > 0) setIsNew(false);
-    else setIsNew(true);
-  }, [bots]);
+    if (botLoading) return; // تا زمانی که useBot مشغول گرفتن داده‌هاست
+
+    if (bots === undefined || !bots || bots.length === 0) {
+      setIsNew(true);
+    } else {
+      setIsNew(false);
+    }
+  }, [bots, botLoading]);
 
   //statistic cover
   useEffect(() => {
-    // console.log("elham : ",user,currentBot);
     if (!user) return;
     if (!currentBot?.uuid) return;
 
@@ -83,16 +85,14 @@ export default function Dashboard() {
       }
     };
     fetchData();
-  }, [user, currentBot]);
+  }, [user, currentBot, botLoading]);
 
-useEffect(() => {
-  if (!user || !currentBot?.uuid) return;
-  fetchAllStatistics();
-}, [user?.id, currentBot?.uuid]);
-
+  useEffect(() => {
+    if (!user || !currentBot?.uuid) return;
+    fetchAllStatistics();
+  }, [user?.id, currentBot?.uuid, botLoading]);
 
   const fetchAllStatistics = async () => {
-  // console.log("elham")
     setIsLoading(true);
 
     try {
@@ -104,18 +104,15 @@ useEffect(() => {
         fetchFaqList(),
       ]);
 
-      // اگر خواستی نتیجه خطاها را لاگ بگیری:
       results.forEach((r, i) => {
         if (r.status === "rejected") {
           console.error(`Error in promise ${i}`, r.reason);
         }
       });
     } catch (err) {
-      // اینجا معمولاً اجرا نمی‌شود چون allSettled خطا پرتاب نمی‌کند
       console.error("Unexpected error:", err);
     } finally {
       setIsLoading(false);
-      // console.log("isloading",isLoading)
     }
   };
 
@@ -162,7 +159,6 @@ useEffect(() => {
         API_ROUTES.STATISTIC.ACTIVE_USERS(currentBot?.uuid)
       );
       setActiveUsers(response.data.data);
-      // console.log("user", response.data.data);
     } catch (error) {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
@@ -175,15 +171,12 @@ useEffect(() => {
         API_ROUTES.STATISTIC.FAQ_LIST(currentBot?.uuid)
       );
       setFaqList(response.data.data);
-
-      // console.log("setFaqList", response.data.data);
     } catch (error) {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
   };
 
   const fetchRecentSession = async () => {
-    // console.log("fetchRecentSession", currentBot);
     setRecentSession([]);
     if (!currentBot) return;
     try {
@@ -191,8 +184,6 @@ useEffect(() => {
         API_ROUTES.STATISTIC.RECCENT_SESSION(currentBot?.uuid)
       );
       setRecentSession(response.data.data);
-
-      // console.log("RecentSession", response.data.data);
     } catch (error) {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
@@ -207,8 +198,21 @@ useEffect(() => {
 
   const handleChatClick = async () => {};
 
-  if (loading || !currentBot) return <PageLoader />;
-  if (!user) return null;
+  if (loading || botLoading) {
+    return <PageLoader />;
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  if (isNew === null) {
+    return <PageLoader />;
+  }
+
+  if (isNew) {
+    return <NewUserIntro />;
+  }
 
   return (
     <div className="h-screen  bg-white z-0!" style={{ zIndex: 0 }}>
@@ -227,7 +231,7 @@ useEffect(() => {
                   </h1>
                 </div>
 
-                {/* <div className="flex gap-3 ">
+                <div className="flex gap-3 ">
                   <button
                     onClick={() => setIsStatsDrawerOpen(true)}
                     className="flex plans-trigger-special"
@@ -238,21 +242,22 @@ useEffect(() => {
                       <BarChart3 size={20} />
                     </span>
                     <span className="plans-trigger-text">پلن‌ها</span>
+                    {/* <span className="plans-trigger-badge">جدید</span> */}
                   </button>
                   <ChatbotSelector />
-                </div> */}
+                </div>
               </header>
 
-              {isNew && (
+              {/* {isNew && (
                 <div className="flex w-full items-center justify-center m-7">
                   <button
-                    onClick={() => router.push("onboarding")}
+                    onClick={() => router.push("/onboarding")}
                     className="px-8 py-4 font-bold cursor-pointer rounded-md transition-all duration-200   bg-white text-brand-primary shadow-sm"
                   >
                     اولین بات خود را بسازید
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* آمار کلیدی امروز */}
@@ -641,10 +646,10 @@ useEffect(() => {
               )}
             </div>
           </div>
-          {/* <StatsDrawer
+          <StatsDrawer
             isOpen={isStatsDrawerOpen}
             onClose={() => setIsStatsDrawerOpen(false)}
-          /> */}
+          />
         </main>
       </div>
     </div>
