@@ -67,12 +67,13 @@ export function Sidebar({
       style={{ backgroundColor: "#F5E6D3" }}
     >
       {/* Close button (mobile only) */}
-      <button
+      {/* <button
         onClick={onClose}
-        className="lg:hidden absolute top-4 left-4 text-gray-700 hover:text-black"
+        className=" absolute top-4 left-4 text-gray-700 hover:text-black p-1"
+        aria-label="close sidebar"
       >
         ✕
-      </button>{" "}
+      </button> */}
       {/* Header - User Profile */}
       <div className="px-6 py-6 text-center">
         <button

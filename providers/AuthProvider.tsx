@@ -1,11 +1,11 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import axiosInstance from "@/lib/axiosInstance";
-import { useRouter } from "next/navigation";
-import PageLoader from "@/components/pageLoader";
-import { API_ROUTES } from "@/constants/apiRoutes";
 import axios from "axios";
+import PageLoader from "@/components/pageLoader";
+import { useRouter } from "next/navigation";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { jwtDecode } from "jwt-decode";
 
 interface User {
   id: number;
@@ -13,6 +13,7 @@ interface User {
   email: string;
   phone: string;
   token: string;
+  role?: string;
 }
 
 type LoginResponse =
@@ -22,6 +23,7 @@ type LoginResponse =
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+
   login: (identity: string, password: string) => Promise<LoginResponse>;
   logout: () => void;
 }
@@ -68,9 +70,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("accessToken", data.access_token);
       localStorage.setItem("refreshToken", data.refresh_token);
 
+      const payload: any = jwtDecode(data.access_token);
+      console.log("payload", payload);
       const user: User = {
         id: data.id,
         name: data.name || "",
+        role: payload.role || "user",
+
         email: data.email,
         phone: data.phone || identity,
         token: data.access_token,

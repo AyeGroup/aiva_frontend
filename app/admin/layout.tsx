@@ -1,3 +1,4 @@
+"use client"
 import { useRouter, useSearchParams } from "next/navigation";
 import { AdminSidebar } from "./Adminsidebar";
 import { JSX } from "react";

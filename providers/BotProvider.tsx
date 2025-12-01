@@ -19,8 +19,11 @@ interface BotContextType {
   bots: BotConfig[];
   currentBot: BotConfig | null;
   loading: boolean;
+  botLoading: boolean; 
+
   setCurrentBot: (bot: BotConfig) => void;
   refreshBots: () => Promise<void>;
+  setBotLoading: (value: boolean) => void;
 }
 
 const BotContext = createContext<BotContextType | undefined>(undefined);
@@ -30,12 +33,15 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
   const [bots, setBots] = useState<BotConfig[]>([]);
   const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
   const [loading, setLoading] = useState(true);
+  const [botLoading, setBotLoading] = useState(false); 
   const hasFetchedRef = useRef(false);
 
   const fetchBots = useCallback(async () => {
     if (!user) return;
 
     try {
+      setBotLoading(true); 
+
       const response = await axiosInstance.get(API_ROUTES.BOTS.GET);
 
       if (response.status !== 200 || !response.data?.data) {
@@ -60,6 +66,7 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
       console.error("Failed to fetch bots:", error);
     } finally {
       setLoading(false);
+      setBotLoading(false);
     }
   }, [user]);
 
@@ -82,6 +89,7 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return;
 
     try {
+      setBotLoading(true);  
       setLoading(true);
       const response = await axiosInstance.get(API_ROUTES.BOTS.GET);
 
@@ -103,11 +111,20 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
       console.error("Failed to refresh bots:", err);
     } finally {
       setLoading(false);
+      setBotLoading(false); 
     }
   }, [user]);
 
   const value = useMemo(
-    () => ({ bots, currentBot, loading, setCurrentBot, refreshBots }),
+    () => ({
+      bots,
+      currentBot,
+      botLoading,
+      loading,
+      setCurrentBot,
+      refreshBots,
+      setBotLoading,
+    }),
     [bots, currentBot, loading, refreshBots]
   );
 

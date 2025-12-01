@@ -26,12 +26,13 @@ import {
   RightGo,
   User,
 } from "@/public/icons/AppIcons";
+import NewUserIntro from "../NewUserIntro";
 
 export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { bots, currentBot } = useBot();
-  const [isNew, setIsNew] = useState<boolean | null>(null);
+  const { bots, currentBot, botLoading } = useBot();
+  const [isNew, setIsNew] = useState<boolean >(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChartLoading, setIsChartLoading] = useState(false);
@@ -53,17 +54,34 @@ export default function Dashboard() {
     { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
 
-  // user has a bot
+  // useEffect(() => {
+  //   if (bots === undefined) return;
+
+  //   if (!bots || bots.length === 0) {
+  //     setIsNew(true);
+  //   } else {
+  //     setIsNew(false);
+  //   }
+  // }, [bots]);
+  console.log("0");
+
   useEffect(() => {
-    if (!bots) return;
-    if (bots && bots.length > 0) setIsNew(false);
-    else setIsNew(true);
-  }, [bots]);
+    if (botLoading) return; // تا زمانی که useBot مشغول گرفتن داده‌هاست
+
+    console.log("2");
+
+    if (bots === undefined ||!bots || bots.length === 0) {
+      setIsNew(true);
+    } else {
+      setIsNew(false);
+    }
+  }, [bots, botLoading]);
 
   //statistic cover
   useEffect(() => {
     if (!user) return;
     if (!currentBot?.uuid) return;
+    console.log("3");
 
     const fetchData = async () => {
       try {
@@ -81,12 +99,12 @@ export default function Dashboard() {
       }
     };
     fetchData();
-  }, [user, currentBot]);
+  }, [user, currentBot,botLoading]);
 
   useEffect(() => {
     if (!user || !currentBot?.uuid) return;
     fetchAllStatistics();
-  }, [user?.id, currentBot?.uuid]);
+  }, [user?.id, currentBot?.uuid,botLoading]);
 
   const fetchAllStatistics = async () => {
     setIsLoading(true);
@@ -203,10 +221,43 @@ export default function Dashboard() {
 
   const handleChatClick = async () => {};
 
-  if (loading) return <PageLoader />;
-  if (!user) return null;
- 
-if (loading || isNew === null) return <PageLoader />;
+  //   if (loading) return <PageLoader />;
+  //   if (!user) return null;
+
+  // if (loading || isNew === null) return <PageLoader />;
+
+  // if (loading) return <PageLoader />;
+  // if (!user) {
+  //   router.push("/auth/login");
+  //   return null;
+  // }
+
+  // // Show a different loader while checking if user has bots
+  // if (isNew === null) {
+  //   return <PageLoader />;
+  // }
+
+  // وضعیت‌های لودینگ اولیه
+  if (loading || botLoading) {
+    return <PageLoader />;
+  }
+
+  // اگر هنوز وضعیت کاربر مشخص نیست
+  if (!user) {
+    // router.push("/auth/login");
+    return null;
+  }
+
+  // اگر هنوز bots بررسی نشده
+  if (isNew === null) {
+    return <PageLoader />;
+  }
+
+  // اگر کاربر کاملاً جدید است (هیچ باتی ندارد)
+  if (isNew) {
+    return <NewUserIntro />; // مثلاً صفحه ساخت بات جدید
+  }
+  console.log("4");
 
   return (
     <div className="h-screen  bg-white z-0!" style={{ zIndex: 0 }}>
@@ -242,16 +293,16 @@ if (loading || isNew === null) return <PageLoader />;
                 </div>
               </header>
 
-              {isNew && (
+              {/* {isNew && (
                 <div className="flex w-full items-center justify-center m-7">
                   <button
-                    onClick={() => router.push("onboarding")}
+                    onClick={() => router.push("/onboarding")}
                     className="px-8 py-4 font-bold cursor-pointer rounded-md transition-all duration-200   bg-white text-brand-primary shadow-sm"
                   >
                     اولین بات خود را بسازید
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* آمار کلیدی امروز */}
