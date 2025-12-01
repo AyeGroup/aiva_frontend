@@ -32,7 +32,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { bots, currentBot, botLoading } = useBot();
-  const [isNew, setIsNew] = useState<boolean >(true);
+  const [isNew, setIsNew] = useState<boolean>(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChartLoading, setIsChartLoading] = useState(false);
@@ -54,23 +54,10 @@ export default function Dashboard() {
     { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
 
-  // useEffect(() => {
-  //   if (bots === undefined) return;
-
-  //   if (!bots || bots.length === 0) {
-  //     setIsNew(true);
-  //   } else {
-  //     setIsNew(false);
-  //   }
-  // }, [bots]);
-  console.log("0");
-
   useEffect(() => {
     if (botLoading) return; // تا زمانی که useBot مشغول گرفتن داده‌هاست
 
-    console.log("2");
-
-    if (bots === undefined ||!bots || bots.length === 0) {
+    if (bots === undefined || !bots || bots.length === 0) {
       setIsNew(true);
     } else {
       setIsNew(false);
@@ -81,7 +68,6 @@ export default function Dashboard() {
   useEffect(() => {
     if (!user) return;
     if (!currentBot?.uuid) return;
-    console.log("3");
 
     const fetchData = async () => {
       try {
@@ -99,12 +85,12 @@ export default function Dashboard() {
       }
     };
     fetchData();
-  }, [user, currentBot,botLoading]);
+  }, [user, currentBot, botLoading]);
 
   useEffect(() => {
     if (!user || !currentBot?.uuid) return;
     fetchAllStatistics();
-  }, [user?.id, currentBot?.uuid,botLoading]);
+  }, [user?.id, currentBot?.uuid, botLoading]);
 
   const fetchAllStatistics = async () => {
     setIsLoading(true);
@@ -118,18 +104,15 @@ export default function Dashboard() {
         fetchFaqList(),
       ]);
 
-      // اگر خواستی نتیجه خطاها را لاگ بگیری:
       results.forEach((r, i) => {
         if (r.status === "rejected") {
           console.error(`Error in promise ${i}`, r.reason);
         }
       });
     } catch (err) {
-      // اینجا معمولاً اجرا نمی‌شود چون allSettled خطا پرتاب نمی‌کند
       console.error("Unexpected error:", err);
     } finally {
       setIsLoading(false);
-      // console.log("isloading", isLoading);
     }
   };
 
@@ -176,7 +159,6 @@ export default function Dashboard() {
         API_ROUTES.STATISTIC.ACTIVE_USERS(currentBot?.uuid)
       );
       setActiveUsers(response.data.data);
-      // console.log("user", response.data.data);
     } catch (error) {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
@@ -189,15 +171,12 @@ export default function Dashboard() {
         API_ROUTES.STATISTIC.FAQ_LIST(currentBot?.uuid)
       );
       setFaqList(response.data.data);
-
-      // console.log("setFaqList", response.data.data);
     } catch (error) {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
   };
 
   const fetchRecentSession = async () => {
-    // console.log("fetchRecentSession", currentBot);
     setRecentSession([]);
     if (!currentBot) return;
     try {
@@ -205,8 +184,6 @@ export default function Dashboard() {
         API_ROUTES.STATISTIC.RECCENT_SESSION(currentBot?.uuid)
       );
       setRecentSession(response.data.data);
-
-      // console.log("RecentSession", response.data.data);
     } catch (error) {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
@@ -221,43 +198,21 @@ export default function Dashboard() {
 
   const handleChatClick = async () => {};
 
-  //   if (loading) return <PageLoader />;
-  //   if (!user) return null;
-
-  // if (loading || isNew === null) return <PageLoader />;
-
-  // if (loading) return <PageLoader />;
-  // if (!user) {
-  //   router.push("/auth/login");
-  //   return null;
-  // }
-
-  // // Show a different loader while checking if user has bots
-  // if (isNew === null) {
-  //   return <PageLoader />;
-  // }
-
-  // وضعیت‌های لودینگ اولیه
   if (loading || botLoading) {
     return <PageLoader />;
   }
 
-  // اگر هنوز وضعیت کاربر مشخص نیست
   if (!user) {
-    // router.push("/auth/login");
     return null;
   }
 
-  // اگر هنوز bots بررسی نشده
   if (isNew === null) {
     return <PageLoader />;
   }
 
-  // اگر کاربر کاملاً جدید است (هیچ باتی ندارد)
   if (isNew) {
-    return <NewUserIntro />; // مثلاً صفحه ساخت بات جدید
+    return <NewUserIntro />;
   }
-  console.log("4");
 
   return (
     <div className="h-screen  bg-white z-0!" style={{ zIndex: 0 }}>

@@ -36,13 +36,13 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
 interface SidebarProps {
   currentPage?: PageType;
   router: ReturnType<typeof useRouter>;
-  onClose?: () => void;  
+  onCloseُSidebar?: () => void;  
 }
 
 export function Sidebar({
   currentPage = "dashboard-home",
   router,
-  onClose,
+  onCloseُSidebar,
 }: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
@@ -63,17 +63,17 @@ export function Sidebar({
 
   return (
     <aside
-      className="w-64 flex flex-col sticky top-0 h-screen relative"
+      className="w-64 flex flex-col  top-0 h-screen relative"
       style={{ backgroundColor: "#F5E6D3" }}
     >
       {/* Close button (mobile only) */}
-      {/* <button
-        onClick={onClose}
+      <button
+        onClick={onCloseُSidebar}
         className=" absolute top-4 left-4 text-gray-700 hover:text-black p-1"
         aria-label="close sidebar"
       >
         ✕
-      </button> */}
+      </button>
       {/* Header - User Profile */}
       <div className="px-6 py-6 text-center">
         <button
