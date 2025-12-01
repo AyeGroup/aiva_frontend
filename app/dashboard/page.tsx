@@ -46,25 +46,32 @@ export default function DashboardPage() {
     }
   }, [loading, user, router]);
 
- 
-
-  // if (loading) return <PageLoader />;
-  // if (!user) return null;
-
   return (
     <div className="flex min-h-screen relative">
       {/* <Sidebar currentPage={currentPage} router={router} /> */}
-      {/* Toggle Button (Mobile + Desktop) */}
+      {/* Toggle Button (Hamburger) */}
       <button
         onClick={() => setIsSidebarOpen((prev) => !prev)}
-        className="absolute top-0 right-0 z-50 bg-red-400 shadow p-2 rounded-md lg:hidden"
+        className="absolute top-4 right-4 z-50 bg-white shadow p-2 rounded-md lg:hidden"
       >
         <Menu className="w-6 h-6" />
       </button>
 
-      {/* Sidebar */}
-      <div className={`${isSidebarOpen ? "block" : "hidden"} lg:block`}>
-        <Sidebar currentPage={currentPage} router={router} />
+      {/* Sidebar Wrapper with Animation */}
+      <div
+        className={`
+          fixed lg:static top-0 right-0 h-full z-40
+          transition-transform duration-300
+          ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}
+          lg:translate-x-0
+        `}
+        style={{ width: "256px" }}
+      >
+        <Sidebar
+          currentPage={currentPage}
+          router={router}
+          onClose={() => setIsSidebarOpen(false)}
+        />
       </div>
       <main className="flex-1 bg-gray-50">
         {pages[currentPage] || <DashboardHome />}

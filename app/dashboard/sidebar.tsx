@@ -36,17 +36,19 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
 interface SidebarProps {
   currentPage?: PageType;
   router: ReturnType<typeof useRouter>;
+  onClose?: () => void;  
 }
 
 export function Sidebar({
   currentPage = "dashboard-home",
   router,
+  onClose,
 }: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
- 
+
   // const { bots, currentBot, setCurrentBot } = useBot(); // ← دسترسی به بات‌ها
   const handleLogout = async () => {
     try {
@@ -61,9 +63,16 @@ export function Sidebar({
 
   return (
     <aside
-      className="w-64 flex flex-col sticky top-0 h-screen"
+      className="w-64 flex flex-col sticky top-0 h-screen relative"
       style={{ backgroundColor: "#F5E6D3" }}
     >
+      {/* Close button (mobile only) */}
+      <button
+        onClick={onClose}
+        className="lg:hidden absolute top-4 left-4 text-gray-700 hover:text-black"
+      >
+        ✕
+      </button>{" "}
       {/* Header - User Profile */}
       <div className="px-6 py-6 text-center">
         <button
@@ -83,9 +92,7 @@ export function Sidebar({
           </div>
         </button>
       </div>
-
       {loading && <PageLoader />}
-
       {/* Bot Selector Dropdown */}
       <div className="px-4   text-lg font-bold flex justify-center items-center">
         {/* {bots && bots.length > 0 && (
@@ -98,7 +105,6 @@ export function Sidebar({
           </>
         )} */}
       </div>
-
       {/* Navigation Menu */}
       <nav className="flex-1 py-1">
         <SidebarItem
@@ -122,7 +128,6 @@ export function Sidebar({
           onClick={() => router.push("/dashboard?tab=billing")}
         />
       </nav>
-
       {/* Bottom Actions */}
       <div className="px-6 py-4 border-t border-white/30 space-y-2">
         <button
@@ -142,7 +147,6 @@ export function Sidebar({
           <span>خروج</span>
         </button>
       </div>
-
       {/* Footer */}
       <div className="px-6 py-2 border-t border-white/30">
         <div className="flex items-center gap-2">
@@ -164,7 +168,6 @@ export function Sidebar({
           نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
         </div>
       </div>
-
       {/* Modals */}
       <AddChatbotModal
         isOpen={isAddModalOpen}
@@ -179,7 +182,6 @@ export function Sidebar({
       <EditProfileModal
         open={isAddAccountModalOpen}
         onClose={() => setIsAddAccountModalOpen(false)}
-    
       />
     </aside>
   );

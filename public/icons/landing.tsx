@@ -8,7 +8,6 @@ import svgPathsFaq from "@app/landing/svg/svg-m5kcbvnqsq";
 import svgPathsStart from "@app/landing/svg/svg-c8s8h124u2";
 import svgPathsPlan from "@app/landing/svg/svg-f338pva7p3";
 
-
 export function Sec2_Icon() {
   return (
     <motion.div
@@ -145,7 +144,7 @@ export function Sec2_Icon2() {
 export function Sec2_Icon3() {
   return (
     <motion.div
-      className="absolute left-[171.72px] size-[40px] top-[1074.83px]"
+      className="absolute left-[171.72px] size-10 top-[1074.83px]"
       data-name="Icon"
       animate={{
         scale: [1, 1.2, 1],
@@ -921,7 +920,7 @@ export function Icon4() {
   return (
     <motion.div
       className="  size-64  "
-      // className="absolute left-[1168.35px] size-[48px] top-[455.66px]"
+      // className="absolute left-[1168.35px]  size-12  top-[455.66px]"
       data-name="Icon"
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 0.3, rotate: [0, 180, 360] }}
@@ -949,7 +948,7 @@ export function Icon5() {
   return (
     <motion.div
       className="  size-64  "
-      // className="absolute left-[286.19px] size-[40px] top-[1099.17px]"
+      // className="absolute left-[286.19px] size-10 top-[1099.17px]"
       data-name="Icon"
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 0.3, rotate: [0, -180, -360] }}
@@ -1009,10 +1008,7 @@ export function Icon6() {
 
 export function Icon11() {
   return (
-    <div
-      className="absolute left-[1240px] size-[24px] top-[16px]"
-      data-name="Icon"
-    >
+    <div className="absolute left-[1240px] size-6 top-[16px]" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -1038,10 +1034,7 @@ export function Icon11() {
 
 export function Icon12() {
   return (
-    <div
-      className="absolute left-[-32px] size-[24px] top-[16px]"
-      data-name="Icon"
-    >
+    <div className="absolute left-[-32px] size-6 top-[16px]" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -1588,7 +1581,7 @@ export function Icon37() {
 export function Icon38() {
   return (
     <motion.div
-      className="absolute left-[592px] size-[48px] top-[-32px]"
+      className="absolute left-[592px]  size-12  top-[-32px]"
       data-name="Icon"
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 0.05, rotate: [0, 360] }}
@@ -1920,10 +1913,9 @@ export const Moshavere = () => {
   );
 };
 
-
 export function Sec6_Icon2() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -1947,7 +1939,7 @@ export function Sec6_Icon2() {
 
 export function Sec6_Icon3() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -1971,7 +1963,7 @@ export function Sec6_Icon3() {
 
 export function Sec6_Icon4() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -1995,7 +1987,7 @@ export function Sec6_Icon4() {
 
 export function Sec6_Icon6() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2019,7 +2011,7 @@ export function Sec6_Icon6() {
 
 export function Sec6_Icon7() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2043,7 +2035,7 @@ export function Sec6_Icon7() {
 
 export function Sec6_Icon8() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2091,7 +2083,7 @@ export function Sec6_Icon8() {
 
 export function Sec6_Icon9() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2123,7 +2115,7 @@ export function Sec6_Icon9() {
 
 export function Sec6_Icon10() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2155,7 +2147,7 @@ export function Sec6_Icon10() {
 
 export function Sec6_Icon11() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2179,7 +2171,7 @@ export function Sec6_Icon11() {
 
 export function Sec6_Icon12() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2211,7 +2203,7 @@ export function Sec6_Icon12() {
 
 export function Sec6_Icon13() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2243,7 +2235,7 @@ export function Sec6_Icon13() {
 
 export function Sec6_Icon14() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2275,7 +2267,7 @@ export function Sec6_Icon14() {
 
 export function Sec6_Icon15() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2299,7 +2291,7 @@ export function Sec6_Icon15() {
 
 export function Sec6_Icon16() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2339,7 +2331,7 @@ export function Sec6_Icon16() {
 
 export function Sec6_Icon17() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2371,7 +2363,7 @@ export function Sec6_Icon17() {
 
 export function Sec6_Icon18() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2403,7 +2395,7 @@ export function Sec6_Icon18() {
 
 export function Sec6_Icon19() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2427,7 +2419,7 @@ export function Sec6_Icon19() {
 
 export function Sec6_Icon20() {
   return (
-    <div className="relative shrink-0 size-[32px]" data-name="Icon">
+    <div className="relative shrink-0 size-8" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2475,7 +2467,7 @@ export function Sec6_Icon20() {
 
 export function Sec6_Icon21() {
   return (
-    <div className="relative shrink-0 size-[14px]" data-name="Icon">
+    <div className="relative shrink-0 size-3.5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2507,7 +2499,7 @@ export function Sec6_Icon21() {
 
 export function Sec7_Icon() {
   return (
-    <div className="absolute left-0 -top-4 w-full" >
+    <div className="absolute left-0 -top-4 w-full">
       <svg
         className="block size-full"
         fill="none"
@@ -2535,10 +2527,7 @@ export function Sec7_Icon() {
 
 export function Sec7_Icon1() {
   return (
-    <div
-      className="absolute left-10 top-10 w-full"
-      data-name="Icon"
-    >
+    <div className="absolute left-10 top-10 w-full" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2560,10 +2549,7 @@ export function Sec7_Icon1() {
 
 export function Sec7_Icon2() {
   return (
-    <div
-      className="absolute left-0 size-16 top-0"
-      data-name="Icon"
-    >
+    <div className="absolute left-0 size-16 top-0" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2615,10 +2601,7 @@ export function Sec7_Icon2() {
 
 export function Sec7_Icon3() {
   return (
-    <div
-      className="absolute left-0 size-[56px] top-0"
-      data-name="Icon"
-    >
+    <div className="absolute left-0 size-14 top-0" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2651,10 +2634,7 @@ export function Sec7_Icon3() {
 
 export function Sec7_Icon4() {
   return (
-    <div
-      className="absolute left-0 size-[40px] top-0"
-      data-name="Icon"
-    >
+    <div className="absolute left-0 size-10 top-0" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2676,10 +2656,7 @@ export function Sec7_Icon4() {
 
 export function Sec7_Icon5() {
   return (
-    <div
-      className="absolute h-32 left-0 top-0 w-full"
-      data-name="Icon"
-    >
+    <div className="absolute h-32 left-0 top-0 w-full" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2706,7 +2683,7 @@ export function Sec7_Icon5() {
 
 export function Sec7_Icon6() {
   return (
-    <div className="relative shrink-0 size-[28px]" data-name="Icon">
+    <div className="relative shrink-0 size-7" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2738,7 +2715,7 @@ export function Sec7_Icon6() {
 
 export function Sec7_Icon7() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Icon">
+    <div className="relative shrink-0 size-5" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -2819,7 +2796,7 @@ export function Sec7_Icon8() {
 export function Faq_Icon0() {
   return (
     <div
-      className="absolute left-[1268.52px] size-[48px] top-[139.26px]"
+      className="absolute left-[1268.52px]  size-12  top-[139.26px]"
       data-name="Icon"
     >
       <svg
@@ -2844,7 +2821,7 @@ export function Faq_Icon0() {
 export function Faq_Icon1() {
   return (
     <div
-      className="absolute left-[171.72px] size-[40px] top-[702.72px]"
+      className="absolute left-[171.72px] size-10 top-[702.72px]"
       data-name="Icon"
     >
       <svg
@@ -2955,7 +2932,7 @@ export function Faq_Icon4() {
 export function SecSart_Icon0() {
   return (
     <div
-      className="absolute left-[1223.91px] size-[64px] top-[100.4px]"
+      className="absolute left-[1223.91px]  size-16  top-[100.4px]"
       data-name="Icon"
     >
       <svg
@@ -2998,7 +2975,7 @@ export function SecSart_Icon0() {
 export function SecSart_Icon1() {
   return (
     <div
-      className="absolute left-[114.48px] size-[56px] top-[320.5px]"
+      className="absolute left-[114.48px] size-14 top-[320.5px]"
       data-name="Icon"
     >
       <svg
@@ -3029,7 +3006,7 @@ export function SecSart_Icon1() {
 export function SecSart_Icon2() {
   return (
     <div
-      className="absolute left-[171.72px] size-[48px] top-[225.9px]"
+      className="absolute left-[171.72px]  size-12  top-[225.9px]"
       data-name="Icon"
     >
       <svg
@@ -3054,7 +3031,7 @@ export function SecSart_Icon2() {
 export function SecSart_Icon3() {
   return (
     <div
-      className="absolute left-[1176.35px] size-[40px] top-[361.6px]"
+      className="absolute left-[1176.35px] size-10 top-[361.6px]"
       data-name="Icon"
     >
       <svg
@@ -3096,14 +3073,14 @@ export function SecSart_Icon11() {
 
 export function SecSart_Icon12() {
   return (
-    <div className="absolute bg-[rgba(255,255,255,0.1)] blur-3xl filter left-[40px] rounded-[1.67772e+07px] size-[320px] top-[142px]" />
+    <div className="absolute bg-[rgba(255,255,255,0.1)] blur-3xl filter left-[40px] rounded-[1.67772e+07px] size-80 top-[142px]" />
   );
 }
 
 export function SecSart_Icon4() {
   return (
     <div
-      className="absolute left-[114.48px] size-[80px] top-[75.3px]"
+      className="absolute left-[114.48px]  size-20  top-[75.3px]"
       data-name="Icon"
     >
       <svg
@@ -3128,7 +3105,7 @@ export function SecSart_Icon4() {
 export function SecSart_Icon5() {
   return (
     <div
-      className="absolute left-[1223.91px] size-[64px] top-[337.6px]"
+      className="absolute left-[1223.91px]  size-16  top-[337.6px]"
       data-name="Icon"
     >
       <svg
@@ -3152,7 +3129,7 @@ export function SecSart_Icon5() {
 export function SecSart_Icon6() {
   return (
     <div
-      className="absolute left-[1303.45px] size-[56px] top-[251px]"
+      className="absolute left-[1303.45px] size-14 top-[251px]"
       data-name="Icon"
     >
       <svg
@@ -3232,7 +3209,7 @@ export function SecSart_Icon8() {
 export function SecSart_Icon9() {
   return (
     <div
-      className="absolute left-[1176.35px] size-[40px] top-[125.5px]"
+      className="absolute left-[1176.35px] size-10 top-[125.5px]"
       data-name="Icon"
     >
       <svg
@@ -3256,7 +3233,7 @@ export function SecSart_Icon9() {
 export function SecSart_Icon10() {
   return (
     <div
-      className="absolute left-[171.72px] size-[32px] top-[319.41px]"
+      className="absolute left-[171.72px] size-8 top-[319.41px]"
       data-name="Icon"
     >
       <svg
@@ -3276,7 +3253,6 @@ export function SecSart_Icon10() {
     </div>
   );
 }
-
 
 // Pricing Icon Components
 export const RocketIcon = ({ className }: { className?: string }) => (
@@ -3345,8 +3321,6 @@ export const CrownIcon = ({ className }: { className?: string }) => (
     />
   </svg>
 );
-
-
 
 export function PlanImage() {
   return (
