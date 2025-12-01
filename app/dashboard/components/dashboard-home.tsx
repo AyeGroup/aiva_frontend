@@ -55,7 +55,7 @@ export default function Dashboard() {
   ];
 
   useEffect(() => {
-    if (botLoading) return; // تا زمانی که useBot مشغول گرفتن داده‌هاست
+    if (botLoading) return;
 
     if (bots === undefined || !bots || bots.length === 0) {
       setIsNew(true);
@@ -210,7 +210,7 @@ export default function Dashboard() {
     return <PageLoader />;
   }
 
-  if (isNew) {
+  if (!botLoading && isNew) {
     return <NewUserIntro />;
   }
 
@@ -226,7 +226,7 @@ export default function Dashboard() {
               {/* Page Header */}
               <header className="flex items-center justify-between w-full mb-6">
                 <div className="text-right">
-                  <h1 className="text-grey-900 mb-0 text-3xl font-bold">
+                  <h1 className="text-grey-900 mb-0 mr-10 text-3xl font-bold">
                     میزکار
                   </h1>
                 </div>

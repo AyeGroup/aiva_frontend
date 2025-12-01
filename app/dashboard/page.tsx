@@ -50,9 +50,9 @@ export default function DashboardPage() {
       {!isSidebarOpen && (
         <button
           onClick={() => setIsSidebarOpen((prev) => !prev)}
-          className="absolute top-0 right-0 z-50 bg-gray-100 shadow p-2 rounded-md"
+          className="absolute top-2 right-2 z-50 bg-secondary/10 shadow p-2 rounded-md"
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-6 h-6 text-secondary" />
         </button>
       )}
 

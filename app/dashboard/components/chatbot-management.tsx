@@ -179,8 +179,10 @@ export function ChatbotManagement() {
             {/* Page Header */}
             <header className="flex items-center justify-between mb-8">
               <div className="text-right">
-                <h1 className="text-grey-900 mb-2">مدیریت چت‌بات‌ها</h1>
-                <p className="text-grey-600">مدیریت و ویرایش چت‌بات‌ها</p>
+                <h1 className="text-grey-900 mb-0 mr-10 text-3xl font-bold">
+                  مدیریت چت‌بات‌ها
+                </h1>
+                <p className="text-grey-600 mr-10">مدیریت و ویرایش چت‌بات‌ها</p>
               </div>
 
               <button

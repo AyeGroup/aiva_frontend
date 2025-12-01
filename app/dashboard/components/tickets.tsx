@@ -18,7 +18,6 @@ import {
   TicketClose,
   TicketOpen,
   TicketPend,
-  TicketTitle,
 } from "@/public/icons/AppIcons";
 
 export function Tickets() {
@@ -80,7 +79,9 @@ export function Tickets() {
             <header className="shrink-0 bg-bg-surface border-b border-border-soft px-8 py-6">
               <div className="flex items-start justify-between">
                 <div className="text-right">
-                  <h1 className="text-grey-900 mb-2"> تیکت‌های پشتیبانی</h1>
+                  <h1 className="text-grey-900 mb-0 mr-10 text-3xl font-bold">
+                    تیکت‌های پشتیبانی
+                  </h1>
                   <p className="text-grey-600">
                     مدیریت و پیگیری درخواست‌های پشتیبانی
                   </p>
