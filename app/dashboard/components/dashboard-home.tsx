@@ -85,12 +85,11 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
-  useEffect(() => {
-    // if (!user || !currentBot?.uuid) return;
-    if (!user  ) return;
-    // if (isLoading) return;
-    fetchAllStatistics();
-  }, [user?.id, currentBot?.uuid]);
+useEffect(() => {
+  if (!user || !currentBot?.uuid) return;
+  fetchAllStatistics();
+}, [user?.id, currentBot?.uuid]);
+
 
   const fetchAllStatistics = async () => {
   // console.log("elham")
@@ -116,7 +115,7 @@ export default function Dashboard() {
       console.error("Unexpected error:", err);
     } finally {
       setIsLoading(false);
-      console.log("isloading",isLoading)
+      // console.log("isloading",isLoading)
     }
   };
 
@@ -208,7 +207,7 @@ export default function Dashboard() {
 
   const handleChatClick = async () => {};
 
-  if (loading) return <PageLoader />;
+  if (loading || !currentBot) return <PageLoader />;
   if (!user) return null;
 
   return (
