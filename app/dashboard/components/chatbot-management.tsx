@@ -180,9 +180,7 @@ export function ChatbotManagement() {
             <header className="flex items-center justify-between mb-8">
               <div className="text-right">
                 <h1 className="text-grey-900 mb-2">مدیریت چت‌بات‌ها</h1>
-                <p className="text-grey-600">
-                  مدیریت و ویرایش چت‌بات‌ها  
-                </p>
+                <p className="text-grey-600">مدیریت و ویرایش چت‌بات‌ها</p>
               </div>
 
               <button
@@ -362,8 +360,6 @@ export function ChatbotManagement() {
                                     setSelectedChatbot(chatbot);
                                     setShowDetailModal(true);
                                     setOpenMenuId(null);
-                                    // setPlanColor(chatbot.primary_color);
-                                    // setChatbotName(chatbot.name);
                                   }}
                                   className="chatbot-menu-item"
                                   title="جزئیات بیشتر"
@@ -403,24 +399,6 @@ export function ChatbotManagement() {
                               </div>
                             )}
                           </div>
-                          {/* <button
-                            onClick={() =>
-                              router.push(
-                                `/dashboard?tab=onboarding&id=${chatbot.uuid}`
-                              )
-                            }
-                            className="p-2 text-grey-600 hover:text-brand-primary hover:bg-brand-primary/10 rounded-lg transition-all"
-                            title="ویرایش"
-                          >
-                            <Edit3 className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => openConfirmModal(chatbot.uuid)}
-                            className="p-2 text-grey-600 hover:text-danger hover:bg-danger/10 rounded-lg transition-all"
-                            title="حذف"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button> */}
                         </div>
                       </div>
                     </div>

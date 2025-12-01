@@ -52,7 +52,6 @@ export default function Dashboard() {
     { value: "30d", label: "۳۰ روز اخیر", disable: false },
     { value: "90d", label: "۹۰ روز اخیر", disable: false },
   ];
-  // console.log("elham1");
 
   // user has a bot
   useEffect(() => {
@@ -63,7 +62,6 @@ export default function Dashboard() {
 
   //statistic cover
   useEffect(() => {
-    // console.log("elham : ",user,currentBot);
     if (!user) return;
     if (!currentBot?.uuid) return;
 
@@ -85,20 +83,12 @@ export default function Dashboard() {
     fetchData();
   }, [user, currentBot]);
 
-  // useEffect(() => {
-  //   // if (!user || !currentBot?.uuid) return;
-  //   if (!user) return;
-  //   // if (isLoading) return;
-  //   fetchAllStatistics();
-  // }, [user?.id]);
-
   useEffect(() => {
     if (!user || !currentBot?.uuid) return;
     fetchAllStatistics();
   }, [user?.id, currentBot?.uuid]);
 
   const fetchAllStatistics = async () => {
-    // console.log("elham")
     setIsLoading(true);
 
     try {
@@ -215,6 +205,8 @@ export default function Dashboard() {
 
   if (loading) return <PageLoader />;
   if (!user) return null;
+ 
+if (loading || isNew === null) return <PageLoader />;
 
   return (
     <div className="h-screen  bg-white z-0!" style={{ zIndex: 0 }}>
