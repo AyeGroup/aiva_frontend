@@ -602,7 +602,7 @@ html {
 
 @media (max-width: 768px) {
   .app-content:not(:has(.landing-page)) {
-    margin: var(--space-3);
+    margin: 0;
     min-height: calc(100vh - var(--space-6));
   }
 }
@@ -977,7 +977,7 @@ html {
 
 @media (max-width: 768px) {
   .app-content:not(:has(.landing-page)):not(:has(.onboarding-wizard)) {
-    margin: var(--space-2);
+    margin:0;
     border-radius: var(--radius-lg);
   }
 

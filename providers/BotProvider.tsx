@@ -18,9 +18,7 @@ import axiosInstance from "@/lib/axiosInstance";
 interface BotContextType {
   bots: BotConfig[];
   currentBot: BotConfig | null;
-  loading: boolean;
-  botLoading: boolean; 
-
+  botLoading: boolean;
   setCurrentBot: (bot: BotConfig) => void;
   refreshBots: () => Promise<void>;
   setBotLoading: (value: boolean) => void;
@@ -29,24 +27,22 @@ interface BotContextType {
 const BotContext = createContext<BotContextType | undefined>(undefined);
 
 export const BotProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [bots, setBots] = useState<BotConfig[]>([]);
   const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [botLoading, setBotLoading] = useState(false); 
+  const [botLoading, setBotLoading] = useState(false);
   const hasFetchedRef = useRef(false);
 
   const fetchBots = useCallback(async () => {
     if (!user) return;
 
     try {
-      setBotLoading(true); 
+      setBotLoading(true);
 
       const response = await axiosInstance.get(API_ROUTES.BOTS.GET);
 
       if (response.status !== 200 || !response.data?.data) {
         console.warn("Unexpected bots API response:", response);
-        setLoading(false);
         return;
       }
 
@@ -65,32 +61,33 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Failed to fetch bots:", error);
     } finally {
-      setLoading(false);
       setBotLoading(false);
     }
   }, [user]);
 
   useEffect(() => {
+    // منتظر بمان تا loading از useAuth تمام شود
+    if (loading) return;
+
     if (user) {
+      // اگر کاربر لاگین است و هنوز fetch نشده
       if (!hasFetchedRef.current) {
         hasFetchedRef.current = true;
-        setLoading(true);
         fetchBots();
       }
     } else {
+      // اگر کاربر لاگین نیست، همه چیز را ریست کن
       hasFetchedRef.current = false;
       setBots([]);
       setCurrentBot(null);
-      setLoading(false);
     }
-  }, [user, fetchBots]);
+  }, [user, loading, fetchBots]);
 
   const refreshBots = useCallback(async () => {
     if (!user) return;
 
     try {
-      setBotLoading(true);  
-      setLoading(true);
+      setBotLoading(true);
       const response = await axiosInstance.get(API_ROUTES.BOTS.GET);
 
       if (response.status === 200 && response.data?.data) {
@@ -110,8 +107,7 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
     } catch (err) {
       console.error("Failed to refresh bots:", err);
     } finally {
-      setLoading(false);
-      setBotLoading(false); 
+      setBotLoading(false);
     }
   }, [user]);
 
@@ -120,12 +116,11 @@ export const BotProvider = ({ children }: { children: ReactNode }) => {
       bots,
       currentBot,
       botLoading,
-      loading,
       setCurrentBot,
       refreshBots,
       setBotLoading,
     }),
-    [bots, currentBot, loading, refreshBots]
+    [bots, currentBot, botLoading, refreshBots]
   );
 
   return <BotContext.Provider value={value}>{children}</BotContext.Provider>;
@@ -136,3 +131,141 @@ export const useBot = () => {
   if (!context) throw new Error("useBot must be used within a BotProvider");
   return context;
 };
+// "use client";
+
+// import {
+//   createContext,
+//   useContext,
+//   useState,
+//   ReactNode,
+//   useEffect,
+//   useCallback,
+//   useMemo,
+//   useRef,
+// } from "react";
+// import { useAuth } from "./AuthProvider";
+// import { BotConfig } from "@/types/common";
+// import { API_ROUTES } from "@/constants/apiRoutes";
+// import axiosInstance from "@/lib/axiosInstance";
+
+// interface BotContextType {
+//   bots: BotConfig[];
+//   currentBot: BotConfig | null;
+//   isLoading: boolean;
+//   botLoading: boolean;
+
+//   setCurrentBot: (bot: BotConfig) => void;
+//   refreshBots: () => Promise<void>;
+//   setBotLoading: (value: boolean) => void;
+// }
+
+// const BotContext = createContext<BotContextType | undefined>(undefined);
+
+// export const BotProvider = ({ children }: { children: ReactNode }) => {
+//   const { user,loading} = useAuth();
+//   const [bots, setBots] = useState<BotConfig[]>([]);
+//   const [currentBot, setCurrentBot] = useState<BotConfig | null>(null);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [botLoading, setBotLoading] = useState(false);
+//   const hasFetchedRef = useRef(false);
+
+//   const fetchBots = useCallback(async () => {
+//     if (!user) return;
+
+//     try {
+//       setBotLoading(true);
+
+//       const response = await axiosInstance.get(API_ROUTES.BOTS.GET);
+
+//       if (response.status !== 200 || !response.data?.data) {
+//         console.warn("Unexpected bots API response:", response);
+//         setIsLoading(false);
+//         return;
+//       }
+
+//       const userBots: BotConfig[] = response.data.data;
+//       setBots(userBots);
+
+//       setCurrentBot((prev) => {
+//         if (userBots.length === 0) return null;
+
+//         if (prev && userBots.find((b) => b.uuid === prev.uuid)) {
+//           return prev;
+//         }
+
+//         return userBots[0];
+//       });
+//     } catch (error) {
+//       console.error("Failed to fetch bots:", error);
+//     } finally {
+//       setIsLoading(false);
+//       setBotLoading(false);
+//     }
+//   }, [user]);
+
+//   useEffect(() => {
+//     if (user) {
+//       if (!hasFetchedRef.current) {
+//         hasFetchedRef.current = true;
+//         setIsLoading(true);
+//         fetchBots();
+//       }
+//     } else {
+//       hasFetchedRef.current = false;
+//       setBots([]);
+//       setCurrentBot(null);
+//       setIsLoading(false);
+//     }
+//   }, [user, fetchBots]);
+
+//   const refreshBots = useCallback(async () => {
+//     if (!user) return;
+
+//     try {
+//       setBotLoading(true);
+//       setIsLoading(true);
+//       const response = await axiosInstance.get(API_ROUTES.BOTS.GET);
+
+//       if (response.status === 200 && response.data?.data) {
+//         const userBots: BotConfig[] = response.data.data;
+//         setBots(userBots);
+
+//         setCurrentBot((prev) => {
+//           if (userBots.length === 0) return null;
+
+//           const found = prev
+//             ? userBots.find((b) => b.uuid === prev.uuid)
+//             : null;
+
+//           return found || userBots[0];
+//         });
+//       }
+//     } catch (err) {
+//       console.error("Failed to refresh bots:", err);
+//     } finally {
+//       setIsLoading(false);
+//       setBotLoading(false);
+//     }
+//   }, [user]);
+
+//   const value = useMemo(
+//     () => ({
+//       bots,
+//       currentBot,
+//       botLoading,
+//       isLoading,
+//       setCurrentBot,
+//       refreshBots,
+//       setBotLoading,
+//     }),
+//     [bots, currentBot, botLoading, refreshBots]
+//   );
+
+//   return <BotContext.Provider value={value}>{children}</BotContext.Provider>;
+// };
+
+// export const useBot = () => {
+//   const context = useContext(BotContext);
+//   if (!context) throw new Error("useBot must be used within a BotProvider");
+//   return context;
+// };

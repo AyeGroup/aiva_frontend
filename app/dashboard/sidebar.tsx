@@ -6,10 +6,9 @@ import { useAuth } from "@/providers/AuthProvider";
 import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { AddChatbotModal } from "./add-chatbot-modal";
-import { AddAccountModal } from "./add-account-modal";
+import { EditProfileModal } from "./EditProfileModal";
 import { User, LogOut, ArrowLeft } from "lucide-react";
 import Image from "next/image";
-import { EditProfileModal, ProfileForm } from "./EditProfileModal";
 
 interface SidebarItemProps {
   label: string;
@@ -36,20 +35,19 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
 interface SidebarProps {
   currentPage?: PageType;
   router: ReturnType<typeof useRouter>;
-  onCloseُSidebar?: () => void;  
+  onCloseSidebar?: () => void;
 }
 
 export function Sidebar({
   currentPage = "dashboard-home",
   router,
-  onCloseُSidebar,
+  onCloseSidebar,
 }: SidebarProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  // const { bots, currentBot, setCurrentBot } = useBot(); // ← دسترسی به بات‌ها
   const handleLogout = async () => {
     try {
       setIsLoading(true);
@@ -68,7 +66,7 @@ export function Sidebar({
     >
       {/* Close button (mobile only) */}
       <button
-        onClick={onCloseُSidebar}
+        onClick={onCloseSidebar}
         className=" absolute top-4 left-4 text-gray-700 hover:text-black p-1"
         aria-label="close sidebar"
       >
@@ -94,39 +92,39 @@ export function Sidebar({
         </button>
       </div>
       {loading && <PageLoader />}
-      {/* Bot Selector Dropdown */}
-      <div className="px-4   text-lg font-bold flex justify-center items-center">
-        {/* {bots && bots.length > 0 && (
-          <>
-            <label className="block   font-medium text-gray-700 m-1">
-              چت‌بات
-            </label>
-          <ChatbotSelector/>
-            
-          </>
-        )} */}
-      </div>
       {/* Navigation Menu */}
       <nav className="flex-1 py-1">
         <SidebarItem
           label="میزکار"
           active={currentPage === "dashboard-home"}
-          onClick={() => router.push("/dashboard?tab=dashboard-home")}
+          onClick={() => {
+            router.push("/dashboard?tab=dashboard-home");
+            onCloseSidebar?.(); // بستن سایدبار بعد از کلیک
+          }}
         />
         <SidebarItem
           label="مدیریت چت‌بات"
           active={currentPage === "chatbot-management"}
-          onClick={() => router.push("/dashboard?tab=chatbot-management")}
+          onClick={() => {
+            router.push("/dashboard?tab=chatbot-management");
+            onCloseSidebar?.(); // بستن سایدبار بعد از کلیک
+          }}
         />
         <SidebarItem
           label="پشتیبانی"
           active={currentPage === "tickets"}
-          onClick={() => router.push("/dashboard?tab=tickets")}
+          onClick={() => {
+            router.push("/dashboard?tab=tickets");
+            onCloseSidebar?.(); // بستن سایدبار بعد از کلیک
+          }}
         />
         <SidebarItem
           label="مالی"
           active={currentPage === "billing"}
-          onClick={() => router.push("/dashboard?tab=billing")}
+          onClick={() => {
+            router.push("/dashboard?tab=billing");
+            onCloseSidebar?.(); // بستن سایدبار بعد از کلیک
+          }}
         />
       </nav>
       {/* Bottom Actions */}
@@ -175,11 +173,7 @@ export function Sidebar({
         onClose={() => setIsAddModalOpen(false)}
         onAdd={() => {}}
       />
-      {/* <AddAccountModal
-        isOpen={isAddAccountModalOpen}
-        onClose={() => setIsAddAccountModalOpen(false)}
-        onAdd={() => {}}
-      /> */}
+
       <EditProfileModal
         open={isAddAccountModalOpen}
         onClose={() => setIsAddAccountModalOpen(false)}

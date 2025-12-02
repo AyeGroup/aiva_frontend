@@ -19,13 +19,291 @@ import {
   TicketOpen,
   TicketPend,
 } from "@/public/icons/AppIcons";
+import { DialogOverlay } from "@/components/dialog";
 
+// Types
+type TicketStatus = "open" | "in_progress" | "closed" | "all";
+type TicketPriority = "urgent" | "high" | "medium" | "low" | "all";
+
+interface TicketStats {
+  total: number;
+  open: number;
+  pending: number;
+  closed: number;
+  high: number;
+}
+
+interface StatCardConfig {
+  title: string;
+  count: number;
+  icon: React.ReactNode;
+  bgColor: string;
+  textColor: string;
+  progressColor: string;
+  onClick: () => void;
+}
+
+// Helper functions
+const calculatePercentage = (part: number, total: number): number => {
+  return total > 0 ? (part / total) * 100 : 0;
+};
+
+const formatDateTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  const faDate = date.toLocaleDateString("fa-IR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const faTime = date.toLocaleTimeString("fa-IR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${faDate} - ${faTime}`;
+};
+
+const getPriorityLabel = (priority: string): string => {
+  const labels: Record<string, string> = {
+    urgent: "اورژانسی",
+    high: "بالا",
+    medium: "متوسط",
+    low: "پایین",
+  };
+  return labels[priority] || priority;
+};
+
+const getPriorityStyles = (priority: string): string => {
+  const styles: Record<string, string> = {
+    urgent: "bg-red-100 text-red-700",
+    high: "bg-orange-100 text-orange-700",
+    medium: "bg-yellow-100 text-yellow-700",
+    low: "bg-blue-100 text-blue-700",
+  };
+  return styles[priority] || "";
+};
+
+const getCategoryLabel = (category: string): string => {
+  const labels: Record<string, string> = {
+    technical: "فنی",
+    financial: "مالی",
+    general: "عمومی",
+  };
+  return labels[category] || category;
+};
+
+const getBadgeStatus = (status: string): "error" | "pending" | "success" => {
+  if (status === "open") return "error";
+  if (status === "in_progress") return "pending";
+  return "success";
+};
+
+// Sub-components
+const StatCard: React.FC<StatCardConfig> = ({
+  title,
+  count,
+  icon,
+  bgColor,
+  textColor,
+  progressColor,
+  onClick,
+}) => (
+  <div className="bg-white relative rounded-[20px]">
+    <div
+      className="overflow-clip rounded-[inherit] size-full cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="p-6 flex flex-col gap-8 w-full">
+        <div className="flex gap-4 items-center justify-start w-full">
+          <div
+            className={`${bgColor} rounded-2xl size-14 flex items-center justify-center`}
+          >
+            <div className={`w-7 h-7 ${textColor}`}>{icon}</div>
+          </div>
+          <div className="flex-1 flex flex-col gap-2 items-start justify-center">
+            <p className="text-grey-600">{title}</p>
+            <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
+              {convertToPersian(count)}
+            </p>
+          </div>
+        </div>
+        <div className="bg-grey-100 h-1 flex items-end justify-center overflow-clip rounded-full w-full">
+          <div className={`${progressColor} h-1 rounded-full w-full`}></div>
+        </div>
+      </div>
+    </div>
+    <div
+      aria-hidden="true"
+      className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
+    />
+  </div>
+);
+
+const ProgressStatCard: React.FC<StatCardConfig & { percentage: number }> = ({
+  title,
+  count,
+  icon,
+  bgColor,
+  textColor,
+  progressColor,
+  onClick,
+  percentage,
+}) => (
+  <div className="bg-white relative rounded-[20px]">
+    <div
+      className="overflow-clip rounded-[inherit] size-full cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="p-6 flex flex-col gap-8 w-full">
+        <div className="flex gap-4 items-center justify-start w-full">
+          <div
+            className={`${bgColor} rounded-2xl size-14 flex items-center justify-center`}
+          >
+            <div className={`w-7 h-7 ${textColor}`}>{icon}</div>
+          </div>
+          <div className="flex-1 flex flex-col gap-2 items-start justify-center">
+            <p className="text-grey-600">{title}</p>
+            <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
+              {convertToPersian(count)}
+            </p>
+          </div>
+        </div>
+        <div className="bg-grey-100 h-1 relative rounded-full w-full">
+          <div className="overflow-clip rounded-[inherit] size-full">
+            <div
+              className="flex flex-col h-1 items-start w-full"
+              style={{ paddingLeft: `${100 - percentage}%` }}
+            >
+              <div className={`${progressColor} h-1 rounded-full w-full`}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      aria-hidden="true"
+      className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
+    />
+  </div>
+);
+
+const TicketCard: React.FC<{
+  ticket: Ticket;
+  onClick: () => void;
+}> = ({ ticket, onClick }) => {
+  const badgeStatus = getBadgeStatus(ticket.status);
+
+  return (
+    <Card
+      className="p-6 hover:shadow-hover border border-border-soft cursor-pointer group transition-all"
+      onClick={onClick}
+    >
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-6">
+          <div className="shrink-0">
+            <div className="px-4 py-2 bg-brand-primary/10 rounded-lg">
+              <span className="text-brand-primary font-mono text-xs">
+                {ticket.id}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <h3 className="text-grey-900 group-hover:text-brand-primary transition-colors text-right">
+              {ticket.title}
+            </h3>
+          </div>
+
+          <div className="shrink-0 flex items-center gap-2 text-grey-500">
+            <div className="w-4 h-4">
+              <TicketPend />
+            </div>
+            <span className="text-sm">{formatDateTime(ticket.updated_at)}</span>
+          </div>
+
+          <div className="shrink-0">
+            <div className="w-5 h-5 text-gray-500">
+              <Back />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 pr-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-grey-500">وضعیت:</span>
+            <StatusBadge status={badgeStatus} />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-grey-500">اولویت:</span>
+            <span
+              className={`px-3 py-1 rounded-lg text-xs ${getPriorityStyles(
+                ticket.priority
+              )}`}
+            >
+              {getPriorityLabel(ticket.priority)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-grey-500">دسته‌بندی:</span>
+            <span className="px-3 py-1 rounded-lg text-xs bg-grey-100 text-grey-700">
+              {getCategoryLabel(ticket.category)}
+            </span>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+const EmptyState: React.FC<{
+  hasFilters: boolean;
+  onClearFilters: () => void;
+  onCreateTicket: () => void;
+}> = ({ hasFilters, onClearFilters, onCreateTicket }) => (
+  <div className="text-center py-16">
+    <div className="w-24 h-24 bg-grey-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <div className="w-12 h-12 text-grey-400">
+        <TicketAll />
+      </div>
+    </div>
+    <h3 className="text-grey-900 mb-2">هیچ تیکتی یافت نشد</h3>
+    <p className="text-grey-600 mb-6 max-w-md mx-auto">
+      {hasFilters
+        ? "برای این فیلتر تیکتی وجود ندارد. فیلترها را تغییر دهید."
+        : "هنوز تیکت پشتیبانی‌ای ایجاد نکرده‌اید."}
+    </p>
+
+    {hasFilters ? (
+      <button
+        onClick={onClearFilters}
+        className="px-6 py-3 bg-grey-100 text-grey-700 rounded-xl hover:bg-grey-200 font-medium"
+      >
+        نمایش همه تیکت‌ها
+      </button>
+    ) : (
+      <button
+        className="px-6 py-3 bg-brand-primary text-white rounded-xl hover:bg-brand-primary/90 font-medium"
+        onClick={onCreateTicket}
+      >
+        + ایجاد اولین تیکت
+      </button>
+    )}
+  </div>
+);
+
+// Main component
 export function Tickets() {
   const [view, setView] = useState<ViewType>("list");
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterPriority, setFilterPriority] = useState<string>("all");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { user, loading } = useAuth();
+
+  // Computed values
   const filteredTickets = tickets.filter((ticket) => {
     if (filterStatus !== "all" && ticket.status !== filterStatus) return false;
     if (filterPriority !== "all" && ticket.priority !== filterPriority)
@@ -33,7 +311,7 @@ export function Tickets() {
     return true;
   });
 
-  const stats = {
+  const stats: TicketStats = {
     total: tickets.length,
     open: tickets.filter((t) => t.status === "open").length,
     pending: tickets.filter((t) => t.status === "in_progress").length,
@@ -41,22 +319,17 @@ export function Tickets() {
     high: tickets.filter((t) => t.priority === "high").length,
   };
 
-  const { user, loading } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const hasActiveFilters = filterStatus !== "all" || filterPriority !== "all";
 
+  // Effects
   useEffect(() => {
     if (!user?.token) return;
-
-    const fetchTicket = async () => {
-      await loadTicket();
-    };
-
-    fetchTicket();
+    loadTickets();
   }, [user?.token]);
 
-  const loadTicket = async () => {
+  // Handlers
+  const loadTickets = async () => {
     setIsLoading(true);
-
     try {
       const response = await axiosInstance.get(API_ROUTES.TICKETS.LIST);
       setTickets(response.data.data);
@@ -68,437 +341,185 @@ export function Tickets() {
     }
   };
 
+  const handleCreateTicket = () => setView("create");
+
+  const handleBackToList = () => {
+    setView("list");
+    setSelectedTicketId(null);
+  };
+
+  const handleTicketClick = (ticketId: string) => {
+    console.log("wwww");
+    setSelectedTicketId(ticketId);
+    setView("view");
+  };
+
+  const handleTicketCreated = (newTicket: Ticket) => {
+    setTickets([...tickets, newTicket]);
+    setSelectedTicketId(newTicket.id);
+    setView("view");
+    toast.success("تیکت جدید با موفقیت ایجاد شد");
+  };
+
+  const handleClearFilters = () => {
+    setFilterStatus("all");
+    setFilterPriority("all");
+  };
+
+  // Render helpers
+  const renderHeader = () => (
+    <header className="shrink-0 bg-bg-surface border-b border-border-soft px-8 py-6">
+      <div className="flex items-start justify-between">
+        <div className="text-right">
+          <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
+            تیکت‌های پشتیبانی
+          </h1>
+          <p className="text-grey-600 mr-1 lg:mr-10 ">
+            مدیریت و پیگیری درخواست‌های پشتیبانی
+          </p>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {view === "list" ? (
+            <button
+              type="button"
+              className="bg-brand-primary text-white px-6 py-3 rounded-xl hover:bg-brand-primary/90 font-medium flex items-center gap-2"
+              title="ایجاد تیکت جدید"
+              onClick={handleCreateTicket}
+            >
+              <div className="text-white w-4 h-4">
+                <Plus />
+              </div>
+              تیکت جدید
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="bg-grey-200 text-grey-700 px-6 py-3 rounded-xl hover:bg-grey-300 font-medium flex items-center gap-2"
+              title="بازگشت به لیست تیکت‌ها"
+              onClick={handleBackToList}
+            >
+              <div className="w-4 h-4">
+                <Back />
+              </div>
+              بازگشت
+            </button>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+
+  const renderStatsCards = () => (
+    <section className="shrink-0 bg-white border-b border-grey-300">
+      <div className="px-8 py-9">
+        <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
+          <StatCard
+            title="کل تیکت‌ها"
+            count={stats.total}
+            icon={<TicketAll />}
+            bgColor="bg-brand-primary/10"
+            textColor="text-primary"
+            progressColor="bg-brand-primary"
+            onClick={() => setFilterStatus("all")}
+          />
+
+          <ProgressStatCard
+            title="تیکت‌های باز"
+            count={stats.open}
+            icon={<TicketOpen />}
+            bgColor="bg-danger/10"
+            textColor="text-danger"
+            progressColor="bg-danger"
+            percentage={calculatePercentage(stats.open, stats.total)}
+            onClick={() => setFilterStatus("open")}
+          />
+
+          <ProgressStatCard
+            title="در حال بررسی"
+            count={stats.pending}
+            icon={<TicketPend />}
+            bgColor="bg-warning/10"
+            textColor="text-warning"
+            progressColor="bg-warning"
+            percentage={calculatePercentage(stats.pending, stats.total)}
+            onClick={() => setFilterStatus("pending")}
+          />
+
+          <ProgressStatCard
+            title="بسته شده"
+            count={stats.closed}
+            icon={<TicketClose />}
+            bgColor="bg-accentGreen/10"
+            textColor="text-accentGreen"
+            progressColor="bg-accentGreen"
+            percentage={calculatePercentage(stats.closed, stats.total)}
+            onClick={() => setFilterStatus("closed")}
+          />
+        </div>
+      </div>
+    </section>
+  );
+
+  const renderTicketsList = () => (
+    <section className="flex-1 ">
+      <div className="p-8">
+        {filteredTickets.length > 0 ? (
+          <div className="space-y-4">
+            {filteredTickets.map((ticket) => (
+              <TicketCard
+                key={ticket.id}
+                ticket={ticket}
+                onClick={() => handleTicketClick(ticket.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            hasFilters={hasActiveFilters}
+            onClearFilters={handleClearFilters}
+            onCreateTicket={handleCreateTicket}
+          />
+        )}
+      </div>
+    </section>
+  );
+
+  const renderContent = () => {
+    switch (view) {
+      case "create":
+        return <CreateTicketView onSubmit={handleTicketCreated} />;
+
+      case "view":
+        if (!selectedTicketId) return null;
+        const selectedTicket = tickets.find((t) => t.id === selectedTicketId);
+        if (!selectedTicket) return null;
+        return (
+          <ViewTicketDetail
+            ticket={selectedTicket}
+            onClose={handleBackToList}
+          />
+        );
+
+      case "list":
+      default:
+        return (
+          <div className="overflow-y-auto">
+            {renderStatsCards()}
+            {renderTicketsList()}
+          </div>
+        );
+    }
+  };
+
   return (
-    <div className="h-screen overflow-hidden bg-bg-shell">
+    <div className="h-screen w-full overflow-hidden bg-bg-shell">
       <div className="flex h-screen">
-        {/* Main Content */}
         {(isLoading || loading) && <PageLoader />}
         <main className="flex-1 overflow-hidden">
           <div className="h-full flex flex-col">
-            {/* Header */}
-            <header className="shrink-0 bg-bg-surface border-b border-border-soft px-8 py-6">
-              <div className="flex items-start justify-between">
-                <div className="text-right">
-                  <h1 className="text-grey-900 mb-0 mr-10 text-3xl font-bold">
-                    تیکت‌های پشتیبانی
-                  </h1>
-                  <p className="text-grey-600">
-                    مدیریت و پیگیری درخواست‌های پشتیبانی
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  {view === "list" && (
-                    <button
-                      type="button"
-                      className="bg-brand-primary text-white px-6 py-3 rounded-xl hover:bg-brand-primary/90 font-medium flex items-center gap-2"
-                      title="ایجاد تیکت جدید"
-                      onClick={() => setView("create")}
-                    >
-                      <div className="text-white w-4 h-4">
-                        <Plus />
-                      </div>
-                      تیکت جدید
-                    </button>
-                  )}
-
-                  {view !== "list" && (
-                    <button
-                      type="button"
-                      className="bg-grey-200 text-grey-700 px-6 py-3 rounded-xl hover:bg-grey-300 font-medium flex items-center gap-2"
-                      title="بازگشت به لیست تیکت‌ها"
-                      onClick={() => {
-                        setView("list");
-                        setSelectedTicketId(null);
-                      }}
-                    >
-                      <div className="w-4 h-4">
-                        <Back />
-                      </div>
-                      بازگشت
-                    </button>
-                  )}
-                </div>
-              </div>
-            </header>
-
-            {/* Stats Cards - Only show in list view */}
-            {view === "list" && (
-              <section className="shrink-0 bg-white border-b border-grey-300">
-                <div className="px-8 py-9">
-                  <div className="gap-6 grid grid-cols-[repeat(4,_minmax(0px,_1fr))] w-full">
-                    {/* کل تیکت‌ها */}
-                    <div className="bg-white relative rounded-[20px]">
-                      <div
-                        className="overflow-clip rounded-[inherit] size-full  cursor-pointer"
-                        onClick={() => setFilterStatus("all")}
-                      >
-                        <div className="p-6 flex flex-col gap-8 w-full">
-                          <div className="flex gap-4 items-center justify-start w-full">
-                            <div className="bg-brand-primary/10 rounded-2xl size-14 flex items-center justify-center">
-                              <div className="w-7 h-7 text-primary">
-                                <TicketAll />
-                              </div>
-                            </div>
-                            <div className="flex-1 flex flex-col gap-2 items-start justify-center">
-                              <p className="text-grey-600">کل تیکت‌ها</p>
-                              <p
-                                className="text-brand-primary"
-                                style={{ fontFamily: "Vazirmatn" }}
-                              >
-                                {convertToPersian(stats.total)}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="bg-grey-100 h-1 flex items-end justify-center overflow-clip rounded-full w-full">
-                            <div className="bg-brand-primary h-1 rounded-full w-full"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
-                      />
-                    </div>
-
-                    {/* تیکت‌های باز */}
-                    <div className="bg-white relative rounded-[20px]">
-                      <div
-                        className="flex flex-col items-start justify-center overflow-clip rounded-[inherit] size-full cursor-pointer"
-                        onClick={() => setFilterStatus("open")}
-                      >
-                        <div className="p-6 flex flex-col gap-8 items-start justify-center w-full">
-                          <div className="flex gap-4 items-center justify-start w-full">
-                            <div className="bg-danger/10 rounded-2xl size-14 flex items-center justify-center">
-                              <div className="w-7 h-7 text-danger">
-                                <TicketOpen />
-                              </div>
-                            </div>
-                            <div className="flex-1 flex flex-col gap-2 items-start justify-center">
-                              <p className="text-grey-600">تیکت‌های باز</p>
-                              <p
-                                className="text-danger"
-                                style={{ fontFamily: "Vazirmatn" }}
-                              >
-                                {convertToPersian(stats.open)}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="bg-grey-100 h-1 relative rounded-full w-full">
-                            <div className="overflow-clip rounded-[inherit] size-full">
-                              <div
-                                className="flex flex-col h-1 items-start w-full"
-                                style={{
-                                  paddingLeft: `${
-                                    stats.total > 0
-                                      ? 100 - (stats.open / stats.total) * 100
-                                      : 100
-                                  }%`,
-                                }}
-                              >
-                                <div className="bg-danger h-1 rounded-full w-full"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
-                      />
-                    </div>
-
-                    {/* در انتظار */}
-                    <div className="bg-white relative rounded-[20px]">
-                      <div
-                        className="overflow-clip rounded-[inherit] size-full cursor-pointer"
-                        onClick={() => setFilterStatus("pending")}
-                      >
-                        <div className="p-6 flex flex-col gap-8 w-full">
-                          <div className="flex gap-4 items-center justify-start w-full">
-                            <div className="bg-warning/10 rounded-2xl size-14 flex items-center justify-center">
-                              <div className="w-7 h-7 text-secondary">
-                                <TicketPend />
-                              </div>
-                            </div>
-                            <div className="flex-1 flex flex-col gap-2 items-start justify-center">
-                              <p className="text-grey-600">در حال بررسی</p>
-                              <p
-                                className="text-warning"
-                                style={{ fontFamily: "Vazirmatn" }}
-                              >
-                                {convertToPersian(stats.pending)}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="bg-grey-100 h-1 relative rounded-full w-full">
-                            <div className="overflow-clip rounded-[inherit] size-full">
-                              <div
-                                className="flex flex-col h-1 items-start w-full"
-                                style={{
-                                  paddingLeft: `${
-                                    stats.total > 0
-                                      ? 100 -
-                                        (stats.pending / stats.total) * 100
-                                      : 100
-                                  }%`,
-                                }}
-                              >
-                                <div className="bg-warning h-1 rounded-full w-full"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
-                      />
-                    </div>
-
-                    {/* حل شده */}
-                    <div className="bg-white relative rounded-[20px]">
-                      <div
-                        className="overflow-clip rounded-[inherit] size-full cursor-pointer"
-                        onClick={() => setFilterStatus("closed")}
-                      >
-                        <div className="p-6 flex flex-col gap-8 w-full">
-                          <div className="flex gap-4 items-center justify-start w-full">
-                            <div className="bg-accentGreen/10 rounded-2xl size-14 flex items-center justify-center">
-                              <div className="w-7 h-7 text-accentGreen">
-                                <TicketClose />
-                              </div>
-                            </div>
-                            <div className="flex-1 flex flex-col gap-2 items-start justify-center">
-                              <p className="text-grey-600">بسته شده</p>
-                              <p
-                                className="text-accentGreen"
-                                style={{ fontFamily: "Vazirmatn" }}
-                              >
-                                {convertToPersian(stats.closed)}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="bg-grey-100 h-1 relative rounded-full w-full">
-                            <div className="overflow-clip rounded-[inherit] size-full">
-                              <div
-                                className="flex flex-col h-1 items-start w-full"
-                                style={{
-                                  paddingLeft: `${
-                                    stats.total > 0
-                                      ? 100 - (stats.closed / stats.total) * 100
-                                      : 100
-                                  }%`,
-                                }}
-                              >
-                                <div className="bg-accentGreen h-1 rounded-full w-full"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </section>
-            )}
-
-            {/* Tickets List - Only show in list view */}
-            {view === "list" && (
-              <section className="flex-1 overflow-y-auto">
-                <div className="p-8">
-                  {filteredTickets.length > 0 ? (
-                    <div className="space-y-4">
-                      {filteredTickets.map((ticket) => {
-                        const badgeStatus =
-                          ticket.status === "open"
-                            ? "error"
-                            : ticket.status === "in_progress"
-                            ? "pending"
-                            : "success";
-
-                        return (
-                          <Card
-                            key={ticket.id}
-                            className="p-6 hover:shadow-hover border border-border-soft cursor-pointer group transition-all"
-                            onClick={() => {
-                              console.log("wwww");
-                              setSelectedTicketId(ticket.id);
-                              setView("view");
-                            }}
-                          >
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-between gap-6">
-                                {/* شناسه تیکت */}
-                                <div className="shrink-0">
-                                  <div className="px-4 py-2 bg-brand-primary/10 rounded-lg">
-                                    <span className="text-brand-primary font-mono text-xs">
-                                      {ticket.id}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                {/* عنوان تیکت */}
-                                <div className="flex-1 min-w-0">
-                                  <h3 className="text-grey-900 group-hover:text-brand-primary transition-colors text-right">
-                                    {ticket.title}
-                                  </h3>
-                                </div>
-
-                                {/* زمان آخرین بروزرسانی */}
-                                <div className="shrink-0 flex items-center gap-2 text-grey-500">
-                                  <div className="w-4 h-4">
-                                    <TicketPend />
-                                  </div>
-                                  <span className="text-sm">
-                                    {(() => {
-                                      const date = new Date(ticket.updated_at);
-                                      const faDate = date.toLocaleDateString(
-                                        "fa-IR",
-                                        {
-                                          year: "numeric",
-                                          month: "2-digit",
-                                          day: "2-digit",
-                                        }
-                                      );
-                                      const faTime = date.toLocaleTimeString(
-                                        "fa-IR",
-                                        {
-                                          hour: "2-digit",
-                                          minute: "2-digit",
-                                        }
-                                      );
-                                      return `${faDate} - ${faTime}`;
-                                    })()}
-                                  </span>
-                                </div>
-
-                                {/* آیکون فلش */}
-                                <div className="shrink-0">
-                                  <div className="w-5 h-5 text-gray-500">
-                                    <Back />
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* وضعیت، اولویت و دسته‌بندی */}
-                              <div className="flex items-center gap-3 pr-2">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs text-grey-500">
-                                    وضعیت:
-                                  </span>
-                                  <StatusBadge status={badgeStatus} />
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs text-grey-500">
-                                    اولویت:
-                                  </span>
-                                  <span
-                                    className={`px-3 py-1 rounded-lg text-xs ${
-                                      ticket.priority === "urgent"
-                                        ? "bg-red-100 text-red-700"
-                                        : ticket.priority === "high"
-                                        ? "bg-orange-100 text-orange-700"
-                                        : ticket.priority === "medium"
-                                        ? "bg-yellow-100 text-yellow-700"
-                                        : "bg-blue-100 text-blue-700"
-                                    }`}
-                                  >
-                                    {ticket.priority === "urgent"
-                                      ? "اورژانسی"
-                                      : ticket.priority === "high"
-                                      ? "بالا"
-                                      : ticket.priority === "medium"
-                                      ? "متوسط"
-                                      : "پایین"}
-                                  </span>
-                                </div>
-
-                                {/* دسته‌بندی */}
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs text-grey-500">
-                                    دسته‌بندی:
-                                  </span>
-                                  <span className="px-3 py-1 rounded-lg text-xs bg-grey-100 text-grey-700">
-                                    {ticket.category === "technical"
-                                      ? "فنی"
-                                      : ticket.category === "financial"
-                                      ? "مالی"
-                                      : "عمومی"}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </Card>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    /* Empty State */
-                    <div className="text-center py-16">
-                      <div className="w-24 h-24 bg-grey-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <div className="w-12 h-12 text-grey-400">
-                          <TicketAll />
-                        </div>
-                      </div>
-                      <h3 className="text-grey-900 mb-2">هیچ تیکتی یافت نشد</h3>
-                      <p className="text-grey-600 mb-6 max-w-md mx-auto">
-                        {filterStatus !== "all" || filterPriority !== "all"
-                          ? "برای این فیلتر تیکتی وجود ندارد. فیلترها را تغییر دهید."
-                          : "هنوز تیکت پشتیبانی‌ای ایجاد نکرده‌اید."}
-                      </p>
-
-                      {filterStatus !== "all" || filterPriority !== "all" ? (
-                        <button
-                          onClick={() => {
-                            setFilterStatus("all");
-                            setFilterPriority("all");
-                          }}
-                          className="px-6 py-3 bg-grey-100 text-grey-700 rounded-xl hover:bg-grey-200 font-medium"
-                        >
-                          نمایش همه تیکت‌ها
-                        </button>
-                      ) : (
-                        <button
-                          className="px-6 py-3 bg-brand-primary text-white rounded-xl hover:bg-brand-primary/90 font-medium"
-                          onClick={() => setView("create")}
-                        >
-                          + ایجاد اولین تیکت
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </section>
-            )}
-
-            {/* Create Ticket View */}
-            {view === "create" && (
-              <CreateTicketView
-                onSubmit={(newTicket) => {
-                  setTickets([...tickets, newTicket]);
-                  setSelectedTicketId(newTicket.id);
-                  setView("view");
-                  toast.success("تیکت جدید با موفقیت ایجاد شد");
-                }}
-              />
-            )}
-
-            {/* View Ticket Detail */}
-            {view === "view" && selectedTicketId && (
-              <ViewTicketDetail
-                ticket={tickets.find((t) => t.id === selectedTicketId)!}
-                onClose={() => {
-                  setView("list");
-                  setSelectedTicketId(null);
-                }}
-              />
-            )}
+            {renderHeader()}
+            {renderContent()}
           </div>
         </main>
       </div>
