@@ -42,11 +42,11 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const can_website_crawling = useFeatureAccess("website_crawling");
-  const can_qa_as_file = useFeatureAccess("qa_as_file");
-  const can_upload_docs = useFeatureAccess("upload_docs");
+  const can_website_crawling = useFeatureAccess(botConfig.uuid,"website_crawling");
+  const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
+  const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
   const fileCount = useUploadLimits();
-
+console.log("can_website_crawling", can_website_crawling);
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
 

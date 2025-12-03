@@ -117,19 +117,72 @@ export const usePricing = () => {
   return context;
 };
 
-export const useFeatureAccess = (feature: string) => {
-  const { currentPlan, featureMinPlan } = usePricing();
+export const useFeatureAccess = (bot_uuid: string, feature: string) => {
+  const { featureMinPlan } = usePricing();
+  const [allowed, setAllowed] = useState<boolean | null>(null);
 
-  if (!currentPlan) return false;
+  useEffect(() => {
+    if (!bot_uuid) {
+      setAllowed(false);
+      return;
+    }
 
-  const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+    const checkAccess = async () => {
+      try {
+        const response = await axiosInstance.get(
+          API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid)
+        );
 
-  const userIndex = planOrder.indexOf(currentPlan);
-  const minPlan = featureMinPlan[feature] ?? "FREE";
-  const minIndex = planOrder.indexOf(minPlan);
+        if (!response || response.status !== 200) {
+          setAllowed(false);
+          return;
+        }
 
-  return userIndex >= minIndex;
+        const currentPlan = response.data.data.plan;
+        console.log("currentPlan", currentPlan);
+        if (!currentPlan) {
+          setAllowed(false);
+          return;
+        }
+
+        const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+
+        // const userIndex = planOrder.indexOf(currentPlan);
+        const minPlan = featureMinPlan[feature] ?? "FREE";
+        const minIndex = planOrder.indexOf(minPlan);
+
+        setAllowed(currentPlan >= minIndex);
+      } catch (err) {
+        console.error("Failed to check feature access:", err);
+        setAllowed(false);
+      }
+    };
+
+    checkAccess();
+  }, [bot_uuid, feature, featureMinPlan]);
+
+  return allowed; // null = loading
 };
+
+// export const useFeatureAccess =async (bot_uuid :string,feature: string) => {
+//   const {  featureMinPlan } = usePricing();
+
+//   const response = await axiosInstance.get(API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid));
+//  if(!response || response.status!==200)return false
+//   const currentPlan = response.data.data;
+ 
+//   if (!currentPlan) return false;
+//   console.log("featureMinPlan", featureMinPlan);
+//   const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+
+//   const userIndex = planOrder.indexOf(currentPlan);
+//   const minPlan = featureMinPlan[feature] ?? "FREE";
+//   const minIndex = planOrder.indexOf(minPlan);
+//   // console.log("userIndex",feature, userIndex);
+//   // console.log("minIndex",feature, minIndex);
+
+//   return userIndex >= minIndex;
+// };
 
 export const useFeatureRequiredPlan = (feature: string) => {
   const { featureMinPlan } = usePricing();
@@ -139,7 +192,7 @@ export const useFeatureRequiredPlan = (feature: string) => {
 export const useUploadLimits = () => {
   const { currentPlan } = usePricing();
   if (!currentPlan) return 0;
-  console.log("pricingcontext currentPlan: ", currentPlan);
+  // console.log("pricingcontext currentPlan: ", currentPlan);
   switch (currentPlan) {
     case "FREE":
       return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_FREE);

@@ -44,7 +44,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const checkScreenSize = () => {
       const desktop = window.innerWidth >= 1024;
-      console.log("desk", desktop);
+      // console.log("desk", desktop);
       setIsDesktop(desktop);
       setIsSidebarOpen(desktop);
     };

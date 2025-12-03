@@ -199,60 +199,60 @@ export function ChatbotManagement() {
             </header>
 
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card  ">
-                <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-primary/10"></div>
-                <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-primary/5"></div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card  ">
+                  <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-primary/10"></div>
+                  <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-primary/5"></div>
 
-                <div className="flex items-center justify-between mb-4   ">
-                  <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center">
-                    <MessageSquare className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-grey-900 mb-1">
-                  {convertToPersian(chatbots.length)}
-                </h3>
-                <p className="text-grey-600 text-sm text-left">کل چت بات‌ها</p>
-              </div>
-              <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
-                <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-success/10"></div>
-                <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-success/5"></div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-success rounded-xl flex items-center justify-center">
-                    <Eye className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
-                  {convertToPersian(
-                    chatbots.filter((bot) => bot.active === true).length
-                  )}
-                </h3>
-                <p className="text-grey-600 text-sm text-left">چت بات فعال</p>
-              </div>
-
-              <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
-                <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-secondary/10"></div>
-                <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-secondary/5"></div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-brand-secondary rounded-xl flex items-center justify-center">
-                    <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
+                  <div className="flex items-center justify-between mb-4   ">
+                    <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center">
                       <MessageSquare className="w-5 h-5 text-white" />
                     </div>
                   </div>
+                  <h3 className="text-2xl font-bold text-grey-900 mb-1">
+                    {convertToPersian(chatbots.length)}
+                  </h3>
+                  <p className="text-grey-600 text-sm text-left">کل چت بات‌ها</p>
                 </div>
-                <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
-                  {convertToPersian(
-                    Object.values(sessions).reduce(
-                      (sum, count) => sum + count,
-                      0
-                    )
-                  )}
-                </h3>
-                <p className="text-grey-600 text-sm text-left">
-                  گفتگوهای امروز
-                </p>
+                <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
+                  <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-success/10"></div>
+                  <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-success/5"></div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-success rounded-xl flex items-center justify-center">
+                      <Eye className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
+                    {convertToPersian(
+                      chatbots.filter((bot) => bot.active === true).length
+                    )}
+                  </h3>
+                  <p className="text-grey-600 text-sm text-left">چت بات فعال</p>
+                </div>
+
+                <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card    ">
+                  <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-secondary/10"></div>
+                  <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-secondary/5"></div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-brand-secondary rounded-xl flex items-center justify-center">
+                      <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
+                        <MessageSquare className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-grey-900 mb-1 text-left">
+                    {convertToPersian(
+                      Object.values(sessions).reduce(
+                        (sum, count) => sum + count,
+                        0
+                      )
+                    )}
+                  </h3>
+                  <p className="text-grey-600 text-sm text-left">
+                    گفتگوهای امروز
+                  </p>
+                </div>
               </div>
-            </div>
 
             {/* Chatbots List */}
             <div className="bg-white rounded-3xl border border-grey-100 shadow-card overflow-visible">
@@ -262,7 +262,7 @@ export function ChatbotManagement() {
                 </h2>
               </div>
 
-              <div className="divide-y divide-grey-100">
+              <div className="divide-y divide-grey-100 w-full">
                 {chatbots.map((chatbot) => (
                   <div
                     key={chatbot.uuid}
@@ -270,13 +270,11 @@ export function ChatbotManagement() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        {/* Status Indicator */}
                         <div
                           className="w-4 h-4 rounded-full shrink-0"
                           style={{ backgroundColor: chatbot.primary_color }}
                         />
 
-                        {/* Chatbot Info */}
                         <div>
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="font-bold text-grey-900 text-lg">
@@ -292,12 +290,9 @@ export function ChatbotManagement() {
                         </div>
                       </div>
 
-                      {/* Stats and Actions */}
-                      <div className="flex items-center gap-6">
-                        {/* Stats */}
+                      <div className="flex items-center gap-6 w-full">
                         <div className="text-center">
                           <p className="text-lg font-bold text-grey-900">
-                            {/* {chatbot.conversationsToday} */}
                             {convertToPersian(
                               sessions?.[chatbot?.uuid as any] || "0"
                             )}
@@ -316,7 +311,6 @@ export function ChatbotManagement() {
                           </p>
                         </div>
 
-                        {/* Actions */}
                         <div className="flex items-center gap-2">
                           <div className="rounded-3xl border text-sm p-2 border-gray-200">
                             <Switch
@@ -330,7 +324,6 @@ export function ChatbotManagement() {
                             />
                           </div>
 
-                          {/* Actions Menu */}
                           <div className="chatbot-menu-container">
                             <button
                               type="button"
@@ -350,7 +343,6 @@ export function ChatbotManagement() {
                               <MoreVertical className="w-4 h-4" />
                             </button>
 
-                            {/* Dropdown Menu */}
                             {openMenuId === chatbot.uuid && (
                               <div
                                 className="chatbot-dropdown-menu"

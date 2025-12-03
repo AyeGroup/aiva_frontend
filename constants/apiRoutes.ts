@@ -44,6 +44,10 @@ export const API_ROUTES = {
     SESSION_COUNT: (bot_uuid: string) =>
       `${API_BASE_URL}/dashboard/chatbots-conversations/${bot_uuid}`,
     FAQ: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/faqs`,
+    CRAWL_DISCOVER: (bot_uuid: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/crawl/discover`,
+    CRAWL_BATCH: (bot_uuid: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/crawl/batch`,
   },
 
   KNOWLEDGE: {

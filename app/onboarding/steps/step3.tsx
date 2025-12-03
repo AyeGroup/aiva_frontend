@@ -14,7 +14,7 @@ interface WizardStep3Props {
 const AnswerLength = ["short", "medium", "long"];
 
 export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
-  const can_advanced_stats = useFeatureAccess("advanced_stats");
+  const can_advanced_stats = useFeatureAccess(botConfig.uuid,"advanced_stats");
 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg">
