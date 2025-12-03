@@ -170,45 +170,45 @@ export function Billing() {
   };
 
   return (
-    <div className="h-screen w-full overflow-y-auto z-0!" style={{ zIndex: 0 }}>
-      <div className="flex flex-col lg:flex-row w-ful">
+    <div className="h-screen  bg-white z-0!" style={{ zIndex: 0 }}>
+      <div className="flex h-screen">
         {(isLoading || loading) && <PageLoader />}
-        <main className="flex flex-col p-4 sm:p-6 w-full">
-          <header className="mb-6 sm:mb-8">
+        <main className="flex-1 p-6 overflow-y-auto h-screen">
+          <header className="mb-8">
             <div className="text-right">
-              <h1 className="text-grey-900 mb-0 mr-0 sm:mr-10 text-2xl sm:text-3xl font-bold">
+              <h1 className="text-grey-900 mb-0 mr-10 text-3xl font-bold">
                 مالی و اشتراک
               </h1>
-              <p className="text-grey-600 mr-0 sm:mr-10 text-sm sm:text-base">
+              <p className="text-grey-600 mr-10">
                 مدیریت پلن‌ها، اعتبار و تراکنش‌های مالی
               </p>
             </div>
           </header>
 
-          <section className="mb-6 sm:mb-8" aria-label="خلاصه اعتبار">
+          <section className="mb-8" aria-label="خلاصه اعتبار">
             <WalletCard />
           </section>
 
           {/* Discount & Expiring Alert */}
-          {showDiscountHint && expiringPlan && expiringPlan.length > 0 && (
-            <section className="mb-6 sm:mb-8" aria-label="هشدار و اطلاعیه‌ها">
+          {showDiscountHint && expiringPlan && expiringPlan.lentgh > 0 && (
+            <section className="mb-8" aria-label="هشدار و اطلاعیه‌ها">
               <Card className="p-0 overflow-hidden border-2 bg-[#FFA18E] mb-4">
                 <div
-                  className="px-4 sm:px-6 py-4 flex flex-col gap-4"
+                  className="px-6 py-4 flex flex-col gap-4"
                   style={{
                     background:
                       "linear-gradient(135deg, rgba(255, 161, 142, 0.1) 0%, rgba(255, 161, 142, 0.05) 100%)",
                   }}
                 >
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex items-center gap-3">
                       <div
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0"
+                        className="w-10 h-10 rounded-xl flex items-center justify-center"
                         style={{ backgroundColor: "#FFA18E" }}
                       >
-                        <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                      </div>
-                      <h3 className="text-grey-900 mb-2 text-right text-sm sm:text-base">
+                        <AlertCircle className="w-5 h-5 text-white" />
+                      </div>{" "}
+                      <h3 className="text-grey-900 mb-2 text-right">
                         ⚠️ پلن در حال منقضی شدن
                       </h3>
                     </div>
@@ -219,16 +219,17 @@ export function Billing() {
                       title="بستن هشدار"
                       aria-label="بستن هشدار"
                     >
-                      <X className="w-4 h-4 sm:w-5 sm:h-5 text-grey-600" />
+                      <X className="w-5 h-5 text-grey-600" />
                     </button>
                   </div>
 
                   {expiringPlan.map((plan: any, index: number) => (
                     <div
                       key={index}
-                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-grey-700 mx-2 sm:mx-4 my-2 text-right"
+                      // key={plan.id}
+                      className="flex justify-between items-center text-grey-700 mx-4 my-2 text-right"
                     >
-                      <div className="my-2 sm:my-4 text-sm sm:text-base">
+                      <div className="my-4">
                         پلن چت‌بات <strong>{plan.chatbot_name}</strong>{" "}
                         {plan.daysRemaining <= maxDays ? (
                           <>
@@ -275,43 +276,39 @@ export function Billing() {
           )}
 
           {/* Active Chatbot Plans Table */}
-          <section
-            className="mb-6 sm:mb-8"
-            aria-labelledby="chatbot-plans-heading"
-          >
-            <div className="mb-4 sm:mb-6">
+          <section className="mb-8" aria-labelledby="chatbot-plans-heading">
+            <div className="mb-6">
               <h2
                 id="chatbot-plans-heading"
-                className="text-grey-900 text-right text-xl sm:text-2xl"
+                className="text-grey-900 text-right"
               >
                 پلن‌های فعال چت‌بات‌ها
               </h2>
-              <p className="text-grey-600 text-right mt-2 text-sm sm:text-base">
+              <p className="text-grey-600 text-right mt-2">
                 مشاهده و مدیریت پلن‌های فعال چت‌بات‌های شما
               </p>
             </div>
 
             <Card>
               {activeSubscrp.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 sm:py-16 px-4">
+                <div className="flex flex-col items-center justify-center py-16 px-4">
                   <div
-                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mb-4"
+                    className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
                     style={{ backgroundColor: "rgba(101, 188, 182, 0.1)" }}
                   >
                     <Bot
                       style={{
-                        width: "24px",
-                        height: "24px",
+                        width: "32px",
+                        height: "32px",
                         color: "#65BCB6",
                       }}
-                      className="sm:w-8 sm:h-8"
                       aria-hidden="true"
                     />
                   </div>
-                  <h3 className="text-grey-900 mb-2 text-base sm:text-lg">
+                  <h3 className="text-grey-900 mb-2">
                     هیچ چت‌بات فعالی وجود ندارد
                   </h3>
-                  <p className="text-grey-600 text-center max-w-md mb-4 text-sm sm:text-base">
+                  <p className="text-grey-600 text-center max-w-md mb-4">
                     برای شروع، یک چت‌بات جدید ایجاد کنید و پلن مورد نظر را
                     خریداری کنید
                   </p>
@@ -326,138 +323,25 @@ export function Billing() {
                 </div>
               ) : (
                 <div className="overflow-x-auto" style={{ direction: "rtl" }}>
-                  {/* Mobile Cards */}
-                  <div className="flex flex-col gap-4 lg:hidden mt-4">
-                    {activeSubscrp.map((plan, index) => {
-                      const creditPercent = Math.round(
-                        ((plan.subscription.total_characters -
-                          plan.subscription.remaining_upload_chars) /
-                          plan.subscription.total_characters) *
-                          100
-                      );
-                      const planColor =
-                        bots.find((b) => b.uuid === plan.chatbot_uuid)
-                          ?.primary_color || "";
-
-                      return (
-                        <div
-                          key={index}
-                          className="rounded-xl border border-grey-200 p-4 bg-white shadow-sm"
-                        >
-                          {/* نام چت‌بات */}
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <div
-                                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                                style={{ backgroundColor: `${planColor}20` }}
-                              >
-                                <Bot
-                                  style={{
-                                    width: "18px",
-                                    height: "18px",
-                                    color: planColor,
-                                  }}
-                                />
-                              </div>
-                              <span className="text-grey-900 font-medium text-sm">
-                                {plan.chatbot_name}
-                              </span>
-                            </div>
-
-                            <span
-                              className="px-2 py-1 rounded-lg text-xs"
-                              style={{
-                                backgroundColor: `${
-                                  PLAN_COLORS_BYID[plan.subscription.plan]
-                                }15`,
-                                color: PLAN_COLORS_BYID[plan.subscription.plan],
-                              }}
-                            >
-                              {getPlanNameById(plan.subscription.plan)}
-                            </span>
-                          </div>
-
-                          {/* کاراکتر مصرفی */}
-                          <div className="mb-3">
-                            <div className="flex items-center justify-between text-xs mb-1">
-                              <span className="text-grey-700">
-                                {new Intl.NumberFormat("fa-IR").format(
-                                  plan.subscription.total_characters -
-                                    plan.subscription.remaining_upload_chars
-                                )}{" "}
-                                /
-                                {new Intl.NumberFormat("fa-IR").format(
-                                  plan.subscription.total_characters
-                                )}
-                              </span>
-                              <span className="text-grey-500">
-                                {creditPercent.toLocaleString("fa-IR")}٪
-                              </span>
-                            </div>
-
-                            <div className="w-full h-1.5 bg-grey-100 rounded-full">
-                              <div
-                                className="h-full rounded-full"
-                                style={{
-                                  width: `${creditPercent}%`,
-                                  backgroundColor:
-                                    creditPercent > 90
-                                      ? "#ef4444"
-                                      : creditPercent > 70
-                                      ? "#FFA18E"
-                                      : planColor,
-                                }}
-                              />
-                            </div>
-                          </div>
-
-                          {/* انقضا */}
-                          <div className="flex items-center justify-between mb-3 text-xs">
-                            <span className="text-grey-600">
-                              انقضا:{" "}
-                              {new Date(
-                                plan.subscription.end_date
-                              ).toLocaleDateString("fa-IR")}
-                            </span>
-                            <span className="text-grey-600">
-                              {getDaysRemaining(
-                                plan.subscription.end_date
-                              ).toLocaleString("fa-IR")}{" "}
-                              روز مانده
-                            </span>
-                          </div>
-
-                          <button
-                            onClick={() => handleUpgrade(plan)}
-                            className="w-full py-2 rounded-lg text-sm text-white"
-                            style={{ backgroundColor: "#65bcb6" }}
-                          >
-                            افزایش اعتبار
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <table className="hidden lg:block w-full ">
+                  <table className="w-full">
                     <thead>
                       <tr className="border-b border-grey-200">
-                        <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
+                        <th className="px-4 py-3 text-right text-grey-600">
                           چت‌بات
                         </th>
-                        <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
+                        <th className="px-4 py-3 text-right text-grey-600">
                           پلن
                         </th>
-                        <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
+                        <th className="px-4 py-3 text-right text-grey-600">
                           کاراکتر
                         </th>
-                        <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
+                        <th className="px-4 py-3 text-right text-grey-600">
                           اعتبار
                         </th>
-                        <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
+                        <th className="px-4 py-3 text-right text-grey-600">
                           انقضا
                         </th>
-                        <th className="px-2 sm:px-4 py-3 text-center text-grey-600 text-xs sm:text-sm">
+                        <th className="px-4 py-3 text-center text-grey-600">
                           عملیات
                         </th>
                       </tr>
@@ -485,33 +369,34 @@ export function Billing() {
                             key={index}
                             className="border-b border-grey-100 hover:bg-grey-50"
                           >
-                            <td className="px-2 sm:px-4 py-3">
+                            {/* چت‌بات */}
+                            <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <div
-                                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0"
+                                  className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                                   style={{
                                     backgroundColor: `${planColor}20`,
                                   }}
                                 >
                                   <Bot
                                     style={{
-                                      width: "14px",
-                                      height: "14px",
+                                      width: "18px",
+                                      height: "18px",
                                       color: planColor,
                                     }}
-                                    className="sm:w-[18px] sm:h-[18px]"
                                     aria-hidden="true"
                                   />
                                 </div>
-                                <span className="text-grey-900 text-xs sm:text-sm truncate max-w-[100px] sm:max-w-none">
+                                <span className="text-grey-900">
                                   {plan.chatbot_name}
                                 </span>
                               </div>
                             </td>
 
-                            <td className="px-2 sm:px-4 py-3">
+                            {/* پلن */}
+                            <td className="px-4 py-3">
                               <span
-                                className="inline-block px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm whitespace-nowrap"
+                                className="inline-block px-3 py-1 rounded-lg"
                                 style={{
                                   backgroundColor: `${
                                     PLAN_COLORS_BYID[plan.subscription.plan]
@@ -524,10 +409,11 @@ export function Billing() {
                               </span>
                             </td>
 
-                            <td className="px-2 sm:px-4 py-3">
-                              <div className="flex flex-col gap-1.5 min-w-[120px]">
+                            {/* اعتبار پیام */}
+                            <td className="px-4 py-3">
+                              <div className="flex flex-col gap-1.5">
                                 <div className="flex items-center justify-between gap-2">
-                                  <span className="text-grey-900 text-xs sm:text-sm">
+                                  <span className="text-grey-900">
                                     {new Intl.NumberFormat("fa-IR").format(
                                       plan.subscription.total_characters -
                                         plan.subscription.remaining_upload_chars
@@ -537,7 +423,7 @@ export function Billing() {
                                       plan.subscription.total_characters
                                     )}
                                   </span>
-                                  <span className="text-grey-500 text-xs">
+                                  <span className="text-grey-500">
                                     {creditPercent.toLocaleString("fa-IR")}٪
                                   </span>
                                 </div>
@@ -557,37 +443,39 @@ export function Billing() {
                                           ? "#ef4444"
                                           : creditPercent > 70
                                           ? "#FFA18E"
-                                          : planColor,
+                                          : plan.planColor,
                                     }}
                                   />
                                 </div>
                               </div>
                             </td>
 
-                            <td className="px-2 sm:px-4 py-3">
-                              <div className="flex items-center gap-1 sm:gap-2">
-                                <span className="text-grey-700 text-xs sm:text-sm">
+                            {/* کاراکتر فایل */}
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <span className="text-grey-700">
                                   {new Intl.NumberFormat("fa-IR").format(
                                     plan.subscription.balance
                                   )}
                                 </span>
-                                <span className="text-grey-500 text-xs">
+                                <span className="text-grey-500">
                                   ({fileCharPercent}٪)
                                 </span>
                               </div>
                             </td>
 
-                            <td className="px-2 sm:px-4 py-3">
+                            {/* انقضا */}
+                            <td className="px-4 py-3">
                               <div className="flex flex-col gap-1">
                                 <time
                                   dateTime={plan.subscription.end_date}
-                                  className="text-grey-900 text-xs sm:text-sm whitespace-nowrap"
+                                  className="text-grey-900"
                                 >
                                   {new Date(
                                     plan.subscription.end_date
                                   ).toLocaleDateString("fa-IR")}
                                 </time>
-                                <span className="text-grey-600 text-xs whitespace-nowrap">
+                                <span className="text-grey-600">
                                   {getDaysRemaining(
                                     plan.subscription.end_date
                                   ).toLocaleString("fa-IR")}{" "}
@@ -596,11 +484,12 @@ export function Billing() {
                               </div>
                             </td>
 
-                            <td className="px-2 sm:px-4 py-3">
+                            {/* عملیات */}
+                            <td className="px-4 py-3">
                               <div className="flex items-center justify-center">
                                 <button
                                   onClick={() => handleUpgrade(plan)}
-                                  className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap"
+                                  className="px-4 py-2 rounded-lg billing-upgrade-btn"
                                   style={{
                                     backgroundColor: "#65bcb6",
                                     color: "white",
@@ -631,19 +520,16 @@ export function Billing() {
           </section>
 
           {/* Available Plans Section */}
-          <section
-            className="mb-6 sm:mb-8"
-            aria-labelledby="available-plans-heading"
-          >
+          <section className="mb-8" aria-labelledby="available-plans-heading">
             <div className="mb-4">
               <h2
                 id="available-plans-heading"
-                className="text-grey-900 text-right mb-1 text-xl sm:text-2xl"
+                className="text-grey-900 text-right mb-1"
               >
                 پلن‌های قابل خرید
               </h2>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-grey-600 text-right text-sm sm:text-base">
-                <span>پلن مناسب خود را انتخاب کنید</span>
+              <div className="flex items-center gap-3 text-grey-600 text-right">
+                پلن مناسب خود را انتخاب کنید
                 <ChatbotList
                   placeholder="یک چت‌بات را انتخاب کنید"
                   selectedBot={billingBot}
@@ -652,7 +538,7 @@ export function Billing() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 px-0 sm:px-6">
+            <div className=" grid  grid-cols-2  gap-8 px-6">
               {plans.map((plan, index) => (
                 <PlanCard
                   key={index}

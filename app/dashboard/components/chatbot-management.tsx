@@ -179,19 +179,19 @@ export function ChatbotManagement() {
             {/* Page Header */}
             <header className="flex items-center justify-between mb-8">
               <div className="text-right">
-                <h1 className="text-grey-900 mb-0 mr-10 text-3xl font-bold">
+                <h1 className="text-grey-900 mb-0 mr-2 lg:mr-10 text-2xl lg:text-3xl font-bold">
                   مدیریت چت‌بات‌ها
                 </h1>
-                <p className="text-grey-600 mr-10">مدیریت و ویرایش چت‌بات‌ها</p>
+                <p className="text-grey-600 mr-2 lg:mr-10">مدیریت و ویرایش چت‌بات‌ها</p>
               </div>
 
               <button
-                className="flex bg-primary rounded-sm white px-4 py-3 cursor-pointer"
+                className="flex bg-primary rounded-sm white px-2 lg:px-4 py-2 lg:py-3 cursor-pointer"
                 onClick={() => {
                   router.push("/dashboard?tab=onboarding&id=new");
                 }}
               >
-                <span className="text-white">افزودن چت‌بات جدید</span>
+                <span className="text-white text-sm lg:text-base">افزودن چت‌بات جدید</span>
                 <div className="w-4 h-4 mr-2 text-white">
                   <Plus />
                 </div>

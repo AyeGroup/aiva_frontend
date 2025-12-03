@@ -146,12 +146,12 @@ export const Transactions: React.FC = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="  w-full">
       <h2 className="text-grey-900 mb-6 text-right">تاریخچه تراکنش‌ها</h2>
 
       {/* فیلترها */}
       <div className="mb-4 p-4 md:p-5 bg-white rounded-2xl border border-grey-200">
-        <div className="flex flex-wrap items-center gap-x-1 gap-y-3 lg:gap-2 text-sm">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-grey-600 ml-2">نوع تراکنش:</span>
           <button
             onClick={() => setTransactionTypeFilter("all")}
@@ -168,7 +168,7 @@ export const Transactions: React.FC = () => {
             onClick={() =>
               setTransactionTypeFilter(TRANSACTION_TYPE.BUY_SUBSCRIPTION)
             }
-            className={`px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-1 lg:gap-2 ${
+            className={`px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${
               transactionTypeFilter === TRANSACTION_TYPE.BUY_SUBSCRIPTION
                 ? "bg-[#65bcb6] text-white shadow-sm"
                 : "bg-grey-50 text-grey-700 hover:bg-grey-100"
@@ -182,7 +182,7 @@ export const Transactions: React.FC = () => {
             onClick={() =>
               setTransactionTypeFilter(TRANSACTION_TYPE.INCREASE_WALLET)
             }
-            className={`px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-1 lg:gap-2 ${
+            className={`px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${
               transactionTypeFilter === TRANSACTION_TYPE.INCREASE_WALLET
                 ? "bg-[#65bcb6] text-white shadow-sm"
                 : "bg-grey-50 text-grey-700 hover:bg-grey-100"
@@ -206,7 +206,7 @@ export const Transactions: React.FC = () => {
           <div className="relative mr-auto">
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className={`px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-1 lg:gap-2 ${
+              className={`px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${
                 hasActiveFilters
                   ? "bg-[#65bcb6] text-white shadow-sm"
                   : "bg-grey-50 text-grey-700 hover:bg-grey-100"
@@ -337,8 +337,8 @@ export const Transactions: React.FC = () => {
           </span>
         </div>
       </div>
-      <Card className="w-full">
-        <div className=" ">
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto">
           {filteredTransactions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-grey-500">
               <FileText
@@ -349,7 +349,7 @@ export const Transactions: React.FC = () => {
             </div>
           ) : (
             <>
-              <table className="w-full table-fixed hidden md:block ">
+              <table className="w-full">
                 <thead>
                   <tr className="border-b border-grey-200 bg-grey-50">
                     <th className="px-6 py-4 text-right text-grey-600">نوع</th>
@@ -562,97 +562,6 @@ export const Transactions: React.FC = () => {
                   ))}
                 </tbody>
               </table>
-              <div className="md:hidden space-y-3">
-                {filteredTransactions.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 text-gray-500 bg-white rounded-2xl">
-                    <FileText className="w-12 h-12" />
-                    <p className="mt-4">هیچ تراکنشی یافت نشد</p>
-                  </div>
-                ) : (
-                  filteredTransactions.map((transaction) => (
-                    <div
-                      key={transaction.id}
-                      className="bg-white rounded-2xl border border-gray-200 p-4"
-                    >
-                      <div className="flex items-start gap-3 mb-3">
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{
-                            backgroundColor:
-                              transaction.type === "plan"
-                                ? "rgba(101, 188, 182, 0.1)"
-                                : transaction.walletType === "deposit"
-                                ? "rgba(82, 212, 160, 0.1)"
-                                : "rgba(255, 161, 142, 0.1)",
-                          }}
-                        >
-                          {transaction.type === "plan" ? (
-                            <Bot className="w-5 h-5 text-teal-500" />
-                          ) : transaction.walletType === "deposit" ? (
-                            <TrendingUp className="w-5 h-5 text-green-500" />
-                          ) : (
-                            <Download className="w-5 h-5 text-orange-400" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-gray-900 font-medium">
-                            {getTransactionTitle(transaction.type)}
-                          </p>
-                          <p className="text-gray-500 text-sm">
-                            کد: {transaction.tracking_code}
-                          </p>
-                        </div>
-                        <div
-                          className="px-2 py-1 rounded-full text-xs flex-shrink-0"
-                          style={{
-                            backgroundColor:
-                              transaction.status === "success"
-                                ? "#f0fdf4"
-                                : transaction.status === "failed"
-                                ? "#fef2f2"
-                                : "#fefce8",
-                            color:
-                              transaction.status === "success"
-                                ? "#008236"
-                                : transaction.status === "failed"
-                                ? "#dc2626"
-                                : "#ca8a04",
-                          }}
-                        >
-                          {transaction.status === "success"
-                            ? "موفق"
-                            : transaction.status === "failed"
-                            ? "ناموفق"
-                            : "در انتظار"}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                        <div>
-                          <p className="text-gray-900 font-bold text-lg">
-                            {transaction.amount.toLocaleString("fa-IR")} تومان
-                          </p>
-                          <p className="text-gray-500 text-xs">
-                            {new Date(
-                              transaction.created_at
-                            ).toLocaleDateString("fa-IR")}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                            <Download className="w-5 h-5 text-gray-600" />
-                          </button>
-                          {transaction.status === "failed" && (
-                            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                              <RefreshCw className="w-5 h-5 text-gray-600" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
             </>
           )}
         </div>

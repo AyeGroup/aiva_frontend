@@ -368,8 +368,8 @@ export function Tickets() {
 
   // Render helpers
   const renderHeader = () => (
-    <header className="shrink-0 bg-bg-surface border-b border-border-soft px-8 py-6">
-      <div className="flex items-start justify-between">
+    <header className="shrink-0 bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6">
+      <div className="flex items-center lg:items-start justify-between">
         <div className="text-right">
           <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
             تیکت‌های پشتیبانی
@@ -383,7 +383,7 @@ export function Tickets() {
           {view === "list" ? (
             <button
               type="button"
-              className="bg-brand-primary text-white px-6 py-3 rounded-xl hover:bg-brand-primary/90 font-medium flex items-center gap-2"
+              className="bg-brand-primary text-white px-3 py-2 lg:px-6 lg:py-3 rounded-xl hover:bg-brand-primary/90 font-medium flex items-center gap-2"
               title="ایجاد تیکت جدید"
               onClick={handleCreateTicket}
             >
@@ -413,7 +413,7 @@ export function Tickets() {
   const renderStatsCards = () => (
     <section className="shrink-0 bg-white border-b border-grey-300">
       <div className="px-8 py-9">
-        <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
+        <div className="gap-6 grid  grid-cols-2 lg:grid-cols-4 w-full">
           <StatCard
             title="کل تیکت‌ها"
             count={stats.total}
@@ -513,16 +513,49 @@ export function Tickets() {
   };
 
   return (
-    <div className="h-screen w-full overflow-hidden bg-bg-shell">
-      <div className="flex h-screen">
-        {(isLoading || loading) && <PageLoader />}
-        <main className="flex-1 overflow-hidden">
-          <div className="h-full flex flex-col">
-            {renderHeader()}
-            {renderContent()}
-          </div>
-        </main>
-      </div>
+    <div className="h-screen overflow-y-auto w-full bg-bg-shell">
+      {(isLoading || loading) && <PageLoader />}
+
+      <main className="w-full">
+        {renderHeader()}
+
+        <div className="w-full">
+          {view === "list" ? (
+            <>
+              {renderStatsCards()}
+              {renderTicketsList()}
+            </>
+          ) : view === "create" ? (
+            <CreateTicketView onSubmit={handleTicketCreated} />
+          ) : view === "view" && selectedTicketId ? (
+            (() => {
+              const selectedTicket = tickets.find(
+                (t) => t.id === selectedTicketId
+              );
+              return selectedTicket ? (
+                <ViewTicketDetail
+                  ticket={selectedTicket}
+                  onClose={handleBackToList}
+                />
+              ) : null;
+            })()
+          ) : null}
+        </div>
+      </main>
     </div>
   );
+
+  // return (
+  //   <div className="h-screen w-full overflow-hidden bg-bg-shell">
+  //     <div className="flex h-screen">
+  //       {(isLoading || loading) && <PageLoader />}
+  //       <main className="flex-1 overflow-hidden">
+  //         <div className="h-full flex flex-col">
+  //           {renderHeader()}
+  //           {renderContent()}
+  //         </div>
+  //       </main>
+  //     </div>
+  //   </div>
+  // );
 }
