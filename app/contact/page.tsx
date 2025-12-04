@@ -5,8 +5,8 @@ import { convertToPersian } from "@/utils/common";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 const SectionHeader = () => (
-  <div className="w-full flex flex-col justify-start gap-8 py-16 px-40">
-    <div className="absolute h-5/12 w-1/3 left-16 top-32 ">
+  <div className="w-full relative flex flex-col justify-start gap-8 py-16 px-10 lg:px-40">
+    <div className="absolute h-5/12 w-1/3 left-1 lg:left-16 top-1 lg:top-32 ">
       <PhoneAndCustomer1 />
     </div>
     {/* Title */}

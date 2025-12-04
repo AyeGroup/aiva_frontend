@@ -18,6 +18,7 @@ import {
   PLAN_COLORS,
   PLAN_TYPES,
   SUBSCRIPTION_TYPES,
+  translateFeature,
 } from "@/constants/plans";
 
 export function Upgrade() {
@@ -68,25 +69,7 @@ export function Upgrade() {
     fetchAllData();
   }, [user?.token, currentBot?.uuid]);
 
-  const translateFeature = (key: string): string => {
-    const dict: Record<string, string> = {
-      base_stats: "آمار پایه",
-      choosing_llm: "انتخاب مدل هوش مصنوعی",
-      usage_reports: "گزارش مصرف",
-      upload_docs: "آپلود فایل",
-      chatbot_logo: "لوگوی چت‌بات اختصاصی",
-      advanced_stats: "آمار پیشرفته",
-      website_crawling: "خزش وب‌سایت",
-      qa_as_file: "سوال و پاسخ از فایل",
-      chatbot_greetings: "پیام خوش‌آمدگویی",
-      chatbot_k: "حافظه چت‌بات",
-      chatbot_emoji: "استفاده از ایموجی",
-      chatbot_support_phone: "پشتیبانی تلفنی",
-      chatbot_answer_length: "کنترل طول پاسخ",
-    };
-    return dict[key] || key;
-  };
-
+ 
   const normalizedPlans = plans.map((p, index) => ({
     id: index.toString(),
     plan: p.plan,

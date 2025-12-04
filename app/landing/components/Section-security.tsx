@@ -302,9 +302,9 @@ interface FeatureCardProps {
 }
 
 const FeatureCard = ({ data }: FeatureCardProps) => (
-  <article className=" relative rounded-3xl border-2 border-transparent">
+  <article className=" relative rounded-3xl border-2 bg-gray-100 lg:bg-white border-transparent p-4 lg:p-0">
     {/* Content */}
-    <div className="flex flex-col gap-3 items-start  bg-white">
+    <div className="flex flex-col gap-3 items-start">
       <div
         className="flex items-center justify-center  rounded-2xl p-3 "
         style={{ backgroundColor: data.color.background }}
@@ -345,12 +345,12 @@ const SectionHeader = () => (
     </div>
 
     {/* Title */}
-    <h2 className="font-extrabold leading-[57.6px] text-[48px] text-center text-gray-900 tracking-[-0.96px]">
+    <h2 className="font-extrabold  text-2xl lg:text-3xl text-center text-gray-900 tracking-[-0.96px]">
       امنیت و اعتماد
     </h2>
 
     {/* Description */}
-    <p className="font-normal leading-[28.8px] text-[18px] text-center text-gray-600 max-w-[672px]">
+    <p className="font-normal   text-center text-gray-600  ">
       داده‌های شما با بالاترین استانداردهای امنیتی محافظت می‌شود
     </p>
   </header>
@@ -418,7 +418,7 @@ export default function SecuritySection() {
         <SectionHeader />
 
         {/* Feature cards grid */}
-        <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full bg-white z-20">
+        <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full bg-white rounded-lg z-20 p-4 lg:p-1 ">
           {features.map((feature) => (
             <FeatureCard key={feature.id} data={feature} />
           ))}

@@ -1879,7 +1879,7 @@ export const Moshavere = () => {
       height="28"
       viewBox="0 0 28 28"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+     
     >
       <path
         d="M12.8333 25.3519C13.188 25.5567 13.5904 25.6645 14 25.6645C14.4096 25.6645 14.812 25.5567 15.1667 25.3519L23.3333 20.6852C23.6877 20.4806 23.982 20.1864 24.1868 19.8322C24.3916 19.4779 24.4996 19.0761 24.5 18.6669V9.33354C24.4996 8.92436 24.3916 8.52249 24.1868 8.16823C23.982 7.81398 23.6877 7.5198 23.3333 7.31521L15.1667 2.64854C14.812 2.44375 14.4096 2.33594 14 2.33594C13.5904 2.33594 13.188 2.44375 12.8333 2.64854L4.66667 7.31521C4.31231 7.5198 4.01798 7.81398 3.81321 8.16823C3.60843 8.52249 3.50042 8.92436 3.5 9.33354V18.6669C3.50042 19.0761 3.60843 19.4779 3.81321 19.8322C4.01798 20.1864 4.31231 20.4806 4.66667 20.6852L12.8333 25.3519Z"
@@ -1915,9 +1915,9 @@ export const Moshavere = () => {
 
 export function Sec6_Icon2() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div  >
       <svg
-        className="block size-full"
+      
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -1939,9 +1939,9 @@ export function Sec6_Icon2() {
 
 export function Sec6_Icon3() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div  >
       <svg
-        className="block size-full"
+       
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"
@@ -1963,9 +1963,9 @@ export function Sec6_Icon3() {
 
 export function Sec6_Icon4() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+     
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -1987,9 +1987,9 @@ export function Sec6_Icon4() {
 
 export function Sec6_Icon6() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+      
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -2011,9 +2011,9 @@ export function Sec6_Icon6() {
 
 export function Sec6_Icon7() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+    
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"
@@ -2035,9 +2035,9 @@ export function Sec6_Icon7() {
 
 export function Sec6_Icon8() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+      
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -2083,9 +2083,9 @@ export function Sec6_Icon8() {
 
 export function Sec6_Icon9() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+     
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"
@@ -2115,9 +2115,8 @@ export function Sec6_Icon9() {
 
 export function Sec6_Icon10() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -2147,9 +2146,9 @@ export function Sec6_Icon10() {
 
 export function Sec6_Icon11() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+       
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"
@@ -2171,9 +2170,9 @@ export function Sec6_Icon11() {
 
 export function Sec6_Icon12() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+     
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -2203,9 +2202,9 @@ export function Sec6_Icon12() {
 
 export function Sec6_Icon13() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div>
       <svg
-        className="block size-full"
+       
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"
@@ -2235,9 +2234,8 @@ export function Sec6_Icon13() {
 
 export function Sec6_Icon14() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -2267,9 +2265,9 @@ export function Sec6_Icon14() {
 
 export function Sec6_Icon15() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div  >
       <svg
-        className="block size-full"
+        
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"
@@ -2291,9 +2289,9 @@ export function Sec6_Icon15() {
 
 export function Sec6_Icon16() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div  >
       <svg
-        className="block size-full"
+       
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -2331,9 +2329,9 @@ export function Sec6_Icon16() {
 
 export function Sec6_Icon17() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+      
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"
@@ -2363,9 +2361,9 @@ export function Sec6_Icon17() {
 
 export function Sec6_Icon18() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div>
       <svg
-        className="block size-full"
+      
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -2395,9 +2393,9 @@ export function Sec6_Icon18() {
 
 export function Sec6_Icon19() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div >
       <svg
-        className="block size-full"
+        
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"
@@ -2419,9 +2417,9 @@ export function Sec6_Icon19() {
 
 export function Sec6_Icon20() {
   return (
-    <div className="relative shrink-0 size-8" data-name="Icon">
+    <div  >
       <svg
-        className="block size-full"
+       
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 32 32"
@@ -2467,9 +2465,9 @@ export function Sec6_Icon20() {
 
 export function Sec6_Icon21() {
   return (
-    <div className="relative shrink-0 size-3.5" data-name="Icon">
+    <div  >
       <svg
-        className="block size-full"
+     
         fill="none"
         preserveAspectRatio="none"
         viewBox="0 0 14 14"

@@ -119,7 +119,7 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <nav className="md:hidden bg-gray-50 border-t border-gray-200 px-4 py-4 flex flex-col gap-2">
+        <nav className="md:hidden bg-gray-100 shadow border-t border-gray-200 px-4 py-4 flex flex-col gap-2">
           {menuItems.map(({ label, href }) => (
             <a
               key={href}
@@ -138,7 +138,7 @@ export default function Header() {
           <a
             href="/onboarding"
             onClick={closeMenu}
-            className="flex items-center justify-end gap-2 bg-[#65bcb6] text-white px-4 py-3 rounded-lg shadow hover:bg-[#58aaa5] transition mt-2"
+            className="flex items-center w-fit justify-end gap-2 bg-[#65bcb6] text-white px-4 py-3 rounded-lg shadow hover:bg-[#58aaa5] transition mt-2"
           >
             شروع رایگان
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none">

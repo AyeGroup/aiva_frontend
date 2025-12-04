@@ -243,7 +243,7 @@ export default function Section2() {
   return (
     <section
       id="about"
-      className="relative w-full bg-[rgba(255,228,222,0.45)] overflow-hidden py-12 sm:py-16 lg:py-24"
+      className="relative w-full bg-[rgba(255,228,222,0.45)] overflow-hidden px-6 py-12 sm:py-16 lg:py-24"
     >
       <BackgroundDecorations />
 

@@ -52,7 +52,7 @@ function Header() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
       >
-        <p className="font-extrabold text-4xl text-center  text-white  ">
+        <p className="font-extrabold text-2xl lg:text-4xl text-center  text-white  ">
           آیوا برای چه کسب‌وکارهایی مناسب است؟
         </p>
       </motion.div>
@@ -323,22 +323,82 @@ const INDUSTRIES_DATA = [
 ];
 
 function ContainerUsage() {
+  const [showAllMobile, setShowAllMobile] = useState(false);
+
+  // فقط ۳ مورد برای موبایل
+  const mobileItems = showAllMobile ? USAGES_DATA : USAGES_DATA.slice(0, 3);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 w-full px-4">
-      {USAGES_DATA.map((use, index) => (
-        <Article key={index} {...use} />
-      ))}
+    <div className="w-full px-4">
+      {/* GRID نسخه دسکتاپ (موبایل hidden) */}
+      <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+        {USAGES_DATA.map((use, index) => (
+          <Article key={index} {...use} />
+        ))}
+      </div>
+
+      {/* GRID نسخه موبایل */}
+      <div className="grid sm:hidden grid-cols-1 gap-4">
+        {mobileItems.map((use, index) => (
+          <Article key={index} {...use} />
+        ))}
+      </div>
+
+      {/* دکمه نمایش بیشتر / کمتر (فقط موبایل) */}
+      <div className="sm:hidden flex justify-center mt-3">
+        <button
+          className="cursor-pointer border-2 border-primary text-primary rounded-sm bg-[rgba(255,255,255,0.3)] py-4 px-6 mt-3"
+          onClick={() => setShowAllMobile(!showAllMobile)}
+        >
+          {showAllMobile ? "نمایش کمتر" : "نمایش بیشتر"}
+        </button>
+      </div>
     </div>
+    // <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 w-full px-4">
+    //   {USAGES_DATA.map((use, index) => (
+    //     <Article key={index} {...use} />
+    //   ))}
+    // </div>
   );
 }
 
 function ContainerIndustry() {
+  const [showAllMobile, setShowAllMobile] = useState(false);
+
+  // فقط ۳ مورد برای موبایل
+  const mobileItems = showAllMobile
+    ? INDUSTRIES_DATA
+    : INDUSTRIES_DATA.slice(0, 3);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 w-full px-4">
-      {INDUSTRIES_DATA.map((industry, index) => (
-        <Article key={index} {...industry} />
-      ))}
+    <div className="w-full px-4">
+      {/* GRID نسخه دسکتاپ (موبایل hidden) */}
+      <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+        {INDUSTRIES_DATA.map((industry, index) => (
+          <Article key={index} {...industry} />
+        ))}
+      </div>
+
+      {/* GRID نسخه موبایل */}
+      <div className="grid sm:hidden grid-cols-1 gap-4">
+        {mobileItems.map((industry, index) => (
+          <Article key={index} {...industry} />
+        ))}
+      </div>
+
+      {/* دکمه نمایش بیشتر / کمتر (فقط موبایل) */}
+      <div className="sm:hidden flex justify-center mt-3">
+        <button
+          className="cursor-pointer border-2 border-primary text-primary rounded-sm bg-[rgba(255,255,255,0.3)] py-4 px-6 mt-3"
+          onClick={() => setShowAllMobile(!showAllMobile)}
+        >
+          {showAllMobile ? "نمایش کمتر" : "نمایش بیشتر"}
+        </button>
+      </div>
     </div>
+    // <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 w-full px-4">
+    //   {INDUSTRIES_DATA.map((industry, index) => (
+    //     <Article key={index} {...industry} />
+    //   ))}
+    // </div>
   );
 }
 
@@ -501,7 +561,7 @@ export default function Section4() {
   return (
     <div
       id="crafts"
-      className=" w-full flex flex-col relative  bg-linear-to-b from-[#ffffff] gap-2.5 items-center to-[#ffffff] via-50% via-[#f9fafb]"
+      className=" w-full flex flex-col relative  bg-linear-to-b from-[#ffffff] gap-2.5 items-center to-[#ffffff] via-50% via-[#f9fafb] px-6"
     >
       <div className="  ">
         <Container />

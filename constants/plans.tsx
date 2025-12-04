@@ -23,7 +23,7 @@ export enum TRANSACTION_TITLE {
 export const getTransactionTitle = (type: keyof typeof TRANSACTION_TITLE) => {
   return TRANSACTION_TITLE[type] || "";
 };
- 
+
 export type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
 
 interface PlanInfo {
@@ -67,12 +67,14 @@ export const translateFeature = (key: string): string => {
     chatbot_logo: "لوگوی چت‌بات اختصاصی",
     advanced_stats: "آمار پیشرفته",
     website_crawling: "خزش وب‌سایت",
+    website_crawling_level_2: "خزش وب‌سایت سطح ۲ ",
     qa_as_file: "سوال و پاسخ از فایل",
     chatbot_greetings: "پیام خوش‌آمدگویی",
     chatbot_k: "حافظه چت‌بات",
     chatbot_emoji: "استفاده از ایموجی",
     chatbot_support_phone: "پشتیبانی تلفنی",
     chatbot_answer_length: "کنترل طول پاسخ",
+    bale_integration: "اتصال به ربات بله",
   };
   return dict[key] || key;
 };

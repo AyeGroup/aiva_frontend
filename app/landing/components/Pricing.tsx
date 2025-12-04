@@ -161,9 +161,9 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
         />
       )}
 
-      <div className="p-8 flex flex-col h-full">
+      <div className="p-6 lg:p-8 flex flex-col h-full">
         {/* Header */}
-        <div className="flex flex-col justify-between items-start mb-6">
+        <div className="flex flex-row lg:flex-col justify-start lg:justify-between items-center lg:items-start mb-6  gap-3 lg:gap-0">
           <div className="flex justify-between">
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center"
@@ -172,7 +172,6 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
                 color: pricingPlans[index].color,
               }}
             >
-              {/* {plan.icon} */}
               {pricingPlans[index].icon}
             </div>
             {plan.isPopular && (
@@ -184,43 +183,44 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
               </div>
             )}
           </div>
-          <h3 className="text-gl font-medium text-gray-900 text-right mb-2 mt-5">
-            {/* {plan.name} */}
-            {pricingPlans[index].name}
-          </h3>
-          <p className="text-xs text-gray-500 text-right">{plan.description}</p>
+          <div className=" ">
+            <h3 className="text-gl font-medium text-gray-900 text-right mb-2 mt-0 lg:mt-5">
+              {pricingPlans[index].name}
+            </h3>
+            <p className="text-xs text-gray-500 text-right">
+              {plan.description}
+            </p>
+          </div>
         </div>
 
         {/* Price */}
-        <div className="border-b border-gray-100 pb-6 mb-6">
-          <div className="flex items-center justify-start gap-8 ">
+        <div className="border-b border-gray-100 pb-6 mb-2 lg:mb-6">
+          <div className="flex items-center justify-start gap-8">
             <div
               className="text-2xl font-semibold"
               style={{
                 color: plan.isPopular ? plan.color : "#111827",
               }}
             >
-              {plan?.price_yearly_irr.toLocaleString("fa-IR")}
+              {plan?.price_monthly_irr === 0
+                ? "رایگان"
+                : plan?.price_monthly_irr.toLocaleString("fa-IR")}
             </div>
-            <div className="flex flex-col ">
-              <span className="text-sm text-gray-500">تومان</span>
-              <span className="text-xs text-gray-400">/ ماه</span>
-            </div>
+
+            {plan?.price_monthly_irr !== 0 && (
+              <div className="flex flex-row lg:flex-col items-center">
+                <span className="text-sm text-gray-500">تومان</span>
+                <span className="text-xs text-gray-400">/ ماه</span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Features */}
-        <ul className="space-y-3.5 mb-8 flex-1">
-          {/* {plan.features.map((feature, index) => ( */}
+        <ul className="space-y-3 mb-4 lg:mb-8 flex-1">
           {mapFeatures(plan).map((feature, index) => (
             <li key={index} className="flex items-start gap-3 text-right">
-              <div
-                className="w-5 h-5 text-primary bg-primary/20  rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                // style={{
-                //   backgroundColor: pricingPlans[index]?.bgColor,
-                //   color: pricingPlans[index]?.color,
-                // }}
-              >
+              <div className="w-5 h-5 text-primary bg-primary/20  rounded-full flex items-center justify-center shrink-0 mt-0.5">
                 <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
               </div>
               <span className="text-base text-gray-700 flex-1">
@@ -233,7 +233,7 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
         {/* Button */}
         <button
           onClick={handlePlan}
-          className={`w-full py-4 px-6 cursor-pointer rounded-xl text-lg font-normal transition-all ${
+          className={`w-full py-3 lg:py-4 px-6 cursor-pointer rounded-xl text-lg font-normal transition-all ${
             plan.buttonVariant === "primary"
               ? "text-white shadow-md hover:shadow-lg"
               : "bg-white border-2 hover:shadow-md"
@@ -280,11 +280,11 @@ export default function PricingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen py-16 px-12 lg:px-24" id="pricing">
+    <div className="lg:min-h-screen py-16 px-12 lg:px-24" id="pricing">
       <PlanImage />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16 space-y-6">
+        <div className="text-center mb-10 lg:mb-16 space-y-6">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm">
             <div className="w-2 h-2 rounded-full bg-[#65BCB6]" />
@@ -306,7 +306,7 @@ export default function PricingPage() {
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+        <div className="px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
           {/* {pricingPlans.map((plan) => ( */}
           {plans.map((plan, index) => (
             <PricingCard key={index} plan={plan} index={index} />
