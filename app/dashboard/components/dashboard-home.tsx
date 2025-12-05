@@ -295,11 +295,11 @@ export default function Dashboard() {
     return null;
   }
 
-  if (isNew === null) {
-    return <PageLoader />;
-  }
+  // if (isNew === null) {
+    // return <PageLoader />;
+  // }
 
-  if (!botLoading && isNew) {
+  if (!botLoading && isNew===true) {
     return <NewUserIntro />;
   }
 

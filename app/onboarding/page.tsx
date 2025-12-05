@@ -548,7 +548,7 @@ export default function OnboardingWizard() {
   const showButton = isNew || currentStep < totalSteps;
 
   return (
-    <main className="onboarding-wizard min-h-screen bg-bg-app">
+    <main className="onboarding-wizard h-screen overflow-y-auto bg-bg-app">
       <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-6 relative z-10">
         {/* Clean Minimal Header */}
         {isNew && <FloatSideMenu activePlan={activeSubscrp} />}
