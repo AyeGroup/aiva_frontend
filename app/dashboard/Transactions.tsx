@@ -57,7 +57,7 @@ export const Transactions: React.FC = () => {
         );
 
         setTransactions(res.data?.data);
-        console.log("HISTORY :", res.data?.data);
+        // console.log("HISTORY :", res.data?.data);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
       } finally {
@@ -128,6 +128,7 @@ export const Transactions: React.FC = () => {
         API_ROUTES.FINANCIAL.PDF(transaction_id),
         { responseType: "blob" } // مهم!!
       );
+          console.error("response1  :", response);
 
       const pdfBlob = new Blob([response.data], { type: "application/pdf" });
 
@@ -138,10 +139,31 @@ export const Transactions: React.FC = () => {
       link.download = `invoice-${transaction_id}.pdf`;
       link.click();
       window.URL.revokeObjectURL(url);
-
+      toast.success("فایل دانلود شد");
       console.log("PDF downloaded");
     } catch (error: any) {
-      console.error("Error downloading PDF:", error);
+
+          console.error("error  :", error);
+          console.error("error.response  :", error.response);
+
+      // بررسی وجود پاسخ از سرور
+      if (error.response && error.response.data) {
+        // اگر سرور پیام JSON فرستاده باشد
+        try {
+          const serverMsg = JSON.parse(
+            new TextDecoder().decode(error.response.data)
+          );
+          console.error("Server message:", serverMsg.message || serverMsg);
+          toast.error(`خطا: ${serverMsg.message || serverMsg}`);
+        } catch {
+          // اگر پیام ساده باشد
+          console.error("Server message:", error.response.data);
+          toast.error(`خطا: ${error.response.data}`);
+        }
+      } else {
+        console.error("Error downloading PDF:", error.message);
+        toast.error(`خطا: ${error.message}`);
+      }
     }
   };
 
@@ -349,7 +371,7 @@ export const Transactions: React.FC = () => {
             </div>
           ) : (
             <>
-              <table className="w-full table-fixed hidden md:block ">
+              <table className="w-full table-fixed hidden lg:table ">
                 <thead>
                   <tr className="border-b border-grey-200 bg-grey-50">
                     <th className="px-6 py-4 text-right text-grey-600">نوع</th>
@@ -501,10 +523,10 @@ export const Transactions: React.FC = () => {
 
                       {/* عملیات */}
                       <td className="px-6 py-4">
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center  justify-center gap-2">
                           <button
                             onClick={() => handlePdf(transaction.id)}
-                            className="inline-flex items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
+                            className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
                             title="دانلود فاکتور"
                             type="button"
                           >
@@ -517,24 +539,6 @@ export const Transactions: React.FC = () => {
                               aria-hidden="true"
                             />
                           </button>
-
-                          {/* <button
-                            onClick={() =>
-                              toast.success("لینک اشتراک‌گذاری کپی شد")
-                            }
-                            className="inline-flex items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                            title="اشتراک‌گذاری"
-                            type="button"
-                          >
-                            <Share2
-                              style={{
-                                width: "20px",
-                                height: "20px",
-                                color: "#374151",
-                              }}
-                              aria-hidden="true"
-                            />
-                          </button> */}
 
                           {/* پرداخت مجدد - فقط برای ناموفق‌ها */}
                           {transaction.status === "failed" && (
@@ -639,7 +643,10 @@ export const Transactions: React.FC = () => {
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                          <button
+                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                            onClick={() => handlePdf(transaction.id)}
+                          >
                             <Download className="w-5 h-5 text-gray-600" />
                           </button>
                           {transaction.status === "failed" && (

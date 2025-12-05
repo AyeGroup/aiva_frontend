@@ -86,10 +86,10 @@ export default function ChatbotDetailModal({
           subData?.remaining_upload_chars !== undefined &&
           currentPlan?.upload_char_limit
         ) {
-          const percentage =100-(  (subData.remaining_upload_chars / currentPlan.upload_char_limit) *
-            100)
-          ;
-
+          const percentage =
+            100 -
+            (subData.remaining_upload_chars / currentPlan.upload_char_limit) *
+              100;
           console.log("remaining: ", subData.remaining_upload_chars);
           console.log("total: ", currentPlan.upload_char_limit);
           console.log("percentage: ", percentage);
@@ -112,13 +112,13 @@ export default function ChatbotDetailModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-10 chatbot-modal-overlay"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-99 chatbot-modal-overlay "
       onClick={onClose}
       style={{ animation: "fadeIn 0.2s ease-out" }}
     >
       {loading && <PageLoader />}
       <div
-        className="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
+        className="bg-white max-h-[95vh]   rounded-3xl max-w-2xl w-full overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         style={{ animation: "slideUp 0.3s ease-out" }}
       >
@@ -152,13 +152,6 @@ export default function ChatbotDetailModal({
                   {chatbot.name}
                 </h2>
                 <div className="flex items-center gap-2 flex-wrap">
-                  {/* <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-grey-200 shadow-sm">
-                    <Globe className="w-4 h-4 text-grey-500" />
-                    <span className="text-grey-700 text-sm">
-                      {chatbot?.url}
-                    </span>
-                  </div> */}
-
                   {/* Plan */}
                   <div
                     className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm shadow-sm"
@@ -223,12 +216,10 @@ export default function ChatbotDetailModal({
         </div>
 
         {/* Content */}
-        <div
-          className="p-4 space-y-2 overflow-y-auto"
-          style={{ maxHeight: "calc(90vh - 120px)" }}
-        >
-          <Card
-            className={`p-2 relative overflow-hidden h-full flex flex-col items-center justify-center bg-white border-[${chatbot?.primary_color}30]`}
+
+        <div className=" space-y-1 overflow-y-auto  ">
+          <div
+            className={`p-2 relative   overflow-hidden h-full flex flex-col items-center justify-center   border-[${chatbot?.primary_color}30]`}
           >
             <div
               className="absolute top-0 left-0 w-32 h-32 rounded-full opacity-5 blur-3xl"
@@ -236,7 +227,7 @@ export default function ChatbotDetailModal({
             />
 
             {/* Usage Circle */}
-            <div className="relative mb-5">
+            <div className="relative mb-2">
               <svg
                 width="140"
                 height="140"
@@ -287,7 +278,7 @@ export default function ChatbotDetailModal({
             </div>
 
             {/* Info Blocks */}
-            <div className="grid grid-cols-2 gap-3 w-full mb-4">
+            <div className="grid grid-cols-2 gap-3 w-full mb-1">
               <div className="text-center p-3 bg-grey-50 rounded-xl border border-grey-100">
                 <p className="text-grey-600 text-xs mb-1">باقی‌مانده</p>
                 <p className="text-grey-900 text-base font-semibold">
@@ -349,17 +340,17 @@ export default function ChatbotDetailModal({
                 </div>
               </div>
             )}
-          </Card>
+          </div>
 
           {/* Buttons */}
-          <div className="sticky bottom-0   pt-2 pb-2 px-5 bg-white">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="   pt-2 pb-2 px-5 bg-white">
+            <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="primary"
                 size="sm"
                 onClick={() => {
                   onClose();
-                  router.push("/upgrade");
+                  router.push("/?tab=billing");
                   //   onNavigate("upgrade");
                 }}
               >
@@ -378,7 +369,7 @@ export default function ChatbotDetailModal({
               >
                 <div className="flex">
                   <BarChart3 className="w-4 h-4 ml-2" />
-                  مشاهده داشبورد آمار
+                  مشاهده داشبورد  
                 </div>
               </Button>
             </div>

@@ -203,7 +203,7 @@ export function Billing() {
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0"
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center "
                         style={{ backgroundColor: "#FFA18E" }}
                       >
                         <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -345,7 +345,7 @@ export function Billing() {
                           className="rounded-xl border border-grey-200 p-4 bg-white shadow-sm"
                         >
                           {/* نام چت‌بات */}
-                          <div className="flex items-center justify-between mb-3">
+                          <div className="flex w-full items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
                               <div
                                 className="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -439,9 +439,9 @@ export function Billing() {
                     })}
                   </div>
 
-                  <table className="hidden lg:block w-full ">
+                  <table className="hidden lg:table w-full ">
                     <thead>
-                      <tr className="border-b border-grey-200">
+                      <tr className="border-b border-grey-200 ">
                         <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
                           چت‌بات
                         </th>
@@ -483,12 +483,12 @@ export function Billing() {
                         return (
                           <tr
                             key={index}
-                            className="border-b border-grey-100 hover:bg-grey-50"
+                            className="border-b border-grey-100 hover:bg-grey-50 "
                           >
                             <td className="px-2 sm:px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <div
-                                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0"
+                                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center "
                                   style={{
                                     backgroundColor: `${planColor}20`,
                                   }}
