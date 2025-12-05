@@ -192,7 +192,7 @@ export function WizardStep6({
           </div>
 
           {/* Tone Selection */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-1 lg:gap-3">
             {onboardingData.tones.map((tone: any) => (
               <div
                 key={tone.id}
@@ -253,7 +253,7 @@ export function WizardStep6({
               <h4 className="text-grey-900 text-sm font-bold">رنگ‌ چت‌بات</h4>
             </div>
 
-            <div className="flex   w-full  my-3 justify-between">
+            <div className="flex flex-col lg:flex-row w-full my-3 justify-between">
               <div className="flex flex-col gap-2 p-2">
                 <div>رنگ انتخابی</div>
                 <div className="flex items-center">
@@ -303,7 +303,7 @@ export function WizardStep6({
               </h4>
             </div>
 
-            <div className="flex   w-full  my-3 justify-between">
+            <div className="flex   flex-col lg:flex-row  w-full  my-3 justify-between">
               <div className="flex flex-col gap-2 p-2">
                 <div>رنگ انتخابی</div>
                 <div className="flex items-center">
@@ -352,14 +352,14 @@ export function WizardStep6({
             <h3 className="text-grey-900">تنظیمات دکمه چت</h3>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-6">
             {/* Chat Button Size */}
             <div className="form-group">
               <label className="block text-grey-900 mb-3">
                 اندازه دکمه چت
                 <span className="text-brand-primary ml-1">*</span>
               </label>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 gap-1 lg:gap-2">
                 {onboardingData.sizeOptions.map((size) => (
                   <div
                     key={size.id}
@@ -389,9 +389,7 @@ export function WizardStep6({
                         <h4 className="text-grey-900 text-sm font-medium">
                           {size.name}
                         </h4>
-                        {/* <p className="text-grey-600 text-xs">
-                          {size.description}
-                        </p> */}
+                        
                       </div>
 
                       {/* Size Preview */}
@@ -433,7 +431,7 @@ export function WizardStep6({
                 موقعیت نمایش
                 <span className="text-brand-primary ml-1">*</span>
               </label>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 gap-0 lg:gap-2">
                 {onboardingData.positionOptions.map((position) => (
                   <button
                     key={position.id}

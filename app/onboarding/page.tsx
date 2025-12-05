@@ -10,9 +10,9 @@ import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
 import { BarChart3 } from "lucide-react";
-import { AivaWhite } from "@/public/icons/AppIcons";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { headerData } from "@/components/header/header.data";
+import { usePricing } from "@/providers/PricingContext";
 import { WizardStep1 } from "./steps/step1";
 import { WizardStep2 } from "./steps/step2";
 import { WizardStep3 } from "./steps/step3";
@@ -27,7 +27,6 @@ import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getPlanCodeById, getPlanIcon, PlanCode } from "@/constants/plans";
-import { usePricing } from "@/providers/PricingContext";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -72,8 +71,8 @@ export default function OnboardingWizard() {
     greetings: true,
     use_emoji: false,
     support_phone: "",
-    bale_enabled:false,
-    bale_token:"",
+    bale_enabled: false,
+    bale_token: "",
     require_user_phone: false,
     require_user_name: false,
     require_user_email: false,
@@ -514,9 +513,7 @@ export default function OnboardingWizard() {
         );
 
       case 3:
-        return (
-          <WizardStep2 botConfig={botConfig}  />
-        );
+        return <WizardStep2 botConfig={botConfig} />;
       case 4:
         return (
           <WizardStep4 botConfig={botConfig} updateConfig={updateBotConfig} />
@@ -537,12 +534,9 @@ export default function OnboardingWizard() {
   const saveCaption = () => {
     if (isSaving) return "در حال ذخیره...";
 
-    // if (!id || id === "new") {
     if (isNew) {
-      // console.log("is new");
       return currentStep === totalSteps ? "اتمام و شروع" : "بعدی";
     } else {
-      // console.log("is edit", currentStep);
       if (currentStep === 1 || currentStep === 2 || currentStep === 5)
         return "ثبت";
       else return "بعدی";
@@ -551,12 +545,10 @@ export default function OnboardingWizard() {
 
   if (loading || isLoading) return <PageLoader />;
   if (!user) return null;
-  // const showButton = !id || id === "new" || currentStep < totalSteps;
   const showButton = isNew || currentStep < totalSteps;
 
   return (
     <main className="onboarding-wizard min-h-screen bg-bg-app">
-      {/* {!id && <Header currentPage="onboarding" isOnboarding={true} />} */}
       <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-6 relative z-10">
         {/* Clean Minimal Header */}
         {isNew && <FloatSideMenu activePlan={activeSubscrp} />}
@@ -596,22 +588,21 @@ export default function OnboardingWizard() {
               </div>
             </button>
           </div>
-          {/* <div className="absolute top-4 left-4"> */}
-         {!isNew && (
-          <div className="">
-            <button
-              onClick={() => setIsStatsDrawerOpen(true)}
-              className="plans-trigger-special"
-              title="مشاهده پلن‌های پیشنهادی"
-              aria-label="باز کردن پنل پلن‌ها"
-            >
-              <span className="plans-trigger-icon">
-                <BarChart3 size={20} />
-              </span>
-              <span className="plans-trigger-text">پلن‌ها</span>
-            </button>
-          </div>
-         )}
+          {!isNew && (
+            <div className="">
+              <button
+                onClick={() => setIsStatsDrawerOpen(true)}
+                className="plans-trigger-special"
+                title="مشاهده پلن‌های پیشنهادی"
+                aria-label="باز کردن پنل پلن‌ها"
+              >
+                <span className="plans-trigger-icon">
+                  <BarChart3 size={20} />
+                </span>
+                <span className="plans-trigger-text">پلن‌ها</span>
+              </button>
+            </div>
+          )}
         </div>
         <div className="flex flex-col justify-center items-center mb-10 -mt-4">
           <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
@@ -656,32 +647,31 @@ export default function OnboardingWizard() {
                 return (
                   <div
                     key={step.id}
-                    className="flex flex-col items-center min-w-[120px] flex-1"
+                    className="flex flex-col items-center flex-1  min-w-0  sm:min-w-[120px]  w-full sm:w-auto  "
                   >
                     <button
                       onClick={() => goToStep(stepNumber)}
-                      className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 text-sm font-medium shadow-sm
-                        ${
-                          isActive
-                            ? "text-white shadow-lg border-2"
-                            : isReached
-                            ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
-                            : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
-                        }
-                      `}
+                      className={`
+        flex items-center justify-center
+        w-10 h-10 sm:w-12 sm:h-12
+        rounded-full text-sm font-medium shadow-sm
+        transition-all duration-200
+        ${
+          isActive
+            ? "text-white shadow-lg border-2"
+            : isReached
+            ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
+            : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
+        }
+      `}
                       style={
                         isActive ? { background: "var(--sharp-primary)" } : {}
                       }
                       disabled={
-                        // اجازه کلیک اگر:
-                        // - بات در حالت ویرایش (uuid) => همه فعال
-                        // - یا استپ مورد نظر <= maxReachedStep => فعال
-                        // در غیر این صورت غیرفعال
                         botConfig.uuid ? false : !(stepNumber <= maxReachedStep)
                       }
                     >
                       {isReached && !isActive ? (
-                        // اگر رسیدگی شده و فعال نیست => تیک یا شماره به شکل متفاوت
                         <svg
                           className="w-5 h-5"
                           fill="white"
@@ -699,13 +689,18 @@ export default function OnboardingWizard() {
                     </button>
 
                     <p
-                      className={`mt-3 text-sm text-center font-medium whitespace-nowrap ${
-                        isActive
-                          ? "text-brand-primary"
-                          : isReached
-                          ? "text-secondary"
-                          : "text-grey-600"
-                      }`}
+                      className={`
+        mt-2 sm:mt-3
+        text-xs sm:text-sm
+        text-center font-medium
+        ${
+          isActive
+            ? "text-brand-primary"
+            : isReached
+            ? "text-secondary"
+            : "text-grey-600"
+        }
+      `}
                     >
                       {step.title}
                     </p>
@@ -720,7 +715,7 @@ export default function OnboardingWizard() {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Step Content */}
             <div className="lg:col-span-2 ">
-              <Card className="p-8  border border-grey-200 bg-white rounded-xl shadow-lg">
+              <Card className="p-0 lg:p-8  border border-grey-200 bg-white rounded-xl shadow-lg">
                 <div className="animate-soft">{renderCurrentStep()}</div>
               </Card>
 
@@ -729,7 +724,6 @@ export default function OnboardingWizard() {
                 <Button
                   variant="tertiary"
                   onClick={prevStep}
-                  // disabled={currentStep === 1}
                   icon="arrow-right"
                   iconPosition="right"
                   className={`${
@@ -761,7 +755,7 @@ export default function OnboardingWizard() {
 
             {/* Preview Sidebar */}
             <div className="lg:col-span-1 ">
-              <div className="top-8 sticky w-full h-[800px]">
+              <div className="top-8 sticky p-4 lg:p-1 w-full h-[800px]">
                 <ChatPreview
                   currentStep={currentStep}
                   botConfig={botConfig}
@@ -786,12 +780,11 @@ export default function OnboardingWizard() {
           </div>
         )}
       </div>
-     
-        <StatsDrawer
-          isOpen={isStatsDrawerOpen}
-          onClose={() => setIsStatsDrawerOpen(false)}
-        />
-      
+
+      <StatsDrawer
+        isOpen={isStatsDrawerOpen}
+        onClose={() => setIsStatsDrawerOpen(false)}
+      />
     </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import { useAuth } from "@/providers/AuthProvider";
 import { PageType } from "@/types/common";
@@ -47,7 +47,17 @@ export function Sidebar({
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const desktop = window.innerWidth >= 1024;
+      console.log("sidebar desktop", desktop);
+      setIsDesktop(desktop);
+    };
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
   const handleLogout = async () => {
     try {
       setIsLoading(true);
@@ -99,7 +109,7 @@ export function Sidebar({
           active={currentPage === "dashboard-home"}
           onClick={() => {
             router.push("/dashboard?tab=dashboard-home");
-            onCloseSidebar?.(); // بستن سایدبار بعد از کلیک
+            if (!isDesktop) onCloseSidebar?.();
           }}
         />
         <SidebarItem
@@ -107,7 +117,7 @@ export function Sidebar({
           active={currentPage === "chatbot-management"}
           onClick={() => {
             router.push("/dashboard?tab=chatbot-management");
-            onCloseSidebar?.(); // بستن سایدبار بعد از کلیک
+            if (!isDesktop) onCloseSidebar?.();
           }}
         />
         <SidebarItem
@@ -115,7 +125,7 @@ export function Sidebar({
           active={currentPage === "tickets"}
           onClick={() => {
             router.push("/dashboard?tab=tickets");
-            onCloseSidebar?.(); // بستن سایدبار بعد از کلیک
+            if (!isDesktop) onCloseSidebar?.();
           }}
         />
         <SidebarItem
@@ -123,7 +133,7 @@ export function Sidebar({
           active={currentPage === "billing"}
           onClick={() => {
             router.push("/dashboard?tab=billing");
-            onCloseSidebar?.(); // بستن سایدبار بعد از کلیک
+            if (!isDesktop) onCloseSidebar?.();
           }}
         />
       </nav>

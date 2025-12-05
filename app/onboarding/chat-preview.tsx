@@ -134,7 +134,7 @@ export function ChatPreview({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]); // هر وقت messages تغییر کرد، scroll کن
+  }, [messages]);  
 
   async function callChatbotAPIWithSSE(message: string) {
     const apiUrl = `${API_BASE_URL}/public/${botConfig.uuid}/chat`;
@@ -315,6 +315,7 @@ export function ChatPreview({
 
         <div>
           <div className="sticky top-0">
+          {/* <div > */}
             <div
               className="w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-grey-200 flex flex-col overflow-hidden"
               style={{

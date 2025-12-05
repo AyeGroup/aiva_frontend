@@ -83,23 +83,12 @@ export function Pricing() {
 
             return (
               <Card
-                key={plan.id}
-                variant="default"
-                elevation="low"
-                // padding="none"
-                radius="xl"
-                hover={false}
+                key={index}
                 className={`relative overflow-hidden transition-all duration-300 group ${
                   isPopular ? "lg:row-span-1" : ""
                 }`}
                 aria-labelledby={`plan-${plan.id}-title`}
-                // style={{
-                //   animationDelay: `${index * 0.1}s`,
-                //   border: isPopular ? `2px solid ${theme.color}` : '1px solid var(--grey-200)',
-                //   transform: isPopular ? 'scale(1.05)' : 'scale(1)'
-                // }}
               >
-                {/* Background Accent */}
                 <div
                   className="absolute top-0 right-0 w-32 h-32 opacity-20 transition-all duration-500 group-hover:opacity-30"
                   style={{

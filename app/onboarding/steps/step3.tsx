@@ -130,7 +130,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           }`}
         >  <div className="flex items-center text-gray-900">
             شماره تماس
-            <span className="text-gray-400 text-xs pr-2">اختیاری</span>
+            <span className="text-gray-400 text-xs pr-0.5 lg:pr-2">اختیاری</span>
           </div>
           <Input
             id="phone"
@@ -140,10 +140,9 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             value={botConfig.support_phone || ""}
             onChange={
               (e) => updateConfig({ support_phone: e.target.value })
-              // handleBehaviorChange("support_phone", e.target.value)
             }
             placeholder="شماره پشتیبانی را وارد کنید"
-            className="w-full text-sm rounded-2xl p-4 border bg-white! text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary text-center!"
+            className="w-full text-sm rounded-2xl p-2 lg:p-4 border bg-white! text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary text-center!"
             maxLength={16}
           />
         </div>

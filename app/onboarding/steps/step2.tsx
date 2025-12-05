@@ -1,5 +1,6 @@
-import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
+import LockFeature from "../LockFeature";
+import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
@@ -11,6 +12,7 @@ import { convertToPersian } from "@/utils/common";
 import { Info, Refresh, Tick } from "@/public/icons/AppIcons";
 import { BotConfig, KnowledgeItem } from "@/types/common";
 import { useEffect, useRef, useState } from "react";
+import { useFeatureAccess, useUploadLimits } from "@/providers/PricingContext";
 import {
   FileText,
   Link,
@@ -24,12 +26,9 @@ import {
   Edit2,
   FileStack,
 } from "lucide-react";
-import LockFeature from "../LockFeature";
-import { useFeatureAccess, useUploadLimits } from "@/providers/PricingContext";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
-  // updateConfig: (updates: Partial<BotConfig>) => void;
 }
 
 export function WizardStep2({ botConfig }: WizardStep2Props) {
@@ -42,11 +41,14 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const can_website_crawling = useFeatureAccess(botConfig.uuid,"website_crawling");
+  const can_website_crawling = useFeatureAccess(
+    botConfig.uuid,
+    "website_crawling"
+  );
   const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
   const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
   const fileCount = useUploadLimits();
-console.log("can_website_crawling", can_website_crawling);
+  // console.log("can_website_crawling", can_website_crawling);
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
 
@@ -57,7 +59,6 @@ console.log("can_website_crawling", can_website_crawling);
     fetchData();
   }, [user?.token, botConfig?.uuid]);
 
- 
   const loadQa = async (botUuid: string) => {
     if (!botUuid) return;
     setIsLoading(true);
@@ -807,32 +808,19 @@ console.log("can_website_crawling", can_website_crawling);
               return (
                 <Card
                   key={item.id ? item.id : index}
-                  className="p-4 border-2 border-brand-primary/10 bg-bg-surface shadow-sm"
+                  className="p-2 lg:p-4 border-2 border-brand-primary/10 bg-bg-surface shadow-sm"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3 flex-1">
+                  <div className="flex flex-col lg:flex-row items-start justify-between">
+                    <div className="flex items-start gap-2 lg:gap-3 flex-1">
                       <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center shrink-0 border border-brand-primary/20">
                         <IconComponent className="w-4 h-4 text-brand-primary" />
                       </div>
 
                       <div className="flex-1 min-w-0 text-right">
                         <div className="flex items-center justify-between gap-3 mb-2">
-                          <h4 className="text-grey-900 flex-1">{item.title}</h4>
-
-                          {/* Status Tag */}
-                          <div
-                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                              item.status || ""
-                            )}`}
-                          >
-                            {(() => {
-                              const StatusIcon = getStatusIcon(
-                                item?.status || ""
-                              );
-                              return <StatusIcon className="w-3 h-3" />;
-                            })()}
-                            <span>{getStatusText(item?.status || "")}</span>
-                          </div>
+                          <h4 className="text-grey-900 text-base flex-1">
+                            {item.title}
+                          </h4>
                         </div>
 
                         {item.content && (
@@ -849,32 +837,50 @@ console.log("can_website_crawling", can_website_crawling);
                         )}
 
                         {/* Created date */}
-                        <p className="text-grey-400 text-xs mt-1">
+                        <p className="hidden lg:block text-grey-400 text-xs  lg:mt-1">
                           {new Date(item?.created_at ?? "").toLocaleDateString(
                             "fa-IR"
                           )}
                         </p>
                       </div>
                     </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex items-center gap-1 shrink-0 mr-2">
-                      <button
-                        onClick={() => startEditing(item)}
-                        //elham
-                        title="ویرایش محتوا"
-                        className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
+                    {/* Status Tag */}
+                    <div className="flex items-center justify-end w-full lg:w-fit">
+                      <div className="lg:hidden block text-grey-400 text-xs ml-2">
+                        {new Date(item?.created_at ?? "").toLocaleDateString(
+                          "fa-IR"
+                        )}
+                      </div>
+                      <div
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                          item.status || ""
+                        )}`}
                       >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
+                        {(() => {
+                          const StatusIcon = getStatusIcon(item?.status || "");
+                          return <StatusIcon className="w-3 h-3" />;
+                        })()}
+                        <span>{getStatusText(item?.status || "")}</span>
+                      </div>
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-1 shrink-0 mr-2">
+                        <button
+                          onClick={() => startEditing(item)}
+                          //elham
+                          title="ویرایش محتوا"
+                          className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
 
-                      <button
-                        onClick={() => removeItem(item)}
-                        title="حذف محتوا"
-                        className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                        <button
+                          onClick={() => removeItem(item)}
+                          title="حذف محتوا"
+                          className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </Card>

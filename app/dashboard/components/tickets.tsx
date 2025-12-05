@@ -194,12 +194,12 @@ const TicketCard: React.FC<{
 
   return (
     <Card
-      className="p-6 hover:shadow-hover border border-border-soft cursor-pointer group transition-all"
+      className="p-3 lg:p-6 hover:shadow-hover border border-border-soft cursor-pointer group transition-all"
       onClick={onClick}
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-6">
-          <div className="shrink-0">
+          <div className="">
             <div className="px-4 py-2 bg-brand-primary/10 rounded-lg">
               <span className="text-brand-primary font-mono text-xs">
                 {ticket.id}
@@ -207,27 +207,27 @@ const TicketCard: React.FC<{
             </div>
           </div>
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1  ">
             <h3 className="text-grey-900 group-hover:text-brand-primary transition-colors text-right">
               {ticket.title}
             </h3>
           </div>
 
-          <div className="shrink-0 flex items-center gap-2 text-grey-500">
+          <div className="flex items-center gap-1 lg:gap-2 text-grey-500">
             <div className="w-4 h-4">
               <TicketPend />
             </div>
             <span className="text-sm">{formatDateTime(ticket.updated_at)}</span>
           </div>
 
-          <div className="shrink-0">
+          <div className="flex items-center ">
             <div className="w-5 h-5 text-gray-500">
               <Back />
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 pr-2">
+        <div className="grid grid-cols-2 lg:grid-cols-3 items-center gap-1 lg:gap-3 lg:pr-2">
           <div className="flex items-center gap-2">
             <span className="text-xs text-grey-500">وضعیت:</span>
             <StatusBadge status={badgeStatus} />
@@ -368,7 +368,7 @@ export function Tickets() {
 
   // Render helpers
   const renderHeader = () => (
-    <header className="shrink-0 bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6">
+    <header className="bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6">
       <div className="flex items-center lg:items-start justify-between">
         <div className="text-right">
           <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
@@ -411,7 +411,7 @@ export function Tickets() {
   );
 
   const renderStatsCards = () => (
-    <section className="shrink-0 bg-white border-b border-grey-300">
+    <section className=" bg-white border-b border-grey-300">
       <div className="px-8 py-9">
         <div className="gap-6 grid  grid-cols-2 lg:grid-cols-4 w-full">
           <StatCard
@@ -462,8 +462,8 @@ export function Tickets() {
   );
 
   const renderTicketsList = () => (
-    <section className="flex-1 ">
-      <div className="p-8">
+    <section className="flex-col w-full">
+      <div className="p-3 lg:p-8">
         {filteredTickets.length > 0 ? (
           <div className="space-y-4">
             {filteredTickets.map((ticket) => (
@@ -484,34 +484,7 @@ export function Tickets() {
       </div>
     </section>
   );
-
-  const renderContent = () => {
-    switch (view) {
-      case "create":
-        return <CreateTicketView onSubmit={handleTicketCreated} />;
-
-      case "view":
-        if (!selectedTicketId) return null;
-        const selectedTicket = tickets.find((t) => t.id === selectedTicketId);
-        if (!selectedTicket) return null;
-        return (
-          <ViewTicketDetail
-            ticket={selectedTicket}
-            onClose={handleBackToList}
-          />
-        );
-
-      case "list":
-      default:
-        return (
-          <div className="overflow-y-auto">
-            {renderStatsCards()}
-            {renderTicketsList()}
-          </div>
-        );
-    }
-  };
-
+ 
   return (
     <div className="h-screen overflow-y-auto w-full bg-bg-shell">
       {(isLoading || loading) && <PageLoader />}
@@ -544,18 +517,5 @@ export function Tickets() {
       </main>
     </div>
   );
-
-  // return (
-  //   <div className="h-screen w-full overflow-hidden bg-bg-shell">
-  //     <div className="flex h-screen">
-  //       {(isLoading || loading) && <PageLoader />}
-  //       <main className="flex-1 overflow-hidden">
-  //         <div className="h-full flex flex-col">
-  //           {renderHeader()}
-  //           {renderContent()}
-  //         </div>
-  //       </main>
-  //     </div>
-  //   </div>
-  // );
+ 
 }

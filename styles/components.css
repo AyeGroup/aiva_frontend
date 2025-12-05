@@ -3949,6 +3949,7 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
+
 .chatbot-selector-container {
   position: relative;
   display: inline-block;
@@ -4007,7 +4008,7 @@
 .chatbot-dropdown {
   position: absolute;
   top: calc(100% + 0.5rem);
-  right: 0;
+  left: 0;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 0.875rem;
@@ -4126,7 +4127,7 @@
 
 .chatbot-dropdown-menu {
   position: absolute;
-  top: calc(100% + 6px);
+  bottom: calc(100% - 50px);
   left: 0;
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);

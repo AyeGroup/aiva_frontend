@@ -26,12 +26,9 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
   const [isloading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [baleToken, setBaleToken] = useState<string>("");
-const [isBaleEditing, setIsBaleEditing] = useState(!botConfig?.bale_enabled);
-
-
+  const [isBaleEditing, setIsBaleEditing] = useState(!botConfig?.bale_enabled);
   const { loading } = useAuth();
-console.log("isBaleEditing: ", isBaleEditing);
-console.log("bale_enabled: ", botConfig?.bale_enabled);
+
   useEffect(() => {
     const fetchCode = async () => {
       try {
@@ -98,8 +95,8 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
   };
 
   return (
-    <div className="bg-white rounded-2xl border-2 border-brand-primary/20 shadow overflow-hidden">
-      <div className="p-7 space-y-8">
+    <div className="bg-white w-full rounded-2xl border-2 border-brand-primary/20 shadow overflow-hidden">
+      <div className="p-7 space-y-8 cursor-default">
         {/* Header Section */}
         <div className="flex gap-4 px-0 py-3 items-center justify-start ">
           <div className=" w-12 h-12 bg-success/10 rounded-2xl flex items-center justify-center">
@@ -109,7 +106,7 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
             تبریک! آیوا آماده نصب و راه اندازی است
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 bg-blend-overlay border-2 rounded-2xl border-[#d1d5db] p-6 bg-linear-to-b from-[#E3F3F082] to-[#FBF4F4] gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 bg-blend-overlay border-2 rounded-2xl border-[#d1d5db] p-6 bg-linear-to-b from-[#E3F3F082] to-[#FBF4F4] gap-4 ">
           {loading || (isloading && <PageLoader />)}
           <div className="bg-primary/10  rounded-2xl border border-primary p-6 ">
             <div className="flex items-center justify-start gap-2 mb-5">
@@ -126,7 +123,6 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
             </div>
 
             <div className="grid grid-cols-2 gap-y-3">
-              {/* نام دستیار */}
               <div className=" text-grey-600 pl-5">نام دستیار:</div>
               <div className="flex  items-center">
                 <div
@@ -139,7 +135,6 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
               </div>
               <div className=" text-grey-600 pl-5">زبان :</div>
 
-              {/* زبان */}
               <div className="flex items-center">
                 <div
                   className="size-2 ml-2 rounded-full"
@@ -150,7 +145,6 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
                 </span>
               </div>
 
-              {/* تعداد منابع دانش */}
               <div className=" text-grey-600 pl-5"> منابع دانش :</div>
               <div className="flex  items-center">
                 <div
@@ -187,23 +181,22 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
             بله
           </div>
           <div className="flex flex-col gap-3">
-            {/* اگر توکن ذخیره شده و در حالت ویرایش نیست */}
             {botConfig.bale_enabled && !isBaleEditing ? (
-              <div className="flex items-center justify-between p-4 border rounded-2xl bg-gray-100">
+              <div className="flex  items-center justify-between p-4 border rounded-2xl bg-gray-100">
                 <div className="text-gray-700 text-sm">
                   توکن ربات بله ثبت شده است
                 </div>
 
                 <button
                   onClick={() => setIsBaleEditing(true)}
-                  className="text-brand-primary text-sm underline"
+                  className="text-brand-primary text-sm underline cursor-pointer"
                 >
                   ویرایش
                 </button>
               </div>
             ) : (
-              <div className="flex justify-start items-center gap-3">
-                <div className="flex items-center text-gray-900">
+              <div className="flex flex-col lg:flex-row justify-start items-center gap-3">
+                <div className="flex  items-center text-gray-900">
                   توکن ربات بله را وارد کنید
                 </div>
                 <Input
@@ -217,41 +210,30 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
               </div>
             )}
           </div>
-          {/* <div className="flex justify-start items-center gap-3 ">
-            <div className="flex items-center text-gray-900">
-              توکن ربات بله را وارد کنید
-            </div>
-            <Input
-              id="bale_code"
-              type="text"
-              value={baleToken || ""}
-              onChange={(e) => setBaleToken(e.target.value)}
-              className="w-full text-sm rounded-2xl p-4 border bg-white! text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr  border-grey-300 focus:border-brand-primary text-center!"
-              maxLength={200}
-            />
-          </div> */}
-          { isBaleEditing && (
+
+          {isBaleEditing && (
             <div className="text-left mt-4">
               <Button
                 variant="primary"
                 onClick={handleBaleLink}
                 icon="arrow-right"
                 iconPosition="right"
-                className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 disabled:opacity-50 disabled:cursor-not-allowed  cursor-pointer"
               >
                 {isSaving ? "در حال ثبت" : "ثبت"}
               </Button>
             </div>
           )}
         </div>
+        {/* کد نصب */}
         <div className="border-2 border-[#d1d5db] p-6 rounded-2xl">
           <div className=" mb-8">کد نصب</div>
 
           <div className="space-y-6">
             <div className="space-y-3">
               <div className="relative">
-                <div className="bg-brand-secondary rounded-2xl p-4 pr-24 h-56 overflow-hidden">
-                  <div className="text-white text-sm leading-6 font-mono ltr text-left">
+                <div className="bg-brand-secondary rounded-2xl p-4 pr-12 lg:pr-24 h-56 overflow-y-auto">
+                  <div className="text-white text-sm leading-6 font-mono ltr text-left break-all">
                     {installCode}
                   </div>
                 </div>
@@ -259,7 +241,7 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
                 <div className="absolute top-3 right-4 flex gap-2">
                   <button
                     onClick={copyToClipboard}
-                    className="bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]"
+                    className="bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]  cursor-pointer"
                     title="کپی کردن کد"
                   >
                     {copied ? (
@@ -272,7 +254,6 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
               </div>
             </div>
 
-            {/* Installation Guide */}
             <div className="space-y-[12px]">
               <p className="text-base text-grey-900 text-right">
                 راهنمای نصب - HTML/JavaScript
@@ -298,7 +279,7 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
                 ))}
               </ol>
 
-              <div className="bg-brand-tertiary/10 border border-brand-tertiary/20 rounded-[20px] p-[17px] h-[82px]">
+              <div className="bg-brand-tertiary/10 border border-brand-tertiary/20 rounded-lg p-3">
                 <p className="text-base text-brand-tertiary leading-6 text-right">
                   💡 نکته: پس از نصب، ممکن است تا چند دقیقه طول بکشد تا دستیار
                   در سایت شما فعال شود.
@@ -309,8 +290,7 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
         </div>
 
         {/* Next Steps Cards */}
-        <div className="grid grid-cols-2 gap-6">
-          {/* Dashboard Card */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-[20px] border-2 border-grey-300 p-6 flex flex-col gap-4 items-center justify-start">
             <div className="flex items-center gap-3">
               <BarChart3 className="w-5 h-5 text-brand-primary" />
@@ -321,7 +301,7 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
             </p>
             <button
               onClick={() => router.push("dashboard")}
-              className="bg-brand-primary rounded-sm shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)] h-12 w-full flex items-center justify-center text-white text-base"
+              className="bg-brand-primary rounded-sm shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)] h-12 w-full flex items-center justify-center text-white text-base  cursor-pointer"
               title="رفتن به داشبورد"
             >
               رفتن به داشبورد
@@ -341,7 +321,7 @@ console.log("bale_enabled: ", botConfig?.bale_enabled);
             </div>
             <a
               href="tel:09903202903"
-              className="bg-white border-2 border-brand-primary rounded-sm h-12 w-full flex items-center justify-center text-brand-primary text-base "
+              className="bg-white border-2 border-brand-primary rounded-sm h-12 w-full flex items-center justify-center text-brand-primary text-base  cursor-pointer"
               title="تماس با پشتیبانی"
             >
               ۰۹۹۰۳۲۰۲۹۰۳
