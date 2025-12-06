@@ -51,7 +51,8 @@ export default function Checkout() {
         const invoicePayload = {
           purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
           // purpose: "subscription_purchase",
-          subscription_type: parsed.billingPeriod,
+          subscription_type: parsed.periods,
+          // subscription_type: parsed.billingPeriod,
           subscription_plan: getPlanIdByCode(parsed.plan),
 
           amount_irr:
@@ -150,7 +151,9 @@ export default function Checkout() {
         amount_irr: invoice?.total_amount_irr,
         chatbot_uuid: currentBot?.uuid,
         subscription_plan: getPlanIdByCode(selectedPlan.plan),
-        subscription_type: selectedPlan.billingPeriod,
+        // subscription_type: selectedPlan.billingPeriod,
+        subscription_type: selectedPlan.periods,
+        
         description: selectedPlan.description,
       };
 

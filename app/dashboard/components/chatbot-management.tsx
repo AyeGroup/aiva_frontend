@@ -4,6 +4,7 @@ import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
 import ChatbotDetailModal from "../ChatbotDetailModal";
 import { toast } from "sonner";
+import { useBot } from "@/providers/BotProvider";
 import { Switch } from "@/components/switch";
 import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
@@ -19,7 +20,6 @@ import {
   MessageSquare,
   Plus,
 } from "lucide-react";
-import { useBot } from "@/providers/BotProvider";
 
 export function ChatbotManagement() {
   const router = useRouter();
@@ -48,7 +48,6 @@ export function ChatbotManagement() {
 
   useEffect(() => {
     if (!user?.token) return;
-
     const fetchChatbots = async () => {
       await loadChatbots();
     };
@@ -56,6 +55,7 @@ export function ChatbotManagement() {
     fetchChatbots();
   }, [user?.token]);
 
+  //handle size
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -79,13 +79,11 @@ export function ChatbotManagement() {
     try {
       const response = await axiosInstance.get(API_ROUTES.BOTS.LIST);
       setChatbots(response.data.data);
-      // console.log("bot list: ", response.data);
 
       const response1 = await axiosInstance.get(
         API_ROUTES.BOTS.SESSION_COUNT_COVER
       );
       setSessions(response1.data.data.chatbots);
-      // console.log("SESSION_COUNT_COVER: ", response1.data.data.chatbots);
     } catch (apiError: any) {
       console.warn("API fetch failed, using local data:", apiError);
     } finally {

@@ -20,7 +20,8 @@ interface PlanCardProps {
   badgeText?: string;
   buttonText?: string;
   buttonVariant?: "primary" | "secondary";
-  onSelect: () => void;
+  onSelect?: (selectedPeriod: "monthly" | "yearly") => void;
+
   disabled?: boolean;
 }
 
@@ -55,7 +56,9 @@ export function PlanCard({
       <header className="plan-card-header">
         <div className="plan-card-icon">{icon}</div>
         <h3 className="plan-card-name text-right">{name}</h3>
-        <p className="plan-card-description text-right text-sm">{description}</p>
+        <p className="plan-card-description text-right text-sm">
+          {description}
+        </p>
       </header>
       <div className="grid grid-cols-2   mb-3 w-full text-sm rounded-sm bg-gray-100 p-1.5">
         <button
@@ -131,7 +134,8 @@ export function PlanCard({
       <button
         type="button"
         className={`plan-card-button ${buttonVariant}`}
-        onClick={onSelect}
+        // onClick={onSelect}
+        onClick={() => onSelect?.(period)}  
         disabled={disabled}
         title={buttonText}
         style={{ textAlign: "center" }}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import PageLoader from "@/components/pageLoader";
 import { useAuth } from "@/providers/AuthProvider";
 import { PageType } from "@/types/common";
@@ -8,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { AddChatbotModal } from "./add-chatbot-modal";
 import { EditProfileModal } from "./EditProfileModal";
 import { User, LogOut, ArrowLeft } from "lucide-react";
-import Image from "next/image";
 
 interface SidebarItemProps {
   label: string;

@@ -103,15 +103,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // ✅ Logout
   const logout = async () => {
     try {
-      // await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
-    } catch {
-      /* ignore logout errors */
-    } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       setUser(null);
-      router.push("/auth/login");
+      router.push("/auth/login"); // await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
+    } catch {
+      /* ignore logout errors */
+    } finally {
     }
   };
 

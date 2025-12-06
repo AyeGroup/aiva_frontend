@@ -28,14 +28,14 @@ export default function DashboardPage() {
     | "tickets"
     | "onboarding"
     | "activeusers"
-    | "billing"
-    | "upgrade";
+    | "billing";
+    // | "upgrade";
 
   const pages: Record<string, JSX.Element> = {
     "chatbot-management": <ChatbotManagement />,
     tickets: <Tickets />,
     billing: <Billing />,
-    upgrade: <Upgrade />,
+    // upgrade: <Upgrade />,
     dashboard: <DashboardHome />,
     onboarding: <OnboardingWizard />,
     activeusers: <ActiveUsers />,
@@ -81,7 +81,7 @@ export default function DashboardPage() {
           {/* Menu Button */}
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="bg-secondary/10 shadow p-2 ml-4 rounded-md hover:bg-secondary/20 transition-colors"
+            className="bg-secondary/10 shadow p-2 ml-4 rounded-md hover:bg-secondary/20 transition-colors z-999"
             aria-label="باز کردن منو"
           >
             <Menu className="w-6 h-6 text-secondary" />
@@ -92,7 +92,7 @@ export default function DashboardPage() {
       {isDesktop && !isSidebarOpen && (
         <button
           onClick={() => setIsSidebarOpen(true)}
-          className="absolute top-10 right-8 bg-secondary/10 shadow p-2 ml-4 rounded-md hover:bg-secondary/20 transition-colors"
+          className="absolute top-10 right-8 bg-secondary/10 shadow p-2 ml-4 rounded-md hover:bg-secondary/20 transition-colors z-999"
         >
           <Menu className="w-6 h-6 text-secondary" />
         </button>

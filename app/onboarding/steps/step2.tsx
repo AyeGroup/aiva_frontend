@@ -27,6 +27,7 @@ import {
   FileStack,
 } from "lucide-react";
 import RadioGroup from "@/components/RadioGroup";
+import CrawlLevel2 from "@/app/dashboard/CrawlLevel2";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -42,6 +43,10 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [crawlType, setCrawlType] = useState<number>(1);
+  const [showCrawl2Modal, setShowCrawl2Modal] = useState(false);
+  const [selectedChatbot, setSelectedChatbot] = useState<BotConfig | null>(
+    null
+  );
   const titleInputRef = useRef<HTMLInputElement>(null);
   const can_website_crawling = useFeatureAccess(
     botConfig.uuid,
@@ -87,10 +92,18 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       setIsLoading(false);
     }
   };
-const handleCrawl = (value: number) => {
-  console.log("ctype", value);
-  setCrawlType(value);
-};
+  
+  const handleCrawl = (value: number) => {
+    setCrawlType(value);
+    if (value === 2) {
+      console.log("ctype", value);
+      setShowCrawl2Modal(true);
+      setSelectedChatbot(botConfig);
+    } else {
+      setShowCrawl2Modal(false);
+      setSelectedChatbot(null);
+    }
+  };
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -554,7 +567,8 @@ const handleCrawl = (value: number) => {
             name="crawlType"
             value={crawlType}
             onChange={(v) => {
-              handleCrawl(Number(v))
+              //
+              handleCrawl(Number(v));
               // console.log("Selected:", v);
               // setCrawlType(v);
             }}
@@ -585,6 +599,7 @@ const handleCrawl = (value: number) => {
                 )}
               </label>
               <Input
+                id="titleText"
                 ref={titleInputRef}
                 type="text"
                 value={newItem.title || ""}
@@ -957,6 +972,15 @@ const handleCrawl = (value: number) => {
           </li>
         </ul>
       </Card>
+      <CrawlLevel2
+        // chatbot={selectedChatbot?.uuid ||""}
+        chatbot={selectedChatbot ? { uuid: selectedChatbot.uuid } : undefined}
+        show={showCrawl2Modal}
+        onClose={() => {
+          setShowCrawl2Modal(false);
+          setSelectedChatbot(null);
+        }}
+      />
     </div>
   );
 }

@@ -131,7 +131,7 @@ export function Billing() {
     }));
   };
 
-  const handlePlanPurchase = (planName: string) => {
+  const handlePlanPurchase = (planName: string,selectedPeriod:string) => {
     if (!billingBot) {
       toast.info("لطفاً چت‌بات مورد نظر را انتخاب کنید");
       return;
@@ -157,7 +157,7 @@ export function Billing() {
         JSON.stringify({
           ...plan,
           billingBot,
-          periods,
+          periods: selectedPeriod,
         })
       );
       router.push("/pay/checkout");
@@ -664,8 +664,11 @@ export function Billing() {
                   onPeriodChange={(p) => handlePeriodChange(plan.plan, p)}
                   icon={getPlanIcon(plan.plan)}
                   features={mapFeatures(plan)}
-                  onSelect={() => {
-                    handlePlanPurchase(plan.plan);
+                  // onSelect={() => {
+                  //   handlePlanPurchase(plan.plan);
+                  // }}
+                  onSelect={(selectedPeriod) => {
+                    handlePlanPurchase(plan.plan, selectedPeriod); // دریافت period
                   }}
                   buttonText="خرید پلن"
                   buttonVariant="secondary"

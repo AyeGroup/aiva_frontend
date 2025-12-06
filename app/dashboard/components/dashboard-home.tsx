@@ -177,9 +177,9 @@ export default function Dashboard() {
   }, [user, currentBot, botLoading]);
 
   useEffect(() => {
-    if (!user || !currentBot?.uuid) return;
+    if (!user  ) return;
     fetchAllStatistics();
-  }, [user?.id, currentBot?.uuid, botLoading]);
+  }, [user?.id,   botLoading]);
 
   const fetchAllStatistics = async () => {
     setIsLoading(true);
@@ -295,10 +295,7 @@ export default function Dashboard() {
     return null;
   }
 
-  // if (isNew === null) {
-    // return <PageLoader />;
-  // }
-
+ 
   if (!botLoading && isNew===true) {
     return <NewUserIntro />;
   }
