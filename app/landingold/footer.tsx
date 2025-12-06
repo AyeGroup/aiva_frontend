@@ -56,7 +56,7 @@ export const Footer = memo(function Footer() {
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
               <img
-                src="/logo.png"
+                src="/logo.webp"
                 alt="لوگوی آیوا"
                 className="w-8 h-8 object-cover"
               />

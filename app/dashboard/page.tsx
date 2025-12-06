@@ -29,7 +29,7 @@ export default function DashboardPage() {
     | "onboarding"
     | "activeusers"
     | "billing";
-    // | "upgrade";
+  // | "upgrade";
 
   const pages: Record<string, JSX.Element> = {
     "chatbot-management": <ChatbotManagement />,
@@ -66,7 +66,7 @@ export default function DashboardPage() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <Image
-              src="/logo.png"
+              src="/logo.webp"
               alt="لوگوی آیوا"
               width={40}
               height={40}

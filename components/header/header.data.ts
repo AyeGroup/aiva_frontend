@@ -1,5 +1,5 @@
 import { NavItem } from "../../types/common";
-import aivaLogo from "@/public/logo.png";
+import aivaLogo from "@/public/logo.webp";
 
 // اطلاعات هدر آیوا
 export const headerData = {

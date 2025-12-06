@@ -112,7 +112,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
             <div className="flex items-center justify-start gap-2 mb-5">
               <div className="w-6 h-6 text-primary">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   height={64}
                   width={64}
                   alt="آیوا"

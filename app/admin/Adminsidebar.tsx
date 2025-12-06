@@ -36,7 +36,7 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
 interface SidebarProps {
   currentPage?: AdminPageType;
   router: ReturnType<typeof useRouter>;
-  onClose?: () => void;  
+  onClose?: () => void;
 }
 
 export function AdminSidebar({
@@ -155,7 +155,7 @@ export function AdminSidebar({
             <Image
               width={32}
               height={32}
-              src="logo.png"
+              src="logo.webp"
               alt="آیوا - دستیار هوشمند"
               className="w-8 h-8 object-cover"
             />
@@ -169,7 +169,6 @@ export function AdminSidebar({
           نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
         </div>
       </div>
-     
     </aside>
   );
 }

@@ -42,7 +42,7 @@
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   background-size: contain;
   background-repeat: no-repeat;
-  /* content: url("/public/logo.png") !important; */
+  /* content: url("/public/logo.webp") !important; */
 }
 
 .swal2-actions {
@@ -2015,11 +2015,11 @@
 }
 
 /* RTL Support */
- .input-base {
+.input-base {
   text-align: right;
 }
 
- .input-search {
+.input-search {
   padding-left: var(--space-12);
   padding-right: var(--space-4);
 }
@@ -2393,7 +2393,7 @@
 }
 
 /* RTL Support */
- .radio-item {
+.radio-item {
   flex-direction: row-reverse;
 } /* ========================================
    Modern Select Component - Enhanced Design
@@ -2684,34 +2684,34 @@
    RTL Support
 ======================================== */
 
- .select-base {
+.select-base {
   text-align: right;
   padding-right: var(--space-12);
   padding-left: var(--space-4);
 }
 
- .select-icons {
+.select-icons {
   right: var(--space-4);
   left: auto;
 }
 
- .select-chevron-icon {
+.select-chevron-icon {
   transform: rotate(0deg);
 }
 
- .select-wrapper.select-focused .select-chevron-icon {
+.select-wrapper.select-focused .select-chevron-icon {
   transform: rotate(180deg);
 }
 
- .select-small {
+.select-small {
   padding: var(--space-2) var(--space-3) var(--space-2) var(--space-10);
 }
 
- .select-medium {
+.select-medium {
   padding: var(--space-4) var(--space-4) var(--space-4) var(--space-12);
 }
 
- .select-large {
+.select-large {
   padding: var(--space-5) var(--space-5) var(--space-5) var(--space-14);
 }
 
@@ -3889,22 +3889,22 @@
 }
 
 /* RTL Support */
- .chat-message.user {
+.chat-message.user {
   flex-direction: row;
   align-self: flex-start;
 }
 
- .chat-message.bot {
+.chat-message.bot {
   flex-direction: row-reverse;
   align-self: flex-end;
 }
 
- .code-block {
+.code-block {
   direction: ltr;
   text-align: left;
 }
 
- .code-actions {
+.code-actions {
   left: auto;
   right: var(--space-3);
 }

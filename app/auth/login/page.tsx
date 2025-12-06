@@ -99,7 +99,7 @@ function Login() {
               className="flex items-center gap-3 hover:opacity-90 transition"
             >
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="آیوا"
                 width={80}
                 height={80}

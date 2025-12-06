@@ -205,7 +205,7 @@ export default function Verification() {
               {/* Logo - Right Side */}
               <div className="flex items-center gap-3">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   width={80}
                   height={80}
                   alt="آیوا"

@@ -31,7 +31,6 @@ export function Header({
       //     : "bg-white/95 backdrop-blur-sm border-b border-border-soft shadow-sm"
       // }`}
       className="header w-full transition-all duration-300 "
-
       role="banner"
       style={{
         borderRadius:
@@ -53,7 +52,7 @@ export function Header({
               {/* تصویر لوگو */}
               {logo.image ? (
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   width={50}
                   height={40}
                   alt="Logo"

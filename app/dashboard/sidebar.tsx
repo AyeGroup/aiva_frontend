@@ -163,7 +163,7 @@ export function Sidebar({
             <Image
               width={32}
               height={32}
-              src="logo.png"
+              src="logo.webp"
               alt="آیوا - دستیار هوشمند"
               className="w-8 h-8 object-cover"
             />

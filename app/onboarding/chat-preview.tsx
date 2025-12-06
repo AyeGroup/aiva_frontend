@@ -47,7 +47,7 @@ export function ChatPreview({
         prev.filter((msg) => !msg.id.startsWith("greeting"))
       );
     }
-  }, [botConfig.greetings ]);
+  }, [botConfig.greetings]);
 
   const handleClear = () => {
     setMessages([]);
@@ -134,7 +134,7 @@ export function ChatPreview({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);  
+  }, [messages]);
 
   async function callChatbotAPIWithSSE(message: string) {
     const apiUrl = `${API_BASE_URL}/public/${botConfig.uuid}/chat`;
@@ -315,7 +315,7 @@ export function ChatPreview({
 
         <div>
           <div className="sticky top-0">
-          {/* <div > */}
+            {/* <div > */}
             <div
               className="w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-grey-200 flex flex-col overflow-hidden"
               style={{
@@ -334,7 +334,7 @@ export function ChatPreview({
                 {/* Bot Avatar */}
                 <div className=" bg-white/20  rounded-full flex items-center justify-center p-1  overflow-hidden">
                   <Image
-                    src={botConfig.logo_url || "/logo.png"}
+                    src={botConfig.logo_url || "/logo.webp"}
                     height={64}
                     width={64}
                     alt="آیوا"

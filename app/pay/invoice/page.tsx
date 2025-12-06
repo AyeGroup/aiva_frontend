@@ -195,7 +195,7 @@ export default function Invoice() {
           <div>
             <div className="flex mt-4">
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="آیوا"
                 width={30}
                 height={30}

@@ -25,7 +25,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="لوگوی آیوا"
             width={40}
             height={40}

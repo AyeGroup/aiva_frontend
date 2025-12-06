@@ -65,7 +65,7 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                 {/* Bot Avatar */}
                 <div className=" bg-white/20  rounded-full flex items-center justify-center p-1  overflow-hidden">
                   <Image
-                    src={currentBot.logo_url || "/logo.png"}
+                    src={currentBot.logo_url || "/logo.webp"}
                     height={64}
                     width={64}
                     alt="آیوا"
