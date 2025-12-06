@@ -664,14 +664,14 @@ html {
 }
 
 /* Card hover effects - DISABLED */
-.card-hover {
+/* .card-hover {
   transition: none !important;
 }
 
 .card-hover:hover {
   box-shadow: var(--shadow-md);
   transform: none !important;
-}
+} */
 
 /* Creative visual effects */
 .glass-effect {

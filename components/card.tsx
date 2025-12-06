@@ -29,7 +29,7 @@ export function Card({
   return (
     <div
       className={`card animate-soft border shadow-low rounded-2xl p-1 lg:p-4shadow-low 
-        bg-bg-surface border-border-soft card-hover cursor-pointer ${
+        bg-bg-surface border-border-soft card-hover  ${
           disable ? "pointer-events-none opacity-50" : ""
         } border-2! border-solid! border-grey-200! ${className} `}
       style={style}

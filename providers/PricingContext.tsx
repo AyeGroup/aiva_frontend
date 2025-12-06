@@ -139,7 +139,7 @@ export const useFeatureAccess = (bot_uuid: string, feature: string) => {
         }
 
         const currentPlan = response.data.data.plan;
-        console.log("currentPlan", currentPlan);
+        // console.log("currentPlan", currentPlan);
         if (!currentPlan) {
           setAllowed(false);
           return;

@@ -26,6 +26,7 @@ import {
   Edit2,
   FileStack,
 } from "lucide-react";
+import RadioGroup from "@/components/RadioGroup";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -40,6 +41,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [crawlType, setCrawlType] = useState<number>(1);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const can_website_crawling = useFeatureAccess(
     botConfig.uuid,
@@ -85,6 +87,10 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       setIsLoading(false);
     }
   };
+const handleCrawl = (value: number) => {
+  console.log("ctype", value);
+  setCrawlType(value);
+};
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -543,7 +549,22 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
               انصراف
             </Button>
           </div>
+          {/* elham */}
+          <RadioGroup
+            name="crawlType"
+            value={crawlType}
+            onChange={(v) => {
+              handleCrawl(Number(v))
+              // console.log("Selected:", v);
+              // setCrawlType(v);
+            }}
+            options={[
+              { label: "خزش وب‌سایت سطح 1", value: 1 },
+              { label: "خزش وب‌سایت سطح 2", value: 2 },
+            ]}
+          />
 
+          {selectedType === "website" && isAdding && <div></div>}
           <div className="space-y-4">
             <div
               className={`${
@@ -701,7 +722,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
               </div>
             )}
           </div>
-
           <div className="flex justify-end gap-6 mt-8 pt-6 border-t border-border-soft">
             <Button
               variant="tertiary"

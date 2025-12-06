@@ -267,7 +267,7 @@ export default function PricingPage() {
 
         setPlans(allPlans);
 
-        console.log("allPlans :", allPlans);
+        // console.log("allPlans :", allPlans);
         // console.log("filteredPlans :", filteredPlans);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);

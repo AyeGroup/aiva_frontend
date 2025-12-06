@@ -321,7 +321,7 @@
 }
 
 /* Hover effects for interactive cards */
-.card-hover:hover {
+/* .card-hover:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-1px) scale(1.005);
 }
@@ -329,7 +329,7 @@
 .card-hover:active {
   transform: translateY(0) scale(1.002);
   box-shadow: var(--shadow-low);
-}
+} */
 
 /* Focus states for accessible cards */
 .card:focus-visible {

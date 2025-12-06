@@ -190,7 +190,7 @@ export default function OnboardingWizard() {
             subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
           //  subsc =getPlanCodeById( response.data.data.plan);
         }
-        console.log("active SUBSCRIPTION: ", subsc);
+        // console.log("active SUBSCRIPTION: ", subsc);
         setActiveSubscrp(subsc);
       } catch (error) {
         console.error("خطا در دریافت داده کاربران:", error);

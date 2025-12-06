@@ -29,7 +29,7 @@ export function WalletCard() {
         const res = await axiosInstance.get(API_ROUTES.FINANCIAL.WALLET);
 
         setWallet_balance(res.data?.data.wallet_balance);
-        console.log("setWallet_balance :", res.data?.data);
+        // console.log("setWallet_balance :", res.data?.data);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
       } finally {

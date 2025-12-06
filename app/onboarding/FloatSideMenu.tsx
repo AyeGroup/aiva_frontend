@@ -9,8 +9,8 @@ export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("BASIC");
   const { currentPlan } = usePricing();
-  console.log("currentPlan", currentPlan);
-  console.log("activePlan", activePlan);
+  // console.log("currentPlan", currentPlan);
+  // console.log("activePlan", activePlan);
   const menuItems = [
     { icon: getPlanIcon("FREE"), label: "آغازین", key: "FREE" },
     { icon: getPlanIcon("BASIC"), label: "پایه", key: "BASIC" },

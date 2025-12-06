@@ -71,7 +71,7 @@ export default function ChatbotDetailModal({
         const currentPlan = pricingData.find(
           (plan: any) => plan.plan === getPlanCodeById(subData?.plan)
         );
-        console.log("currentPlan: ", currentPlan);
+        // console.log("currentPlan: ", currentPlan);
 
         // 🟢 5. تنظیم totalMessages بر اساس upload_char_limit
         if (currentPlan) {

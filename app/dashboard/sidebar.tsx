@@ -51,7 +51,7 @@ export function Sidebar({
   useEffect(() => {
     const checkScreenSize = () => {
       const desktop = window.innerWidth >= 1024;
-      console.log("sidebar desktop", desktop);
+      // console.log("sidebar desktop", desktop);
       setIsDesktop(desktop);
     };
     checkScreenSize();
