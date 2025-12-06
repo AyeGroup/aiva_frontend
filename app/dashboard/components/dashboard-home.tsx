@@ -30,7 +30,7 @@ import {
 
 export default function Dashboard() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuth(); 
   const { bots, currentBot, botLoading } = useBot();
   const [isNew, setIsNew] = useState<boolean>(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);

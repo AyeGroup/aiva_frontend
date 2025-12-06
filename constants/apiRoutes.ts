@@ -110,4 +110,9 @@ export const API_ROUTES = {
   PUBLIC: {
     HISTORY: (bot_uuid: string) => `${API_BASE_URL}/public/${bot_uuid}/history`,
   },
+
+  ADMIN: {
+    STATISTICS: `${API_BASE_URL}/admin/statistics`,
+  },
+
 };
