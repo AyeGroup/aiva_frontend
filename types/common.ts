@@ -1,3 +1,4 @@
+export type AdminPageType = "home" | "users" | "tickets" | "billing";
 export type PageType =
   | "landing"
   | "register"

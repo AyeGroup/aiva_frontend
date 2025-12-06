@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import { useAuth } from "@/providers/AuthProvider";
-import { PageType } from "@/types/common";
+import { AdminPageType, PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
 // import { AddChatbotModal } from "./add-chatbot-modal";
 // import { AddAccountModal } from "./add-account-modal";
@@ -34,13 +34,13 @@ function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
 }
 
 interface SidebarProps {
-  currentPage?: PageType;
+  currentPage?: AdminPageType;
   router: ReturnType<typeof useRouter>;
   onClose?: () => void;  
 }
 
 export function AdminSidebar({
-  currentPage = "dashboard-home",
+  currentPage = "home",
   router,
   onClose,
 }: SidebarProps) {
@@ -110,16 +110,16 @@ export function AdminSidebar({
       <nav className="flex-1 py-1">
         <SidebarItem
           label="میزکار"
-          active={currentPage === "dashboard-home"}
-          onClick={() => router.push("/dashboard?tab=dashboard-home")}
+          active={currentPage === "home"}
+          onClick={() => router.push("/dashboard?tab=home")}
         />
         <SidebarItem
-          label="مدیریت چت‌بات"
-          active={currentPage === "chatbot-management"}
-          onClick={() => router.push("/dashboard?tab=chatbot-management")}
+          label="کاربران"
+          active={currentPage === "users"}
+          onClick={() => router.push("/dashboard?tab=users")}
         />
         <SidebarItem
-          label="پشتیبانی"
+          label="تیکت ها"
           active={currentPage === "tickets"}
           onClick={() => router.push("/dashboard?tab=tickets")}
         />
@@ -169,21 +169,7 @@ export function AdminSidebar({
           نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
         </div>
       </div>
-      {/* Modals */}
-      {/* <AddChatbotModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={() => {}}
-      /> */}
-      {/* <AddAccountModal
-        isOpen={isAddAccountModalOpen}
-        onClose={() => setIsAddAccountModalOpen(false)}
-        onAdd={() => {}}
-      /> */}
-      {/* <EditProfileModal
-        open={isAddAccountModalOpen}
-        onClose={() => setIsAddAccountModalOpen(false)}
-      /> */}
+     
     </aside>
   );
 }

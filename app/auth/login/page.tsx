@@ -47,27 +47,39 @@ function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const identity = phone.trim();
-    // console.log("login ", identity);
     if (!isValidEmail(identity) && !isValidPhone(identity)) {
       toast.error("لطفاً شماره موبایل یا ایمیل معتبر وارد کنید");
       return;
     }
-    // if (!isValidPhone(identity)) {
-    // identity = user?.phone || "";
-    // }
+
     try {
       setIsLoading(true);
       const res = await login(identity, password);
+      // if (!res.success) {
+      //   toast.error(res.message);
+      //   if (res.status === 403) {
+      //     router.push(`/auth/verification?phone=${identity}`);
+      //     return;
+      //   }
+      // }
+
+      // console.log("redirecting dashboard ...");
+      // if (res.user.role === "admin") router.push("/dashboard/admin");
+      // else router.push("/dashboard");
       if (!res.success) {
         toast.error(res.message);
         if (res.status === 403) {
           router.push(`/auth/verification?phone=${identity}`);
           return;
         }
+        return;
       }
-      // toast.success("ورود موفق!");
-      console.log("redirecting dashboard ...");
-      router.push("/dashboard");
+
+      // فقط وقتی login موفق بود، به res.user دسترسی داشته باشید
+      if (res.user.role === "admin") router.push("/admin");
+      else router.push("/dashboard");
+
+      console.log("user");
     } catch (err) {
       console.log(err);
       toast.error("خطا در ورود");
