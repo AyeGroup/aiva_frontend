@@ -11,25 +11,27 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { Plan, PricingContextType } from "@/types/common";
 import { useBot } from "./BotProvider";
 import { getPlanCodeById } from "@/constants/plans";
+import { useAuth } from "./AuthProvider";
+import PageLoader from "@/components/pageLoader";
 
 export const PricingContext = createContext<PricingContextType | null>(null);
 
 export const PricingProvider = ({ children }: { children: ReactNode }) => {
+  const { user, loading: authLoading } = useAuth();
   const [plans, setPlans] = useState<Plan[] | null>(null);
   const [currentPlan, setCurrentPlan] = useState<string | null>(null);
   const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
     {}
   );
   const { currentBot } = useBot();
-
-  // -------------------------------
+ 
   // 1) Load pricing ONCE
-  // -------------------------------
   useEffect(() => {
+    if (authLoading) return;
     const fetchPricing = async () => {
       try {
         const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
-console.log("res",res)
+        console.log("res", res);
         const allPlans = res.data?.data?.subscription_plans ?? [];
         setPlans(allPlans);
       } catch (error) {
@@ -38,12 +40,12 @@ console.log("res",res)
     };
 
     fetchPricing();
-  }, []); // فقط یک بار اجرا شود
+  }, [authLoading]);
 
-  // -------------------------------
   // 2) Update user currentPlan WHEN bot changes
-  // -------------------------------
   useEffect(() => {
+    if (authLoading || !currentBot) return;
+
     const fetchUserPlan = async () => {
       if (!currentBot?.uuid) {
         setCurrentPlan("FREE");
@@ -64,11 +66,9 @@ console.log("res",res)
     };
 
     fetchUserPlan();
-  }, [currentBot]); // با هر تغییر bot، دوباره اجرا می‌شود
+  }, [authLoading, currentBot]);
 
-  // -------------------------------
   // 3) Build feature → minPlan map
-  // -------------------------------
   useEffect(() => {
     if (!plans) return;
 
@@ -89,6 +89,10 @@ console.log("res",res)
     setFeatureMinPlan(map);
   }, [plans]);
 
+  // ⚠️ تا وقتی Auth و Bot آماده نشده‌اند، children را render نکن
+  // if (authLoading || !currentBot) return <div><PageLoader/></div>;
+
+
   return (
     <PricingContext.Provider
       value={{
@@ -103,10 +107,7 @@ console.log("res",res)
   );
 };
 
-// -----------------------------------------
 // HOOKS
-// -----------------------------------------
-
 export const usePricing = () => {
   const context = useContext(PricingContext);
 
@@ -139,7 +140,6 @@ export const useFeatureAccess = (bot_uuid: string, feature: string) => {
         }
 
         const currentPlan = response.data.data.plan;
-        // console.log("currentPlan", currentPlan);
         if (!currentPlan) {
           setAllowed(false);
           return;
@@ -147,7 +147,6 @@ export const useFeatureAccess = (bot_uuid: string, feature: string) => {
 
         const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
 
-        // const userIndex = planOrder.indexOf(currentPlan);
         const minPlan = featureMinPlan[feature] ?? "FREE";
         const minIndex = planOrder.indexOf(minPlan);
 
@@ -161,28 +160,8 @@ export const useFeatureAccess = (bot_uuid: string, feature: string) => {
     checkAccess();
   }, [bot_uuid, feature, featureMinPlan]);
 
-  return allowed; // null = loading
+  return allowed;
 };
-
-// export const useFeatureAccess =async (bot_uuid :string,feature: string) => {
-//   const {  featureMinPlan } = usePricing();
-
-//   const response = await axiosInstance.get(API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid));
-//  if(!response || response.status!==200)return false
-//   const currentPlan = response.data.data;
- 
-//   if (!currentPlan) return false;
-//   console.log("featureMinPlan", featureMinPlan);
-//   const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
-
-//   const userIndex = planOrder.indexOf(currentPlan);
-//   const minPlan = featureMinPlan[feature] ?? "FREE";
-//   const minIndex = planOrder.indexOf(minPlan);
-//   // console.log("userIndex",feature, userIndex);
-//   // console.log("minIndex",feature, minIndex);
-
-//   return userIndex >= minIndex;
-// };
 
 export const useFeatureRequiredPlan = (feature: string) => {
   const { featureMinPlan } = usePricing();
@@ -192,7 +171,6 @@ export const useFeatureRequiredPlan = (feature: string) => {
 export const useUploadLimits = () => {
   const { currentPlan } = usePricing();
   if (!currentPlan) return 0;
-  // console.log("pricingcontext currentPlan: ", currentPlan);
   switch (currentPlan) {
     case "FREE":
       return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_FREE);

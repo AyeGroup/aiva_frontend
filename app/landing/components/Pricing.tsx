@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Check, CrownIcon, StarIcon } from "lucide-react";
+import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import {
-  DiamondIcon,
-  DocumentIcon,
-  PlanImage,
-  RocketIcon,
-} from "@/public/icons/landing";
+import { PlanImage } from "@/public/icons/landing";
 import { getPlanIcon, translateFeature } from "@/constants/plans";
+import axios from "axios";
 
 const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
   return [
@@ -255,24 +250,15 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
 // Main Pricing Component
 export default function PricingPage() {
   const [plans, setPlans] = useState<any[]>([]);
+
   useEffect(() => {
     const fetchAllData = async () => {
-      //  setIsLoading(true);
-
       try {
-        const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
-
-        // setPlans(res.data?.data?.subscription_plans ?? []);
+        const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
         const allPlans = res.data?.data?.subscription_plans ?? [];
-
         setPlans(allPlans);
-
-        // console.log("allPlans :", allPlans);
-        // console.log("filteredPlans :", filteredPlans);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
-      } finally {
-        //  setIsLoading(false);
       }
     };
 
@@ -305,9 +291,7 @@ export default function PricingPage() {
           </p>
         </div>
 
-        {/* Pricing Cards Grid */}
         <div className="px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-          {/* {pricingPlans.map((plan) => ( */}
           {plans.map((plan, index) => (
             <PricingCard key={index} plan={plan} index={index} />
           ))}

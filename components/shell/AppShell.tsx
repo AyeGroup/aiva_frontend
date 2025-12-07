@@ -69,14 +69,14 @@ export default function AppShell({ page }: AppShellProps) {
     }
   };
 
-  const showHeader = ![
-    "dashboard-home",
-    "chatbot-management",
-    "tickets",
-    "login",
-    "verification",
-    "register",
-  ].includes(page);
+  // const showHeader = ![
+  //   "dashboard-home",
+  //   "chatbot-management",
+  //   "tickets",
+  //   "login",
+  //   "verification",
+  //   "register",
+  // ].includes(page);
 
   return (
     <div className="app-shell">
