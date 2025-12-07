@@ -74,7 +74,7 @@ function Login() {
         }
         return;
       }
-
+      if (res.user.role === "admin") console.log("user role", res.user.role);
       // فقط وقتی login موفق بود، به res.user دسترسی داشته باشید
       if (res.user.role === "admin") router.push("/admin");
       else router.push("/dashboard");

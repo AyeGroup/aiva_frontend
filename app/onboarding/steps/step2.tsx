@@ -92,7 +92,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       setIsLoading(false);
     }
   };
-  
+
   const handleCrawl = (value: number) => {
     setCrawlType(value);
     if (value === 2) {
@@ -563,22 +563,25 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
             </Button>
           </div>
           {/* elham */}
-          <RadioGroup
-            name="crawlType"
-            value={crawlType}
-            onChange={(v) => {
-              //
-              handleCrawl(Number(v));
-              // console.log("Selected:", v);
-              // setCrawlType(v);
-            }}
-            options={[
-              { label: "خزش وب‌سایت سطح 1", value: 1 },
-              { label: "خزش وب‌سایت سطح 2", value: 2 },
-            ]}
-          />
 
-          {selectedType === "website" && isAdding && <div></div>}
+          {selectedType === "website" && isAdding && (
+            <div>
+              <RadioGroup
+                name="crawlType"
+                value={crawlType}
+                onChange={(v) => {
+                  //
+                  handleCrawl(Number(v));
+                  // console.log("Selected:", v);
+                  // setCrawlType(v);
+                }}
+                options={[
+                  { label: "خزش وب‌سایت سطح 1", value: 1 },
+                  { label: "خزش وب‌سایت سطح 2", value: 2 },
+                ]}
+              />
+            </div>
+          )}
           <div className="space-y-4">
             <div
               className={`${

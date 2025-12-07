@@ -10,6 +10,7 @@ import { TicketPend, User } from "@/public/icons/AppIcons";
 import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import PageLoader from "@/components/pageLoader";
+import { getCategoryLabel } from "@/constants/common";
 
 interface Props {
   ticket: Ticket;
@@ -224,12 +225,9 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                   {/* دسته‌بندی */}
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-grey-500">دسته‌بندی:</span>
+
                     <span className="px-3 py-1 rounded-lg text-xs bg-grey-100 text-grey-700">
-                      {thisTicket.category === "technical"
-                        ? "فنی"
-                        : thisTicket.category === "financial"
-                        ? "مالی"
-                        : "عمومی"}
+                      {getCategoryLabel(thisTicket.category)}
                     </span>
                   </div>
                 </div>

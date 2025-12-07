@@ -5,8 +5,8 @@ import { convertToPersian } from "@/utils/common";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 const SectionHeader = () => (
-  <div className="w-full relative flex flex-col justify-start gap-8 py-16 px-10 lg:px-40">
-    <div className="absolute h-5/12 w-1/3 left-1 lg:left-16 top-1 lg:top-32 ">
+  <div className="w-full relative flex flex-col justify-start gap-8 py-16 px-10 lg:px-[20%]">
+    <div className="absolute h-5/12 lg:h-7/12 w-5/12 lg:w-1/3 left-1 lg:left-24 top-1 lg:top-32 ">
       <PhoneAndCustomer1 />
     </div>
     {/* Title */}
@@ -15,27 +15,27 @@ const SectionHeader = () => (
     </h2>
 
     {/* Subtitle */}
-    <p className="text-gray-600  max-w-xl text-lg mr-3">
+    <p className="text-gray-600 max-w-xl text-lg mr-3">
       با ما در ارتباط باشید:
     </p>
 
     <div className="flex justify-start items-center gap-2 mr-3">
-      <MapPin size={20} className="text-gray-300" />
+      <MapPin size={20} className="text-primary" />
       <span>تهران، آزادی، خیابان صادقی، پلاک ۳۳</span>
     </div>
 
     <div className="flex justify-start items-center gap-2 mr-3">
-      <Phone size={20} className="text-gray-300" />
-      <a href="tel:09903202903" className="hover:text-gray-100 transition">
+      <Phone size={20} className="text-primary" />
+      <a href="tel:09903202903" className="hover:text-primary transition">
         {convertToPersian("09903202903")}
       </a>
     </div>
 
     <div className="flex justify-start items-center gap-2 mr-3">
-      <Mail size={20} className="text-gray-300" />
+      <Mail size={20} className="text-primary" />
       <a
         href="mailto:info@ayehgroup.com"
-        className="hover:text-gray-100 transition"
+        className="hover:text-primary transition"
       >
         info@ayehgroup.com
       </a>

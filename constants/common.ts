@@ -21,3 +21,13 @@ export function paersianDay(day: string): string {
 
   return daysMap[day.toLowerCase()] || "روز نامعتبر";
 }
+
+export const getCategoryLabel = (category: string): string => {
+  const labels: Record<string, string> = {
+    technical: "فنی",
+    financial: "مالی",
+    general: "عمومی",
+    others: "سایر",
+  };
+  return labels[category] || category;
+};

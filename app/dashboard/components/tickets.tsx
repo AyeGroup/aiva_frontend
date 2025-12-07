@@ -20,6 +20,7 @@ import {
   TicketPend,
 } from "@/public/icons/AppIcons";
 import { DialogOverlay } from "@/components/dialog";
+import { getCategoryLabel } from "@/constants/common";
 
 // Types
 type TicketStatus = "open" | "in_progress" | "closed" | "all";
@@ -82,14 +83,7 @@ const getPriorityStyles = (priority: string): string => {
   return styles[priority] || "";
 };
 
-const getCategoryLabel = (category: string): string => {
-  const labels: Record<string, string> = {
-    technical: "فنی",
-    financial: "مالی",
-    general: "عمومی",
-  };
-  return labels[category] || category;
-};
+
 
 const getBadgeStatus = (status: string): "error" | "pending" | "success" => {
   if (status === "open") return "error";

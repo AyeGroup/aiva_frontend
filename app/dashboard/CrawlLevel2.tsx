@@ -36,11 +36,23 @@ export default function CrawlLevel2({
     setLoading(true);
 
     try {
+      // const res = await axiosInstance.post(
+      //   API_ROUTES.BOTS.CRAWL_DISCOVER(chatbot!.uuid),
+      //   { url: url }
+      // );
+
+      const formData = new URLSearchParams();
+      formData.append("url", url);
+
       const res = await axiosInstance.post(
         API_ROUTES.BOTS.CRAWL_DISCOVER(chatbot!.uuid),
-        { url: url }
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
-
       if (!res.data?.success) {
         toast.error("خطا در دریافت لینک‌ها");
         return;

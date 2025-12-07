@@ -111,22 +111,22 @@ export function AdminSidebar({
         <SidebarItem
           label="میزکار"
           active={currentPage === "home"}
-          onClick={() => router.push("/dashboard?tab=home")}
+          onClick={() => router.push("/admin?tab=home")}
         />
         <SidebarItem
           label="کاربران"
           active={currentPage === "users"}
-          onClick={() => router.push("/dashboard?tab=users")}
+          onClick={() => router.push("/admin?tab=users")}
         />
         <SidebarItem
           label="تیکت ها"
           active={currentPage === "tickets"}
-          onClick={() => router.push("/dashboard?tab=tickets")}
+          onClick={() => router.push("/admin?tab=tickets")}
         />
         <SidebarItem
           label="مالی"
           active={currentPage === "billing"}
-          onClick={() => router.push("/dashboard?tab=billing")}
+          onClick={() => router.push("/admin?tab=billing")}
         />
       </nav>
       {/* Bottom Actions */}

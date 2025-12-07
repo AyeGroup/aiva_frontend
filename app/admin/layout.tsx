@@ -3,8 +3,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AdminSidebar } from "./Adminsidebar";
 import { JSX } from "react";
 import AdminUsers from "./users/page";
-import AdminTickets from "./tickets/page";
 import Home from "./page";
+import { AdminTickets } from "./tickets/page";
 
 export default function AdminLayout() {
   const router = useRouter();
