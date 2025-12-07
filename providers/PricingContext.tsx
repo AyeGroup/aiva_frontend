@@ -29,7 +29,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     const fetchPricing = async () => {
       try {
         const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
-
+console.log("res",res)
         const allPlans = res.data?.data?.subscription_plans ?? [];
         setPlans(allPlans);
       } catch (error) {

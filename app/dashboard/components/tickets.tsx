@@ -20,7 +20,7 @@ import {
   TicketPend,
 } from "@/public/icons/AppIcons";
 import { DialogOverlay } from "@/components/dialog";
-import { getCategoryLabel } from "@/constants/common";
+import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 
 // Types
 type TicketStatus = "open" | "in_progress" | "closed" | "all";
@@ -63,15 +63,7 @@ const formatDateTime = (dateString: string): string => {
   return `${faDate} - ${faTime}`;
 };
 
-const getPriorityLabel = (priority: string): string => {
-  const labels: Record<string, string> = {
-    urgent: "اورژانسی",
-    high: "بالا",
-    medium: "متوسط",
-    low: "پایین",
-  };
-  return labels[priority] || priority;
-};
+
 
 const getPriorityStyles = (priority: string): string => {
   const styles: Record<string, string> = {

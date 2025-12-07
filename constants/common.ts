@@ -31,3 +31,13 @@ export const getCategoryLabel = (category: string): string => {
   };
   return labels[category] || category;
 };
+
+export const getPriorityLabel = (priority: string): string => {
+  const labels: Record<string, string> = {
+    urgent: "اورژانسی",
+    high: "بالا",
+    medium: "متوسط",
+    low: "پایین",
+  };
+  return labels[priority] || priority;
+};

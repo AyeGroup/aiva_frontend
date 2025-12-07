@@ -5,12 +5,13 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
+import { StatusBadge } from "@/app/dashboard/status-badge";
 import { API_ROUTES } from "@/constants/apiRoutes";
-// import { StatusBadge } from "../status-badge";
 import { Ticket, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
-// import { ViewTicketDetail } from "../TicketView";
-// import { CreateTicketView } from "../TicketCreate";
+import { CreateTicketView } from "@/app/dashboard/TicketCreate";
+import { ViewTicketDetail } from "@/app/dashboard/TicketView";
+import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 import {
   Back,
   Plus,
@@ -19,15 +20,7 @@ import {
   TicketOpen,
   TicketPend,
 } from "@/public/icons/AppIcons";
-import { DialogOverlay } from "@/components/dialog";
-import { CreateTicketView } from "@/app/dashboard/TicketCreate";
-import { ViewTicketDetail } from "@/app/dashboard/TicketView";
-import { StatusBadge } from "@/app/dashboard/status-badge";
-
-// Types
-type TicketStatus = "open" | "in_progress" | "closed" | "all";
-type TicketPriority = "urgent" | "high" | "medium" | "low" | "all";
-
+ 
 interface TicketStats {
   total: number;
   open: number;
@@ -65,15 +58,7 @@ const formatDateTime = (dateString: string): string => {
   return `${faDate} - ${faTime}`;
 };
 
-const getPriorityLabel = (priority: string): string => {
-  const labels: Record<string, string> = {
-    urgent: "اورژانسی",
-    high: "بالا",
-    medium: "متوسط",
-    low: "پایین",
-  };
-  return labels[priority] || priority;
-};
+
 
 const getPriorityStyles = (priority: string): string => {
   const styles: Record<string, string> = {
@@ -85,14 +70,7 @@ const getPriorityStyles = (priority: string): string => {
   return styles[priority] || "";
 };
 
-const getCategoryLabel = (category: string): string => {
-  const labels: Record<string, string> = {
-    technical: "فنی",
-    financial: "مالی",
-    general: "عمومی",
-  };
-  return labels[category] || category;
-};
+
 
 const getBadgeStatus = (status: string): "error" | "pending" | "success" => {
   if (status === "open") return "error";
@@ -296,7 +274,7 @@ const EmptyState: React.FC<{
 );
 
 // Main component
-export function AdminTickets() {
+export default function AdminTickets() {
   const [view, setView] = useState<ViewType>("list");
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);

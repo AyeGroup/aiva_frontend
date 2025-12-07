@@ -1,15 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import PageLoader from "@/components/pageLoader";
 import { useAuth } from "@/providers/AuthProvider";
-import { AdminPageType, PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
-// import { AddChatbotModal } from "./add-chatbot-modal";
-// import { AddAccountModal } from "./add-account-modal";
+import { AdminPageType } from "@/types/common";
 import { User, LogOut, ArrowLeft } from "lucide-react";
-import Image from "next/image";
-// import { EditProfileModal, ProfileForm } from "./EditProfileModal";
 
 interface SidebarItemProps {
   label: string;
@@ -44,12 +41,9 @@ export function AdminSidebar({
   router,
   onClose,
 }: SidebarProps) {
-  // const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  // const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  // const { bots, currentBot, setCurrentBot } = useBot(); // ← دسترسی به بات‌ها
   const handleLogout = async () => {
     try {
       setIsLoading(true);
@@ -63,18 +57,15 @@ export function AdminSidebar({
 
   return (
     <aside
-      className="w-64 flex flex-col sticky top-0 h-screen relative"
+      className="w-64 flex flex-col  top-0 h-screen relative"
       style={{ backgroundColor: "#F5E6D3" }}
     >
-      {/* Close button (mobile only) */}
       <button
         onClick={onClose}
-        className=" absolute top-4 left-4 text-gray-700 hover:text-black p-1"
-        aria-label="close sidebar"
+        className=" absolute cursor-pointer top-4 left-4 text-gray-700 hover:text-black p-1"
       >
         ✕
       </button>
-      {/* Header - User Profile */}
       <div className="px-6 py-6 text-center">
         <button
           // onClick={() => setIsAddAccountModalOpen(true)}
@@ -119,7 +110,12 @@ export function AdminSidebar({
           onClick={() => router.push("/admin?tab=users")}
         />
         <SidebarItem
-          label="تیکت ها"
+          label="چت‌بات‌ها"
+          active={currentPage === "tickets"}
+          onClick={() => router.push("/admin?tab=chatbots")}
+        />
+        <SidebarItem
+          label="تیکت‌ها"
           active={currentPage === "tickets"}
           onClick={() => router.push("/admin?tab=tickets")}
         />
