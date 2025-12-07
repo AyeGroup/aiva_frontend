@@ -13,8 +13,10 @@ import { useBot } from "./BotProvider";
 import { getPlanCodeById } from "@/constants/plans";
 import { useAuth } from "./AuthProvider";
 import PageLoader from "@/components/pageLoader";
+import { usePathname } from "next/navigation";
 
 export const PricingContext = createContext<PricingContextType | null>(null);
+const PUBLIC_ROUTES = ["/login", "/register", "/"];
 
 export const PricingProvider = ({ children }: { children: ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
@@ -24,10 +26,18 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     {}
   );
   const { currentBot } = useBot();
- 
+  const pathname = usePathname();
+
+  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+
   // 1) Load pricing ONCE
   useEffect(() => {
+    if (isPublicRoute) {
+      return;
+    }
+
     if (authLoading) return;
+    if (!user) return;
     const fetchPricing = async () => {
       try {
         const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
@@ -44,6 +54,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
 
   // 2) Update user currentPlan WHEN bot changes
   useEffect(() => {
+    if (!user) return;
     if (authLoading || !currentBot) return;
 
     const fetchUserPlan = async () => {
@@ -88,10 +99,6 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
 
     setFeatureMinPlan(map);
   }, [plans]);
-
-  // ⚠️ تا وقتی Auth و Bot آماده نشده‌اند، children را render نکن
-  // if (authLoading || !currentBot) return <div><PageLoader/></div>;
-
 
   return (
     <PricingContext.Provider

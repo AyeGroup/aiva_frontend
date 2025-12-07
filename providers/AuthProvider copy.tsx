@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import PageLoader from "@/components/pageLoader";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { jwtDecode } from "jwt-decode";
 
@@ -23,25 +23,17 @@ type LoginResponse =
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+
   login: (identity: string, password: string) => Promise<LoginResponse>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// مسیرهای عمومی که نیاز به لاگین ندارند
-const PUBLIC_ROUTES = ["/auth/login", "/auth/register", "/"];
-
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname();
-
-  // چک کردن اینکه مسیر فعلی عمومی است یا خیر
-  const isPublicRoute = PUBLIC_ROUTES.some((route) =>
-    pathname.startsWith(route)
-  );
 
   useEffect(() => {
     const handleLogout = () => {
@@ -52,57 +44,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [router]);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem("accessToken");
-      const savedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("accessToken");
+    const savedUser = localStorage.getItem("user");
 
-      if (token && savedUser) {
-        try {
-          // بررسی اعتبار token
-          const decoded: any = jwtDecode(token);
-          const currentTime = Date.now() / 1000;
+    if (token && savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
 
-          if (decoded.exp && decoded.exp < currentTime) {
-            // Token منقضی شده
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("user");
+    setLoading(false);
+  }, []);
 
-            if (!isPublicRoute) {
-              router.replace("/auth/login");
-            }
-          } else {
-            // Token معتبر است
-            setUser(JSON.parse(savedUser));
-
-            // اگر کاربر لاگین کرده و می‌خواد به صفحه login/register بره
-            if (pathname === "/auth/login" || pathname === "/auth/register") {
-              router.replace("/dashboard");
-            }
-          }
-        } catch (error) {
-          console.error("Error decoding token:", error);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("user");
-
-          if (!isPublicRoute) {
-            router.replace("/auth/login");
-          }
-        }
-      } else {
-        // Token وجود ندارد
-        if (!isPublicRoute) {
-          router.replace("/auth/login");
-        }
-      }
-
-      setLoading(false);
-    };
-
-    checkAuth();
-  }, [pathname, isPublicRoute, router]);
-
+  // ✅ Login
   const login = async (
     identity: string,
     password: string
@@ -112,16 +64,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         identity,
         password,
       });
+      // console.log("login res",res)
 
       const data = res.data.data;
       localStorage.setItem("accessToken", data.access_token);
       localStorage.setItem("refreshToken", data.refresh_token);
 
       const payload: any = jwtDecode(data.access_token);
+      console.log("payload", payload);
       const user: User = {
         id: data.id,
         name: data.name || "",
         role: payload.role || "user",
+
         email: data.email,
         phone: data.phone || identity,
         token: data.access_token,
@@ -145,15 +100,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  // ✅ Logout
   const logout = async () => {
     try {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       setUser(null);
-      router.push("/auth/login");
+      router.push("/auth/login"); // await axiosInstance.post(API_ROUTES.AUTH.LOGOUT);
     } catch {
       /* ignore logout errors */
+    } finally {
     }
   };
 
@@ -161,12 +118,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {loading ? (
-        <div className="flex items-center justify-center min-h-screen">
+      {!loading ? (
+        children
+      ) : (
+        <div className="text-center p-6">
           <PageLoader />
         </div>
-      ) : (
-        children
       )}
     </AuthContext.Provider>
   );

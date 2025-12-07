@@ -26,7 +26,9 @@ export default function RootLayout({
           <div className="app-content">
             <AuthProvider>
               <BotProvider>
-                <PricingProvider>{children}</PricingProvider>
+                {/* <PricingProvider> */}
+                  {children}
+                  {/* </PricingProvider> */}
               </BotProvider>
             </AuthProvider>
             <Toaster
