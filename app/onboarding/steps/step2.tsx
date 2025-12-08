@@ -96,7 +96,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const handleCrawl = (value: number) => {
     setCrawlType(value);
     if (value === 2) {
-      console.log("ctype", value);
+      // console.log("ctype", value);
       setShowCrawl2Modal(true);
       setSelectedChatbot(botConfig);
     } else {
@@ -565,7 +565,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           {/* elham */}
 
           {selectedType === "website" && isAdding && (
-            <div>
+            <div className="mb-4">
               <RadioGroup
                 name="crawlType"
                 value={crawlType}
@@ -975,7 +975,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           </li>
         </ul>
       </Card>
-      <CrawlLevel2
+      {/* <CrawlLevel2
         // chatbot={selectedChatbot?.uuid ||""}
         chatbot={selectedChatbot ? { uuid: selectedChatbot.uuid } : undefined}
         show={showCrawl2Modal}
@@ -983,7 +983,19 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           setShowCrawl2Modal(false);
           setSelectedChatbot(null);
         }}
+      /> */}
+
+      <CrawlLevel2
+        chatbot={selectedChatbot ? { uuid: selectedChatbot.uuid } : undefined}
+        show={showCrawl2Modal}
+        onClose={() => {
+          setShowCrawl2Modal(false);
+          setSelectedChatbot(null);
+          setCrawlType(1);
+          // هر کار اضافه‌ای که می‌خوای انجام بدی اینجا
+        }}
       />
+
     </div>
   );
 }

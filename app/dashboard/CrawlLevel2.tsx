@@ -5,7 +5,6 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
-import { BotConfig } from "@/types/common";
 import { API_ROUTES } from "@/constants/apiRoutes";
 
 interface ChatbotDetailModalProps {
@@ -31,19 +30,17 @@ export default function CrawlLevel2({
   }, [chatbot]);
 
   const handleCrawl = async () => {
+    console.log("handleCrawl");
+
     if (!url) return;
     if (!chatbot?.uuid) return;
     setLoading(true);
 
     try {
-      // const res = await axiosInstance.post(
-      //   API_ROUTES.BOTS.CRAWL_DISCOVER(chatbot!.uuid),
-      //   { url: url }
-      // );
-
       const formData = new URLSearchParams();
       formData.append("url", url);
 
+      console.log("url:", url);
       const res = await axiosInstance.post(
         API_ROUTES.BOTS.CRAWL_DISCOVER(chatbot!.uuid),
         formData,
@@ -53,12 +50,16 @@ export default function CrawlLevel2({
           },
         }
       );
+      console.log("response: ", res);
+
       if (!res.data?.success) {
         toast.error("خطا در دریافت لینک‌ها");
         return;
       }
-      // فرض می‌کنیم لینک‌ها در res.data.urls هست
-      setAllUrl(res.data.urls || []);
+
+      setAllUrl(res.data?.data?.discovered_links || []);
+      console.log("data: ", res.data?.data?.discovered_links);
+
       toast.success("لینک‌ها دریافت شد");
     } catch (err: any) {
       console.error("خطا در دریافت لینک‌ها:", err);
@@ -71,6 +72,14 @@ export default function CrawlLevel2({
       setLoading(false);
     }
   };
+  const isValidUrl = (value: string) => {
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   const handleSave = async () => {
     if (!chatbot?.uuid) return;
@@ -78,10 +87,28 @@ export default function CrawlLevel2({
       toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
       return;
     }
+    console.log("selected url", selectedUrl);
+
+    const formData = new URLSearchParams();
+
+    selectedUrl.forEach((url) => {
+      formData.append("urls", url);
+    });
+
+    console.log("formData:", formData.toString());
+
     const res = await axiosInstance.post(
       API_ROUTES.BOTS.CRAWL_BATCH(chatbot?.uuid),
-      { urls: selectedUrl }
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
     );
+
+    console.log("res url", res);
+
     if (!res.data?.success) {
       toast.error("خطا در دریافت لینک‌ها");
       return;
@@ -118,11 +145,11 @@ export default function CrawlLevel2({
           <div className="flex flex-col items-center justify-start border-b border-gray-200 ">
             <div className="w-full flex items-center">
               <label className="text-gray-900 m-2 whitespace-nowrap">
-                آدرس وب <span className="text-blue-500">*</span>
+                آدرس وب <span className="text-red-500">*</span>
               </label>
               <div className="flex-1">
                 <Input
-                  type="text"
+                  type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="آدرس وب"
@@ -130,45 +157,63 @@ export default function CrawlLevel2({
                 />
               </div>
             </div>
-
-            <Button
-              variant="primary"
-              onClick={handleCrawl}
-              disabled={!url || loading}
-              className="px-12 py-3 my-3 min-w-40 shadow-lg hover:shadow-xl w-fit"
-            >
-              {loading ? "در حال بررسی..." : "بررسی"}
-            </Button>
+            <div className=" flex items-center justify-center gap-4">
+              <Button
+                variant="primary"
+                onClick={handleCrawl}
+                disabled={!url || !isValidUrl(url) || loading}
+                className="px-12 py-3 my-3 min-w-40 shadow-lg hover:shadow-xl w-fit"
+              >
+                {loading ? "در حال بررسی..." : "بررسی"}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={onClose}
+                disabled={loading}
+                className="px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
+              >
+                انصراف
+              </Button>
+            </div>
           </div>
 
-          {allUrl.length > 0 && (
-            <div>
-              <p className="font-semibold mb-2 text-right">
+          {allUrl && allUrl.length > 0 && (
+            <div className="flex flex-col items-start border-b border-gray-200 p-4 gap-4">
+              <p className="font-semibold mb-2 text-left">
                 لینک‌های دریافت شده:
               </p>
-              <div className="flex flex-col gap-2 max-h-64 overflow-y-auto border rounded-lg p-2">
-                {allUrl.map((link) => (
+
+              {/* لیست URLها */}
+              <div className="flex flex-col gap-2 max-h-64 overflow-y-auto border rounded-lg p-2 w-full">
+                {allUrl.map((link: any, index: number) => (
                   <label
-                    key={link}
-                    className="flex items-center gap-2 cursor-pointer"
+                    key={index}
+                    dir="ltr"
+                    className="flex items-center gap-2 cursor-pointer text-left"
                   >
                     <input
                       type="checkbox"
-                      checked={selectedUrl.includes(link)}
-                      onChange={() => toggleSelectUrl(link)}
+                      checked={selectedUrl.includes(link.url)}
+                      onChange={() => toggleSelectUrl(link.url)}
                       className="w-4 h-4"
                     />
-                    <span className="truncate">{link}</span>
+                    <span className="truncate">
+                      {decodeURIComponent(link.url)}
+                    </span>
                   </label>
                 ))}
               </div>
-              <Button
-                variant="primary"
-                onClick={handleSave}
-                className="mt-4 px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
-              >
-                ثبت انتخاب‌ها
-              </Button>
+
+              {/* دکمه در وسط */}
+              <div className="w-full flex justify-center">
+                <Button
+                  variant="primary"
+                  onClick={handleSave}
+                  className="mt-2 px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
+                >
+                  ثبت انتخاب‌ها
+                </Button>
+              </div>
             </div>
           )}
         </div>

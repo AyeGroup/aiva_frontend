@@ -14,9 +14,10 @@ import { getPlanCodeById } from "@/constants/plans";
 import { useAuth } from "./AuthProvider";
 import PageLoader from "@/components/pageLoader";
 import { usePathname } from "next/navigation";
+import axios from "axios";
 
 export const PricingContext = createContext<PricingContextType | null>(null);
-const PUBLIC_ROUTES = ["/login", "/register", "/"];
+const PUBLIC_ROUTES = ["/login", "/register", "/", "verification"];
 
 export const PricingProvider = ({ children }: { children: ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
@@ -40,7 +41,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return;
     const fetchPricing = async () => {
       try {
-        const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
+        const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
         console.log("res", res);
         const allPlans = res.data?.data?.subscription_plans ?? [];
         setPlans(allPlans);
@@ -55,7 +56,9 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
   // 2) Update user currentPlan WHEN bot changes
   useEffect(() => {
     if (!user) return;
-    if (authLoading || !currentBot) return;
+    if (authLoading) return;
+    if (!currentBot) return;
+    if (isPublicRoute) return;
 
     const fetchUserPlan = async () => {
       if (!currentBot?.uuid) {

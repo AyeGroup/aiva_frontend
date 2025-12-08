@@ -1008,7 +1008,7 @@ export function Icon6() {
 
 export function Icon11() {
   return (
-    <div className="absolute left-[1240px] size-6 top-[16px]" data-name="Icon">
+    <div className="absolute left-[1240px] size-6 top-4" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -1034,7 +1034,7 @@ export function Icon11() {
 
 export function Icon12() {
   return (
-    <div className="absolute left-[-32px] size-6 top-[16px]" data-name="Icon">
+    <div className="absolute left-[-32px] size-6 top-4" data-name="Icon">
       <svg
         className="block size-full"
         fill="none"
@@ -1874,13 +1874,7 @@ export const Sazmani = () => {
 
 export const Moshavere = () => {
   return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 28 28"
-      fill="none"
-     
-    >
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
       <path
         d="M12.8333 25.3519C13.188 25.5567 13.5904 25.6645 14 25.6645C14.4096 25.6645 14.812 25.5567 15.1667 25.3519L23.3333 20.6852C23.6877 20.4806 23.982 20.1864 24.1868 19.8322C24.3916 19.4779 24.4996 19.0761 24.5 18.6669V9.33354C24.4996 8.92436 24.3916 8.52249 24.1868 8.16823C23.982 7.81398 23.6877 7.5198 23.3333 7.31521L15.1667 2.64854C14.812 2.44375 14.4096 2.33594 14 2.33594C13.5904 2.33594 13.188 2.44375 12.8333 2.64854L4.66667 7.31521C4.31231 7.5198 4.01798 7.81398 3.81321 8.16823C3.60843 8.52249 3.50042 8.92436 3.5 9.33354V18.6669C3.50042 19.0761 3.60843 19.4779 3.81321 19.8322C4.01798 20.1864 4.31231 20.4806 4.66667 20.6852L12.8333 25.3519Z"
         stroke="#EA580C"
@@ -1915,13 +1909,8 @@ export const Moshavere = () => {
 
 export function Sec6_Icon2() {
   return (
-    <div  >
-      <svg
-      
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d={svgPaths6.p27520040}
@@ -1939,13 +1928,8 @@ export function Sec6_Icon2() {
 
 export function Sec6_Icon3() {
   return (
-    <div  >
-      <svg
-       
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d={svgPaths6.p3de7e600}
@@ -1963,13 +1947,8 @@ export function Sec6_Icon3() {
 
 export function Sec6_Icon4() {
   return (
-    <div >
-      <svg
-     
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d={svgPaths6.p1efd0200}
@@ -1987,13 +1966,8 @@ export function Sec6_Icon4() {
 
 export function Sec6_Icon6() {
   return (
-    <div >
-      <svg
-      
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d={svgPaths6.p2979bb00}
@@ -2011,13 +1985,8 @@ export function Sec6_Icon6() {
 
 export function Sec6_Icon7() {
   return (
-    <div >
-      <svg
-    
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d={svgPaths6.p3de7e600}
@@ -2035,13 +2004,8 @@ export function Sec6_Icon7() {
 
 export function Sec6_Icon8() {
   return (
-    <div >
-      <svg
-      
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d={svgPaths6.p27a3200}
@@ -2083,13 +2047,8 @@ export function Sec6_Icon8() {
 
 export function Sec6_Icon9() {
   return (
-    <div >
-      <svg
-     
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d="M10.5 3.5L3.5 10.5"
@@ -2115,12 +2074,8 @@ export function Sec6_Icon9() {
 
 export function Sec6_Icon10() {
   return (
-    <div >
-      <svg
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d={svgPaths6.pa89ed00}
@@ -2146,13 +2101,8 @@ export function Sec6_Icon10() {
 
 export function Sec6_Icon11() {
   return (
-    <div >
-      <svg
-       
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d={svgPaths6.p3de7e600}
@@ -2170,13 +2120,8 @@ export function Sec6_Icon11() {
 
 export function Sec6_Icon12() {
   return (
-    <div >
-      <svg
-     
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d="M16 2.66667V29.3333"
@@ -2203,12 +2148,7 @@ export function Sec6_Icon12() {
 export function Sec6_Icon13() {
   return (
     <div>
-      <svg
-       
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d="M10.5 3.5L3.5 10.5"
@@ -2234,12 +2174,8 @@ export function Sec6_Icon13() {
 
 export function Sec6_Icon14() {
   return (
-    <div >
-      <svg
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d={svgPaths6.pa89ed00}
@@ -2265,13 +2201,8 @@ export function Sec6_Icon14() {
 
 export function Sec6_Icon15() {
   return (
-    <div  >
-      <svg
-        
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d={svgPaths6.p3de7e600}
@@ -2289,13 +2220,8 @@ export function Sec6_Icon15() {
 
 export function Sec6_Icon16() {
   return (
-    <div  >
-      <svg
-       
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d={svgPaths6.p37a10d80}
@@ -2329,13 +2255,8 @@ export function Sec6_Icon16() {
 
 export function Sec6_Icon17() {
   return (
-    <div >
-      <svg
-      
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d="M10.5 3.5L3.5 10.5"
@@ -2362,12 +2283,7 @@ export function Sec6_Icon17() {
 export function Sec6_Icon18() {
   return (
     <div>
-      <svg
-      
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d="M16 8V16L21.3333 18.6667"
@@ -2393,13 +2309,8 @@ export function Sec6_Icon18() {
 
 export function Sec6_Icon19() {
   return (
-    <div >
-      <svg
-        
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d={svgPaths6.p3de7e600}
@@ -2417,13 +2328,8 @@ export function Sec6_Icon19() {
 
 export function Sec6_Icon20() {
   return (
-    <div  >
-      <svg
-       
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 32 32"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
         <g id="Icon">
           <path
             d={svgPaths6.p27a3200}
@@ -2465,13 +2371,8 @@ export function Sec6_Icon20() {
 
 export function Sec6_Icon21() {
   return (
-    <div  >
-      <svg
-     
-        fill="none"
-        preserveAspectRatio="none"
-        viewBox="0 0 14 14"
-      >
+    <div>
+      <svg fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
         <g id="Icon">
           <path
             d="M10.5 3.5L3.5 10.5"
@@ -2900,7 +2801,7 @@ export function Faq_Icon3() {
 export function Faq_Icon4() {
   return (
     <div
-      className="absolute h-[160px] left-0 top-[706.39px] w-[1431px]"
+      className="absolute h-40 left-0 top-[706.39px] w-[1431px]"
       data-name="Icon"
     >
       <svg
@@ -3065,7 +2966,7 @@ export function SecSart_Icon3() {
 
 export function SecSart_Icon11() {
   return (
-    <div className="absolute bg-[rgba(255,255,255,0.1)] blur-3xl filter left-[1135px] rounded-[1.67772e+07px] size-[256px] top-[40px]" />
+    <div className="absolute bg-[rgba(255,255,255,0.1)] blur-3xl filter left-[1135px] rounded-[1.67772e+07px] size-64 top-10" />
   );
 }
 

@@ -30,7 +30,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // مسیرهای عمومی که نیاز به لاگین ندارند
-const PUBLIC_ROUTES = ["/auth/login", "/auth/register", "/"];
+const PUBLIC_ROUTES = ["/auth/login", "/auth/register", "/", "verification"];
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
