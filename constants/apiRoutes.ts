@@ -112,8 +112,10 @@ export const API_ROUTES = {
   },
 
   ADMIN: {
-    STATISTICS: `${API_BASE_URL.replace("/api","")}/admin/statistics`,
+    STATISTICS: `${API_BASE_URL.replace("/api", "")}/admin/statistics`,
     TICKETS: `${API_BASE_URL}/tickets/admin/all`,
     TICKET: (ticket_id: string) => `${API_BASE_URL}/tickets/admin/${ticket_id}`,
+    TICKET_UPDATE: (ticket_id: string) =>
+      `${API_BASE_URL}/tickets/admin/${ticket_id}`,
   },
 };

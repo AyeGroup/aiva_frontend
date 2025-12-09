@@ -10,7 +10,6 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { Ticket, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
 import { CreateTicketView } from "@/app/dashboard/TicketCreate";
-import { ViewTicketDetail } from "@/app/dashboard/TicketView";
 import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 import {
   Back,
@@ -20,7 +19,8 @@ import {
   TicketOpen,
   TicketPend,
 } from "@/public/icons/AppIcons";
- 
+import { ViewTicketDetail } from "./TicketView";
+
 interface TicketStats {
   total: number;
   open: number;
@@ -58,8 +58,6 @@ const formatDateTime = (dateString: string): string => {
   return `${faDate} - ${faTime}`;
 };
 
-
-
 const getPriorityStyles = (priority: string): string => {
   const styles: Record<string, string> = {
     urgent: "bg-red-100 text-red-700",
@@ -69,8 +67,6 @@ const getPriorityStyles = (priority: string): string => {
   };
   return styles[priority] || "";
 };
-
-
 
 const getBadgeStatus = (status: string): "error" | "pending" | "success" => {
   if (status === "open") return "error";
@@ -324,9 +320,10 @@ export default function AdminTickets() {
 
   const handleCreateTicket = () => setView("create");
 
-  const handleBackToList = () => {
+  const handleBackToList = async () => {
     setView("list");
     setSelectedTicketId(null);
+    await loadTickets();
   };
 
   const handleTicketClick = (ticketId: string) => {
@@ -465,7 +462,7 @@ export default function AdminTickets() {
       </div>
     </section>
   );
- 
+
   return (
     <div className="h-screen overflow-y-auto w-full bg-bg-shell">
       {(isLoading || loading) && <PageLoader />}
@@ -480,7 +477,7 @@ export default function AdminTickets() {
               {renderTicketsList()}
             </>
           ) : view === "create" ? (
-            <CreateTicketView  onSubmit={handleTicketCreated} />
+            <CreateTicketView onSubmit={handleTicketCreated} />
           ) : view === "view" && selectedTicketId ? (
             (() => {
               const selectedTicket = tickets.find(
@@ -498,5 +495,4 @@ export default function AdminTickets() {
       </main>
     </div>
   );
- 
 }

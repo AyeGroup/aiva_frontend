@@ -5,12 +5,12 @@ import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { Ticket } from "@/types/common";
-import { StatusBadge } from "./status-badge";
 import { TicketPend, User } from "@/public/icons/AppIcons";
 import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import PageLoader from "@/components/pageLoader";
 import { getCategoryLabel } from "@/constants/common";
+import { StatusBadge } from "@/app/dashboard/status-badge";
 
 interface Props {
   ticket: Ticket;
@@ -106,7 +106,22 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
       setIsLoading(false);
     }
   };
-  
+  const handleCloseTicket = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.patch(
+        API_ROUTES.ADMIN.TICKET_UPDATE(thisTicket.id),
+        { status: "closed" }
+      );
+      await loadTicket();
+      toast.success("اطلاعات ثبت شد");
+      setReplyText("");
+    } catch (error) {
+      toast.error("ثبت اطلاعات با مشکل مواجه شد");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSendReply = async () => {
     if (!replyText.trim()) return;
@@ -163,7 +178,17 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                         thisTicket.messages[0].content}
                     </p>
 
-                    
+                    {thisTicket.status !== "closed" && (
+                      <Button
+                        variant="primary"
+                        size="md"
+                        className="w-fit"
+                        title="بستن تیکت"
+                        onClick={handleCloseTicket}
+                      >
+                        بستن تیکت
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>

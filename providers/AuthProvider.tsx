@@ -17,6 +17,7 @@ interface User {
 }
 
 type LoginResponse =
+
   | { success: true; user: User }
   | { success: false; status: number | null; message: string };
 

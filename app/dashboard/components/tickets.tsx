@@ -11,6 +11,7 @@ import { Ticket, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
 import { ViewTicketDetail } from "../TicketView";
 import { CreateTicketView } from "../TicketCreate";
+import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 import {
   Back,
   Plus,
@@ -19,13 +20,8 @@ import {
   TicketOpen,
   TicketPend,
 } from "@/public/icons/AppIcons";
-import { DialogOverlay } from "@/components/dialog";
-import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 
-// Types
-type TicketStatus = "open" | "in_progress" | "closed" | "all";
-type TicketPriority = "urgent" | "high" | "medium" | "low" | "all";
-
+ 
 interface TicketStats {
   total: number;
   open: number;

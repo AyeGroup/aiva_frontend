@@ -23,6 +23,8 @@ export type TicketCategory = "technical" | "financial" | "general" | "others";
 
 export type TicketPriority = "low" | "medium" | "high" | "urgent";
 
+export type TicketStatus = "open" | "in_progress" | "resolved" | "closed";
+
 export type ViewType = "list" | "create" | "view";
 
 export type LoadingState = "idle" | "loading" | "success" | "error";
@@ -133,7 +135,7 @@ export interface Ticket {
   id: string;
   title: string;
   content: string;
-  status: "open" | "in_progress" | "resolved" | "closed";
+  status:  TicketStatus;
   priority: TicketPriority;
   category: TicketCategory;
   created_at: string;

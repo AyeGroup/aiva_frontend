@@ -33,6 +33,7 @@ function Login() {
     const phoneRegex = /^(\+98|0)?9\d{9}$/; // شماره موبایل ایران
     return phoneRegex.test(value);
   };
+
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
@@ -44,6 +45,7 @@ function Login() {
       setWarning("");
     }
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const identity = phone.trim();
@@ -74,7 +76,8 @@ function Login() {
         }
         return;
       }
-      if (res.user.role === "admin") console.log("user role", res.user.role);
+      // if (res.user.role === "admin")
+      console.log("user role", res.user.role);
       // فقط وقتی login موفق بود، به res.user دسترسی داشته باشید
       if (res.user.role === "admin") router.push("/admin");
       else router.push("/dashboard");
@@ -91,7 +94,7 @@ function Login() {
   return (
     <div className="login-page min-h-screen bg-white relative overflow-hidden">
       {/* Header Content */}
-      <div className="relative z-50 w-full p-2 pb-0">
+      <div className="relative z-50 w-full px-2 pb-0">
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
             <Link
@@ -99,7 +102,7 @@ function Login() {
               className="flex items-center gap-3 hover:opacity-90 transition"
             >
               <Image
-                src="/logo.webp"
+                src="/logo.png"
                 alt="آیوا"
                 width={80}
                 height={80}
@@ -181,7 +184,7 @@ function Login() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-[calc(100vh-120px)] flex items-center justify-center p-2 pt-4 pb-16">
+      <div className="relative z-10 flex items-center justify-center p-2 pt-0">
         <div className="w-full max-w-md">
           {/* Login Card */}
           <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
@@ -320,24 +323,18 @@ function Login() {
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 p-2">
-        <div className="text-center">
-          <p
-            className="text-grey-500"
-            style={{ fontSize: "var(--text-caption)" }}
-          >
-            کپی رایت © آیوا ۱۴۰۳ |{" "}
-            <button className="hover:text-grey-700 transition-colors border-0">
-              سیاست حفظ حریم خصوصی
-            </button>
-          </p>
-        </div>
+      <div className="flex items-end justify-center mt-8">
+        <p
+          className="text-grey-500"
+          style={{ fontSize: "var(--text-caption)" }}
+        >
+          کپی رایت © آیوا ۱۴۰۳ |{" "}
+          <button className="hover:text-grey-700 transition-colors border-0">
+            سیاست حفظ حریم خصوصی
+          </button>
+        </p>
       </div>
-
-      {/* <Toaster position="top-center"  richColors closeButton /> */}
     </div>
-    //   </div>
-    // </div>
   );
 }
 
