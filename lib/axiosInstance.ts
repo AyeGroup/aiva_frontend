@@ -47,7 +47,8 @@ axiosInstance.interceptors.response.use(
 
         // ذخیره توکن‌های جدید
         localStorage.setItem("accessToken", access_token);
-        localStorage.setItem("refreshToken", refresh_token);
+        localStorage.setItem("refreshToken", access_token);
+        // localStorage.setItem("refreshToken", refresh_token);
 
         // ست کردن توکن جدید برای درخواست‌ها
         axiosInstance.defaults.headers.common[
