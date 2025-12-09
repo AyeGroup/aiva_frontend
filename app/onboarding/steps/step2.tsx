@@ -513,7 +513,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                         <IconComponent className="w-7 h-7 text-brand-primary" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-grey-900 mb-1">{type.title}</h3>
+                        <h3 className="text-grey-900 mb-1 pl-2">
+                          {type.title}
+                        </h3>
                         <p className="text-grey-600 text-body-small text-[14px]">
                           {type.description}
                         </p>
@@ -698,8 +700,10 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                   onChange={(e) =>
                     setNewItem((prev) => ({ ...prev, url: e.target.value }))
                   }
+                 
                   placeholder="https://example.com/about"
-                  className="w-full"
+                  className="w-full text-left!"
+                  dir="ltr"
                 />
                 <p className="text-grey-500 mt-2 text-body-small">
                   محتوای این صفحه به‌صورت خودکار استخراج و به دانش دستیار اضافه
@@ -858,14 +862,17 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                   className="p-2 lg:p-4 border-2 border-brand-primary/10 bg-bg-surface shadow-sm"
                 >
                   <div className="flex flex-col lg:flex-row items-start justify-between">
-                    <div className="flex items-start gap-2 lg:gap-3 flex-1 ">
+                    <div className="flex items-start gap-2 max-w-[60%] lg:gap-3 flex-1 ">
                       <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center shrink-0 border border-brand-primary/20">
                         <IconComponent className="w-4 h-4 text-brand-primary" />
                       </div>
 
-                      <div className="flex-1 min-w-0 text-right  ">
+                      <div className="flex-1 min-w-0 text-right">
                         <div className="flex items-center justify-between gap-3 mb-2  line-clamp-1">
-                          <h4 className="text-grey-900 text-base block w-full ">
+                          <h4
+                            className="text-grey-900 text-base block w-full "
+                            title={item.title}
+                          >
                             {decodeURIComponent(item.title)}
                           </h4>
                         </div>

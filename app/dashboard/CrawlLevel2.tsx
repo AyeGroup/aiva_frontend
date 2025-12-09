@@ -10,7 +10,7 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 interface ChatbotDetailModalProps {
   show: boolean;
   chatbot?: { uuid: string };
-  onClose: (success?: boolean) => void;  
+  onClose: (success?: boolean) => void;
 }
 
 export default function CrawlLevel2({
@@ -34,6 +34,7 @@ export default function CrawlLevel2({
 
     if (!url) return;
     if (!chatbot?.uuid) return;
+    setAllUrl([]);
     setLoading(true);
 
     try {
@@ -57,16 +58,22 @@ export default function CrawlLevel2({
         return;
       }
 
-      setAllUrl(res.data?.data?.discovered_links || []);
-      console.log("data: ", res.data?.data?.discovered_links);
+      const allurls = res.data?.data?.discovered_links || [];
+      console.log("allurls: ", allurls);
+
+      if (allurls.length === 0) {
+        toast.error("لینکی یافت نشد");
+        return;
+      }
+      setAllUrl(allurls);
 
       toast.success("لینک‌ها دریافت شد");
     } catch (err: any) {
       console.error("خطا در دریافت لینک‌ها:", err);
-      const backendMessage =
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        err.response?.data?.msg;
+      const backendMessage =""
+        // err.response?.data?.message ||
+        // err.response?.data?.error ||
+        // err.response?.data?.msg;
       toast.error(backendMessage || "خطا در دریافت لینک‌ها");
     } finally {
       setLoading(false);
@@ -131,7 +138,7 @@ export default function CrawlLevel2({
   return (
     <div
       className=" fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-      onClick={()=>onClose(false)}
+      onClick={() => onClose(false)}
     >
       {loading && <PageLoader />}
       <div
@@ -152,8 +159,9 @@ export default function CrawlLevel2({
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="آدرس وب"
-                  className="w-full"
+                  placeholder="https://example.com/about"
+                  className="w-full text-left!"
+                  dir="ltr"
                 />
               </div>
             </div>
@@ -168,7 +176,7 @@ export default function CrawlLevel2({
               </Button>
               <Button
                 variant="secondary"
-                onClick={()=>onClose(false)}
+                onClick={() => onClose(false)}
                 disabled={loading}
                 className="px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
               >
