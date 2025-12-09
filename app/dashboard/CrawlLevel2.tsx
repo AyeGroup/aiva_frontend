@@ -10,7 +10,7 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 interface ChatbotDetailModalProps {
   show: boolean;
   chatbot?: { uuid: string };
-  onClose: () => void;
+  onClose: (success?: boolean) => void;  
 }
 
 export default function CrawlLevel2({
@@ -117,7 +117,7 @@ export default function CrawlLevel2({
     // اینجا می‌تونید selectedUrl رو برای backend بفرستید
     console.log("لینک‌های انتخاب شده:", selectedUrl);
     toast.success("لینک‌ها ثبت شدند");
-    onClose();
+    onClose(true);
   };
 
   const toggleSelectUrl = (link: string) => {
@@ -131,7 +131,7 @@ export default function CrawlLevel2({
   return (
     <div
       className=" fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-      onClick={onClose}
+      onClick={()=>onClose(false)}
     >
       {loading && <PageLoader />}
       <div
@@ -168,7 +168,7 @@ export default function CrawlLevel2({
               </Button>
               <Button
                 variant="secondary"
-                onClick={onClose}
+                onClick={()=>onClose(false)}
                 disabled={loading}
                 className="px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
               >

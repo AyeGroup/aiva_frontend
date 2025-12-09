@@ -47,13 +47,12 @@ export function StatsDrawer({
 
   useEffect(() => {
     if (isOpen && selectedPlan) {
-    
       setTimeout(() => {
         const el = planRefs.current[selectedPlan.toLowerCase()];
         if (el) {
           el.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-      }, 350); 
+      }, 350);
     }
   }, [isOpen, selectedPlan]);
 
@@ -82,7 +81,6 @@ export function StatsDrawer({
           (p: any) => p.plan?.toLowerCase() !== "free"
         );
         setPlans(filteredPlans);
-
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
       } finally {
@@ -109,18 +107,18 @@ export function StatsDrawer({
     const plan = plans.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
-    console.log("plan:", plan);
-    console.log("billingBot:", billingBot);
-    console.log("billingPeriod:", billingPeriod);
+    // console.log("plan:", plan);
+    // console.log("billingBot:", billingBot);
+    // console.log("billingPeriod:", billingPeriod);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
-      //
+      
       localStorage.setItem(
         "selectedPlan",
         JSON.stringify({
           ...plan,
           billingBot,
-          billingPeriod,
+          periods: billingPeriod,
         })
       );
       router.push("/pay/checkout");
@@ -140,113 +138,109 @@ export function StatsDrawer({
     ];
   };
 
+  return (
+    <>
+      {/* Overlay */}
+      <div
+        className={`stats-drawer-overlay ${isOpen ? "block" : "hidden"}`}
+        onClick={onClose}
+      />
 
-return (
-  <>
-    {/* Overlay */}
-    <div
-      className={`stats-drawer-overlay ${isOpen ? "block" : "hidden"}`}
-      onClick={onClose}
-    />
-
-    {/* Drawer */}
-    <aside
-      className={`stats-drawer ${isOpen ? "open" : ""}`}
-      role="complementary"
-      aria-label="پنل پلن‌های پیشنهادی"
-    >
-      {/* Header */}
-      <header className="stats-drawer-header px-4 sm:px-6">
-        <div>
-          <h2 className="text-lg sm:text-xl">تمام پلن‌ها</h2>
-          <p className="stats-drawer-subtitle text-xs sm:text-sm">
-            انتخاب بهترین پلن برای نیازهای شما
-          </p>
-        </div>
-        <button
-          onClick={onClose}
-          className="stats-drawer-close w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
-          title="بستن پنل"
-          aria-label="بستن پنل پلن‌ها"
-        >
-          <X size={window.innerWidth < 640 ? 18 : 20} />
-        </button>
-      </header>
-
-      {/* Content */}
-      <div className="stats-drawer-content px-4 sm:px-6">
-        {/* Billing Period Toggle */}
-        <div className="flex items-center justify-center mb-3 sm:mb-4 gap-2 text-sm sm:text-base">
-          <span>چت‌بات</span>
-          <ChatbotSelector />
-        </div>
-
-        <div className="billing-toggle-wrapper  flex-row gap-2 sm:gap-0">
-          <button
-            type="button"
-            className={`billing-toggle-option ${
-              billingPeriod === "monthly" ? "active" : ""
-            } 
-            py-2 sm:py-3 text-sm sm:text-base`}
-            onClick={() => setBillingPeriod("monthly")}
-            title="نمایش قیمت ماهانه"
-          >
-            ماهانه
-          </button>
-          <button
-            type="button"
-            className={`billing-toggle-option ${
-              billingPeriod === "yearly" ? "active" : ""
-            } 
-            py-2 sm:py-3 text-sm sm:text-base flex items-center justify-center gap-1 sm:gap-2`}
-            onClick={() => setBillingPeriod("yearly")}
-            title="نمایش قیمت سالانه"
-          >
-            سالانه
-            {/* 🔴 CHANGED: کاهش سایز بج در موبایل */}
-            <span className="billing-toggle-badge text-xs sm:text-sm px-1.5 sm:px-2">
-              {"20"}٪ تخفیف
-            </span>
-          </button>
-        </div>
-
-        {/* Plans Section */}
-        {/* 🔴 CHANGED: اضافه شدن mt-4 sm:mt-6 برای فاصله مناسب */}
-        <section
-          className="stats-section mt-4 sm:mt-6"
-          aria-labelledby="plans-heading"
-        >
-          {/* 🔴 CHANGED: اضافه شدن gap-3 sm:gap-4 برای فاصله بین کارت‌ها */}
-          <div className="flex flex-col gap-3 sm:gap-4">
-            {plans.map((plan, index) => (
-              <div
-                key={index}
-                ref={(el) => {
-                  planRefs.current[plan.plan.toLowerCase()] = el;
-                }}
-              >
-                <PlanCardMenu
-                  key={index}
-                  name={getFaNameByCode(plan?.plan) || plan?.plan}
-                  description=""
-                  priceMonthly={Number(plan?.price_monthly_irr || 0)}
-                  priceYearly={Number(plan?.price_yearly_irr || 0)}
-                  period={billingPeriod}
-                  onPeriodChange={(p) => setBillingPeriod(p)}
-                  icon={getPlanIcon(plan.plan)}
-                  features={mapFeatures(plan)}
-                  onSelect={() => {
-                    handlePlanPurchase(plan.plan);
-                  }}
-                  buttonText="خرید پلن"
-                  buttonVariant="secondary"
-                />
-              </div>
-            ))}
+      {/* Drawer */}
+      <aside
+        className={`stats-drawer ${isOpen ? "open" : ""}`}
+        role="complementary"
+        aria-label="پنل پلن‌های پیشنهادی"
+      >
+        {/* Header */}
+        <header className="stats-drawer-header px-4 sm:px-6">
+          <div>
+            <h2 className="text-lg sm:text-xl">تمام پلن‌ها</h2>
+            <p className="stats-drawer-subtitle text-xs sm:text-sm">
+              انتخاب بهترین پلن برای نیازهای شما
+            </p>
           </div>
-        </section>
-      </div>
-    </aside>
-  </>
-);
+          <button
+            onClick={onClose}
+            className="stats-drawer-close w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
+            title="بستن پنل"
+            aria-label="بستن پنل پلن‌ها"
+          >
+            <X size={window.innerWidth < 640 ? 18 : 20} />
+          </button>
+        </header>
+
+        {/* Content */}
+        <div className="stats-drawer-content px-4 sm:px-6">
+          {/* Billing Period Toggle */}
+          <div className="flex items-center justify-center mb-3 sm:mb-4 gap-2 text-sm sm:text-base">
+            <span>چت‌بات</span>
+            <ChatbotSelector />
+          </div>
+
+          <div className="billing-toggle-wrapper  flex-row gap-2 sm:gap-0">
+            <button
+              type="button"
+              className={`billing-toggle-option ${
+                billingPeriod === "monthly" ? "active" : ""
+              } 
+            py-2 sm:py-3 text-sm sm:text-base`}
+              onClick={() => setBillingPeriod("monthly")}
+              title="نمایش قیمت ماهانه"
+            >
+              ماهانه
+            </button>
+            <button
+              type="button"
+              className={`billing-toggle-option ${
+                billingPeriod === "yearly" ? "active" : ""
+              } 
+            py-2 sm:py-3 text-sm sm:text-base flex items-center justify-center gap-1 sm:gap-2`}
+              onClick={() => setBillingPeriod("yearly")}
+              title="نمایش قیمت سالانه"
+            >
+              سالانه
+              <span className="billing-toggle-badge text-xs sm:text-sm px-1.5 sm:px-2">
+                {"20"}٪ تخفیف
+              </span>
+            </button>
+          </div>
+
+          {/* Plans Section */}
+          <section
+            className="stats-section mt-4 sm:mt-6"
+            aria-labelledby="plans-heading"
+          >
+            <div className="flex flex-col gap-3 sm:gap-4">
+              {plans.map((plan, index) => (
+                <div
+                  key={index}
+                  ref={(el) => {
+                    planRefs.current[plan.plan.toLowerCase()] = el;
+                  }}
+                >
+                  <PlanCardMenu
+                    key={index}
+                    name={getFaNameByCode(plan?.plan) || plan?.plan}
+                    description=""
+                    priceMonthly={Number(plan?.price_monthly_irr || 0)}
+                    priceYearly={Number(plan?.price_yearly_irr || 0)}
+                    period={billingPeriod}
+                    onPeriodChange={(p) => setBillingPeriod(p)}
+                    icon={getPlanIcon(plan.plan)}
+                    features={mapFeatures(plan)}
+                    onSelect={() => {
+                      handlePlanPurchase(plan.plan);
+                    }}
+                    buttonText="خرید پلن"
+                    buttonVariant="secondary"
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </aside>
+    </>
+  );
 }

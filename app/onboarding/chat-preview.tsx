@@ -126,15 +126,14 @@ export function ChatPreview({
     await callChatbotAPIWithSSE(inputText);
 
     setIsTyping(false);
+    setTimeout(() => {
+      scrollToBottom();
+    }, 50);
   };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   async function callChatbotAPIWithSSE(message: string) {
     const apiUrl = `${API_BASE_URL}/public/${botConfig.uuid}/chat`;

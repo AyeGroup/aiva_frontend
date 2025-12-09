@@ -1,5 +1,7 @@
 import PageLoader from "@/components/pageLoader";
+import CrawlLevel2 from "@/app/dashboard/CrawlLevel2";
 import LockFeature from "../LockFeature";
+import RadioGroup from "@/components/RadioGroup";
 import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
@@ -12,7 +14,7 @@ import { convertToPersian } from "@/utils/common";
 import { Info, Refresh, Tick } from "@/public/icons/AppIcons";
 import { BotConfig, KnowledgeItem } from "@/types/common";
 import { useEffect, useRef, useState } from "react";
-import { useFeatureAccess, useUploadLimits } from "@/providers/PricingContext";
+import { useFeatureAccess } from "@/providers/PricingContext";
 import {
   FileText,
   Link,
@@ -26,8 +28,6 @@ import {
   Edit2,
   FileStack,
 } from "lucide-react";
-import RadioGroup from "@/components/RadioGroup";
-import CrawlLevel2 from "@/app/dashboard/CrawlLevel2";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -54,8 +54,8 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   );
   const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
   const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
-  const fileCount = useUploadLimits();
-  // console.log("can_website_crawling", can_website_crawling);
+  // const fileCount = useUploadLimits();
+
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
 
@@ -111,7 +111,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     const file = event.target.files?.[0];
 
     if (file) {
-      const maxSize = 50 * 1024 * 1024; // 5MB
+      const maxSize = 50 * 1024 * 1024;
       if (file.size > maxSize) {
         setSelectedFile(null);
         console.error("حجم فایل نباید بیشتر از ۵۰ مگابایت باشد  ");
@@ -152,6 +152,16 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       return false;
     }
   }
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const handleCloseCrawl2 = async (success?: boolean) => {
+    await loadQa(botConfig.uuid);
+    setCrawlType(1);
+    setShowCrawl2Modal(false);
+    setSelectedChatbot(null);
+    console.log("success", success);
+    if (success) listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const saveItem = async () => {
     setIsLoading(true);
@@ -494,7 +504,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                   key={type.id}
                   className="p-6 rounded-lg cursor-pointer border-2 border-brand-primary/30 bg-bg-surface hover:border-brand-primary hover:shadow-lg group"
                   onClick={() => {
-                    // console.log("fired");
                     startAdding(type.id);
                   }}
                 >
@@ -545,14 +554,14 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
             {selectedType === "file" && !can_upload_docs && (
               <LockFeature feature="upload_docs" />
             )}
-            {selectedType === "file" && can_upload_docs && (
+            {/* {selectedType === "file" && can_upload_docs && (
               // <FileStack size={10} />
               <div className="flex items-start -mt-3 gap-1 border h-fit border-gray-100 py-1 px-2 rounded-xl bg-gray-50 shadow">
                 <FileStack className="text-secondary size-4 " strokeWidth={3} />
 
                 <div className="text-gray-500 text-xs">{`حداکثر ${fileCount} فایل می‌توانید آپلود کنید`}</div>
               </div>
-            )}
+            )} */}
 
             <Button
               variant="tertiary"
@@ -839,7 +848,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3" ref={listRef}>
             {botConfig.knowledge.map((item, index) => {
               const IconComponent = getIcon(item.type);
 
@@ -849,32 +858,18 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                   className="p-2 lg:p-4 border-2 border-brand-primary/10 bg-bg-surface shadow-sm"
                 >
                   <div className="flex flex-col lg:flex-row items-start justify-between">
-                    <div className="flex items-start gap-2 lg:gap-3 flex-1">
+                    <div className="flex items-start gap-2 lg:gap-3 flex-1 ">
                       <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center shrink-0 border border-brand-primary/20">
                         <IconComponent className="w-4 h-4 text-brand-primary" />
                       </div>
 
-                      <div className="flex-1 min-w-0 text-right">
-                        <div className="flex items-center justify-between gap-3 mb-2">
-                          <h4 className="text-grey-900 text-base flex-1">
-                            {item.title}
+                      <div className="flex-1 min-w-0 text-right  ">
+                        <div className="flex items-center justify-between gap-3 mb-2  line-clamp-1">
+                          <h4 className="text-grey-900 text-base block w-full ">
+                            {decodeURIComponent(item.title)}
                           </h4>
                         </div>
 
-                        {item.content && (
-                          <p className="text-grey-500 text-body-small truncate">
-                            {item.content.length > 100
-                              ? `${item.content.substring(0, 100)}...`
-                              : item.content}
-                          </p>
-                        )}
-                        {item.url && (
-                          <p className="text-brand-primary text-body-small truncate">
-                            {item.url}
-                          </p>
-                        )}
-
-                        {/* Created date */}
                         <p className="hidden lg:block text-grey-400 text-xs  lg:mt-1">
                           {new Date(item?.created_at ?? "").toLocaleDateString(
                             "fa-IR"
@@ -975,27 +970,12 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           </li>
         </ul>
       </Card>
-      {/* <CrawlLevel2
-        // chatbot={selectedChatbot?.uuid ||""}
-        chatbot={selectedChatbot ? { uuid: selectedChatbot.uuid } : undefined}
-        show={showCrawl2Modal}
-        onClose={() => {
-          setShowCrawl2Modal(false);
-          setSelectedChatbot(null);
-        }}
-      /> */}
 
       <CrawlLevel2
         chatbot={selectedChatbot ? { uuid: selectedChatbot.uuid } : undefined}
         show={showCrawl2Modal}
-        onClose={() => {
-          setShowCrawl2Modal(false);
-          setSelectedChatbot(null);
-          setCrawlType(1);
-          // هر کار اضافه‌ای که می‌خوای انجام بدی اینجا
-        }}
+        onClose={handleCloseCrawl2}
       />
-
     </div>
   );
 }
