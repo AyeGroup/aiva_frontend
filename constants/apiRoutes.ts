@@ -68,9 +68,9 @@ export const API_ROUTES = {
   },
 
   TICKETS: {
-    CREATE: `${API_BASE_URL}/tickets`,
+    CREATE: `${API_BASE_URL}/tickets/`,
     GET: (ticket_id: string) => `${API_BASE_URL}/tickets/${ticket_id}`,
-    LIST: `${API_BASE_URL}/tickets`,
+    LIST: `${API_BASE_URL}/tickets/`,
     ADD_MESSAGE: (ticket_id: string) =>
       `${API_BASE_URL}/tickets/${ticket_id}/messages`,
   },
