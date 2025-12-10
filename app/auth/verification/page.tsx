@@ -1,9 +1,9 @@
 "use client";
+import Image from "next/image";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { API_ROUTES } from "@/constants/apiRoutes";
-// import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { cleanPhoneNumber, persianToEnglish } from "@/utils/number-utils";
@@ -12,7 +12,6 @@ import {
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
-import Image from "next/image";
 
 export default function Verification() {
   const router = useRouter();
@@ -73,8 +72,7 @@ export default function Verification() {
       return;
     }
 
-    // Simple validation - just check if we have some digits
-    if (cleanedPhone.length < 10) {
+    if (cleanedPhone.length < 11) {
       toast.error("لطفاً شماره تلفن معتبر وارد کنید");
       return;
     }
@@ -95,7 +93,6 @@ export default function Verification() {
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData("text");
-    // Convert Persian to English first, then filter digits
     const englishText = persianToEnglish(pastedText);
     const pastedData = englishText.replace(/\D/g, "").slice(0, 5);
     const newOtp = pastedData.split("").concat(Array(5).fill("")).slice(0, 5);
@@ -133,14 +130,12 @@ export default function Verification() {
     setIsSubmit(true);
     setError("");
 
-    // await new Promise((resolve) => setTimeout(resolve, 1500));
     try {
       const res = await axiosInstance.post(API_ROUTES.AUTH.VERIFY_PHONE, {
         phone: phoneNumber,
         code: codeToVerify,
       });
       if (res.status === 200) {
-        // if (codeToVerify === "123456") {
         router.push("/dashboard");
       } else {
         setError("کد وارد شده صحیح نیست. لطفاً مجدداً تلاش کنید.");
@@ -375,14 +370,9 @@ export default function Verification() {
         </div>
 
         {/* Main Content */}
-        <div
-          className="relative z-10 flex items-center justify-center p-2 pt-4 pb-16"
-          style={{ minHeight: "calc(100vh - 120px)" }}
-        >
+        <div className="relative z-10 flex items-center justify-center p-2 pt-4 pb-16">
           <div className="w-full max-w-md">
-            {/* OTP Card */}
             <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
-              {/* Title */}
               <div className="text-center mb-8">
                 <h1 className="text-grey-900 mb-3">تأیید کد امنیتی</h1>
                 <p className="text-grey-600 leading-relaxed">
@@ -403,8 +393,9 @@ export default function Verification() {
                   {otp.map((digit, index) => (
                     <input
                       key={index}
-                      // ref={(el) => (inputRefs.current[index] = el)}
-                      //elham
+                      ref={(el: HTMLInputElement | null) => {
+                        inputRefs.current[index] = el;
+                      }}
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
@@ -436,10 +427,7 @@ export default function Verification() {
                 )}
               </div>
 
-              {/* Verify Button */}
               <button
-                // ="primary"
-                // size="lg"
                 onClick={() => handleVerify()}
                 disabled={isSubmit || otp.some((digit) => digit === "")}
                 className="w-full py-4 px-4 flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -468,12 +456,10 @@ export default function Verification() {
               </div>
             </div>
 
-            {/* Back to Login */}
             <div className="mt-6 flex justify-end">
               <button
-                // onClick={() => onNavigate("login")}
                 onClick={() => router.push("/auth/login")}
-                className="text-grey-600 hover:text-grey-800 text-sm font-medium transition-colors flex items-center gap-2"
+                className="text-grey-600 cursor-pointer hover:text-grey-800 text-sm font-medium transition-colors flex items-center gap-2"
               >
                 بازگشت
                 <ArrowLeft className="w-5 h-5" />

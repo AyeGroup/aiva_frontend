@@ -354,9 +354,9 @@ export default function Checkout() {
               <button
                 onClick={handleProceedToPayment}
                 disabled={isLoading || !selectedPlan}
-                className="w-full py-4 rounded-2xl bg-linear-to-br from-[#65BCB6] to-[#5AA8A2] text-white hover:from-[#5AA8A2] hover:to-[#4E9690] transition-all duration-300 shadow-lg"
+                className="w-full py-4 rounded-2xl cursor-pointer bg-linear-to-br from-[#65BCB6] to-[#5AA8A2] text-white hover:from-[#5AA8A2] hover:to-[#4E9690] transition-all duration-300 shadow-lg"
               >
-                {isLoading ? "در حال پردازش..." : "پرداخت امن"}
+                {isLoading ? "در حال پردازش..." : "پرداخت "}
               </button>
             </Card>
           </div>

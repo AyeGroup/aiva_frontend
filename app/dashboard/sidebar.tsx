@@ -174,7 +174,7 @@ export function Sidebar({
           </div>
         </div>
         <div className="text-xs text-gray-500 mt-1 mr-12">
-          نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
+          نسخه {process.env.APP_VERSION}
         </div>
       </div>
       {/* Modals */}

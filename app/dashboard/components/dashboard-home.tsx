@@ -154,32 +154,55 @@ export default function Dashboard() {
   }, [bots, botLoading]);
 
   //statistic cover
-  useEffect(() => {
-    if (!user) return;
-    if (!currentBot?.uuid) return;
+  
 
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axiosInstance.get(
-          API_ROUTES.STATISTIC.GET_COVER(currentBot?.uuid)
-        );
-        if (response.status == 200 && response.data) {
-          setStatisticCover(response.data.data);
+useEffect(() => {
+  if (!user || !currentBot?.uuid) return;
+
+  const fetchAllData = async () => {
+    setIsLoading(true);
+
+    try {
+      // Fetch all statistics in parallel
+      const [
+        userTrendRes,
+        sessionTrendRes,
+        activeUsersRes,
+        recentSessionRes,
+        faqListRes,
+        coverRes,
+      ] = await Promise.allSettled([
+        fetchUserTrend(timeRange),
+        fetchSessionTrend(timeRange),
+        fetchActiveUsers(),
+        fetchRecentSession(),
+        fetchFaqList(),
+        fetchStatisticCover(), // new wrapper for your cover API
+      ]);
+
+      const results = [
+        userTrendRes,
+        sessionTrendRes,
+        activeUsersRes,
+        recentSessionRes,
+        faqListRes,
+        coverRes,
+      ];
+
+      results.forEach((r, i) => {
+        if (r.status === "rejected") {
+          console.error(`Error in promise ${i}`, r.reason);
         }
-      } catch (error) {
-        console.error("Error fetching bots:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [user, currentBot, botLoading]);
+      });
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  useEffect(() => {
-    if (!user  ) return;
-    fetchAllStatistics();
-  }, [user?.id,   botLoading]);
+  fetchAllData();
+}, [currentBot?.uuid, user, timeRange]);
 
   const fetchAllStatistics = async () => {
     setIsLoading(true);
@@ -205,7 +228,17 @@ export default function Dashboard() {
     }
   };
 
+const fetchStatisticCover = async () => {
+  const response = await axiosInstance.get(
+    API_ROUTES.STATISTIC.GET_COVER(currentBot!.uuid)
+  );
+  if (response.status === 200) {
+    setStatisticCover(response.data.data);
+  }
+};
+
   const fetchUserTrend = async (days: string) => {
+      console.log("fetchUserTrend ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -224,6 +257,7 @@ export default function Dashboard() {
   };
 
   const fetchSessionTrend = async (days: string) => {
+      console.log("fetchSessionTrend ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -242,6 +276,7 @@ export default function Dashboard() {
   };
 
   const fetchActiveUsers = async () => {
+      console.log("fetchActiveUsers ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -254,6 +289,7 @@ export default function Dashboard() {
   };
 
   const fetchFaqList = async () => {
+      console.log("fetchFaqList ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -266,6 +302,7 @@ export default function Dashboard() {
   };
 
   const fetchRecentSession = async () => {
+      console.log("fetchRecentSession ");
     setRecentSession([]);
     if (!currentBot) return;
     try {
@@ -279,6 +316,7 @@ export default function Dashboard() {
   };
 
   const handleTimeRangeChange = async (value: string) => {
+      console.log("handleTimeRangeChange ");
     setIsChartLoading(true);
     await fetchSessionTrend(value);
     await fetchUserTrend(value);

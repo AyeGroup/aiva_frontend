@@ -64,7 +64,6 @@ export function CreditSummaryCard({
                 {React.cloneElement(icon as React.ReactElement, {
                   // className: 'w-5 h-5',
                   // style: { color }
-                  //elham
                 })}
               </div>
               <h3 className="text-grey-700 text-sm">{title}</h3>

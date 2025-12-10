@@ -56,10 +56,14 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     botConfig.uuid,
     "website_crawling"
   );
+  const can_website_crawling_level2 = useFeatureAccess(
+    botConfig.uuid,
+    "website_crawling_level_2"
+  );
   const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
   const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
- 
-console.log("can_upload_docs", can_upload_docs);
+
+  console.log("can_upload_docs", can_upload_docs);
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
 
@@ -115,10 +119,10 @@ console.log("can_upload_docs", can_upload_docs);
     const file = event.target.files?.[0];
 
     if (file) {
-      const maxSize = 50 * 1024 * 1024;
+      const maxSize = 1 * 1024 * 1024;
       if (file.size > maxSize) {
         setSelectedFile(null);
-        console.error("حجم فایل نباید بیشتر از ۵۰ مگابایت باشد  ");
+        toast.error("حجم فایل نباید بیشتر از ۵۰ مگابایت باشد  ");
         return;
       }
       const allowedTypes = [".pdf", ".doc", ".docx", ".txt"];
@@ -277,9 +281,9 @@ console.log("can_upload_docs", can_upload_docs);
         toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
       }
     } finally {
-     setUploading(false);
-     setUploadProgress(0);
-     setIsLoading(false);
+      setUploading(false);
+      setUploadProgress(0);
+      setIsLoading(false);
     }
   };
 
@@ -556,31 +560,21 @@ console.log("can_upload_docs", can_upload_docs);
       {(isAdding || isEditing) && (
         <Card className="p-6 border-2 border-brand-primary/30 bg-bg-soft-mint shadow-lg">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-grey-900">
-              {isEditing
-                ? "ویرایش "
-                : onboardingData.knowledgeTypes.find(
-                    (t) => t.id === selectedType
-                  )?.title}
-            </h3>
-            {selectedType === "website" && !can_website_crawling && (
-              <LockFeature feature="website_crawling" />
-            )}
-            {selectedType === "qa_pair" && !can_qa_as_file && (
-              <LockFeature feature="qa_as_file" />
-            )}
-
-            {/* {selectedType === "file" && !can_upload_docs && (
-              <LockFeature feature="upload_docs" />
-            )} */}
-            {/* {selectedType === "file" && can_upload_docs && (
-              // <FileStack size={10} />
-              <div className="flex items-start -mt-3 gap-1 border h-fit border-gray-100 py-1 px-2 rounded-xl bg-gray-50 shadow">
-                <FileStack className="text-secondary size-4 " strokeWidth={3} />
-
-                <div className="text-gray-500 text-xs">{`حداکثر ${fileCount} فایل می‌توانید آپلود کنید`}</div>
-              </div>
-            )} */}
+            <div className="flex justify-start">
+              <h3 className="text-grey-900 mr-2">
+                {isEditing
+                  ? "ویرایش "
+                  : onboardingData.knowledgeTypes.find(
+                      (t) => t.id === selectedType
+                    )?.title}
+              </h3>
+              {selectedType === "website" && !can_website_crawling && (
+                <LockFeature feature="website_crawling" />
+              )}
+              {selectedType === "qa_pair" && !can_qa_as_file && (
+                <LockFeature feature="qa_as_file" />
+              )}
+            </div>
 
             <Button
               variant="tertiary"
@@ -590,28 +584,103 @@ console.log("can_upload_docs", can_upload_docs);
               انصراف
             </Button>
           </div>
-          {/* elham */}
-
-          {selectedType === "website" &&
-            isAdding &&
-             can_website_crawling && (
-              <div className="mb-4">
-                <RadioGroup
+          {/* <RadioGroup
+                name="crawlType"
+                value={crawlType}
+                onChange={(v) => {
+                  handleCrawl(Number(v));
+                }}
+                options={[
+                  { label: "خزش وب‌سایت سطح 1", value: 1 },
+                  { label: "خزش وب‌سایت سطح 2", value: 2 },
+                ]}
+              /> */}
+          {selectedType === "website" && isAdding && can_website_crawling && (
+            <div className="mb-4 flex-col space-y-3">
+              {/* Radio #1 */}
+              <label
+                className={`flex items-center gap-2 select-none 
+      ${
+        !can_website_crawling
+          ? "cursor-not-allowed opacity-60"
+          : "cursor-pointer"
+      }
+    `}
+              >
+                <input
+                  type="radio"
                   name="crawlType"
-                  value={crawlType}
-                  onChange={(v) => {
-                    //
-                    handleCrawl(Number(v));
-                    // console.log("Selected:", v);
-                    // setCrawlType(v);
-                  }}
-                  options={[
-                    { label: "خزش وب‌سایت سطح 1", value: 1 },
-                    { label: "خزش وب‌سایت سطح 2", value: 2 },
-                  ]}
+                  value={1}
+                  disabled={!can_website_crawling}
+                  checked={crawlType === 1}
+                  onChange={(e) => handleCrawl(Number(e.target.value))}
+                  className="peer absolute opacity-0 w-0 h-0"
                 />
+
+                <span
+                  className={`w-4 h-4 rounded-full border transition
+        border-gray-400
+        peer-checked:border-primary peer-checked:bg-primary
+        peer-disabled:border-gray-300 peer-disabled:bg-gray-200
+      `}
+                ></span>
+
+                <span
+                  className={`text-gray-700 transition
+        peer-checked:text-primary
+        peer-disabled:text-gray-400
+      `}
+                >
+                  خزش وب‌سایت سطح 1
+                </span>
+              </label>
+
+              {/* Radio #2 */}
+              <div className="flex items-center gap-2">
+                <label
+                  className={`flex items-center gap-2 select-none 
+        ${
+          !can_website_crawling_level2
+            ? "cursor-not-allowed opacity-60"
+            : "cursor-pointer"
+        }
+      `}
+                >
+                  <input
+                    type="radio"
+                    name="crawlType"
+                    value={2}
+                    disabled={!can_website_crawling_level2}
+                    checked={crawlType === 2}
+                    onChange={(e) => handleCrawl(Number(e.target.value))}
+                    className="peer absolute opacity-0 w-0 h-0"
+                  />
+
+                  <span
+                    className={`w-4 h-4 rounded-full border transition
+          border-gray-400
+          peer-checked:border-primary peer-checked:bg-primary
+          peer-disabled:border-gray-300 peer-disabled:bg-gray-200
+        `}
+                  ></span>
+
+                  <span
+                    className={`text-gray-700 transition
+          peer-checked:text-primary
+          peer-disabled:text-gray-400
+        `}
+                  >
+                    خزش وب‌سایت سطح 2
+                  </span>
+                </label>
+
+                {/* Lock stays normal, NOT disabled */}
+                {selectedType === "website" && !can_website_crawling_level2 && (
+                  <LockFeature feature="website_crawling_level_2" />
+                )}
               </div>
-            )}
+            </div>
+          )}
           <div className="space-y-4">
             <div
               className={`${
@@ -924,7 +993,6 @@ console.log("can_upload_docs", can_upload_docs);
                       <div className="flex items-center gap-1 shrink-0 mr-2">
                         <button
                           onClick={() => startEditing(item)}
-                          //elham
                           title="ویرایش محتوا"
                           className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
                         >

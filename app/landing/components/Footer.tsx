@@ -36,6 +36,10 @@ const Container = () => {
 };
 
 export default function Footer() {
+  const persianYear = new Intl.DateTimeFormat("fa-IR", {
+    year: "numeric",
+  }).format(new Date());
+
   return (
     <footer className="relative w-full px-10 bg-gray-900">
       {/* Background Pattern */}
@@ -117,7 +121,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-4 sm:mt-6 md:mt-8 w-full p-4 border-t border-gray-800 flex items-center justify-center">
           <div className="flex  items-center justify-center text-gray-500 text-xs sm:text-sm gap-1">
-            <span>© ۲۰۲۵ تمام حقوق سایت متعلق به</span>
+            <span>© {persianYear} تمام حقوق سایت متعلق به</span>
             <Link
               href="https://ayehgroup.com/"
               className="text-gray-400 hover:text-gray-100 transition duration-200 font-semibold mx-0.5"

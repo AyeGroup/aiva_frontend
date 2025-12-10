@@ -45,6 +45,10 @@ function Login() {
       setWarning("");
     }
   };
+ 
+   const persianYear = new Intl.DateTimeFormat("fa-IR", {
+     year: "numeric",
+   }).format(new Date());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +94,7 @@ function Login() {
               className="flex items-center gap-3 hover:opacity-90 transition"
             >
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="آیوا"
                 width={80}
                 height={80}
@@ -194,21 +198,13 @@ function Login() {
             </div>
 
             {/* Form */}
-            {/* <form className="space-y-3" onSubmit={handleSubmit}> */}
-            {/* Phone Field with prefix */}
             <form className="space-y-3" onSubmit={handleSubmit}>
               <div>
                 <div className="relative">
-                  {/* {!phone && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-grey-400 pointer-events-none z-10">
-                      <span className="text-grey-400">موبایل / ایمیل </span>
-                    </div>
-                  )} */}
                   <Input
                     id="phone"
                     type="text"
                     value={phone}
-                    // onChange={(e) => setPhone(e.target.value)}
                     onChange={(e) => {
                       const inputValue = e.target.value;
                       const normalizedValue =
@@ -231,10 +227,8 @@ function Login() {
                     value={password}
                     placeholder="رمز عبور"
                     onChange={handlePasswordChange}
-                    // onChange={(e) => setPassword(e.target.value)}
                     className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 bg-white! text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none text-center! !placeholder:text-center "
                   />
-                  {/* Password toggle button */}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -257,9 +251,12 @@ function Login() {
                 <div className="shrink-0 mt-0.5"></div>
                 <p className="text-grey-600 text-right text-sm">
                   استفاده از آیوا به معنی پذیرش{" "}
-                  <button className="hover:opacity-80 text-base active:opacity-60 text-primary">
+                  <Link
+                    className="hover:opacity-80 text-sm active:opacity-60 text-primary"
+                    href="/policy"
+                  >
                     قوانین و مقررات
-                  </button>
+                  </Link>{" "}
                   این سرویس است.
                 </p>
               </div>
@@ -267,9 +264,8 @@ function Login() {
               {/* Submit Button */}
               <button
                 type="submit"
-                // onClick={handleSubmit}
                 disabled={isLoading}
-                className="w-full py-4 px-4 flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 px-4 cursor-pointer flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>
@@ -288,7 +284,7 @@ function Login() {
                   <button
                     type="button"
                     onClick={() => router.push("/auth/register")}
-                    className="hover:opacity-80 border-0 text-base text-primary p-0 cursor-pointer active:opacity-60"
+                    className="hover:opacity-80 border-0 text-base text-primary p-0 cursor-pointer active:opacity-60 mr-2"
                   >
                     ثبت نام کنید
                   </button>
@@ -301,7 +297,7 @@ function Login() {
           <div className="flex justify-end mt-6 mr-0 mb-0 ml-0">
             <button
               onClick={() => router.push("/")}
-              className="text-grey-600 hover:text-grey-800 text-sm font-medium transition-colors flex items-center gap-2 self-center text-center"
+              className="text-grey-600 hover:text-grey-800 text-sm font-medium transition-colors flex items-center gap-2 self-center cursor-pointer text-center"
             >
               بازگشت به صفحه اصلی
               <ArrowLeft className="w-4 h-4" />
@@ -316,10 +312,7 @@ function Login() {
           className="text-grey-500"
           style={{ fontSize: "var(--text-caption)" }}
         >
-          کپی رایت © آیوا ۱۴۰۳ |{" "}
-          <button className="hover:text-grey-700 transition-colors border-0">
-            سیاست حفظ حریم خصوصی
-          </button>
+          © {persianYear} تمام حقوق سایت متعلق به گروه آیه است.
         </p>
       </div>
     </div>

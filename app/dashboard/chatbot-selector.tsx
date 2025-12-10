@@ -15,6 +15,7 @@ export function ChatbotSelector() {
   useEffect(() => {
     if (currentBot) {
       setSelectedChatbot(currentBot);
+      console.log("currentBot: ",currentBot.name);
     }
   }, [currentBot]);
 

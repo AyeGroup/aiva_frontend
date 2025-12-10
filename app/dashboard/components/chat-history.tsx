@@ -89,9 +89,9 @@ export function ChatHistory({ username }: ChatHistoryProps) {
 
               {/* Messages Area */}
               <div className="flex-1 p-6 space-y-4 overflow-y-auto bg-grey-50">
-                {history.map((message) => (
+                {history.map((message,index) => (
                   <div
-                    key={message.id}
+                    key={index}
                     className={`flex items-end gap-3 ${
                       message.role === "user" ? "justify-end" : "justify-start"
                     }`}

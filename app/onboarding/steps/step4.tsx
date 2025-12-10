@@ -6,7 +6,7 @@ import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { BotConfig, FAQ } from "@/types/common";
 import { useState, useEffect } from "react";
-import { HelpCircle, Trash2, Edit3, Save, X } from "lucide-react";
+import { HelpCircle, Trash2, Edit3, Save, X, Info } from "lucide-react";
 
 interface WizardStep4Props {
   botConfig: BotConfig;
@@ -146,14 +146,14 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   };
 
   return (
-    <div className="space-y-8 bg-bg-surface p-6 border-2 border-brand-primary/20 rounded-xl shadow-lg">
+    <div className="space-y-4 bg-bg-surface p-6 border-2 border-brand-primary/20 rounded-xl shadow-lg">
       {isloading && <PageLoader />}
       <div className="flex items-start gap-4">
         <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
           <HelpCircle className="w-8 h-8 text-primary" />
         </div>
         <div className="flex-1">
-          <h2 className="text-grey-900 mb-2 text-[24px] font-bold text-right">
+          <h2 className="text-grey-900 mb-2 text-xl font-bold text-right">
             سوالات متداول
           </h2>
           <p className="text-grey-600 text-right">
@@ -162,7 +162,10 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
           </p>
         </div>
       </div>
-
+      <div className="flex gap-1 items-center text-sm text-secondary mr-4">
+        <Info className="w-7 h-7 bg-secondary/10 p-1 rounded-full"/>
+        حداکثر ۵ سوال می توانید ثبت کنید
+      </div>
       {/* فرم افزودن سؤال */}
       <div className="bg-bg-soft-mint rounded-xl border-2 border-dashed border-brand-primary/30 p-6">
         <div className="space-y-4">

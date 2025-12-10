@@ -10,12 +10,14 @@ import {
   Phone,
   AlertTriangle,
 } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function PaymentFailed() {
   const router = useRouter();
 
   const handleTryAgain = () => {
-    router.push("/pay/gateway");
+    router.push("/pay/checkout");
   };
 
   const handleBackToCheckout = () => {
@@ -35,8 +37,25 @@ export default function PaymentFailed() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12 px-4 flex items-center justify-center">
-      <main className="max-w-2xl w-full" role="main">
+    <div className="min-h-screen bg-linear-to-br from-red-50 via-white to-red-50 py-0 px-4 flex flex-col items-center justify-center">
+      <div className="flex items-center justify-center lg:justify-start  w-full">
+        <Link href="/" className=" flex m-3 lg:m-0 ">
+          <Image
+            src="/logo.webp"
+            alt="لوگوی آیوا"
+            width={40}
+            height={40}
+            className="sm:w-12 sm:h-12 w-10 h-10"
+          />
+          <div className="text-right leading-tight">
+            <p className="text-base sm:text-lg text-gray-900 font-semibold">
+              آیوا
+            </p>
+            <p className="text-xs sm:text-sm text-gray-600">دستیار هوشمند</p>
+          </div>
+        </Link>
+      </div>
+      <main className="max-w-2xl w-full lg:-mt-4" role="main">
         <Card className="p-8 text-center relative overflow-hidden">
           {/* Background Decoration */}
           <div className="absolute top-0 left-0 w-32 h-32 bg-red-100 rounded-full blur-3xl opacity-50 -translate-x-1/2 -translate-y-1/2" />
@@ -44,7 +63,7 @@ export default function PaymentFailed() {
 
           {/* Failed Icon */}
           <div className="relative mb-6">
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white shadow-2xl animate-shake">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white shadow-2xl animate-shake">
               <XCircle className="w-12 h-12" />
             </div>
           </div>
@@ -55,7 +74,7 @@ export default function PaymentFailed() {
           </p>
 
           {/* Error Message */}
-          <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 text-right">
+          {/* <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 text-right">
             <div className="flex items-start gap-3 mb-4">
               <AlertTriangle className="w-6 h-6 text-red-700 shrink-0 mt-1" />
               <div>
@@ -70,12 +89,13 @@ export default function PaymentFailed() {
                 </ul>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Action Buttons */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <Button
               variant="primary"
+              className="cursor-pointer"
               size="lg"
               onClick={handleTryAgain}
               title="تلاش مجدد"
@@ -85,8 +105,19 @@ export default function PaymentFailed() {
                 <span>تلاش مجدد</span>
               </div>
             </Button>
-
             <Button
+              variant="secondary"
+              className="cursor-pointer"
+              size="lg"
+              onClick={handleBackToBilling}
+              title="ویرایش فاکتور"
+            >
+              <div className="flex items-center justify-center gap-2">
+                <ArrowRight className="w-5 h-5" />
+                <span> بازگشت به صفحه مالی</span>
+              </div>
+            </Button>
+            {/* <Button
               variant="secondary"
               size="lg"
               onClick={handleBackToCheckout}
@@ -96,16 +127,16 @@ export default function PaymentFailed() {
                 <ArrowRight className="w-5 h-5" />
                 <span>ویرایش فاکتور</span>
               </div>
-            </Button>
+            </Button> */}
           </div>
 
-          <button
+          {/* <button
             onClick={handleBackToBilling}
             className="text-grey-600 hover:text-grey-900 transition-colors text-sm"
             title="بازگشت به صفحه مالی"
           >
             بازگشت به صفحه مالی
-          </button>
+          </button> */}
 
           {/* Help Section */}
           <div className="mt-8 pt-6 border-t border-grey-200">
@@ -127,7 +158,6 @@ export default function PaymentFailed() {
           </div>
         </Card>
       </main>
-
       <style>{`
         @keyframes shake {
           0%, 100% {

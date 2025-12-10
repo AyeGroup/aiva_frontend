@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/providers/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -15,7 +16,7 @@ const menuItems = [
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { user, loading } = useAuth();
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
@@ -59,27 +60,47 @@ export default function Header() {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href="/dashboard"
-            className="text-[#65bcb6] text-sm sm:text-base whitespace-nowrap"
-          >
-            ورود
-          </a>
-          <a
-            href="/onboarding"
-            className="flex items-center gap-2 bg-[#65bcb6] text-white px-3 sm:px-4 py-2 rounded-sm shadow hover:bg-[#58aaa5] transition text-sm sm:text-base whitespace-nowrap"
-          >
-            شروع رایگان
-            <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-              <path
-                d="M3.75 9H14.25M9 3.75L14.25 9L9 14.25"
-                stroke="white"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.5"
-              />
-            </svg>
-          </a>
+          {!loading && user ? (
+            <a
+              href="/dashboard"
+              className="flex items-center gap-2 bg-[#65bcb6] text-white px-3 sm:px-4 py-2 rounded-sm shadow hover:bg-[#58aaa5] transition text-sm sm:text-base whitespace-nowrap"
+            >
+              حساب کاربری
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                <path
+                  d="M3.75 9H14.25M9 3.75L14.25 9L9 14.25"
+                  stroke="white"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+              </svg>
+            </a>
+          ) : (
+            <>
+              <a
+                href="/dashboard"
+                className="text-[#65bcb6] text-sm sm:text-base whitespace-nowrap"
+              >
+                ورود
+              </a>
+              <a
+                href="/onboarding"
+                className="flex items-center gap-2 bg-[#65bcb6] text-white px-3 sm:px-4 py-2 rounded-sm shadow hover:bg-[#58aaa5] transition text-sm sm:text-base whitespace-nowrap"
+              >
+                شروع رایگان
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <path
+                    d="M3.75 9H14.25M9 3.75L14.25 9L9 14.25"
+                    stroke="white"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </a>
+            </>
+          )}
         </div>
 
         {/* Mobile Auth + Hamburger */}

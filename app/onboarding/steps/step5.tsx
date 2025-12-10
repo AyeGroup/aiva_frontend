@@ -14,6 +14,8 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
 import { Copy, Globe, CheckCircle2, BarChart3, HelpCircle } from "lucide-react";
+import LockFeature from "../LockFeature";
+import { useFeatureAccess } from "@/providers/PricingContext";
 
 interface WizardStep5Props {
   botConfig: BotConfig;
@@ -79,8 +81,10 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
         formData
       );
       console.log("2", res);
-      if (res.data.success) toast.success("اطلاعات ثبت شد");
-      else toast.error("خطا در ثبت اطلاعات");
+      if (res.data.success) {
+        toast.success("اطلاعات ثبت شد");
+        setIsBaleEditing(true);
+      } else toast.error("خطا در ثبت اطلاعات");
     } catch (error: any) {
       console.error(error);
       const errorMessage =
@@ -94,6 +98,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
     }
   };
 
+  const bale_integration = useFeatureAccess(botConfig.uuid, "bale_integration");
   return (
     <div className="bg-white w-full rounded-2xl border-2 border-brand-primary/20 shadow overflow-hidden">
       <div className="p-7 space-y-8 cursor-default">
@@ -176,13 +181,19 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
 
         {/* Bale */}
         <div className="border-2 border-[#d1d5db] p-6 rounded-2xl">
-          <div className="flex gap-2 m-2">
+          <div className="flex gap-2 m-2 items-center">
             <Image src="/icons/bale.svg" alt="bale" width={16} height={16} />
             بله
+            {!bale_integration && <LockFeature feature="bale_integration" />}
           </div>
-          <div className="flex flex-col gap-3">
+
+          <div
+            className={`flex flex-col gap-3 transition ${
+              !bale_integration ? "opacity-50 pointer-events-none" : ""
+            }`}
+          >
             {botConfig.bale_enabled && !isBaleEditing ? (
-              <div className="flex  items-center justify-between p-4 border rounded-2xl bg-gray-100">
+              <div className="flex items-center justify-between p-4 border rounded-2xl bg-gray-100">
                 <div className="text-gray-700 text-sm">
                   توکن ربات بله ثبت شده است
                 </div>
@@ -195,7 +206,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col lg:flex-row justify-start items-center gap-3">
+              <div className="flex flex-col lg:flex-row justify-between items-center gap-3">
                 <div className="flex  items-center text-gray-900">
                   توکن ربات بله را وارد کنید
                 </div>
@@ -204,27 +215,56 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   type="text"
                   value={baleToken || ""}
                   onChange={(e) => setBaleToken(e.target.value)}
-                  className="w-full text-sm rounded-2xl p-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:bg-white focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ltr border-grey-300 focus:border-brand-primary text-center"
+                  className="w-full text-left text-sm rounded-2xl p-4 border bg-white text-grey-900"
                   maxLength={200}
                 />
               </div>
             )}
-          </div>
+            {isBaleEditing && (
+              <div className="flex items-center gap-4 justify-end mt-4">
+                <Button
+                  variant="primary"
+                  onClick={handleBaleLink}
+                  icon="arrow-right"
+                  iconPosition="right"
+                  disabled={!bale_integration}
+                  className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSaving ? "در حال ثبت" : "ثبت"}
+                </Button>
 
-          {isBaleEditing && (
-            <div className="text-left mt-4">
-              <Button
-                variant="primary"
-                onClick={handleBaleLink}
-                icon="arrow-right"
-                iconPosition="right"
-                className="px-6 disabled:opacity-50 disabled:cursor-not-allowed  cursor-pointer"
-              >
-                {isSaving ? "در حال ثبت" : "ثبت"}
-              </Button>
-            </div>
-          )}
+                {/* دکمه کنسل */}
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  onClick={() => {
+                    setIsBaleEditing(false);
+                    setBaleToken(botConfig.bale_token || "");
+                  }}
+                >
+                  انصراف
+                </Button>
+
+               </div>
+            )}
+
+            {/* {isBaleEditing && (
+              <div className="text-left mt-4">
+                <Button
+                  variant="primary"
+                  onClick={handleBaleLink}
+                  icon="arrow-right"
+                  iconPosition="right"
+                  disabled={!bale_integration}
+                  className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSaving ? "در حال ثبت" : "ثبت"}
+                </Button>
+              </div>
+            )} */}
+          </div>
         </div>
+
         {/* کد نصب */}
         <div className="border-2 border-[#d1d5db] p-6 rounded-2xl">
           <div className=" mb-8">کد نصب</div>

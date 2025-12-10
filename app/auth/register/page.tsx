@@ -49,6 +49,9 @@ export default function Register() {
   const validatePassword = (password: string): boolean => {
     return password.length >= 5;
   };
+  const persianYear = new Intl.DateTimeFormat("fa-IR", {
+    year: "numeric",
+  }).format(new Date());
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -275,7 +278,7 @@ export default function Register() {
       case "signup":
         return (
           <form onSubmit={handleRegisterSubmit} className="space-y-6">
-            <div className="text-center mb-6">
+            <div className="text-center my-6">
               <h1
                 className="text-grey-900 mb-3"
                 style={{
@@ -695,7 +698,7 @@ export default function Register() {
           {/* register Card */}
           <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
             {/* Step indicator */}
-            {currentStep !== "success" && (
+            {/* {currentStep !== "success" && (
               <div className="flex justify-center gap-2 mb-6">
                 <div
                   className={`w-2 h-2 rounded-full ${
@@ -710,7 +713,7 @@ export default function Register() {
                   }`}
                 ></div>
               </div>
-            )}
+            )} */}
 
             {/* Step Content */}
             {renderStepContent()}
@@ -725,13 +728,7 @@ export default function Register() {
             className="text-grey-500"
             style={{ fontSize: "var(--text-caption)" }}
           >
-            کپی رایت © آیوا ۱۴۰۳ |{" "}
-            <button
-              className="hover:text-grey-700 transition-colors"
-              style={{ background: "none", border: "none" }}
-            >
-              سیاست حفظ حریم خصوصی
-            </button>
+            © {persianYear} تمام حقوق سایت متعلق به گروه آیه است.
           </p>
         </div>
       </div>

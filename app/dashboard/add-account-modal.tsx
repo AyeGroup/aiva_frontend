@@ -22,8 +22,8 @@ interface AddAccountModalProps {
 export function AddAccountModal({
   isOpen,
   onClose,
-  // onAdd,
-}: AddAccountModalProps) {
+}: // onAdd,
+AddAccountModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -41,7 +41,6 @@ export function AddAccountModal({
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
 
-      //elham
       // onAdd({
       //   name: formData.name.trim(),
       //   email: formData.email.trim(),

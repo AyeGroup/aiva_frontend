@@ -89,7 +89,7 @@ export default function Invoice() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-grey-600">
-        در حال بارگذاری اطلاعات فاکتور...
+        در حال بارگذاری ...
       </div>
     );
   }
