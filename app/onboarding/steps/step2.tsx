@@ -28,6 +28,7 @@ import {
   Edit2,
   FileStack,
 } from "lucide-react";
+import UploadProgressModal from "@/components/UploadProgressModal";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -47,6 +48,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [selectedChatbot, setSelectedChatbot] = useState<BotConfig | null>(
     null
   );
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploading, setUploading] = useState<boolean>(false);
+
   const titleInputRef = useRef<HTMLInputElement>(null);
   const can_website_crawling = useFeatureAccess(
     botConfig.uuid,
@@ -54,8 +58,8 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   );
   const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
   const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
-  // const fileCount = useUploadLimits();
-
+ 
+console.log("can_upload_docs", can_upload_docs);
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
 
@@ -227,6 +231,8 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
         //  افزودن آیتم جدید
         if (selectedType === "file" && selectedFile) {
+          setUploading(true);
+          setUploadProgress(0);
           formData.append("title", newItem.title || "");
           formData.append("file", selectedFile);
           formData.append("content", newItem.content || "");
@@ -237,8 +243,17 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           formData.append("url", newItem.url || "");
           formData.append("title", newItem.title || "");
         }
-        const res = await axiosInstance.post(apiPath, formData);
-
+        // const res = await axiosInstance.post(apiPath, formData);
+        const res = await axiosInstance.post(apiPath, formData, {
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percent = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              setUploadProgress(percent);
+            }
+          },
+        });
         if (!res.data?.success) {
           toast.error("خطا در ثبت آیتم جدید!");
           return;
@@ -262,7 +277,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
         toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
       }
     } finally {
-      setIsLoading(false);
+     setUploading(false);
+     setUploadProgress(0);
+     setIsLoading(false);
     }
   };
 
@@ -553,9 +570,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
               <LockFeature feature="qa_as_file" />
             )}
 
-            {selectedType === "file" && !can_upload_docs && (
+            {/* {selectedType === "file" && !can_upload_docs && (
               <LockFeature feature="upload_docs" />
-            )}
+            )} */}
             {/* {selectedType === "file" && can_upload_docs && (
               // <FileStack size={10} />
               <div className="flex items-start -mt-3 gap-1 border h-fit border-gray-100 py-1 px-2 rounded-xl bg-gray-50 shadow">
@@ -575,24 +592,26 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           </div>
           {/* elham */}
 
-          {selectedType === "website" && isAdding && (
-            <div className="mb-4">
-              <RadioGroup
-                name="crawlType"
-                value={crawlType}
-                onChange={(v) => {
-                  //
-                  handleCrawl(Number(v));
-                  // console.log("Selected:", v);
-                  // setCrawlType(v);
-                }}
-                options={[
-                  { label: "خزش وب‌سایت سطح 1", value: 1 },
-                  { label: "خزش وب‌سایت سطح 2", value: 2 },
-                ]}
-              />
-            </div>
-          )}
+          {selectedType === "website" &&
+            isAdding &&
+             can_website_crawling && (
+              <div className="mb-4">
+                <RadioGroup
+                  name="crawlType"
+                  value={crawlType}
+                  onChange={(v) => {
+                    //
+                    handleCrawl(Number(v));
+                    // console.log("Selected:", v);
+                    // setCrawlType(v);
+                  }}
+                  options={[
+                    { label: "خزش وب‌سایت سطح 1", value: 1 },
+                    { label: "خزش وب‌سایت سطح 2", value: 2 },
+                  ]}
+                />
+              </div>
+            )}
           <div className="space-y-4">
             <div
               className={`${
@@ -700,7 +719,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                   onChange={(e) =>
                     setNewItem((prev) => ({ ...prev, url: e.target.value }))
                   }
-                 
                   placeholder="https://example.com/about"
                   className="w-full text-left!"
                   dir="ltr"
@@ -977,6 +995,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           </li>
         </ul>
       </Card>
+      <UploadProgressModal show={uploading} progress={uploadProgress} />
 
       <CrawlLevel2
         chatbot={selectedChatbot ? { uuid: selectedChatbot.uuid } : undefined}

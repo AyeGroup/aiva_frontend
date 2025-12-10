@@ -1,4 +1,5 @@
 "use client";
+import Cookies from "js-cookie";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -130,6 +131,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
+
+Cookies.set("role", payload.role, { expires: 7 });
+Cookies.set("accessToken", data.access_token, { expires: 7 });
 
       return { success: true, user };
     } catch (err: any) {

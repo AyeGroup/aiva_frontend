@@ -7,6 +7,7 @@ import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { MessageCircle } from "lucide-react";
+import { PAYMENT_PURPOSE, TRANSACTION_TYPE } from "@/constants/plans";
 
 interface CreditIncreaseModalProps {
   isOpen: boolean;
@@ -29,14 +30,15 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
       toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰ تومان)");
       return;
     }
+    console.log("chat", selectedChatbot?.chatbot_uuid);
 
     try {
       setIsLoading(true);
       const invoicePayload = {
-        // purpose: TRANSACTION_TYPE.INCREASE_BALANCE,
-        purpose: "balance_increase",
+        purpose: PAYMENT_PURPOSE.BALANCE_INCREASE,
+        // purpose: "balance_increase",
         amount_irr: credit,
-        chatbot_uuid: selectedChatbot?.uuid,
+        chatbot_uuid: selectedChatbot?.chatbot_uuid,
       };
 
       const res = await axiosInstance.post(
@@ -63,14 +65,15 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
       toast.error("ابتدا فاکتور را ایجاد کنید");
       return;
     }
-
+    console.log("chat", selectedChatbot);
     try {
       setIsLoading(true);
       const res = await axiosInstance.post(API_ROUTES.PAYMENT.INITIATE, {
-        purpose: "balance_increase",
+        // purpose: "balance_increase",
         // purpose: TRANSACTION_TYPE.INCREASE_BALANCE,
+        purpose: PAYMENT_PURPOSE.BALANCE_INCREASE,
         amount_irr: credit,
-        chatbot_uuid: selectedChatbot?.uuid,
+        chatbot_uuid: selectedChatbot?.chatbot_uuid,
       });
 
       const data = res.data;
@@ -101,7 +104,7 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
     >
       {isLoading && <PageLoader />}
 
-      <div className="space-y-4">
+      <div className="space-y-4 ">
         {!invoice && (
           <>
             {/* مبلغ */}

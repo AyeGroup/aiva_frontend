@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { version } from "./package.json"; // اضافه کردن ورژن
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
@@ -6,7 +7,7 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
- 
+
   images: {
     domains: ["localhost", "127.0.0.1"],
     unoptimized: true,
@@ -23,6 +24,9 @@ const nextConfig: NextConfig = {
 
   async rewrites() {
     return [];
+  },
+  env: {
+    APP_VERSION: version,
   },
 };
 

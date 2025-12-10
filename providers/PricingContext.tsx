@@ -99,7 +99,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
         }
       });
     }
-
+    console.log("plan map", map);
     setFeatureMinPlan(map);
   }, [plans]);
 
@@ -150,16 +150,20 @@ export const useFeatureAccess = (bot_uuid: string, feature: string) => {
         }
 
         const currentPlan = response.data.data.plan;
-        if (!currentPlan) {
-          setAllowed(false);
-          return;
-        }
+        console.log("currentPlan", currentPlan);
+        // if (!currentPlan) {
+      if (typeof currentPlan !== "number" || isNaN(currentPlan)) {
+        setAllowed(false);
+        return;
+      }
 
         const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
 
         const minPlan = featureMinPlan[feature] ?? "FREE";
         const minIndex = planOrder.indexOf(minPlan);
-
+        console.log(feature, " : ");
+        console.log("minPlan", minPlan);
+        console.log("minIndex");
         setAllowed(currentPlan >= minIndex);
       } catch (err) {
         console.error("Failed to check feature access:", err);

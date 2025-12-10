@@ -57,17 +57,7 @@ function Login() {
     try {
       setIsLoading(true);
       const res = await login(identity, password);
-      // if (!res.success) {
-      //   toast.error(res.message);
-      //   if (res.status === 403) {
-      //     router.push(`/auth/verification?phone=${identity}`);
-      //     return;
-      //   }
-      // }
 
-      // console.log("redirecting dashboard ...");
-      // if (res.user.role === "admin") router.push("/dashboard/admin");
-      // else router.push("/dashboard");
       if (!res.success) {
         toast.error(res.message);
         if (res.status === 403) {
@@ -76,9 +66,7 @@ function Login() {
         }
         return;
       }
-      // if (res.user.role === "admin")
       console.log("user role", res.user.role);
-      // فقط وقتی login موفق بود، به res.user دسترسی داشته باشید
       if (res.user.role === "admin") router.push("/admin");
       else router.push("/dashboard");
 

@@ -10,7 +10,7 @@ export default function LockFeature({
   feature: string;
 }) {
     const requiredPlan = useFeatureRequiredPlan(feature);
-
+if (requiredPlan.toLocaleLowerCase()==="free") return
   return (
     <div className="flex items-start -mt-3 gap-1 border h-fit border-gray-100 py-1 px-2 rounded-xl bg-gray-50 shadow">
       <Lock className="text-secondary size-4 " strokeWidth={3} />

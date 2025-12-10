@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import PageLoader from "@/components/pageLoader";
+import LoadingModal from "../../components/LoadingModal";
 import axiosInstance from "@/lib/axiosInstance";
-import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
+import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
 
 interface ChatbotDetailModalProps {
@@ -70,21 +70,13 @@ export default function CrawlLevel2({
       toast.success("لینک‌ها دریافت شد");
     } catch (err: any) {
       console.error("خطا در دریافت لینک‌ها:", err);
-      const backendMessage =""
-        // err.response?.data?.message ||
-        // err.response?.data?.error ||
-        // err.response?.data?.msg;
+      const backendMessage = "";
+      // err.response?.data?.message ||
+      // err.response?.data?.error ||
+      // err.response?.data?.msg;
       toast.error(backendMessage || "خطا در دریافت لینک‌ها");
     } finally {
       setLoading(false);
-    }
-  };
-  const isValidUrl = (value: string) => {
-    try {
-      new URL(value);
-      return true;
-    } catch {
-      return false;
     }
   };
 
@@ -102,7 +94,7 @@ export default function CrawlLevel2({
       formData.append("urls", url);
     });
 
-    console.log("formData:", formData.toString());
+    // console.log("formData:", formData.toString());
 
     const res = await axiosInstance.post(
       API_ROUTES.BOTS.CRAWL_BATCH(chatbot?.uuid),
@@ -133,6 +125,15 @@ export default function CrawlLevel2({
     );
   };
 
+  const isValidUrl = (value: string) => {
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   if (!show) return null;
 
   return (
@@ -140,7 +141,13 @@ export default function CrawlLevel2({
       className=" fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
       onClick={() => onClose(false)}
     >
-      {loading && <PageLoader />}
+      {loading && (
+        <LoadingModal
+          show={loading}
+          message="در حال بررسی لینک‌ها... لطفاً منتظر بمانید. این عملیات ممکن است کمی طول بکشد."
+        />
+      )}
+      {/* {loading && <PageLoader />} */}
       <div
         className="bg-white max-h-[95vh] rounded-3xl max-w-2xl w-full overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}

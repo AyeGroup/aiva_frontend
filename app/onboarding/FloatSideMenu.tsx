@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { getPlanIcon } from "@/constants/plans";
 import { StatsDrawer } from "../dashboard/stats-drawer";
-import { usePricing } from "@/providers/PricingContext";
+// import { usePricing } from "@/providers/PricingContext";
 
 export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("BASIC");
-  const { currentPlan } = usePricing();
+  // const { currentPlan } = usePricing();
   // console.log("currentPlan", currentPlan);
   // console.log("activePlan", activePlan);
   const menuItems = [
@@ -30,7 +30,8 @@ export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
       <div className="fixed left-0 top-40 -translate-y-1/2 z-50">
         <div className="group flex flex-col gap-2 bg-white/40 backdrop-blur-md shadow-lg border-r border-gray-200 rounded-r-xl p-1">
           {menuItems.map((item, index) => {
-            const active = currentPlan === item.key;
+            const active = activePlan === item.key;
+            // const active = currentPlan === item.key;
 
             return (
               <button

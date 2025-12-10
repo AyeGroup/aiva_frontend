@@ -429,7 +429,7 @@ export function Billing() {
 
                           <button
                             onClick={() => handleUpgrade(plan)}
-                            className="w-full py-2 rounded-lg text-sm text-white"
+                            className="text-center w-fit px-6 py-2 rounded-lg text-sm text-white"
                             style={{ backgroundColor: "#65bcb6" }}
                           >
                             افزایش اعتبار
@@ -596,11 +596,11 @@ export function Billing() {
                               </div>
                             </td>
 
-                            <td className="px-2 sm:px-4 py-3">
+                            <td className="px-2 sm:px-4 py-3" >
                               <div className="flex items-center justify-center">
                                 <button
                                   onClick={() => handleUpgrade(plan)}
-                                  className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap"
+                                  className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap "
                                   style={{
                                     backgroundColor: "#65bcb6",
                                     color: "white",

@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
+import React, { useEffect } from "react";
+import { X } from "lucide-react";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-  size?:'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "full";
   footer?: React.ReactNode;
 }
 
@@ -15,55 +15,55 @@ export function Modal({
   onClose,
   title,
   children,
-  size = 'lg',
-  footer
+  size = "lg",
+  footer,
 }: ModalProps) {
   // جلوگیری از اسکرول body وقتی مودال باز است
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
 
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
   // بستن با کلید Escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const sizeClasses = {
-    xs: "!max-w-1/2",
-    sm: "!max-w-md",
-    md: "!max-w-2xl",
-    lg: "!max-w-4xl",
-    xl: "!max-w-6xl",
-    full: "!max-w-7xl",
-  };
+  // const sizeClasses = {
+  //   xs: "!max-w-1/2",
+  //   sm: "!max-w-md",
+  //   md: "!max-w-2xl",
+  //   lg: "!max-w-4xl",
+  //   xl: "!max-w-6xl",
+  //   full: "!max-w-7xl",
+  // };
 
   return (
-    <div 
-      className="modal-overlay " 
+    <div
+      className="modal-overlay "
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div 
-        className={`modal-content ${sizeClasses[size]}`}
+      <div
+        className={`modal-content w-11/12 md:w-9/12 lg:w-1/2  `}
         onClick={(e) => e.stopPropagation()}
       >
         <header className="modal-header">
@@ -75,19 +75,13 @@ export function Modal({
             title="بستن"
             aria-label="بستن مودال"
           >
-            <X style={{ width: '20px', height: '20px' }} />
+            <X style={{ width: "20px", height: "20px" }} />
           </button>
         </header>
 
-        <div className="modal-body">
-          {children}
-        </div>
+        <div className="modal-body">{children}</div>
 
-        {footer && (
-          <footer className="modal-footer">
-            {footer}
-          </footer>
-        )}
+        {footer && <footer className="modal-footer">{footer}</footer>}
       </div>
     </div>
   );

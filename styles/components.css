@@ -4113,10 +4113,7 @@
 .chatbot-menu-container {
   position: relative;
 }
-.modal-overlay {
-  z-index: 9999 !important;
-}
-
+ 
 .modal-content {
   z-index: 10000 !important;
 }
@@ -5209,6 +5206,7 @@
   justify-content: center;
   padding: 20px;
   animation: fadeIn 0.2s ease-out;
+  /* z-index: 9999 !important; */
 }
 
 .modal-content {
@@ -5217,7 +5215,7 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   max-width: 95vw;
   max-height: 90vh;
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s ease-out;

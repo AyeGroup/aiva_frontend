@@ -139,7 +139,7 @@ export function StatsDrawer({
   };
 
   return (
-    <>
+    <div className="z-99">
       {/* Overlay */}
       <div
         className={`stats-drawer-overlay ${isOpen ? "block" : "hidden"}`}
@@ -241,6 +241,6 @@ export function StatsDrawer({
           </section>
         </div>
       </aside>
-    </>
+    </div>
   );
 }

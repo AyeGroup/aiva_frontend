@@ -552,11 +552,11 @@ export default function OnboardingWizard() {
 
   return (
     <main className="onboarding-wizard h-screen overflow-y-auto bg-bg-app">
-      <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-6 relative z-10">
+      <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-4 relative z-10">
         {/* Clean Minimal Header */}
         {isNew && <FloatSideMenu activePlan={activeSubscrp} />}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
+        <div className="flex justify-between items-center px-10">
+          <div className="flex items-center ">
             <button
               onClick={() => router.push("/landing")}
               title={logo.title}
@@ -570,6 +570,7 @@ export default function OnboardingWizard() {
                   width={50}
                   height={40}
                   alt="Logo"
+                  className="mt-1"
                   style={{ width: "auto", height: "40px" }}
                 />
               ) : (
