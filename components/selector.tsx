@@ -63,7 +63,7 @@ export function GenericSelector({
   };
 
   return (
-    <div className="chatbot-selector-container">
+    <div className="chatbot-selector-container z-99">
       {/* Current Selection Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}

@@ -563,7 +563,9 @@ const fetchStatisticCover = async () => {
                   })}
 
                   {/* More Users Button */}
-                  {activeUsers && activeUsers.length > 3 && (
+                  {activeUsers
+                  //  && activeUsers.length > 3
+                    && (
                     <div
                       className="relative rounded-lg p-4 shadow-sm hover-lift   flex items-center justify-center"
                       style={{

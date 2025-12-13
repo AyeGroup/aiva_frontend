@@ -106,3 +106,15 @@ export function getDaysRemaining(targetDate: string | Date): number {
 
   return diffDays;
 }
+
+export function utcHourToLocalTime(hourUTC: number) {
+  const now = new Date();
+  const date = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hourUTC)
+  );
+
+  return date.toLocaleTimeString("fa-IR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}

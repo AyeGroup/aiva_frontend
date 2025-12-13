@@ -8,7 +8,14 @@ import { toast } from "sonner";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { Ticket, TicketCategory, TicketPriority } from "@/types/common";
+import {
+  SelectorItem,
+  Ticket,
+  TicketCategory,
+  TicketPriority,
+} from "@/types/common";
+import { GenericSelector } from "@/components/selector";
+import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 
 interface Props {
   onSubmit: (ticket: Ticket) => void;
@@ -22,7 +29,18 @@ export function CreateTicketView({ onSubmit }: Props) {
     category: "general" as TicketCategory,
     priority: "medium" as TicketPriority,
   });
-
+  const CATEGORY_ITEMS: SelectorItem[] = [
+    { value: "general", label: getCategoryLabel("general") },
+    { value: "technical", label: getCategoryLabel("technical") },
+    { value: "financial", label: getCategoryLabel("financial") },
+    { value: "others", label: getCategoryLabel("others") },
+  ];
+  const PRIORITY_ITEMS: SelectorItem[] = [
+    { value: "urgent", label: getPriorityLabel("urgent") },
+    { value: "high", label: getPriorityLabel("high") },
+    { value: "medium", label: getPriorityLabel("medium") },
+    { value: "low", label: getPriorityLabel("low") },
+  ];
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
     try {
@@ -30,10 +48,10 @@ export function CreateTicketView({ onSubmit }: Props) {
         API_ROUTES.TICKETS.CREATE,
         formData
       );
-       const newTicket: Ticket = response.data.data;
+      const newTicket: Ticket = response.data.data;
 
-       toast.success("تیکت جدید با موفقیت ارسال شد");
-       onSubmit(newTicket); 
+      toast.success("تیکت جدید با موفقیت ارسال شد");
+      onSubmit(newTicket);
 
       // const newTicket: Ticket = response.data.data;
       // clear
@@ -52,7 +70,10 @@ export function CreateTicketView({ onSubmit }: Props) {
     <section className="flex-1 overflow-y-auto bg-bg-shell">
       {isLoading && <PageLoader />}
       <div className="max-w-4xl mx-auto p-8">
-        <Card className="p-8">
+        <div
+          className="animate-soft border shadow-low rounded-2xl p-8 lg:p-4shadow-low 
+        bg-bg-surface border-border-soft card-hover "
+        >
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -91,9 +112,24 @@ export function CreateTicketView({ onSubmit }: Props) {
 
               {/* Category & Priority */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="input-container">
+                {/* <div className="input-container overflow-visible"> */}
+                <div className=" flex items-center gap-2">
                   <label className="input-label">دسته‌بندی</label>
-                  <select
+
+                  <GenericSelector
+                    items={CATEGORY_ITEMS}
+                    selectedValue={formData.category}
+                    disabled={false}
+                    onSelect={(value) =>
+                      setFormData({
+                        ...formData,
+                        category: value as TicketCategory,
+                      })
+                    }
+                    showIndicator={true}
+                  />
+
+                  {/* <select
                     className="input-base input-default input-medium"
                     value={formData.category}
                     onChange={(e) =>
@@ -107,12 +143,25 @@ export function CreateTicketView({ onSubmit }: Props) {
                     <option value="technical">فنی</option>
                     <option value="financial">مالی</option>
                     <option value="others">سایر</option>
-                  </select>
+                  </select> */}
                 </div>
 
-                <div className="input-container">
+                <div className=" flex items-center gap-2">
                   <label className="input-label">اولویت</label>
-                  <select
+                  <GenericSelector
+                    items={PRIORITY_ITEMS}
+                    selectedValue={formData.priority}
+                    disabled={false}
+                    onSelect={(value) =>
+                      setFormData({
+                        ...formData,
+                        priority: value as TicketPriority,
+                      })
+                    }
+                    showIndicator={true}
+                  />
+
+                  {/* <select
                     className="input-base input-default input-medium"
                     value={formData.priority}
                     onChange={(e) =>
@@ -126,13 +175,13 @@ export function CreateTicketView({ onSubmit }: Props) {
                     <option value="medium">متوسط</option>
                     <option value="high">بالا</option>
                     <option value="urgent">اورژانسی</option>
-                  </select>
+                  </select> */}
                 </div>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-3 pt-4">
+            <div className="flex items-center justify-center gap-3 pt-4">
               <Button
                 variant="primary"
                 size="lg"
@@ -143,7 +192,7 @@ export function CreateTicketView({ onSubmit }: Props) {
               </Button>
             </div>
           </form>
-        </Card>
+        </div>
       </div>
     </section>
   );

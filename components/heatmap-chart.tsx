@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { DAYS, paersianDay } from "@/constants/common";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { convertToPersian } from "@/utils/common";
+import { convertToPersian, utcHourToLocalTime } from "@/utils/common";
 import PageLoader from "./pageLoader";
 
 interface HeatmapChartProps {
@@ -40,8 +40,10 @@ export function HeatmapChart({
 
         if (response.status === 200 && response.data?.data) {
           const { heatmap, peak_hour, most_active_day } = response.data.data;
+          console.log("heatmap",heatmap)
           setStatisticHeatmap(heatmap);
-          setPeakHour(peak_hour);
+          const peak = utcHourToLocalTime(peak_hour);
+          setPeakHour(peak);
           setPeakDay(paersianDay(most_active_day));
         }
       } catch (error) {
