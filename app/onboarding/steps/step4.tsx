@@ -149,7 +149,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     <div className="space-y-4 bg-bg-surface p-6 border-2 border-brand-primary/20 rounded-xl shadow-lg">
       {isloading && <PageLoader />}
       <div className="flex items-start gap-4">
-        <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+        <div className="w-16 h-16 bg-primary/10  rounded-xl flex items-center justify-center shrink-0">
           <HelpCircle className="w-8 h-8 text-primary" />
         </div>
         <div className="flex-1">
