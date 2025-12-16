@@ -1,10 +1,12 @@
 import { Input } from "@/components/input";
-import { FormInput  } from "lucide-react";
+import { FormInput } from "lucide-react";
 import { ToggleSmall } from "@/components/toggleSmall";
 import { onboardingData } from "../onboarding.data";
 import { GenericSelector } from "@/components/selector";
 import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
 import { BotConfig, SelectorItem } from "@/types/common";
+import { TextTamplate } from "@/public/icons/dashboard";
+import { useState } from "react";
 
 interface WizardStep1Props {
   botConfig: BotConfig;
@@ -12,14 +14,60 @@ interface WizardStep1Props {
 }
 
 export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
+  const templates = [
+    {
+      color: "text-primary",
+      text: "شما دستیار فروش فروشگاه خانه آرام هستید. ما لوازم خانگی برقی مانند یخچال، ماشین لباسشویی و مایکروویو می‌فروشیم.محصولات ما گارانتی ۱۸ ماهه دارند و ارسال رایگان برای خرید بالای ۵ میلیون تومان.شماره تماس: ۰۲۱-۱۲۳۴۵۶۷۸",
+    },
+    // {
+    //   color: "text-secondary",
+    //   text: "",
+    // },
+    // {
+    //   color: "text-[#52d4a0]",
+    //   text:"",
+    // },
+  ];
 
-  const languageOptions: SelectorItem[] = onboardingData.languages
-    .map((lang) => ({
+  const templatesPrompt = [
+    {
+      color: "text-primary",
+      text:   "تمرکز پاسخ‌ها روی محصولات، قیمت، موجودی و نحوه ارسال باشد.هیچ قولی درباره تخفیف یا مناطق ویژه نده مگر در وب‌سایت رسمی ثبت شده باشد.در پاسخ‌ها، برند و لحن فروشگاه را حفظ کن؛ لحن فروش باید صمیمی ولی دقیق باشد.هرجا کاربر محصولی را جست، پیشنهاد محصولات مرتبط یا جایگزین بده.از درخواست اطلاعات پرداخت یا رمز کارت پرهیز کن.",
+    },
+    {
+      color: "text-secondary",
+      text:"پاسخ‌ها باید بر پایه‌ی اطلاعات رسمی دوره‌ها، شهریه و سرفصل‌ها باشند.از قول دادن درباره قبولی یا تضمین نتایج آموزشی پرهیز کن.لحن چت‌بات آموزشی باید محترمانه، دوستانه و انگیزشی باشد.هرجا کاربر درباره کلاس پرسید، مسیر ثبت‌نام یا رزرو را واضح توضیح بده.اگر کاربر زمان کلاس را خواست، تنها از تقویم رسمی مؤسسه نقل کن.",
+    },
+    {
+      color: "text-[#52d4a0]",
+      text: "فقط بر اساس راهنمای فنی رسمی پاسخ بده، هیچ تحلیل شخصی نکن.در صورت نیاز به تماس انسانی، شماره پشتیبانی را معرفی کن ولی مکالمه را محترمانه ببند.هنگام توضیح خطا یا مشکل، کوتاه و مرحله‌به‌مرحله توضیح بده.از پاسخ‌های خشن یا مسئولیت‌زدا پرهیز کن. همیشه کمک‌کننده باش.اگر کاربر ناراضی بود، پیام آرام‌کننده و همدلانه بده.",
+    },
+  ];
+
+  const addTemplateToDescription = (text: string) => {
+    updateConfig({
+      description: botConfig.description
+        ? botConfig.description + "\n" + text
+        : text,
+    });
+  };
+
+  const addTemplateToGuidelines = (text: string) => {
+    updateConfig({
+      guidelines: botConfig.guidelines
+        ? botConfig.guidelines + "\n" + text
+        : text,
+    });
+  };
+
+  const languageOptions: SelectorItem[] = onboardingData.languages.map(
+    (lang) => ({
       value: lang.code,
       disabled: lang.disabled,
       label: lang.name,
-      id: lang.code,  
-    }));
+      id: lang.code,
+    })
+  );
 
   return (
     <div className="w-full m-0 space-y-8   px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg ">
@@ -88,14 +136,41 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
         {/* Personality Section */}
         <div className="space-y-4">
           <div className="form-group">
-            <label className="block text-grey-900 mb-3">
-              توضیحات کلی دستیار
-              <span className="text-brand-primary ml-1">*</span>
-            </label>
+            <div className="flex flex-col lg:flex-row items-center justify-start lg:justify-between">
+              <label className="block text-grey-900 mb-3">
+                توضیحات کلی دستیار
+                <span className="text-brand-primary ml-1">*</span>
+              </label>
+              <div className="flex items-center gap-3">
+                {templates.map((item, index) => (
+                  <div
+                    key={index}
+                    className="relative group cursor-pointer"
+                    onClick={() => addTemplateToDescription(item.text)}
+                  >
+                    <div className={`${item.color} w-6 h-6`}>
+                      <TextTamplate />
+                    </div>
+
+                    {/* Tooltip */}
+                    <div
+                      className="absolute bottom-full mb-2 right-1/2 translate-x-1/2 
+                              hidden group-hover:block
+                              whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1
+                              text-xs text-white shadow-lg z-10"
+                    >
+                      {item.text}
+                    </div>
+                  </div>
+                ))}
+
+                <span className="text-sm">:قالب آماده</span>
+              </div>
+            </div>
             <textarea
               value={botConfig.description}
               onChange={(e) => updateConfig({ description: e.target.value })}
-              rows={3}
+              rows={6}
               placeholder={`شما دستیار فروش فروشگاه خانه آرام هستید.
 ما لوازم خانگی برقی مانند یخچال، ماشین لباسشویی و مایکروویو می‌فروشیم.
 محصولات ما گارانتی ۱۸ ماهه دارند و ارسال رایگان برای خرید بالای ۵ میلیون تومان.
@@ -118,12 +193,38 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
           </div>
 
           <div className="form-group">
-            <label
-              htmlFor="welcomeMessage"
-              className="block text-grey-900 mb-3"
-            >
-              دستورالعمل‌ها <span className="text-brand-primary ml-1">*</span>
-            </label>
+            <div className="flex flex-col lg:flex-row items-center justify-start lg:justify-between">
+              <label className="block text-grey-900 mb-3">
+                دستورالعمل‌ها
+                <span className="text-brand-primary ml-1">*</span>
+              </label>
+              <div className="flex items-center gap-3">
+                {templatesPrompt.map((item, index) => (
+                  <div
+                    key={index}
+                    className="relative group cursor-pointer"
+                    onClick={() => addTemplateToGuidelines(item.text)}
+                  >
+                    <div className={`${item.color} w-6 h-6`}>
+                      <TextTamplate />
+                    </div>
+
+                    {/* Tooltip */}
+                    <div
+                      className="absolute bottom-full mb-2 right-1/2 translate-x-1/2 
+                              hidden group-hover:block
+                              whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1
+                              text-xs text-white shadow-lg z-10"
+                    >
+                      {item.text}
+                    </div>
+                  </div>
+                ))}
+
+                <span className="text-sm">:قالب آماده</span>
+              </div>
+            </div>
+
             <textarea
               id="welcomeMessage"
               value={botConfig.guidelines}
@@ -133,7 +234,7 @@ export function WizardStep1({ botConfig, updateConfig }: WizardStep1Props) {
 هرگز قیمت اعلام نکنید - مشتری را به شماره تماس هدایت کنید.
 اگر محصولی نداریم، با عذرخواهی اعلام کنید.
 فقط درباره محصولات فروشگاه صحبت کنید.`}
-              rows={3}
+              rows={6}
               className={`w-full px-4 py-3 border border-border-soft rounded-lg 
     focus:outline-none focus:ring-2 focus:ring-brand-primary/20 
     focus:border-brand-primary resize-none whitespace-pre-wrap

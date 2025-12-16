@@ -6,6 +6,8 @@ import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { LayoutRow } from "@/public/icons/dashboard";
+import { Checkbox } from "@/components/checkbox";
 
 interface ChatbotDetailModalProps {
   show: boolean;
@@ -20,6 +22,7 @@ export default function CrawlLevel2({
 }: ChatbotDetailModalProps) {
   const [url, setUrl] = useState<string>("");
   const [allUrl, setAllUrl] = useState<string[]>([]);
+  const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedUrl, setSelectedUrl] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -133,7 +136,9 @@ export default function CrawlLevel2({
       return false;
     }
   };
-
+  const handleSelectAll = (value: boolean) => {
+    setSelectAll(value);
+  };
   if (!show) return null;
 
   return (
@@ -153,7 +158,7 @@ export default function CrawlLevel2({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex w-full font-semibold items-center justify-center p-4 text-white bg-primary">
-          خزش وب‌سایت سطح 2
+          خزش وب‌سایت سطح ۲
         </div>
         <div className="flex w-full flex-col justify-center gap-4 p-6">
           <div className="flex flex-col items-center justify-start border-b border-gray-200 ">
@@ -170,6 +175,9 @@ export default function CrawlLevel2({
                   className="w-full text-left!"
                   dir="ltr"
                 />
+                <span className="text-gray-500 text-sm my-1">
+                  آدرس وب‌سایت با فرمت https://example.com وارد شود
+                </span>
               </div>
             </div>
             <div className=" flex items-center justify-center gap-4">
@@ -194,10 +202,21 @@ export default function CrawlLevel2({
 
           {allUrl && allUrl.length > 0 && (
             <div className="flex flex-col items-start border-b border-gray-200 p-4 gap-4">
-              <p className="font-semibold mb-2 text-left">
-                لینک‌های دریافت شده:
+              <p className="font-semibold mb-2 text-left flex items-center justify-between">
+                <div>لینک‌های دریافت شده:</div>
+                <div className="flex items-center">
+                  <LayoutRow />
+                  تعداد: {allUrl.length}
+                </div>
               </p>
-
+              <div>
+                <Checkbox
+                  id="select-all"
+                  label="انتخاب همه"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                />
+              </div>
               {/* لیست URLها */}
               <div className="flex flex-col gap-2 max-h-64 overflow-y-auto border rounded-lg p-2 w-full">
                 {allUrl.map((link: any, index: number) => (

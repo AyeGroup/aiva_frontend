@@ -101,13 +101,13 @@ export const onboardingData = {
     {
       id: "file",
       title: "افزودن فایل",
-      description: "فایل با فرمت word ٬ pdf ٬ csv",
+      description: "فایل با فرمت PDF و Word و متن ساده",
       icon: "file-text",
       placeholder: "فایل‌های خود را اینجا بکشید یا کلیک کنید",
     },
     {
       id: "website",
-      title: "افزودن لینک وب سایت",
+      title: "افزودن لینک وب‌سایت",
       description: "صفحات سایت یا منابع آنلاین",
       icon: "link",
       placeholder: "https://example.com/about",

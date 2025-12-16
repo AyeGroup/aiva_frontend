@@ -516,21 +516,21 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
             انواع محتوای قابل اضافه
           </h3>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-4">
             {onboardingData.knowledgeTypes.map((type) => {
               const IconComponent = getIcon(type.id);
 
               return (
                 <div
                   key={type.id}
-                  className="p-6 rounded-lg cursor-pointer border-2 border-brand-primary/30 bg-bg-surface hover:border-brand-primary hover:shadow-lg group"
+                  className="p-3 rounded-lg cursor-pointer border-2 border-brand-primary/30 bg-bg-surface hover:border-brand-primary hover:shadow-lg group"
                   onClick={() => {
                     startAdding(type.id);
                   }}
                 >
-                  <div className="text-right">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center">
+                  <div className="text-right flex flex-col justify-between h-full">
+                    <div className="flex items-start justify-start gap-3 mb-4">
+                      <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center">
                         <IconComponent className="w-7 h-7 text-brand-primary" />
                       </div>
                       <div className="flex-1">
@@ -584,28 +584,18 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
               انصراف
             </Button>
           </div>
-          {/* <RadioGroup
-                name="crawlType"
-                value={crawlType}
-                onChange={(v) => {
-                  handleCrawl(Number(v));
-                }}
-                options={[
-                  { label: "خزش وب‌سایت سطح 1", value: 1 },
-                  { label: "خزش وب‌سایت سطح 2", value: 2 },
-                ]}
-              /> */}
+
           {selectedType === "website" && isAdding && can_website_crawling && (
             <div className="mb-4 flex-col space-y-3">
               {/* Radio #1 */}
               <label
                 className={`flex items-center gap-2 select-none 
-      ${
-        !can_website_crawling
-          ? "cursor-not-allowed opacity-60"
-          : "cursor-pointer"
-      }
-    `}
+                          ${
+                            !can_website_crawling
+                              ? "cursor-not-allowed opacity-60"
+                              : "cursor-pointer"
+                          }
+                        `}
               >
                 <input
                   type="radio"
@@ -619,19 +609,19 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
                 <span
                   className={`w-4 h-4 rounded-full border transition
-        border-gray-400
-        peer-checked:border-primary peer-checked:bg-primary
-        peer-disabled:border-gray-300 peer-disabled:bg-gray-200
-      `}
+                  border-gray-400
+                  peer-checked:border-primary peer-checked:bg-primary
+                  peer-disabled:border-gray-300 peer-disabled:bg-gray-200
+                `}
                 ></span>
 
                 <span
                   className={`text-gray-700 transition
-        peer-checked:text-primary
-        peer-disabled:text-gray-400
-      `}
+                    peer-checked:text-primary
+                    peer-disabled:text-gray-400
+                  `}
                 >
-                  خزش وب‌سایت سطح 1
+                  خزش وب‌سایت سطح ۱
                 </span>
               </label>
 
@@ -670,7 +660,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           peer-disabled:text-gray-400
         `}
                   >
-                    خزش وب‌سایت سطح 2
+                    خزش وب‌سایت سطح ۲
                   </span>
                 </label>
 

@@ -79,7 +79,7 @@ export default function Header() {
           ) : (
             <>
               <a
-                href="/dashboard"
+                href="/auth/login"
                 className="text-[#65bcb6] text-sm sm:text-base whitespace-nowrap"
               >
                 ورود
@@ -105,7 +105,7 @@ export default function Header() {
 
         {/* Mobile Auth + Hamburger */}
         <div className="flex md:hidden items-center gap-2">
-          <a href="/dashboard" className="text-[#65bcb6] text-sm">
+          <a href="/auth/login" className="text-[#65bcb6] text-sm">
             ورود
           </a>
           <button

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { Suspense, lazy, useEffect } from "react";
-import { Header } from "@/components/header/header";
 import { PageType } from "@/types/common";
 
 const LandingPage = lazy(() => import("@/app/landing/page"));
@@ -13,25 +12,24 @@ const Register = lazy(() => import("@/app/auth/register/page"));
 const OTPVerification = lazy(() => import("@/app/auth/verification/page"));
 
 const PageLoader = () => {
- useEffect(() => {
-   const handleChunkError = (event: any) => {
-     if (event?.message?.includes("ChunkLoadError")) {
-       console.warn("Chunk error → Refreshing page...");
-       window.location.reload();
-     }
-   };
+  useEffect(() => {
+    const handleChunkError = (event: any) => {
+      if (event?.message?.includes("ChunkLoadError")) {
+        console.warn("Chunk error → Refreshing page...");
+        window.location.reload();
+      }
+    };
 
-   window.addEventListener("error", handleChunkError);
-   window.addEventListener("unhandledrejection", handleChunkError);
+    window.addEventListener("error", handleChunkError);
+    window.addEventListener("unhandledrejection", handleChunkError);
 
-   return () => {
-     window.removeEventListener("error", handleChunkError);
-     window.removeEventListener("unhandledrejection", handleChunkError);
-   };
- }, []);
+    return () => {
+      window.removeEventListener("error", handleChunkError);
+      window.removeEventListener("unhandledrejection", handleChunkError);
+    };
+  }, []);
 
-
- return (
+  return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="space-y-4">
         <div className="h-8 bg-gray-200 rounded w-48 mx-auto"></div>
@@ -69,18 +67,8 @@ export default function AppShell({ page }: AppShellProps) {
     }
   };
 
-  // const showHeader = ![
-  //   "dashboard-home",
-  //   "chatbot-management",
-  //   "tickets",
-  //   "login",
-  //   "verification",
-  //   "register",
-  // ].includes(page);
-
   return (
     <div className="app-shell">
-      {/* {showHeader && <Header currentPage={page} />} */}
       <Suspense fallback={<PageLoader />}>{renderPage()}</Suspense>
     </div>
   );

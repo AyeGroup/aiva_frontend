@@ -272,13 +272,13 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
           <div className="space-y-6">
             <div className="space-y-3">
               <div className="relative">
-                <div className="bg-brand-secondary rounded-2xl p-4 pr-12 lg:pr-24 h-56 overflow-y-auto">
+                <div className="bg-brand-secondary rounded-2xl p-4 pr-12 lg:pr-12 h-56 overflow-y-auto">
                   <div className="text-white text-sm leading-6 font-mono ltr text-left break-all">
                     {installCode}
                   </div>
                 </div>
 
-                <div className="absolute top-3 right-4 flex gap-2">
+                <div className="absolute top-3 right-2 flex gap-2">
                   <button
                     onClick={copyToClipboard}
                     className="bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]  cursor-pointer"
