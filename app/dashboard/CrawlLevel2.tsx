@@ -2,12 +2,16 @@
 import React, { useEffect, useState } from "react";
 import LoadingModal from "../../components/LoadingModal";
 import axiosInstance from "@/lib/axiosInstance";
+import TreeViewContainer from "@/components/TreeViewContainer";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
-import { API_ROUTES } from "@/constants/apiRoutes";
-import { LayoutRow } from "@/public/icons/dashboard";
 import { Checkbox } from "@/components/checkbox";
+import { LayoutRow } from "@/public/icons/dashboard";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { TreeNodeType } from "@/types/common";
+import { buildSitemapTree } from "@/utils/buildSitemapTree";
+import { Tick } from "@/public/icons/AppIcons";
 
 interface ChatbotDetailModalProps {
   show: boolean;
@@ -21,14 +25,15 @@ export default function CrawlLevel2({
   onClose,
 }: ChatbotDetailModalProps) {
   const [url, setUrl] = useState<string>("");
-  const [allUrl, setAllUrl] = useState<string[]>([]);
+  const [tree, setTree] = useState<TreeNodeType[]>([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedUrl, setSelectedUrl] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (!chatbot) return;
-    setAllUrl([]);
+    setTree([]);
     setSelectedUrl([]);
   }, [chatbot]);
 
@@ -37,39 +42,175 @@ export default function CrawlLevel2({
 
     if (!url) return;
     if (!chatbot?.uuid) return;
-    setAllUrl([]);
+    setTree([]);
     setLoading(true);
 
     try {
       const formData = new URLSearchParams();
       formData.append("url", url);
 
-      console.log("url:", url);
-      const res = await axiosInstance.post(
-        API_ROUTES.BOTS.CRAWL_DISCOVER(chatbot!.uuid),
-        formData,
+      // const res = await axiosInstance.post(
+      //   API_ROUTES.BOTS.CRAWL_DISCOVER(chatbot!.uuid),
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/x-www-form-urlencoded",
+      //     },
+      //   }
+      // );
+      // console.log("response: ", res);
+
+      // if (!res.data?.success) {
+      //   toast.error("خطا در دریافت لینک‌ها");
+      //   return;
+      // }
+
+      // const allurls = res.data?.data?.discovered_links || [];
+      const allurls = [
         {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
-      console.log("response: ", res);
-
-      if (!res.data?.success) {
-        toast.error("خطا در دریافت لینک‌ها");
-        return;
-      }
-
-      const allurls = res.data?.data?.discovered_links || [];
-      console.log("allurls: ", allurls);
+          url: "https://aia-ai.com/chatbots",
+          title: "فروش چت‌بات‌ها",
+        },
+        {
+          url: "https://aia-ai.com/chatbots/chat-gpt",
+          title: "خرید اکانت Chat GPT پلاس",
+        },
+        {
+          url: "https://aia-ai.com/pdf-courses",
+          title: "جزوات آموزشی",
+        },
+        {
+          url: "https://aia-ai.com/courses",
+          title: "دوره‌های آموزشی",
+        },
+        {
+          url: "https://aia-ai.com/webinar",
+          title: "وبینار هوش مصنوعی",
+        },
+        {
+          url: "https://aia-ai.com/my-account",
+          title: "ورود / عضویت",
+        },
+        {
+          url: "https://aia-ai.com/courses-2",
+          title:
+            "دوره‌های آموزشیبه روز‌ترین دانش و مهارت‌ها را از متخصصان این حوزه بیاموزید.",
+        },
+        {
+          url: "https://aia-ai.com/product/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab-%d9%be%db%8c%d8%b4%d8%b1%d9%81%d8%aa%d9%87-%d8%af%d8%b1-%da%a9%d8%a7%d8%b1-%d8%a8%d8%a7-%d9%85%d8%af%d9%84%d9%87%d8%a7%db%8c-%d8%b2%d8%a8%d8%a7%d9%86%db%8c",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/product/%d8%a2%d8%b4%d9%86%d8%a7%db%8c%db%8c-%d8%a8%d8%a7-%da%a9%d8%aa%d8%a7%d8%a8%d8%ae%d8%a7%d9%86%d9%87-numpy",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/product/gpt-%da%86%da%af%d9%88%d9%86%d9%87-%d9%85%d8%aa%d9%88%d9%84%d8%af-%d8%b4%d8%af%d8%9f",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/product/%d9%85%da%a9%d8%a7%d9%86%db%8c%d8%b2%d9%85-%d8%aa%d9%88%d8%ac%d9%87-%da%86%da%af%d9%88%d9%86%d9%87-%d8%a8%d9%87-%d9%88%d8%ac%d9%88%d8%af-%d8%a2%d9%85%d8%af%d8%9f",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/product/%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%aa%d8%b5%d9%88%db%8c%d8%b1-%d9%88-%d8%a8%db%8c%d9%86%d8%a7%db%8c%db%8c-%d9%85%d8%a7%d8%b4%db%8c%d9%86",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/product/%d8%b3%db%8c%d8%b3%d8%aa%d9%85%d9%87%d8%a7%db%8c-%d8%aa%d9%88%d8%b5%db%8c%d9%87%da%af%d8%b1",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/product/%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%b5%d9%88%d8%aa",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/product/pandas",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/course/%d8%ad%d9%84-%d8%aa%d9%85%d8%b1%db%8c%d9%86-%d8%af%d8%b1%d9%88%d8%b3-%d8%b3%d8%b1%d9%88%db%8c%d8%b3-%d8%a8%d8%a7-%d9%87%d9%88%d8%b4-%d9%85%d8%b5%d9%86%d9%88%d8%b9%db%8c",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/course-category/webinar",
+          title: "کاربردی",
+        },
+        {
+          url: "https://aia-ai.com/course/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab-%d9%be%db%8c%d8%b4%d8%b1%d9%81%d8%aa%d9%87-%d8%af%d8%b1-%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%b2%d8%a8%d8%a7%d9%86-%d8%b7%d8%a8%db%8c%d8%b9%db%8c",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/course-category/natural-language-processing",
+          title: "پردازش زبان طبیعی",
+        },
+        {
+          url: "https://aia-ai.com/course/%d8%aa%d9%86%d8%b8%db%8c%d9%85-%d9%87%d8%a7%db%8c%d9%be%d8%b1%d9%be%d8%a7%d8%b1%d8%a7%d9%85%d8%aa%d8%b1%d9%87%d8%a7%db%8c-%d8%af%d8%b1-%d8%b4%d8%a8%da%a9%d9%87%d9%87%d8%a7%db%8c-%d8%b9%d9%85",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/course-category/deep-learning",
+          title: "یادگیری عمیق",
+        },
+        {
+          url: "https://aia-ai.com/course/%da%86%d8%aa-%d8%a8%d8%a7%d8%aa",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/wp-content/uploads/2024/11/IMG_20241125_095507.png",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/webinar/management-and-ai-webinars/وبینار-هوش-مصنوعی-صنعتی-از-تئوری-تا-عمل",
+          title: "مشاهده وبینار",
+        },
+        {
+          url: "https://aia-ai.com/wp-content/uploads/2024/11/IMG_20241118_162949.jpg",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/course/انجام-یک-پایان-نامه-از-صفر-تا-صد",
+          title: "مشاهده وبینار",
+        },
+        {
+          url: "https://aia-ai.com/wp-content/uploads/2024/09/photo_2024-09-29_20-05-25.jpg",
+          title: null,
+        },
+        {
+          url: "https://aia-ai.com/webinar/management-and-ai-webinars/وبینار-نقش-هوش-مصنوعی-در-کسب-و-کارها-و-م",
+          title: "مشاهده وبینار",
+        },
+        {
+          url: "https://aia-ai.com/subject-cat/basic-mathematics-of-intelligence",
+          title: "ریاضیات پایه هوش",
+        },
+        {
+          url: "https://aia-ai.com/subject-cat/machine-learning",
+          title: "یادگیری ماشین",
+        },
+        {
+          url: "https://aia-ai.com/subject-cat/deep-learning",
+          title: "یادگیری عمیق",
+        },
+        {
+          url: "https://aia-ai.com/subject-cat/natural-language-processing",
+          title: "پردازش زبان طبیعی",
+        },
+        {
+          url: "https://aia-ai.com/subject-cat/image-processing-and-machine-vision",
+          title: "پردازش تصویر و بینایی ماشین",
+        },
+      ];
+      // console.log("allurls: ", allurls);
 
       if (allurls.length === 0) {
         toast.error("لینکی یافت نشد");
         return;
       }
-      setAllUrl(allurls);
-
+      // setAllUrl(allurls);
+      const tree = buildSitemapTree(allurls);
+      console.log("tree: ", tree);
+      setTree(tree);
       toast.success("لینک‌ها دریافت شد");
     } catch (err: any) {
       console.error("خطا در دریافت لینک‌ها:", err);
@@ -83,50 +224,30 @@ export default function CrawlLevel2({
     }
   };
 
-  const handleSave = async () => {
-    if (!chatbot?.uuid) return;
-    if (selectedUrl.length === 0) {
-      toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
-      return;
+const handleSave = async () => {
+  if (!chatbot?.uuid) return;
+
+  const selectedUrl = getSelectedUrls(tree, checkedMap);
+  if (selectedUrl.length === 0) {
+    toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
+    return;
+  }
+
+  const res = await axiosInstance.post(
+    API_ROUTES.BOTS.CRAWL_BATCH(chatbot.uuid),
+    {
+      urls: selectedUrl, // 👈 دقیقاً آرایه urls
     }
-    console.log("selected url", selectedUrl);
+  );
 
-    const formData = new URLSearchParams();
+  if (!res.data?.success) {
+    toast.error("خطا در دریافت لینک‌ها");
+    return;
+  }
 
-    selectedUrl.forEach((url) => {
-      formData.append("urls", url);
-    });
-
-    // console.log("formData:", formData.toString());
-
-    const res = await axiosInstance.post(
-      API_ROUTES.BOTS.CRAWL_BATCH(chatbot?.uuid),
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    );
-
-    console.log("res url", res);
-
-    if (!res.data?.success) {
-      toast.error("خطا در دریافت لینک‌ها");
-      return;
-    }
-
-    // اینجا می‌تونید selectedUrl رو برای backend بفرستید
-    console.log("لینک‌های انتخاب شده:", selectedUrl);
-    toast.success("لینک‌ها ثبت شدند");
-    onClose(true);
-  };
-
-  const toggleSelectUrl = (link: string) => {
-    setSelectedUrl((prev) =>
-      prev.includes(link) ? prev.filter((l) => l !== link) : [...prev, link]
-    );
-  };
+  toast.success("لینک‌ها ثبت شدند");
+  onClose(true);
+};
 
   const isValidUrl = (value: string) => {
     try {
@@ -136,9 +257,41 @@ export default function CrawlLevel2({
       return false;
     }
   };
+  const getSelectedUrls = (
+    nodes: TreeNodeType[],
+    checkedMap: Record<string, boolean>
+  ): string[] => {
+    let result: string[] = [];
+
+    nodes.forEach((node) => {
+      if (node.url && checkedMap[node.id]) {
+        result.push(node.url);
+      }
+      if (node.children && node.children.length > 0) {
+        result = result.concat(getSelectedUrls(node.children, checkedMap));
+      }
+    });
+
+    return result;
+  };
+
   const handleSelectAll = (value: boolean) => {
     setSelectAll(value);
+    const newMap: Record<string, boolean> = {};
+
+    const checkAllNodes = (nodes: TreeNodeType[]) => {
+      nodes.forEach((node) => {
+        if (node.url) newMap[node.id] = value;
+        if (node.children && node.children.length > 0)
+          checkAllNodes(node.children);
+      });
+    };
+
+    checkAllNodes(tree);
+    setCheckedMap(newMap);
+    setSelectAll(value);
   };
+
   if (!show) return null;
 
   return (
@@ -168,8 +321,10 @@ export default function CrawlLevel2({
               </label>
               <div className="flex-1">
                 <Input
+                  id="url"
                   type="url"
                   value={url}
+                  autoComplete="url"
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://example.com/about"
                   className="w-full text-left!"
@@ -200,26 +355,31 @@ export default function CrawlLevel2({
             </div>
           </div>
 
-          {allUrl && allUrl.length > 0 && (
-            <div className="flex flex-col items-start border-b border-gray-200 p-4 gap-4">
-              <p className="font-semibold mb-2 text-left flex items-center justify-between">
+          {tree && tree.length > 0 && (
+            <div className="flex flex-col items-start border-gray-200 p-4 gap-4">
+              <div className="w-full font-medium mb-2  flex items-center justify-between">
                 <div>لینک‌های دریافت شده:</div>
-                <div className="flex items-center">
-                  <LayoutRow />
-                  تعداد: {allUrl.length}
+                <div className="flex items-center gap-1">
+                  <div className="w-5 h-5 text-primary">
+                    <Tick />
+                  </div>
+                  <span className="font-light text-sm text-matn">
+                    تعداد: {tree.length.toLocaleString("fa-IR")}
+                  </span>
                 </div>
-              </p>
-              <div>
-                <Checkbox
-                  id="select-all"
-                  label="انتخاب همه"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                />
               </div>
+
               {/* لیست URLها */}
-              <div className="flex flex-col gap-2 max-h-64 overflow-y-auto border rounded-lg p-2 w-full">
-                {allUrl.map((link: any, index: number) => (
+              <div className="flex flex-col gap-2 max-h-64 overflow-y-auto border rounded-lg p-2 w-full  bg-gray-50">
+                {/* <TreeViewContainer data={tree} /> */}
+                <TreeViewContainer
+                  data={tree}
+                  checkedMap={checkedMap}
+                  onToggle={(id, checked) =>
+                    setCheckedMap((prev) => ({ ...prev, [id]: checked }))
+                  }
+                />
+                {/* {allUrl.map((link: any, index: number) => (
                   <label
                     key={index}
                     dir="ltr"
@@ -235,9 +395,16 @@ export default function CrawlLevel2({
                       {decodeURIComponent(link.url)}
                     </span>
                   </label>
-                ))}
+                ))} */}
               </div>
-
+              <div className="text-sm">
+                <Checkbox
+                  id="select-all"
+                  label="انتخاب همه"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                />
+              </div>
               {/* دکمه در وسط */}
               <div className="w-full flex justify-center">
                 <Button

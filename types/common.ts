@@ -268,3 +268,10 @@ export interface SelectorItem {
   id?: string;
   disabled?:boolean;
 }
+
+export type TreeNodeType = {
+  id: string;
+  title: string;
+  url?: string;
+  children: TreeNodeType[];
+};

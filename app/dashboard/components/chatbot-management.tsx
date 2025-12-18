@@ -248,7 +248,7 @@ export function ChatbotManagement() {
                   Object.values(sessions).reduce((sum, count) => sum + count, 0)
                 )}
               </h3>
-              <p className="text-grey-600 text-sm text-left">گفتگوهای امروز</p>
+              <p className="text-grey-600 text-sm text-left">گفتگوها</p>
             </div>
           </div>
 
@@ -281,7 +281,7 @@ export function ChatbotManagement() {
                         </div>
 
                         {chatbot.description && (
-                          <p className="text-grey-500 text-sm">
+                          <p className="text-grey-500 text-sm line-clamp-1">
                             {chatbot.description}
                           </p>
                         )}
@@ -296,7 +296,7 @@ export function ChatbotManagement() {
                             sessions?.[chatbot?.uuid as any] || "0"
                           )}
                         </p>
-                        <p className="text-xs text-grey-500">گفتگو امروز</p>
+                        <p className="text-xs text-grey-500">گفتگو  </p>
                       </div>
 
                       <div className="text-center">
