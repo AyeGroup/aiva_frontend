@@ -2,6 +2,7 @@
 import { useAuth } from "@/providers/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const menuItems = [
@@ -19,6 +20,20 @@ export default function Header() {
   const { user, loading } = useAuth();
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
+  const router = useRouter();
+
+  const handleOnboarding = () => {
+    console.log("handleOnboarding");
+    localStorage.setItem("alogUrl", "/onboarding");
+    router.push("/onboarding");
+  };
+  
+  const handleOnboardingMobile = () => {
+    console.log("handleOnboarding");
+    localStorage.setItem("alogUrl", "/onboarding");
+    closeMenu()
+    router.push("/onboarding");
+  };
 
   return (
     <header className="bg-white border-gray-200">
@@ -84,8 +99,9 @@ export default function Header() {
               >
                 ورود
               </a>
-              <a
-                href="/onboarding"
+              <button
+                // href="/onboarding"
+                onClick={handleOnboarding}
                 className="flex items-center gap-2 bg-[#65bcb6] text-white px-3 sm:px-4 py-2 rounded-sm shadow hover:bg-[#58aaa5] transition text-sm sm:text-base whitespace-nowrap"
               >
                 شروع رایگان
@@ -98,7 +114,7 @@ export default function Header() {
                     strokeWidth="1.5"
                   />
                 </svg>
-              </a>
+              </button>
             </>
           )}
         </div>
@@ -156,9 +172,10 @@ export default function Header() {
               {label}
             </a>
           ))}
-          <a
-            href="/onboarding"
-            onClick={closeMenu}
+          <button
+            // href="/onboarding"
+            // onClick={ closeMenu}
+            onClick={handleOnboardingMobile}
             className="flex items-center w-fit justify-end gap-2 bg-[#65bcb6] text-white px-4 py-3 rounded-lg shadow hover:bg-[#58aaa5] transition mt-2"
           >
             شروع رایگان
@@ -171,7 +188,7 @@ export default function Header() {
                 strokeWidth="1.5"
               />
             </svg>
-          </a>
+          </button>
         </nav>
       )}
     </header>

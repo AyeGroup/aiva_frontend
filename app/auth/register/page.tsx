@@ -638,7 +638,7 @@ export default function Register() {
                   آیوا
                 </span>
                 <p className="text-grey-500 text-sm">
-                  دستیار هوشمند کسب و کار تو
+                  دستیار هوشمند کسب‌وکار تو
                 </p>
               </div>
             </Link>

@@ -45,10 +45,10 @@ function Login() {
       setWarning("");
     }
   };
- 
-   const persianYear = new Intl.DateTimeFormat("fa-IR", {
-     year: "numeric",
-   }).format(new Date());
+
+  const persianYear = new Intl.DateTimeFormat("fa-IR", {
+    year: "numeric",
+  }).format(new Date());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +71,11 @@ function Login() {
         return;
       }
       console.log("user role", res.user.role);
+      const storedUrl = localStorage.getItem("alogUrl");
+      localStorage.removeItem("alogUrl");
+
       if (res.user.role === "admin") router.push("/admin");
+      else if (storedUrl) router.push(storedUrl);
       else router.push("/dashboard");
 
       console.log("user");
@@ -105,7 +109,7 @@ function Login() {
                   آیوا
                 </span>
                 <p className="text-grey-500 text-sm">
-                  دستیار هوشمند کسب و کار تو
+                  دستیار هوشمند کسب‌وکار تو
                 </p>
               </div>
             </Link>

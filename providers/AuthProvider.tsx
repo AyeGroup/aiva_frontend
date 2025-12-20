@@ -18,7 +18,6 @@ interface User {
 }
 
 type LoginResponse =
-
   | { success: true; user: User }
   | { success: false; status: number | null; message: string };
 
@@ -132,8 +131,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
 
-Cookies.set("role", payload.role, { expires: 7 });
-Cookies.set("accessToken", data.access_token, { expires: 7 });
+      Cookies.set("role", payload.role, { expires: 7 });
+      Cookies.set("accessToken", data.access_token, { expires: 7 });
 
       return { success: true, user };
     } catch (err: any) {
@@ -154,7 +153,11 @@ Cookies.set("accessToken", data.access_token, { expires: 7 });
     try {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      localStorage.removeItem("user");
+      localStorage.removeItem("aiva-onboarding-data");
+      localStorage.removeItem("selectedPlan");
+      localStorage.removeItem("lastInvoiceId");
+      localStorage.removeItem("invoice-undefined");
+
       setUser(null);
       router.push("/auth/login");
     } catch {

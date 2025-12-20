@@ -1,6 +1,6 @@
 {
   "name": "aiva",
-  "version": "0.9.26",
+  "version": "0.9.29",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -142,8 +142,12 @@ export default function Verification() {
         setOtp(["", "", "", "", ""]);
         inputRefs.current[0]?.focus();
       }
-    } catch (error) {
+    } catch (error:any) {
       setOtp(["", "", "", "", ""]);
+      if (error.response) 
+ 
+      setError(error.message)
+      else
       setError("خطایی رخ داده است. لطفاً مجدداً تلاش کنید.");
     } finally {
       setIsSubmit(false);
@@ -217,7 +221,7 @@ export default function Verification() {
                       lineHeight: "var(--text-body-small-lh)",
                     }}
                   >
-                    دستیار هوشمند کسب و کار تو
+                    دستیار هوشمند کسب‌وکار تو
                   </p>
                 </div>
               </div>
