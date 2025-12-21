@@ -1,6 +1,7 @@
-"use client";
-import AppShell from "@/components/shell/AppShell";
+import LandingPage from "./landing/page";
+
+export const dynamic = "force-dynamic";
 
 export default function Page() {
-  return <AppShell page="landing" />;
+  return <LandingPage />;
 }

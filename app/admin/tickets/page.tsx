@@ -5,7 +5,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
-import { StatusBadge } from "@/app/dashboard/status-badge";
+import { StatusBadge } from "@/app/dashboard/widgets/status-badge";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { Ticket, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";

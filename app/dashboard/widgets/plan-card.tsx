@@ -98,7 +98,7 @@ export function PlanCard({
           <span className="plan-card-price-number">
             {price === 0 ? "رایگان" : formatPrice(price)}
           </span>
-          {price > 0 && <span className="plan-card-price-currency">تومان</span>}
+          {price > 0 && <span className="plan-card-price-currency">ريال</span>}
           {price > 0 && (
             <p className="plan-card-price-period text-sm">/ {periodLabel} </p>
           )}

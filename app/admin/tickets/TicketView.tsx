@@ -10,7 +10,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import PageLoader from "@/components/pageLoader";
 import { getCategoryLabel } from "@/constants/common";
-import { StatusBadge } from "@/app/dashboard/status-badge";
+import { StatusBadge } from "@/app/dashboard/widgets/status-badge";
 
 interface Props {
   ticket: Ticket;

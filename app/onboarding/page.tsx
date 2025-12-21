@@ -20,7 +20,7 @@ import { WizardStep4 } from "./steps/step4";
 import { WizardStep5 } from "./steps/step5";
 import { WizardStep6 } from "./steps/step6";
 import { ChatPreview } from "./chat-preview";
-import { StatsDrawer } from "../dashboard/stats-drawer";
+import { StatsDrawer } from "../dashboard/widgets/stats-drawer";
 import { onboardingData } from "./onboarding.data";
 import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";

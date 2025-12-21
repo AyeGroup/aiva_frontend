@@ -235,8 +235,7 @@ export default function Checkout() {
                         {(invoice?.base_amount_irr || "").toLocaleString(
                           "fa-IR"
                         )}{" "}
-                        تومان
-                        {/* {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان */}
+                        ريال
                       </p>
                       <p className="text-grey-500 text-sm">
                         {SUBSCRIPTION_TYPES[selectedPlan.billingPeriod]}
@@ -290,16 +289,15 @@ export default function Checkout() {
                 <div className="flex justify-between items-center">
                   <span className="text-grey-600">مبلغ پایه</span>
                   <span>
-                    {/* {invoice.base_amount_irr.toLocaleString("fa-IR")} تومان */}
                     {(invoice?.base_amount_irr || "").toLocaleString("fa-IR")}{" "}
-                    تومان
+                    ريال
                   </span>
                 </div>
                 {appliedDiscount > 0 && (
                   <div className="flex justify-between items-center text-green-600">
                     <span>تخفیف ({appliedDiscount}%)</span>
                     <span>
-                      -{invoice.discountAmount.toLocaleString("fa-IR")} تومان
+                      -{invoice.discountAmount.toLocaleString("fa-IR")} ريال
                     </span>
                   </div>
                 )}
@@ -309,7 +307,7 @@ export default function Checkout() {
                   </span>
                   <span>
                     {(invoice?.tax_amount_irr || "").toLocaleString("fa-IR")}{" "}
-                    تومان
+                    ريال
                   </span>
                 </div>
               </div>
@@ -347,7 +345,7 @@ export default function Checkout() {
                 <span>مبلغ قابل پرداخت</span>
                 <span className="text-xl font-bold text-[#65BCB6]">
                   {(invoice?.total_amount_irr || "").toLocaleString("fa-IR")}{" "}
-                  تومان
+                  ريال
                 </span>
               </div>
 

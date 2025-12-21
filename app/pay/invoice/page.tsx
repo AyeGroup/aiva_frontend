@@ -41,6 +41,7 @@ export default function Invoice() {
 
   useEffect(() => {
     const storedUrl = localStorage.getItem("returnUrl");
+     localStorage.removeItem("returnUrl");
     setReturnUrl(storedUrl);
   }, []);
 

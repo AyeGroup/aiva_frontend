@@ -37,11 +37,11 @@ export function PlanCardMenu({
   onSelect,
   disabled = false,
 }: PlanCardProps) {
+
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat("fa-IR").format(price);
   };
 
-  // انتخاب قیمت و متن دوره بر اساس period
   const price = period === "monthly" ? priceMonthly : priceYearly;
 
   return (
@@ -64,7 +64,7 @@ export function PlanCardMenu({
           <h4 className="plan-compact-name">{name}</h4>
           <p className="plan-compact-price">
             {formatPrice(price)}
-            تومان
+            ريال
           </p>
         </div>
       </div>

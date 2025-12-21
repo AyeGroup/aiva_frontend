@@ -6,7 +6,7 @@ import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { StatusBadge } from "../status-badge";
+import { StatusBadge } from "../widgets/status-badge";
 import { Ticket, TicketStatus, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
 import { ViewTicketDetail } from "../TicketView";
@@ -21,7 +21,6 @@ import {
   TicketPend,
 } from "@/public/icons/AppIcons";
 
- 
 interface TicketStats {
   total: number;
   open: number;
@@ -59,8 +58,6 @@ const formatDateTime = (dateString: string): string => {
   return `${faDate} - ${faTime}`;
 };
 
-
-
 const getPriorityStyles = (priority: string): string => {
   const styles: Record<string, string> = {
     urgent: "bg-red-100 text-red-700",
@@ -70,8 +67,6 @@ const getPriorityStyles = (priority: string): string => {
   };
   return styles[priority] || "";
 };
-
-
 
 const getBadgeStatus = (status: string): "error" | "pending" | "success" => {
   if (status === "open") return "error";
@@ -470,7 +465,7 @@ export function Tickets() {
       </div>
     </section>
   );
- 
+
   return (
     <div className="h-screen overflow-y-auto w-full bg-bg-shell">
       {(isLoading || loading) && <PageLoader />}
@@ -503,5 +498,4 @@ export function Tickets() {
       </main>
     </div>
   );
- 
 }

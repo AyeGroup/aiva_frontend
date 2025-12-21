@@ -5,7 +5,7 @@ import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { Wallet, Plus } from "lucide-react";
-import { WalletIncreaseModal } from "./components/WalletIncrease";
+import { WalletIncreaseModal } from "../components/WalletIncrease";
 
 export function WalletCard() {
   const [isUpgradeWalletOpen, setIsUpgradeWalletOpen] = useState(false);
@@ -29,7 +29,6 @@ export function WalletCard() {
         const res = await axiosInstance.get(API_ROUTES.FINANCIAL.WALLET);
 
         setWallet_balance(res.data?.data.wallet_balance);
-        // console.log("setWallet_balance :", res.data?.data);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
       } finally {
@@ -66,9 +65,7 @@ export function WalletCard() {
               </h3>
               <div className="wallet-amount" role="status" aria-live="polite">
                 <span className="wallet-amount-number text-right text-[24px] font-bold">
-                  {/* {formatCurrency(balance)} */}
                   {wallet_balance.toLocaleString("fa-IR")}
-                  {/* {wallet_balance.toLocaleDateString("fa-IR")} */}
                 </span>
                 <span className="wallet-amount-unit text-right text-[20px]">
                   تومان

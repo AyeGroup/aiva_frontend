@@ -1,19 +1,19 @@
 "use client";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
-import NewUserIntro from "../NewUserIntro";
+import NewUserIntro from "../widgets/NewUserIntro";
 import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { BarChart3 } from "lucide-react";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { RecentChats } from "../recent-chats";
-import { StatsDrawer } from "../stats-drawer";
+import { RecentChats } from "../widgets/recent-chats";
+import { StatsDrawer } from "../widgets/stats-drawer";
 import { HeatmapChart } from "@/components/heatmap-chart";
-import { UpgradeBanner } from "../upgrade-banner";
+import { UpgradeBanner } from "../widgets/upgrade-banner";
 import { ActivityChart } from "@/components/activity-chart";
 import { GenericSelector } from "@/components/selector";
-import { ChatbotSelector } from "../chatbot-selector";
+import { ChatbotSelector } from "../widgets/chatbot-selector";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
 import {
@@ -30,7 +30,7 @@ import {
 
 export default function Dashboard() {
   const router = useRouter();
-  const { user, loading } = useAuth(); 
+  const { user, loading } = useAuth();
   const { bots, currentBot, botLoading } = useBot();
   const [isNew, setIsNew] = useState<boolean>(true);
   const [statisticCover, setStatisticCover] = useState<any>(null);
@@ -154,55 +154,54 @@ export default function Dashboard() {
   }, [bots, botLoading]);
 
   //statistic cover
-  
 
-useEffect(() => {
-  if (!user || !currentBot?.uuid) return;
+  useEffect(() => {
+    if (!user || !currentBot?.uuid) return;
 
-  const fetchAllData = async () => {
-    setIsLoading(true);
+    const fetchAllData = async () => {
+      setIsLoading(true);
 
-    try {
-      // Fetch all statistics in parallel
-      const [
-        userTrendRes,
-        sessionTrendRes,
-        activeUsersRes,
-        recentSessionRes,
-        faqListRes,
-        coverRes,
-      ] = await Promise.allSettled([
-        fetchUserTrend(timeRange),
-        fetchSessionTrend(timeRange),
-        fetchActiveUsers(),
-        fetchRecentSession(),
-        fetchFaqList(),
-        fetchStatisticCover(), // new wrapper for your cover API
-      ]);
+      try {
+        // Fetch all statistics in parallel
+        const [
+          userTrendRes,
+          sessionTrendRes,
+          activeUsersRes,
+          recentSessionRes,
+          faqListRes,
+          coverRes,
+        ] = await Promise.allSettled([
+          fetchUserTrend(timeRange),
+          fetchSessionTrend(timeRange),
+          fetchActiveUsers(),
+          fetchRecentSession(),
+          fetchFaqList(),
+          fetchStatisticCover(), // new wrapper for your cover API
+        ]);
 
-      const results = [
-        userTrendRes,
-        sessionTrendRes,
-        activeUsersRes,
-        recentSessionRes,
-        faqListRes,
-        coverRes,
-      ];
+        const results = [
+          userTrendRes,
+          sessionTrendRes,
+          activeUsersRes,
+          recentSessionRes,
+          faqListRes,
+          coverRes,
+        ];
 
-      results.forEach((r, i) => {
-        if (r.status === "rejected") {
-          console.error(`Error in promise ${i}`, r.reason);
-        }
-      });
-    } catch (err) {
-      console.error("Unexpected error:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        results.forEach((r, i) => {
+          if (r.status === "rejected") {
+            console.error(`Error in promise ${i}`, r.reason);
+          }
+        });
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  fetchAllData();
-}, [currentBot?.uuid, user, timeRange]);
+    fetchAllData();
+  }, [currentBot?.uuid, user, timeRange]);
 
   const fetchAllStatistics = async () => {
     setIsLoading(true);
@@ -228,17 +227,17 @@ useEffect(() => {
     }
   };
 
-const fetchStatisticCover = async () => {
-  const response = await axiosInstance.get(
-    API_ROUTES.STATISTIC.GET_COVER(currentBot!.uuid)
-  );
-  if (response.status === 200) {
-    setStatisticCover(response.data.data);
-  }
-};
+  const fetchStatisticCover = async () => {
+    const response = await axiosInstance.get(
+      API_ROUTES.STATISTIC.GET_COVER(currentBot!.uuid)
+    );
+    if (response.status === 200) {
+      setStatisticCover(response.data.data);
+    }
+  };
 
   const fetchUserTrend = async (days: string) => {
-      // console.log("fetchUserTrend ");
+    // console.log("fetchUserTrend ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -257,7 +256,7 @@ const fetchStatisticCover = async () => {
   };
 
   const fetchSessionTrend = async (days: string) => {
-      // console.log("fetchSessionTrend ");
+    // console.log("fetchSessionTrend ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -276,7 +275,7 @@ const fetchStatisticCover = async () => {
   };
 
   const fetchActiveUsers = async () => {
-      // console.log("fetchActiveUsers ");
+    // console.log("fetchActiveUsers ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -289,7 +288,7 @@ const fetchStatisticCover = async () => {
   };
 
   const fetchFaqList = async () => {
-      // console.log("fetchFaqList ");
+    // console.log("fetchFaqList ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -302,7 +301,7 @@ const fetchStatisticCover = async () => {
   };
 
   const fetchRecentSession = async () => {
-      // console.log("fetchRecentSession ");
+    // console.log("fetchRecentSession ");
     setRecentSession([]);
     if (!currentBot) return;
     try {
@@ -316,7 +315,7 @@ const fetchStatisticCover = async () => {
   };
 
   const handleTimeRangeChange = async (value: string) => {
-      // console.log("handleTimeRangeChange ");
+    // console.log("handleTimeRangeChange ");
     setIsChartLoading(true);
     await fetchSessionTrend(value);
     await fetchUserTrend(value);
@@ -333,8 +332,7 @@ const fetchStatisticCover = async () => {
     return null;
   }
 
- 
-  if (!botLoading && isNew===true) {
+  if (!botLoading && isNew === true) {
     return <NewUserIntro />;
   }
 
@@ -424,7 +422,6 @@ const fetchStatisticCover = async () => {
                   );
                 })}
               </div>
-      
             </div>
 
             {/* نمودار تعداد کاربران و گفتگوها  */}
@@ -563,9 +560,8 @@ const fetchStatisticCover = async () => {
                   })}
 
                   {/* More Users Button */}
-                  {activeUsers
-                  //  && activeUsers.length > 3
-                    && (
+                  {activeUsers && (
+                    //  && activeUsers.length > 3
                     <div
                       className="relative rounded-lg p-4 shadow-sm hover-lift   flex items-center justify-center"
                       style={{

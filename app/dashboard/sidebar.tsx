@@ -6,8 +6,8 @@ import PageLoader from "@/components/pageLoader";
 import { useAuth } from "@/providers/AuthProvider";
 import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
-import { AddChatbotModal } from "./add-chatbot-modal";
-import { EditProfileModal } from "./EditProfileModal";
+import { AddChatbotModal } from "./widgets/add-chatbot-modal";
+import { EditProfileModal } from "./widgets/EditProfileModal";
 import { User, LogOut, ArrowLeft } from "lucide-react";
 
 interface SidebarItemProps {
@@ -59,7 +59,7 @@ export function Sidebar({
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
-  
+
   const handleLogout = async () => {
     try {
       setIsLoading(true);

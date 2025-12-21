@@ -6,7 +6,7 @@ import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ChatHistory } from "./chat-history";
-import { ChatbotSelector } from "../chatbot-selector";
+import { ChatbotSelector } from "../widgets/chatbot-selector";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -60,99 +60,98 @@ export default function ActiveUsers() {
 
   if (loading || isLoading) return <PageLoader />;
 
-return (
-  <div className="w-full mx-auto p-4 sm:p-6">
-    <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
-      <header className="mb-2 sm:mb-0">
-        <h1 className="text-grey-900 font-medium text-right text-lg sm:text-xl">
-          کاربران فعال
-        </h1>
-      </header>
-      <div className="mt-2 sm:mt-0">
-        <ChatbotSelector />
+  return (
+    <div className="w-full mx-auto p-4 sm:p-6">
+      <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+        <header className="mb-2 sm:mb-0">
+          <h1 className="text-grey-900 font-medium text-right text-lg sm:text-xl">
+            کاربران فعال
+          </h1>
+        </header>
+        <div className="mt-2 sm:mt-0">
+          <ChatbotSelector />
+        </div>
       </div>
-    </div>
 
-    {users.length === 0 ? (
-      <p className="text-gray-600">هیچ کاربر فعالی یافت نشد.</p>
-    ) : (
-      <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-8">
-        {/* لیست کاربران */}
-        <div className="w-full lg:w-1/2 flex flex-col mt-4 gap-4">
-          {users.map((user, index) => {
-            const color = colors[index % colors.length];
-            return (
-              <button
-                key={user.user_id}
-                onClick={() => setUsername(user.user_id)}
-                className="relative bg-white cursor-pointer rounded-lg pb-3 p-6 text-right shadow-sm hover-lift"
-              >
-                <div
-                  className="absolute -top-4 right-1 w-10 h-10 rounded-full flex items-center justify-center shadow-md text-white font-bold"
-                  style={{ background: color }}
+      {users.length === 0 ? (
+        <p className="text-gray-600">هیچ کاربر فعالی یافت نشد.</p>
+      ) : (
+        <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-8">
+          {/* لیست کاربران */}
+          <div className="w-full lg:w-1/2 flex flex-col mt-4 gap-4">
+            {users.map((user, index) => {
+              const color = colors[index % colors.length];
+              return (
+                <button
+                  key={user.user_id}
+                  onClick={() => setUsername(user.user_id)}
+                  className="relative bg-white cursor-pointer rounded-lg pb-3 p-6 text-right shadow-sm hover-lift"
                 >
-                  <div className="w-4 h-4">
-                    <User />
+                  <div
+                    className="absolute -top-4 right-1 w-10 h-10 rounded-full flex items-center justify-center shadow-md text-white font-bold"
+                    style={{ background: color }}
+                  >
+                    <div className="w-4 h-4">
+                      <User />
+                    </div>
                   </div>
-                </div>
-                <div className="flex justify-between items-center gap-3 flex-wrap">
-                  <div className="flex-col font-bold text-grey-900 my-2 truncate">
-                    {user.email ? `ایمیل: ${user.email}` : ""}
-                    {user.name ? `نام: ${user.name}` : ""}
-                    {user.phone ? `تلفن: ${user.phone}` : ""}
+                  <div className="flex justify-between items-center gap-3 flex-wrap">
+                    <div className="flex-col font-bold text-grey-900 my-2 truncate">
+                      {user.email ? `ایمیل: ${user.email}` : ""}
+                      {user.name ? `نام: ${user.name}` : ""}
+                      {user.phone ? `تلفن: ${user.phone}` : ""}
+                    </div>
+
+                    <p className="flex text-sm text-grey-500 gap-1">
+                      {convertToPersian(user.session_count)}
+                      <span>گفتگو</span>
+                    </p>
                   </div>
+                </button>
+              );
+            })}
 
-                  <p className="flex text-sm text-grey-500 gap-1">
-                    {convertToPersian(user.session_count)}
-                    <span>گفتگو</span>
-                  </p>
-                </div>
-              </button>
-            );
-          })}
-
-          {/* صفحه‌بندی */}
-          {totalPages && totalPages > 1 && (
-            <div className="flex justify-center items-center gap-4 mt-6 flex-wrap">
-              <button
-                onClick={handlePrevPage}
-                disabled={!hasPrev}
-                className={`px-4 py-2 rounded-md ${
-                  hasPrev
-                    ? "bg-gray-200 hover:bg-gray-300"
-                    : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                <ChevronRight />
-              </button>
-              <span className="text-gray-500">
-                <span className="text-primary font-semibold ml-1">
-                  {convertToPersian(page)}
+            {/* صفحه‌بندی */}
+            {totalPages && totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 mt-6 flex-wrap">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={!hasPrev}
+                  className={`px-4 py-2 rounded-md ${
+                    hasPrev
+                      ? "bg-gray-200 hover:bg-gray-300"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
+                >
+                  <ChevronRight />
+                </button>
+                <span className="text-gray-500">
+                  <span className="text-primary font-semibold ml-1">
+                    {convertToPersian(page)}
+                  </span>
+                  از {convertToPersian(totalPages)}
                 </span>
-                از {convertToPersian(totalPages)}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={!hasNext}
-                className={`px-4 py-2 rounded-md ${
-                  hasNext
-                    ? "bg-gray-200 hover:bg-gray-300"
-                    : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                <ChevronLeft />
-              </button>
-            </div>
-          )}
-        </div>
+                <button
+                  onClick={handleNextPage}
+                  disabled={!hasNext}
+                  className={`px-4 py-2 rounded-md ${
+                    hasNext
+                      ? "bg-gray-200 hover:bg-gray-300"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
+                >
+                  <ChevronLeft />
+                </button>
+              </div>
+            )}
+          </div>
 
-        {/* تاریخچه چت */}
-        <div className="w-full lg:w-1/2 rounded-lg p-4 mt-6 lg:mt-0">
-          <ChatHistory username={username} />
+          {/* تاریخچه چت */}
+          <div className="w-full lg:w-1/2 rounded-lg p-4 mt-6 lg:mt-0">
+            <ChatHistory username={username} />
+          </div>
         </div>
-      </div>
-    )}
-  </div>
-);
-
+      )}
+    </div>
+  );
 }

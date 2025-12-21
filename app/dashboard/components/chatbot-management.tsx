@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
-import ChatbotDetailModal from "../ChatbotDetailModal";
+import ChatbotDetailModal from "../widgets/ChatbotDetailModal";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { Switch } from "@/components/switch";

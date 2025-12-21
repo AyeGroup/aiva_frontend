@@ -1,5 +1,5 @@
 import PageLoader from "@/components/pageLoader";
-import CrawlLevel2 from "@/app/dashboard/CrawlLevel2";
+import CrawlLevel2 from "@/app/dashboard/widgets/CrawlLevel2";
 import LockFeature from "../LockFeature";
 import RadioGroup from "@/components/RadioGroup";
 import axiosInstance from "@/lib/axiosInstance";

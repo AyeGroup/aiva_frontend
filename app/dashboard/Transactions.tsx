@@ -8,7 +8,7 @@ import { useBot } from "@/providers/BotProvider";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { ChatbotList } from "./chatbot-list";
+import { ChatbotList } from "./widgets/chatbot-list";
 import { convertToPersian } from "@/utils/common";
 import { getTransactionTitle, TRANSACTION_TYPE } from "@/constants/plans";
 import {
@@ -128,7 +128,7 @@ export const Transactions: React.FC = () => {
         API_ROUTES.FINANCIAL.PDF(transaction_id),
         { responseType: "blob" } // مهم!!
       );
-          console.error("response1  :", response);
+      console.error("response1  :", response);
 
       const pdfBlob = new Blob([response.data], { type: "application/pdf" });
 
@@ -142,9 +142,8 @@ export const Transactions: React.FC = () => {
       toast.success("فایل دانلود شد");
       console.log("PDF downloaded");
     } catch (error: any) {
-
-          console.error("error  :", error);
-          console.error("error.response  :", error.response);
+      console.error("error  :", error);
+      console.error("error.response  :", error.response);
 
       // بررسی وجود پاسخ از سرور
       if (error.response && error.response.data) {
@@ -381,7 +380,9 @@ export const Transactions: React.FC = () => {
                     <th className="px-6 py-4 text-right text-grey-600">
                       شناسه
                     </th>
-                    <th className="px-6 py-4 text-right text-grey-600">مبلغ</th>
+                    <th className="px-6 py-4 text-right text-grey-600">
+                      مبلغ <span className="text-xs text-gray-400">تومان</span>
+                    </th>
                     <th className="px-6 py-4 text-right text-grey-600">
                       تاریخ
                     </th>

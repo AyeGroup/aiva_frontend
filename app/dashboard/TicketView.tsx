@@ -5,7 +5,7 @@ import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { Ticket } from "@/types/common";
-import { StatusBadge } from "./status-badge";
+import { StatusBadge } from "./widgets/status-badge";
 import { TicketPend, User } from "@/public/icons/AppIcons";
 import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
@@ -106,7 +106,6 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
       setIsLoading(false);
     }
   };
-  
 
   const handleSendReply = async () => {
     if (!replyText.trim()) return;
@@ -162,8 +161,6 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                         thisTicket.messages.length > 0 &&
                         thisTicket.messages[0].content}
                     </p>
-
-                    
                   </div>
                 </div>
               </div>

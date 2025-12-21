@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { getPlanIcon } from "@/constants/plans";
-import { StatsDrawer } from "../dashboard/stats-drawer";
+import { StatsDrawer } from "../dashboard/widgets/stats-drawer";
 // import { usePricing } from "@/providers/PricingContext";
 
 export default function FloatSideMenu({ activePlan }: { activePlan: string }) {

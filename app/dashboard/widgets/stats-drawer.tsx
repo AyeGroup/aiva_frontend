@@ -112,7 +112,7 @@ export function StatsDrawer({
     // console.log("billingPeriod:", billingPeriod);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
-      
+
       localStorage.setItem(
         "selectedPlan",
         JSON.stringify({

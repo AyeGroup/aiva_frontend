@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
-import { Modal } from "../modal";
+import { Modal } from "../widgets/modal";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
@@ -27,7 +27,7 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
 
   const handleFactor = async () => {
     if (!credit || Number(credit) < 1000) {
-      toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰ تومان)");
+      toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰ ريال)");
       return;
     }
     console.log("chat", selectedChatbot?.chatbot_uuid);
@@ -137,7 +137,7 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
                 className="w-full px-4 py-2.5 rounded-xl border border-grey-200 focus:border-[#65bcb6] focus:outline-none transition-colors text-right"
                 placeholder="مثال: ۱۰۰٬۰۰۰"
               />
-              <span>تومان</span>
+              <span>ريال</span>
             </div>
 
             {/* دکمه‌های سریع */}
@@ -172,10 +172,10 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-grey-600">مبلغ پایه</span>
-                {/* <span>{0} تومان</span> */}
+                {/* <span>{0} ريال</span> */}
                 <span>
                   {(invoice?.base_amount_irr || 0).toLocaleString("fa-IR")}{" "}
-                  تومان
+                  ريال
                 </span>
               </div>
 
@@ -189,14 +189,14 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
               <div className="flex justify-between">
                 <span className="text-grey-600">مالیات ۹٪</span>
                 <span>
-                  {(invoice?.tax_amount_irr || 0).toLocaleString("fa-IR")} تومان
+                  {(invoice?.tax_amount_irr || 0).toLocaleString("fa-IR")} ريال
                 </span>
               </div>
 
               <div className="flex justify-between pt-2 border-t border-[#65bcb6]">
                 <span className="font-semibold">قابل پرداخت</span>
                 <span className="text-[#65bcb6] font-bold">
-                  {invoice?.total_amount_irr.toLocaleString("fa-IR")} تومان
+                  {invoice?.total_amount_irr.toLocaleString("fa-IR")} ريال
                 </span>
               </div>
             </div>

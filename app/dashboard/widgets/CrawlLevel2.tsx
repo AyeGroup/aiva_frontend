@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import LoadingModal from "../../components/LoadingModal";
+import LoadingModal from "../../../components/LoadingModal";
 import axiosInstance from "@/lib/axiosInstance";
 import TreeViewContainer from "@/components/TreeViewContainer";
 import { Input } from "@/components/input";
@@ -224,30 +224,30 @@ export default function CrawlLevel2({
     }
   };
 
-const handleSave = async () => {
-  if (!chatbot?.uuid) return;
+  const handleSave = async () => {
+    if (!chatbot?.uuid) return;
 
-  const selectedUrl = getSelectedUrls(tree, checkedMap);
-  if (selectedUrl.length === 0) {
-    toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
-    return;
-  }
-
-  const res = await axiosInstance.post(
-    API_ROUTES.BOTS.CRAWL_BATCH(chatbot.uuid),
-    {
-      urls: selectedUrl, // 👈 دقیقاً آرایه urls
+    const selectedUrl = getSelectedUrls(tree, checkedMap);
+    if (selectedUrl.length === 0) {
+      toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
+      return;
     }
-  );
 
-  if (!res.data?.success) {
-    toast.error("خطا در دریافت لینک‌ها");
-    return;
-  }
+    const res = await axiosInstance.post(
+      API_ROUTES.BOTS.CRAWL_BATCH(chatbot.uuid),
+      {
+        urls: selectedUrl, // 👈 دقیقاً آرایه urls
+      }
+    );
 
-  toast.success("لینک‌ها ثبت شدند");
-  onClose(true);
-};
+    if (!res.data?.success) {
+      toast.error("خطا در دریافت لینک‌ها");
+      return;
+    }
+
+    toast.success("لینک‌ها ثبت شدند");
+    onClose(true);
+  };
 
   const isValidUrl = (value: string) => {
     try {
