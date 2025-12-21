@@ -1,7 +1,6 @@
 import PageLoader from "@/components/pageLoader";
 import CrawlLevel2 from "@/app/dashboard/widgets/CrawlLevel2";
 import LockFeature from "../LockFeature";
-import RadioGroup from "@/components/RadioGroup";
 import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
@@ -13,7 +12,7 @@ import { onboardingData } from "../onboarding.data";
 import { convertToPersian } from "@/utils/common";
 import { Info, Refresh, Tick } from "@/public/icons/AppIcons";
 import { BotConfig, KnowledgeItem } from "@/types/common";
-import { useEffect, useRef, useState } from "react";
+import { DragEvent, useEffect, useRef, useState } from "react";
 import { useFeatureAccess } from "@/providers/PricingContext";
 import {
   FileText,
@@ -50,7 +49,8 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   );
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploading, setUploading] = useState<boolean>(false);
-
+  const [isDragging, setIsDragging] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const can_website_crawling = useFeatureAccess(
     botConfig.uuid,
@@ -63,7 +63,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
   const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
 
-  console.log("can_upload_docs", can_upload_docs);
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
 
@@ -90,7 +89,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
         );
 
         botConfig.knowledge = response.data.data;
-        // console.log("botConfig.knowledge: ", botConfig.knowledge);
       } catch (apiError: any) {
         console.warn("API fetch failed, using local data:", apiError);
       }
@@ -104,7 +102,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const handleCrawl = (value: number) => {
     setCrawlType(value);
     if (value === 2) {
-      // console.log("ctype", value);
       setShowCrawl2Modal(true);
       setSelectedChatbot(botConfig);
     } else {
@@ -112,41 +109,64 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       setSelectedChatbot(null);
     }
   };
+  const processFile = (file: File) => {
+    const maxSize = 1 * 1024 * 1024; // 1MB
+
+    if (file.size > maxSize) {
+      setSelectedFile(null);
+      toast.error("حجم فایل نباید بیشتر از ۱ مگابایت باشد");
+      return;
+    }
+
+    const allowedExtensions = ["pdf", "doc", "docx", "txt"];
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+
+    if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+      setSelectedFile(null);
+      toast.error("فرمت فایل مجاز نیست (PDF, DOC, DOCX, TXT)");
+      return;
+    }
+
+    setSelectedFile(file);
+
+    if (!newItem.title) {
+      setNewItem((prev) => ({ ...prev, title: file.name }));
+    }
+  };
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
-
-    if (file) {
-      const maxSize = 1 * 1024 * 1024;
-      if (file.size > maxSize) {
-        setSelectedFile(null);
-        toast.error("حجم فایل نباید بیشتر از ۵۰ مگابایت باشد  ");
-        return;
-      }
-      const allowedTypes = [".pdf", ".doc", ".docx", ".txt"];
-      const fileExtension = file.name
-        .slice(((file.name.lastIndexOf(".") - 1) >>> 0) + 2)
-        .toLowerCase();
-
-      if (allowedTypes.includes(`.${fileExtension}`)) {
-        setSelectedFile(file);
-        // setNewItem()
-        if (!newItem.title)
-          setNewItem((prev) => ({ ...prev, title: file.name }));
-
-        // console.log(`فایل انتخاب شد: ${file.name} (اندازه: ${file.size} بایت)`);
-      } else {
-        setSelectedFile(null);
-        console.error(
-          "فرمت فایل مجاز نیست. لطفاً PDF، DOC، DOCX یا TXT انتخاب کنید."
-        );
-      }
-      // console.log("newItem", newItem);
-    } else {
+    if (!file) {
       setSelectedFile(null);
+      return;
     }
+    processFile(file);
+    event.target.value = "";
+  };
+
+const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const file = e.dataTransfer.files?.[0];
+  if (!file) return;
+
+  processFile(file);
+};
+
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
   };
 
   function isValidUrl(url: string): boolean {
@@ -160,7 +180,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       return false;
     }
   }
-  const listRef = useRef<HTMLDivElement>(null);
 
   const handleCloseCrawl2 = async (success?: boolean) => {
     await loadQa(botConfig.uuid);
@@ -796,7 +815,13 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                 }`}
               >
                 <label className="block text-grey-900 mb-2">آپلود فایل</label>
-                <div className="border-2 border-dashed border-grey-300 rounded-lg p-8 text-center">
+                <div
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  className={`border-2 border-dashed rounded-lg p-8 text-center transition
+        ${isDragging ? "border-primary bg-primary/5" : "border-grey-300"}`}
+                >
                   {selectedFile ? (
                     <div>{selectedFile.name}</div>
                   ) : (
