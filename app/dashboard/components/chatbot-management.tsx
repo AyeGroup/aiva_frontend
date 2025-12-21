@@ -202,7 +202,7 @@ export function ChatbotManagement() {
           </header>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 overflow-hidden">
             <div className="relative flex flex-col items-center justify-center bg-white rounded-2xl p-6 border border-grey-100 shadow-card  ">
               <div className="absolute -top-1 right-5 w-20 h-20 rounded-full bg-primary/10"></div>
               <div className="absolute -bottom-3 -left-1 w-20 h-20 rounded-full bg-primary/5"></div>
@@ -267,9 +267,9 @@ export function ChatbotManagement() {
                   className="p-3 lg:p-6 hover:bg-grey-50/50 transition-colors"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-2 items-center   w-full ">
-                    <div className="flex items-center m-0 gap-4 grow">
+                    <div className="flex items-center m-0 gap-4 grow ">
                       <div
-                        className="w-4 h-4 rounded-full "
+                        className="w-4 h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: chatbot.primary_color }}
                       />
 
@@ -289,14 +289,13 @@ export function ChatbotManagement() {
                     </div>
 
                     <div className="flex items-center gap-4 m-0 lg:gap-6 w-full justify-between lg:justify-end">
-                      {/* <div className="flex items-center gap-6 w-full"> */}
                       <div className="text-center">
                         <p className="text-lg font-bold text-grey-900">
                           {convertToPersian(
                             sessions?.[chatbot?.uuid as any] || "0"
                           )}
                         </p>
-                        <p className="text-xs text-grey-500">گفتگو  </p>
+                        <p className="text-xs text-grey-500">گفتگو </p>
                       </div>
 
                       <div className="text-center">

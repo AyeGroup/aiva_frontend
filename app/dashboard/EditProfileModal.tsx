@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import axiosInstance from "@/lib/axiosInstance";
-import { Button } from "@/components/button";
+import { User } from "lucide-react";
 import { Input } from "@/components/input";
+import { toast } from "sonner";
+import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
@@ -13,8 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/dialog";
-import { User } from "lucide-react";
-import { toast } from "sonner";
 
 export interface ProfileForm {
   full_name: string | null;
@@ -31,6 +31,8 @@ interface EditProfileModalProps {
 
 export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
   const [loading, setLoading] = useState(false);
+const [preview, setPreview] = useState<string | null>(null);
+
   const [form, setForm] = useState<ProfileForm>({
     full_name: "",
     company_name: "",
@@ -53,9 +55,21 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
           full_name: data.full_name || "",
           company_name: data.company_name || "",
           company_role: data.company_role || "",
-          user_logo_url: data.user_logo_url || null,  
+          user_logo_url: data.user_logo_url || null,
           user_logo_file: null,
         });
+
+     
+       if (data.user_logo_url) {
+         const imgRes = await axiosInstance.get(data.user_logo_url, {
+           responseType: "blob",
+         });
+
+         const imageUrl = URL.createObjectURL(imgRes.data);
+         setPreview(imageUrl);
+       } else {
+         setPreview(null);
+       }
       } catch (err) {
         console.error("Error fetching profile:", err);
       } finally {
@@ -70,12 +84,20 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
   const handleLogoUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+  const previewUrl = URL.createObjectURL(file);
 
-    setForm((prev) => ({
-      ...prev,
-      user_logo_file: file,
-      user_logo_url: URL.createObjectURL(file), // preview only
-    }));
+    // setForm((prev) => ({
+    //   ...prev,
+    //   user_logo_file: file,
+    //   user_logo_url: URL.createObjectURL(file), // preview only
+    // }));
+
+     setForm((prev) => ({
+       ...prev,
+       user_logo_file: file,
+     }));
+  setPreview(previewUrl);
+
   };
 
   // Save changes
@@ -104,7 +126,7 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose} >
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md z-999">
         <DialogHeader>
           <DialogTitle>
@@ -127,11 +149,11 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
               <div className="flex items-end gap-8 p-2">
                 {form.user_logo_url && (
                   <Image
-                    src={form.user_logo_url || "/images/default-avatar.jpg"}
+                    src={preview || "/images/default-avatar.jpg"}
                     width={80}
                     height={80}
                     alt="پروفایل"
-                    className="rounded-full object-cover border"
+                    className="rounded-3xl object-cover border"
                   />
                 )}
 

@@ -16,6 +16,8 @@ import {
   TrendingUp,
   BarChart3,
 } from "lucide-react";
+import { useBot } from "@/providers/BotProvider";
+import { useUniqueId } from "recharts/types/util/useUniqueId";
 
 interface ChatbotDetailModalProps {
   show: boolean;
@@ -34,6 +36,7 @@ export default function ChatbotDetailModal({
   const [usagePercentage, setUsagePercentage] = useState<number>(100);
   const [totalMessages, setTotalMessages] = useState<number>();
   const [daysRemaining, setDaysRemaining] = useState<number>(0);
+  const { setCurrentBot } = useBot();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,6 +111,19 @@ export default function ChatbotDetailModal({
     fetchData();
   }, [chatbot?.uuid, show]);
 
+  const handleDashboard = () => {
+    if (chatbot?.uuid) setCurrentBot(chatbot);
+    onClose();
+    router.push("/dashboard");
+  };
+
+  const handlePlan = () => {
+    onClose();
+    sessionStorage.setItem("scrollTo", "chooseplan");
+    sessionStorage.setItem("billingchatbotId", chatbot?.uuid || "");
+    router.push("/dashboard/?tab=billing");
+  };
+
   if (!show || !chatbot?.uuid) return null;
 
   return (
@@ -171,31 +187,17 @@ export default function ChatbotDetailModal({
                     style={{
                       backgroundColor: chatbot.active
                         ? "#52d4a020"
-                        : // : chatbot?.status === "draft"
-                          // ? "#F59E0B20"
-                          "#EF444420",
-                      color: chatbot.active
-                        ? "#52d4a0"
-                        : // : chatbot?.status === "draft"
-                          // ? "#F59E0B"
-                          "#EF4444",
+                        : "#EF444420",
+                      color: chatbot.active ? "#52d4a0" : "#EF4444",
                       border: `1px solid ${
-                        chatbot.active
-                          ? "#52d4a040"
-                          : // : chatbot?.status === "draft"
-                            // ? "#F59E0B40"
-                            "#EF444440"
+                        chatbot.active ? "#52d4a040" : "#EF444440"
                       }`,
                     }}
                   >
                     <div
                       className="w-2 h-2 rounded-full"
                       style={{
-                        backgroundColor: chatbot.active
-                          ? "#52d4a0"
-                          : // : chatbot?.status === "draft"
-                            // ? "#F59E0B"
-                            "#EF4444",
+                        backgroundColor: chatbot.active ? "#52d4a0" : "#EF4444",
                       }}
                     />
 
@@ -345,31 +347,16 @@ export default function ChatbotDetailModal({
           {/* Buttons */}
           <div className="   pt-2 pb-2 px-5 bg-white">
             <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => {
-                  onClose();
-                  router.push("/?tab=billing");
-                  //   onNavigate("upgrade");
-                }}
-              >
+              <Button variant="primary" size="sm" onClick={handlePlan}>
                 <div className="flex">
                   <Zap className="w-4 h-4 ml-2" />
                   ارتقا پلن
                 </div>
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  onClose();
-                  router.push("/dashboard");
-                }}
-              >
+              <Button variant="secondary" size="sm" onClick={handleDashboard}>
                 <div className="flex">
                   <BarChart3 className="w-4 h-4 ml-2" />
-                  مشاهده داشبورد  
+                  مشاهده داشبورد
                 </div>
               </Button>
             </div>

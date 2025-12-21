@@ -9,7 +9,7 @@ import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { PlanCard } from "../plan-card";
 import { BotConfig } from "@/types/common";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WalletCard } from "../wallet-card";
 import { ChatbotList } from "../chatbot-list";
@@ -29,6 +29,7 @@ export function Billing() {
   const { bots } = useBot();
   const { user, loading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const maxDays = 7;
   const maxCredit = 85;
   const [showDiscountHint, setShowDiscountHint] = useState(true);
@@ -109,6 +110,27 @@ export function Billing() {
     fetchAllData();
   }, [user?.token]);
 
+  useEffect(() => {
+    const target = sessionStorage.getItem("scrollTo");
+
+    if (target) {
+      const el = document.getElementById(target);
+      el?.scrollIntoView({ behavior: "smooth" });
+      sessionStorage.removeItem("scrollTo");
+    }
+  }, []);
+
+  useEffect(() => {
+    const billingChatbotId = sessionStorage.getItem("billingchatbotId");
+    console.log("billingChatbotId", billingChatbotId);
+    sessionStorage.removeItem("billingchatbotId");
+    if (!billingChatbotId) return;
+    const myBot = bots.find((b) => b.uuid === billingChatbotId);
+    if (!myBot) return;
+
+    setBillingBot(myBot);
+  }, []);
+
   const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
     return [
       ...plan.features.map((f: string) => ({
@@ -131,7 +153,7 @@ export function Billing() {
     }));
   };
 
-  const handlePlanPurchase = (planName: string,selectedPeriod:string) => {
+  const handlePlanPurchase = (planName: string, selectedPeriod: string) => {
     if (!billingBot) {
       toast.info("لطفاً چت‌بات مورد نظر را انتخاب کنید");
       return;
@@ -431,7 +453,6 @@ export function Billing() {
                             disabled={plan.subscription.plan == "0"}
                             onClick={() => handleUpgrade(plan)}
                             className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                          
                           >
                             افزایش اعتبار
                           </button>
@@ -603,12 +624,10 @@ export function Billing() {
                                   disabled={plan.subscription.plan == "0"}
                                   onClick={() => handleUpgrade(plan)}
                                   className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                 
-                                 
                                   title="افزایش اعتبار پیام"
                                   type="button"
                                 >
-                                  افزایش اعتبار 
+                                  افزایش اعتبار
                                 </button>
                               </div>
                             </td>
@@ -624,7 +643,8 @@ export function Billing() {
 
           {/* Available Plans Section */}
           <section
-            className="mb-6 sm:mb-8"
+            id="chooseplan"
+            className="mb-6 sm:mb-8  lg:scroll-mt-32 "
             aria-labelledby="available-plans-heading"
           >
             <div className="mb-4">

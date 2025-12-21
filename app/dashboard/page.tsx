@@ -29,13 +29,11 @@ export default function DashboardPage() {
     | "onboarding"
     | "activeusers"
     | "billing";
-  // | "upgrade";
 
   const pages: Record<string, JSX.Element> = {
     "chatbot-management": <ChatbotManagement />,
     tickets: <Tickets />,
     billing: <Billing />,
-    // upgrade: <Upgrade />,
     dashboard: <DashboardHome />,
     onboarding: <OnboardingWizard />,
     activeusers: <ActiveUsers />,
