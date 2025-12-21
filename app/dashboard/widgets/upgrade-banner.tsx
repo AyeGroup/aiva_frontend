@@ -6,11 +6,7 @@ export function UpgradeBanner() {
   return (
     <Card
       className="p-6 border-2"
-      // style={{
-      //   backgroundColor: "var(--sharp-primary)",
-      //   opacity: 0.05,
-      //   borderColor: "var(--sharp-primary)",
-      // }}
+     
     >
       <div className="text-center">
         <div

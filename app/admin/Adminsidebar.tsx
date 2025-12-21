@@ -68,7 +68,6 @@ export function AdminSidebar({
       </button>
       <div className="px-6 py-6 text-center">
         <button
-          // onClick={() => setIsAddAccountModalOpen(true)}
           className="w-full flex flex-col items-center gap-3 group"
         >
           <div

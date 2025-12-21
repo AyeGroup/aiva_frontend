@@ -11,22 +11,21 @@ export default function NotFound() {
           متاسفانه صفحه مورد نظر یافت نشد.
         </p>
 
-<div className="flex gap-4">
-
-        <Link
-          href="/"
-          className="cursor-pointer border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-primary py-4 px-6"
+        <div className="flex gap-4">
+          <Link
+            href="/"
+            className="cursor-pointer border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-primary py-4 px-6"
           >
-          بازگشت به خانه
-        </Link>
-        <Link
-          href="/dashboard"
-          className="cursor-pointer border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-primary py-4 px-6"
+            بازگشت به خانه
+          </Link>
+          <Link
+            href="/dashboard"
+            className="cursor-pointer border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-primary py-4 px-6"
           >
-          بازگشت به داشبورد
-        </Link>
+            بازگشت به داشبورد
+          </Link>
+        </div>
       </div>
-          </div>
     </>
   );
 }
