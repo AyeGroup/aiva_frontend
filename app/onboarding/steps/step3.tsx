@@ -159,7 +159,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             />
           </div>
         </div>
-        <div className="mr-28 p-0">
+        <div className="-mb-4 mr-28">
           {!canSupportPhone && <LockFeature feature="chatbot_support_phone" />}
         </div>
         <div className="flex justify-between items-center">

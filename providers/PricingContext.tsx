@@ -6,15 +6,14 @@ import {
   useEffect,
   useState,
 } from "react";
-import axiosInstance from "@/lib/axiosInstance";
-import { API_ROUTES } from "@/constants/apiRoutes";
-import { Plan, PricingContextType } from "@/types/common";
 import { useBot } from "./BotProvider";
-import { getPlanCodeById } from "@/constants/plans";
 import { useAuth } from "./AuthProvider";
-import PageLoader from "@/components/pageLoader";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import { usePathname } from "next/navigation";
+import { getPlanCodeById } from "@/constants/plans";
+import { Plan, PricingContextType } from "@/types/common";
 import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 
 export const PricingContext = createContext<PricingContextType | null>(null);
 const PUBLIC_ROUTES = ["/login", "/register", "/", "verification"];
@@ -42,7 +41,6 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     const fetchPricing = async () => {
       try {
         const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
-        // console.log("res", res);
         const allPlans = res.data?.data?.subscription_plans ?? [];
         setPlans(allPlans);
       } catch (error) {
@@ -99,7 +97,6 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
         }
       });
     }
-    // console.log("plan map", map);
     setFeatureMinPlan(map);
   }, [plans]);
 

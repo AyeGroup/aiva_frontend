@@ -35,7 +35,7 @@ export default function OnboardingWizard() {
   const isNew = !id || id === "new";
   const { logo } = headerData;
   const { user, loading } = useAuth();
-  const { currentPlan } = usePricing();
+  // const { currentPlan } = usePricing();
   const { title, subtitle, steps } = onboardingData;
   const { refreshBots, setCurrentBot } = useBot();
   const [currentStep, setCurrentStep] = useState(1);
@@ -188,9 +188,9 @@ export default function OnboardingWizard() {
           );
           if (response && response.status === 200)
             subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
-          //  subsc =getPlanCodeById( response.data.data.plan);
         }
-        // console.log("active SUBSCRIPTION: ", subsc);
+        console.log("id: ", id);
+        console.log("active SUBSCRIPTION: ", subsc);
         setActiveSubscrp(subsc);
       } catch (error) {
         console.error("خطا در دریافت داده کاربران:", error);
@@ -612,7 +612,7 @@ export default function OnboardingWizard() {
           <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
             <div className="text-white w-7 h-7">
               {/* <AivaWhite /> */}
-              {getPlanIcon(currentPlan || "FREE")}
+              {getPlanIcon(activeSubscrp || "FREE")}
             </div>
           </div>
 

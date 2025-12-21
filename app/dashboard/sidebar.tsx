@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { AddChatbotModal } from "./widgets/add-chatbot-modal";
 import { EditProfileModal } from "./widgets/EditProfileModal";
 import { User, LogOut, ArrowLeft } from "lucide-react";
+import { convertNumbersToPersian, convertToPersian } from "@/utils/common";
 
 interface SidebarItemProps {
   label: string;
@@ -175,8 +176,8 @@ export function Sidebar({
             <p className="text-grey-500 text-xs">دستیار هوشمند</p>
           </div>
         </div>
-        <div className="text-xs text-gray-500 mt-1 mr-12">
-          نسخه {process.env.APP_VERSION}
+        <div className="text-xs text-gray-400 mt-1 mr-12">
+          نسخه {convertToPersian(process.env.APP_VERSION||"")}
         </div>
       </div>
       {/* Modals */}
