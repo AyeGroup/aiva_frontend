@@ -67,7 +67,12 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
       console.error("Failed to copy:", err);
     }
   };
-
+  const getLanguageTitle = (value: string) => {
+    if (value == "arabic") return "عربی";
+    else if (value == "turkish") return "ترکی";
+    else if (value == "english") return "انگلیسی";
+    else return "فارسی";
+  };
   const handleBaleLink = async () => {
     if (!baleToken || baleToken.length === 0) return;
     setIsSaving(true);
@@ -127,37 +132,37 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
               <div className="font-semibold  text-grey-900">خلاصه تنظیمات</div>
             </div>
 
-            <div className="grid grid-cols-2 gap-y-3">
-              <div className=" text-grey-600 pl-5">نام دستیار:</div>
-              <div className="flex  items-center">
+            <div className="flex flex-col gap-5">
+              <div className="flex justify-start items-center">
                 <div
                   className="size-2 ml-2 rounded-full"
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
+                <div className=" text-grey-600 pl-2">نام دستیار:</div>
                 <span className="text-base font-medium text-grey-900">
                   {botConfig.name}
                 </span>
               </div>
-              <div className=" text-grey-600 pl-5">زبان :</div>
 
-              <div className="flex items-center">
+              <div className="flex justify-start items-center">
                 <div
                   className="size-2 ml-2 rounded-full"
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
+                <div className=" text-grey-600 pl-2">زبان :</div>
                 <span className="text-base font-medium text-grey-900">
-                  {botConfig.language}
+                  {getLanguageTitle(botConfig.language)}
                 </span>
               </div>
 
-              <div className=" text-grey-600 pl-5"> منابع دانش :</div>
-              <div className="flex  items-center">
+              <div className="flex justify-start items-center">
                 <div
                   className="size-2 ml-2 rounded-full"
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
+                <div className=" text-grey-600 pl-2"> منابع دانش :</div>
                 <span className="text-base font-medium text-grey-900">
-                  {convertToPersian(botConfig.knowledge?.length || 0)}
+                  {(botConfig.knowledge?.length || 0).toLocaleString("fa-IR")}
                 </span>
               </div>
             </div>
@@ -244,8 +249,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                 >
                   انصراف
                 </Button>
-
-               </div>
+              </div>
             )}
 
             {/* {isBaleEditing && (
@@ -312,7 +316,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                     className="flex items-center gap-3 text-sm text-right"
                   >
                     <span className=" flex items-center justify-center text-white bg-primary rounded-full   size-6">
-                      {index + 1}
+                      {(index + 1).toLocaleString("fa-IR")}
                     </span>
                     <span className="  text-grey-700 flex-1">{step}</span>
                   </li>

@@ -48,6 +48,7 @@ export function Sidebar({
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+
   useEffect(() => {
     const checkScreenSize = () => {
       const desktop = window.innerWidth >= 1024;
@@ -58,6 +59,7 @@ export function Sidebar({
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+  
   const handleLogout = async () => {
     try {
       setIsLoading(true);
@@ -86,7 +88,7 @@ export function Sidebar({
       <div className="px-6 py-6 text-center">
         <button
           onClick={() => setIsAddAccountModalOpen(true)}
-          className="w-full flex flex-col items-center gap-3 group"
+          className="w-full flex flex-col items-center gap-3 group cursor-pointer"
         >
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"

@@ -238,7 +238,7 @@ const fetchStatisticCover = async () => {
 };
 
   const fetchUserTrend = async (days: string) => {
-      console.log("fetchUserTrend ");
+      // console.log("fetchUserTrend ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -257,7 +257,7 @@ const fetchStatisticCover = async () => {
   };
 
   const fetchSessionTrend = async (days: string) => {
-      console.log("fetchSessionTrend ");
+      // console.log("fetchSessionTrend ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -276,7 +276,7 @@ const fetchStatisticCover = async () => {
   };
 
   const fetchActiveUsers = async () => {
-      console.log("fetchActiveUsers ");
+      // console.log("fetchActiveUsers ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -289,7 +289,7 @@ const fetchStatisticCover = async () => {
   };
 
   const fetchFaqList = async () => {
-      console.log("fetchFaqList ");
+      // console.log("fetchFaqList ");
     if (!currentBot) return;
     try {
       const response = await axiosInstance.get(
@@ -302,7 +302,7 @@ const fetchStatisticCover = async () => {
   };
 
   const fetchRecentSession = async () => {
-      console.log("fetchRecentSession ");
+      // console.log("fetchRecentSession ");
     setRecentSession([]);
     if (!currentBot) return;
     try {
@@ -316,7 +316,7 @@ const fetchStatisticCover = async () => {
   };
 
   const handleTimeRangeChange = async (value: string) => {
-      console.log("handleTimeRangeChange ");
+      // console.log("handleTimeRangeChange ");
     setIsChartLoading(true);
     await fetchSessionTrend(value);
     await fetchUserTrend(value);

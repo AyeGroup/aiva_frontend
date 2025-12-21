@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { StatusBadge } from "../status-badge";
-import { Ticket, ViewType } from "@/types/common";
+import { Ticket, TicketStatus, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
 import { ViewTicketDetail } from "../TicketView";
 import { CreateTicketView } from "../TicketCreate";
@@ -279,7 +279,11 @@ export function Tickets() {
   const [view, setView] = useState<ViewType>("list");
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [filterStatus, setFilterStatus] = useState<string>("all");
+  // const [filterStatus, setFilterStatus] = useState<string>("all");
+  type TicketStatusFilter = TicketStatus | "all";
+
+  const [filterStatus, setFilterStatus] = useState<TicketStatusFilter>("all");
+
   const [filterPriority, setFilterPriority] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -315,7 +319,7 @@ export function Tickets() {
     try {
       const response = await axiosInstance.get(API_ROUTES.TICKETS.LIST);
       setTickets(response.data.data);
-      console.log("ticket list: ", response.data.data);
+      // console.log("ticket list: ", response.data.data);
     } catch (apiError: any) {
       console.warn("API fetch failed, using local data:", apiError);
     } finally {
@@ -425,7 +429,7 @@ export function Tickets() {
             textColor="text-warning"
             progressColor="bg-warning"
             percentage={calculatePercentage(stats.pending, stats.total)}
-            onClick={() => setFilterStatus("pending")}
+            onClick={() => setFilterStatus("in_progress")}
           />
 
           <ProgressStatCard

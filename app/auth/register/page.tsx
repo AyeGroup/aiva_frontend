@@ -116,7 +116,7 @@ export default function Register() {
 
     try {
       const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
-        phone: formData.phone,
+        identity: formData.phone,
       });
 
       if (res.status === 200) {
@@ -239,7 +239,7 @@ export default function Register() {
     setOtp(["", "", "", "", ""]);
     try {
       const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
-        phone: formData.phone,
+        identity: formData.phone,
       });
 
       if (res.status !== 200) {

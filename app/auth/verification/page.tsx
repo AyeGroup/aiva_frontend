@@ -79,7 +79,7 @@ export default function Verification() {
 
     setIsLoading(true);
     const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
-      phone: phoneNumber,
+      identity: phoneNumber,
     });
     if (res.status === 200) {
     }
@@ -162,7 +162,7 @@ export default function Verification() {
 
     try {
       const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
-        phone: phoneNumber,
+        identity: phoneNumber,
       });
       if (res.status === 200) {
       }

@@ -70,7 +70,7 @@ function Login() {
         }
         return;
       }
-      console.log("user role", res.user.role);
+      // console.log("user role", res.user.role);
       const storedUrl = localStorage.getItem("alogUrl");
       localStorage.removeItem("alogUrl");
 
@@ -78,7 +78,7 @@ function Login() {
       else if (storedUrl) router.push(storedUrl);
       else router.push("/dashboard");
 
-      console.log("user");
+      // console.log("user");
     } catch (err) {
       console.log(err);
       toast.error("خطا در ورود");

@@ -53,7 +53,7 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
           full_name: data.full_name || "",
           company_name: data.company_name || "",
           company_role: data.company_role || "",
-          user_logo_url: data.user_logo_url || null, // URL from server
+          user_logo_url: data.user_logo_url || null,  
           user_logo_file: null,
         });
       } catch (err) {
@@ -104,8 +104,8 @@ export function EditProfileModal({ open, onClose }: EditProfileModalProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+    <Dialog open={open} onOpenChange={onClose} >
+      <DialogContent className="max-w-md z-999">
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center gap-2">

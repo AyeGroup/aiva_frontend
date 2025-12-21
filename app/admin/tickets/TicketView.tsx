@@ -99,7 +99,7 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
         API_ROUTES.TICKETS.GET(thisTicket.id)
       );
       setThisTicket(response.data.data);
-      console.log("ticket list: ", response.data.data);
+      // console.log("ticket list: ", response.data.data);
     } catch (apiError: any) {
       console.warn("API fetch failed, using local data:", apiError);
     } finally {

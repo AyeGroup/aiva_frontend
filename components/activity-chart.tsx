@@ -34,8 +34,8 @@ export function ActivityChart({
 }: ActivityChartProps) {
   const chartClasses = ["activity-chart", className].filter(Boolean).join(" ");
 
-const maxTicks = 10;
-const interval = Math.ceil(data.length / maxTicks);
+  const maxTicks = 10;
+  const interval = Math.ceil(data.length / maxTicks);
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -52,7 +52,8 @@ const interval = Math.ceil(data.length / maxTicks);
   };
 
   return (
-    <div className={chartClasses} style={{ height }}>
+    //  <div style={{ width: "100%", height: 300 }}>
+    <div className={chartClasses} style={{ height: height ?? 300 }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}

@@ -40,7 +40,7 @@ export function HeatmapChart({
 
         if (response.status === 200 && response.data?.data) {
           const { heatmap, peak_hour, most_active_day } = response.data.data;
-          console.log("heatmap",heatmap)
+          // console.log("heatmap",heatmap)
           setStatisticHeatmap(heatmap);
           const peak = utcHourToLocalTime(peak_hour);
           setPeakHour(peak);

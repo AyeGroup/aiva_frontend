@@ -42,7 +42,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     const fetchPricing = async () => {
       try {
         const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
-        console.log("res", res);
+        // console.log("res", res);
         const allPlans = res.data?.data?.subscription_plans ?? [];
         setPlans(allPlans);
       } catch (error) {
@@ -99,7 +99,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
         }
       });
     }
-    console.log("plan map", map);
+    // console.log("plan map", map);
     setFeatureMinPlan(map);
   }, [plans]);
 
@@ -150,7 +150,7 @@ export const useFeatureAccess = (bot_uuid: string, feature: string) => {
         }
 
         const currentPlan = response.data.data.plan;
-        console.log("currentPlan", currentPlan);
+        // console.log("currentPlan", currentPlan);
         // if (!currentPlan) {
       if (typeof currentPlan !== "number" || isNaN(currentPlan)) {
         setAllowed(false);
@@ -161,9 +161,9 @@ export const useFeatureAccess = (bot_uuid: string, feature: string) => {
 
         const minPlan = featureMinPlan[feature] ?? "FREE";
         const minIndex = planOrder.indexOf(minPlan);
-        console.log(feature, " : ");
-        console.log("minPlan", minPlan);
-        console.log("minIndex");
+        // console.log(feature, " : ");
+        // console.log("minPlan", minPlan);
+        // console.log("minIndex");
         setAllowed(currentPlan >= minIndex);
       } catch (err) {
         console.error("Failed to check feature access:", err);

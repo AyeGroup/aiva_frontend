@@ -310,7 +310,7 @@ export default function AdminTickets() {
     try {
       const response = await axiosInstance.get(API_ROUTES.ADMIN.TICKETS);
       setTickets(response.data.data);
-      console.log("ticket list ", response.data.data);
+      // console.log("ticket list ", response.data.data);
     } catch (apiError: any) {
       console.warn("API fetch failed, using local data:", apiError);
     } finally {

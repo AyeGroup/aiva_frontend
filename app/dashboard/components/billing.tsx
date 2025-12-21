@@ -428,9 +428,10 @@ export function Billing() {
                           </div>
 
                           <button
+                            disabled={plan.subscription.plan == "0"}
                             onClick={() => handleUpgrade(plan)}
-                            className="text-center w-fit px-6 py-2 rounded-lg text-sm text-white"
-                            style={{ backgroundColor: "#65bcb6" }}
+                            className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                          
                           >
                             افزایش اعتبار
                           </button>
@@ -596,27 +597,18 @@ export function Billing() {
                               </div>
                             </td>
 
-                            <td className="px-2 sm:px-4 py-3" >
+                            <td className="px-2 sm:px-4 py-3">
                               <div className="flex items-center justify-center">
                                 <button
+                                  disabled={plan.subscription.plan == "0"}
                                   onClick={() => handleUpgrade(plan)}
-                                  className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap "
-                                  style={{
-                                    backgroundColor: "#65bcb6",
-                                    color: "white",
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "#52a89d";
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "#65bcb6";
-                                  }}
+                                  className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                 
+                                 
                                   title="افزایش اعتبار پیام"
                                   type="button"
                                 >
-                                  افزایش اعتبار
+                                  افزایش اعتبار 
                                 </button>
                               </div>
                             </td>

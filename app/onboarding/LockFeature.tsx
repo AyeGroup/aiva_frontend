@@ -12,7 +12,7 @@ export default function LockFeature({ feature }: { feature: string }) {
   if (requiredPlan.toLocaleLowerCase() === "free") return null;
 
   return (
-    <div className="flex items-start -mt-4 gap-1 border h-fit border-gray-100 py-1 px-2 rounded-xl bg-gray-50 shadow">
+    <div className="flex items-start -mt-4 gap-1 border h-fit border-gray-100 py-1 px-2 rounded-xl bg-gray-50 shadow w-fit">
       <Lock className="text-secondary size-4 " strokeWidth={3} />
 
       <div className="text-gray-500 text-xs">{`در پلن ${getFaNameByCode(

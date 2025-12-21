@@ -49,158 +49,158 @@ export default function CrawlLevel2({
       const formData = new URLSearchParams();
       formData.append("url", url);
 
-      // const res = await axiosInstance.post(
-      //   API_ROUTES.BOTS.CRAWL_DISCOVER(chatbot!.uuid),
-      //   formData,
+      const res = await axiosInstance.post(
+        API_ROUTES.BOTS.CRAWL_DISCOVER(chatbot!.uuid),
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      console.log("response: ", res);
+
+      if (!res.data?.success) {
+        toast.error("خطا در دریافت لینک‌ها");
+        return;
+      }
+
+      const allurls = res.data?.data?.discovered_links || [];
+      // const allurls = [
       //   {
-      //     headers: {
-      //       "Content-Type": "application/x-www-form-urlencoded",
-      //     },
-      //   }
-      // );
-      // console.log("response: ", res);
-
-      // if (!res.data?.success) {
-      //   toast.error("خطا در دریافت لینک‌ها");
-      //   return;
-      // }
-
-      // const allurls = res.data?.data?.discovered_links || [];
-      const allurls = [
-        {
-          url: "https://aia-ai.com/chatbots",
-          title: "فروش چت‌بات‌ها",
-        },
-        {
-          url: "https://aia-ai.com/chatbots/chat-gpt",
-          title: "خرید اکانت Chat GPT پلاس",
-        },
-        {
-          url: "https://aia-ai.com/pdf-courses",
-          title: "جزوات آموزشی",
-        },
-        {
-          url: "https://aia-ai.com/courses",
-          title: "دوره‌های آموزشی",
-        },
-        {
-          url: "https://aia-ai.com/webinar",
-          title: "وبینار هوش مصنوعی",
-        },
-        {
-          url: "https://aia-ai.com/my-account",
-          title: "ورود / عضویت",
-        },
-        {
-          url: "https://aia-ai.com/courses-2",
-          title:
-            "دوره‌های آموزشیبه روز‌ترین دانش و مهارت‌ها را از متخصصان این حوزه بیاموزید.",
-        },
-        {
-          url: "https://aia-ai.com/product/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab-%d9%be%db%8c%d8%b4%d8%b1%d9%81%d8%aa%d9%87-%d8%af%d8%b1-%da%a9%d8%a7%d8%b1-%d8%a8%d8%a7-%d9%85%d8%af%d9%84%d9%87%d8%a7%db%8c-%d8%b2%d8%a8%d8%a7%d9%86%db%8c",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/product/%d8%a2%d8%b4%d9%86%d8%a7%db%8c%db%8c-%d8%a8%d8%a7-%da%a9%d8%aa%d8%a7%d8%a8%d8%ae%d8%a7%d9%86%d9%87-numpy",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/product/gpt-%da%86%da%af%d9%88%d9%86%d9%87-%d9%85%d8%aa%d9%88%d9%84%d8%af-%d8%b4%d8%af%d8%9f",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/product/%d9%85%da%a9%d8%a7%d9%86%db%8c%d8%b2%d9%85-%d8%aa%d9%88%d8%ac%d9%87-%da%86%da%af%d9%88%d9%86%d9%87-%d8%a8%d9%87-%d9%88%d8%ac%d9%88%d8%af-%d8%a2%d9%85%d8%af%d8%9f",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/product/%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%aa%d8%b5%d9%88%db%8c%d8%b1-%d9%88-%d8%a8%db%8c%d9%86%d8%a7%db%8c%db%8c-%d9%85%d8%a7%d8%b4%db%8c%d9%86",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/product/%d8%b3%db%8c%d8%b3%d8%aa%d9%85%d9%87%d8%a7%db%8c-%d8%aa%d9%88%d8%b5%db%8c%d9%87%da%af%d8%b1",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/product/%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%b5%d9%88%d8%aa",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/product/pandas",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/course/%d8%ad%d9%84-%d8%aa%d9%85%d8%b1%db%8c%d9%86-%d8%af%d8%b1%d9%88%d8%b3-%d8%b3%d8%b1%d9%88%db%8c%d8%b3-%d8%a8%d8%a7-%d9%87%d9%88%d8%b4-%d9%85%d8%b5%d9%86%d9%88%d8%b9%db%8c",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/course-category/webinar",
-          title: "کاربردی",
-        },
-        {
-          url: "https://aia-ai.com/course/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab-%d9%be%db%8c%d8%b4%d8%b1%d9%81%d8%aa%d9%87-%d8%af%d8%b1-%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%b2%d8%a8%d8%a7%d9%86-%d8%b7%d8%a8%db%8c%d8%b9%db%8c",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/course-category/natural-language-processing",
-          title: "پردازش زبان طبیعی",
-        },
-        {
-          url: "https://aia-ai.com/course/%d8%aa%d9%86%d8%b8%db%8c%d9%85-%d9%87%d8%a7%db%8c%d9%be%d8%b1%d9%be%d8%a7%d8%b1%d8%a7%d9%85%d8%aa%d8%b1%d9%87%d8%a7%db%8c-%d8%af%d8%b1-%d8%b4%d8%a8%da%a9%d9%87%d9%87%d8%a7%db%8c-%d8%b9%d9%85",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/course-category/deep-learning",
-          title: "یادگیری عمیق",
-        },
-        {
-          url: "https://aia-ai.com/course/%da%86%d8%aa-%d8%a8%d8%a7%d8%aa",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/wp-content/uploads/2024/11/IMG_20241125_095507.png",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/webinar/management-and-ai-webinars/وبینار-هوش-مصنوعی-صنعتی-از-تئوری-تا-عمل",
-          title: "مشاهده وبینار",
-        },
-        {
-          url: "https://aia-ai.com/wp-content/uploads/2024/11/IMG_20241118_162949.jpg",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/course/انجام-یک-پایان-نامه-از-صفر-تا-صد",
-          title: "مشاهده وبینار",
-        },
-        {
-          url: "https://aia-ai.com/wp-content/uploads/2024/09/photo_2024-09-29_20-05-25.jpg",
-          title: null,
-        },
-        {
-          url: "https://aia-ai.com/webinar/management-and-ai-webinars/وبینار-نقش-هوش-مصنوعی-در-کسب-و-کارها-و-م",
-          title: "مشاهده وبینار",
-        },
-        {
-          url: "https://aia-ai.com/subject-cat/basic-mathematics-of-intelligence",
-          title: "ریاضیات پایه هوش",
-        },
-        {
-          url: "https://aia-ai.com/subject-cat/machine-learning",
-          title: "یادگیری ماشین",
-        },
-        {
-          url: "https://aia-ai.com/subject-cat/deep-learning",
-          title: "یادگیری عمیق",
-        },
-        {
-          url: "https://aia-ai.com/subject-cat/natural-language-processing",
-          title: "پردازش زبان طبیعی",
-        },
-        {
-          url: "https://aia-ai.com/subject-cat/image-processing-and-machine-vision",
-          title: "پردازش تصویر و بینایی ماشین",
-        },
-      ];
+      //     url: "https://aia-ai.com/chatbots",
+      //     title: "فروش چت‌بات‌ها",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/chatbots/chat-gpt",
+      //     title: "خرید اکانت Chat GPT پلاس",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/pdf-courses",
+      //     title: "جزوات آموزشی",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/courses",
+      //     title: "دوره‌های آموزشی",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/webinar",
+      //     title: "وبینار هوش مصنوعی",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/my-account",
+      //     title: "ورود / عضویت",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/courses-2",
+      //     title:
+      //       "دوره‌های آموزشیبه روز‌ترین دانش و مهارت‌ها را از متخصصان این حوزه بیاموزید.",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/product/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab-%d9%be%db%8c%d8%b4%d8%b1%d9%81%d8%aa%d9%87-%d8%af%d8%b1-%da%a9%d8%a7%d8%b1-%d8%a8%d8%a7-%d9%85%d8%af%d9%84%d9%87%d8%a7%db%8c-%d8%b2%d8%a8%d8%a7%d9%86%db%8c",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/product/%d8%a2%d8%b4%d9%86%d8%a7%db%8c%db%8c-%d8%a8%d8%a7-%da%a9%d8%aa%d8%a7%d8%a8%d8%ae%d8%a7%d9%86%d9%87-numpy",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/product/gpt-%da%86%da%af%d9%88%d9%86%d9%87-%d9%85%d8%aa%d9%88%d9%84%d8%af-%d8%b4%d8%af%d8%9f",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/product/%d9%85%da%a9%d8%a7%d9%86%db%8c%d8%b2%d9%85-%d8%aa%d9%88%d8%ac%d9%87-%da%86%da%af%d9%88%d9%86%d9%87-%d8%a8%d9%87-%d9%88%d8%ac%d9%88%d8%af-%d8%a2%d9%85%d8%af%d8%9f",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/product/%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%aa%d8%b5%d9%88%db%8c%d8%b1-%d9%88-%d8%a8%db%8c%d9%86%d8%a7%db%8c%db%8c-%d9%85%d8%a7%d8%b4%db%8c%d9%86",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/product/%d8%b3%db%8c%d8%b3%d8%aa%d9%85%d9%87%d8%a7%db%8c-%d8%aa%d9%88%d8%b5%db%8c%d9%87%da%af%d8%b1",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/product/%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%b5%d9%88%d8%aa",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/product/pandas",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/course/%d8%ad%d9%84-%d8%aa%d9%85%d8%b1%db%8c%d9%86-%d8%af%d8%b1%d9%88%d8%b3-%d8%b3%d8%b1%d9%88%db%8c%d8%b3-%d8%a8%d8%a7-%d9%87%d9%88%d8%b4-%d9%85%d8%b5%d9%86%d9%88%d8%b9%db%8c",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/course-category/webinar",
+      //     title: "کاربردی",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/course/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab-%d9%be%db%8c%d8%b4%d8%b1%d9%81%d8%aa%d9%87-%d8%af%d8%b1-%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%b2%d8%a8%d8%a7%d9%86-%d8%b7%d8%a8%db%8c%d8%b9%db%8c",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/course-category/natural-language-processing",
+      //     title: "پردازش زبان طبیعی",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/course/%d8%aa%d9%86%d8%b8%db%8c%d9%85-%d9%87%d8%a7%db%8c%d9%be%d8%b1%d9%be%d8%a7%d8%b1%d8%a7%d9%85%d8%aa%d8%b1%d9%87%d8%a7%db%8c-%d8%af%d8%b1-%d8%b4%d8%a8%da%a9%d9%87%d9%87%d8%a7%db%8c-%d8%b9%d9%85",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/course-category/deep-learning",
+      //     title: "یادگیری عمیق",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/course/%da%86%d8%aa-%d8%a8%d8%a7%d8%aa",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/wp-content/uploads/2024/11/IMG_20241125_095507.png",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/webinar/management-and-ai-webinars/وبینار-هوش-مصنوعی-صنعتی-از-تئوری-تا-عمل",
+      //     title: "مشاهده وبینار",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/wp-content/uploads/2024/11/IMG_20241118_162949.jpg",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/course/انجام-یک-پایان-نامه-از-صفر-تا-صد",
+      //     title: "مشاهده وبینار",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/wp-content/uploads/2024/09/photo_2024-09-29_20-05-25.jpg",
+      //     title: null,
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/webinar/management-and-ai-webinars/وبینار-نقش-هوش-مصنوعی-در-کسب-و-کارها-و-م",
+      //     title: "مشاهده وبینار",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/subject-cat/basic-mathematics-of-intelligence",
+      //     title: "ریاضیات پایه هوش",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/subject-cat/machine-learning",
+      //     title: "یادگیری ماشین",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/subject-cat/deep-learning",
+      //     title: "یادگیری عمیق",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/subject-cat/natural-language-processing",
+      //     title: "پردازش زبان طبیعی",
+      //   },
+      //   {
+      //     url: "https://aia-ai.com/subject-cat/image-processing-and-machine-vision",
+      //     title: "پردازش تصویر و بینایی ماشین",
+      //   },
+      // ];
       // console.log("allurls: ", allurls);
 
       if (allurls.length === 0) {
