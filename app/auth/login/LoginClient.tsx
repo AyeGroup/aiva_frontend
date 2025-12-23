@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
@@ -14,6 +14,7 @@ import {
   LoginTopLeft3,
   LoginTopRight,
 } from "@/public/icons/AppIcons";
+import { Checkbox } from "@/components/checkbox";
 
 function LoginClient() {
   const router = useRouter();
@@ -23,6 +24,18 @@ function LoginClient() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [warning, setWarning] = useState("");
+  // const [rememberMe, setRememberMe] = useState<boolean>(true);
+
+  // useEffect(() => {
+  //   if (localStorage.getItem("accessToken")) {
+  //     setRememberMe(true);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    setPhone("");
+    setPassword("");
+  }, []);
 
   const isValidEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,6 +68,10 @@ function LoginClient() {
     const identity = phone.trim();
     if (!isValidEmail(identity) && !isValidPhone(identity)) {
       toast.error("لطفاً شماره موبایل یا ایمیل معتبر وارد کنید");
+      return;
+    }
+    if (!password) {
+      toast.error("لطفاً رمز عبور را وارد کنید");
       return;
     }
 
@@ -202,7 +219,11 @@ function LoginClient() {
             </div>
 
             {/* Form */}
-            <form className="space-y-3" onSubmit={handleSubmit}>
+            <form
+              className="space-y-3"
+              onSubmit={handleSubmit}
+              autoComplete="off"
+            >
               <div>
                 <div className="relative">
                   <Input
@@ -223,7 +244,7 @@ function LoginClient() {
               </div>
 
               {/* Password Field */}
-              <div>
+              {/* <div>
                 <div className="relative">
                   <Input
                     id="password"
@@ -248,10 +269,66 @@ function LoginClient() {
                 {warning && (
                   <p className="text-red-400 mt-2 text-xs">{warning}</p>
                 )}
+              </div> */}
+              <div>
+                {/* Anti-autofill fake fields */}
+                <input
+                  type="text"
+                  name="username"
+                  autoComplete="username"
+                  style={{ display: "none" }}
+                />
+                <input
+                  type="password"
+                  name="password"
+                  autoComplete="current-password"
+                  style={{ display: "none" }}
+                />
+
+                <div className="relative">
+                  <Input
+                    id="password"
+                    name="fake-password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    placeholder="رمز عبور"
+                    autoComplete="new-password"
+                    onChange={handlePasswordChange}
+                    className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 bg-white! text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none text-center! !placeholder:text-center"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-grey-400 hover:text-grey-600 transition-colors"
+                    aria-label={
+                      showPassword ? "مخفی کردن رمز عبور" : "نمایش رمز عبور"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
+
+                {warning && (
+                  <p className="text-red-400 mt-2 text-xs">{warning}</p>
+                )}
               </div>
 
+              {/* <div className="text-sm">
+                <Checkbox
+                  id="remember"
+                  label="مرا به یاد داشته باش"
+                  checked={rememberMe}
+                  onChange={setRememberMe}
+                  // onChange={(e) => setRememberMe(e.target.checked)}
+                />
+              </div> */}
               {/* Terms and conditions info */}
-              <div className="flex items-start gap-2 p-4 bg-grey-50 rounded-lg">
+              {/* <div className="flex items-start gap-2 p-4 bg-grey-50 rounded-lg">
                 <div className="shrink-0 mt-0.5"></div>
                 <p className="text-grey-600 text-right text-sm">
                   استفاده از آیوا به معنی پذیرش{" "}
@@ -263,7 +340,7 @@ function LoginClient() {
                   </Link>{" "}
                   این سرویس است.
                 </p>
-              </div>
+              </div> */}
 
               {/* Submit Button */}
               <button
@@ -284,13 +361,21 @@ function LoginClient() {
               {/* Password login link */}
               <div className="text-center mt-3">
                 <span className="text-grey-600 text-base">
-                  حساب کاربری ندارید؟
+                  {/* حساب کاربری ندارید؟ */}
                   <button
                     type="button"
                     onClick={() => router.push("/auth/register")}
                     className="hover:opacity-80 border-0 text-base text-primary p-0 cursor-pointer active:opacity-60 mr-2"
                   >
-                    ثبت نام کنید
+                    ثبت نام
+                  </button>
+                  <span className="mx-3 text-gray-400">|</span>
+                  <button
+                    type="button"
+                    onClick={() => router.push("/auth/forgot-pass")}
+                    className="hover:opacity-80 border-0 text-base text-primary p-0 cursor-pointer active:opacity-60 mr-2"
+                  >
+                    فراموشی رمز عبور
                   </button>
                 </span>
               </div>

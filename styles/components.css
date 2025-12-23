@@ -183,9 +183,8 @@
   height: 9px;
   border: solid white;
   border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  transform: rotate(50deg) !important;
 }
-
 .checkbox-input:disabled ~ .checkbox-custom {
   background-color: var(--grey-100);
   border-color: var(--grey-200);

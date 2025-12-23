@@ -31,7 +31,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // مسیرهای عمومی که نیاز به لاگین ندارند
-const PUBLIC_ROUTES = ["/auth/login", "/auth/register", "/", "verification"];
+const PUBLIC_ROUTES = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/reset-pass",
+  "/auth/forgot-pass",
+  "/",
+  "verification",
+];
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -151,13 +158,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("aiva-onboarding-data");
-      localStorage.removeItem("selectedPlan");
-      localStorage.removeItem("lastInvoiceId");
-      localStorage.removeItem("invoice-undefined");
-
+      // localStorage.removeItem("accessToken");
+      // localStorage.removeItem("refreshToken");
+      // localStorage.removeItem("aiva-onboarding-data");
+      // localStorage.removeItem("selectedPlan");
+      // localStorage.removeItem("lastInvoiceId");
+      // localStorage.removeItem("invoice-undefined");
+      localStorage.clear();
+      sessionStorage.clear();
       setUser(null);
       router.push("/auth/login");
     } catch {

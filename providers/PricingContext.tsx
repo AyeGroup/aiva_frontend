@@ -16,7 +16,7 @@ import axios from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 
 export const PricingContext = createContext<PricingContextType | null>(null);
-const PUBLIC_ROUTES = ["/login", "/register", "/", "verification"];
+const PUBLIC_ROUTES = ["/login", "/register", "/", "/verification","/reset-pass","/auth/forgot-pass"];
 
 export const PricingProvider = ({ children }: { children: ReactNode }) => {
   const { user, loading: authLoading } = useAuth();

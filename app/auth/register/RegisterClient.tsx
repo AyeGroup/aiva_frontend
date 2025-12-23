@@ -35,6 +35,7 @@ export default function RegisterClient() {
     phone?: string;
     password?: string;
   }>({});
+  const [passwordRules, setPasswordRules] = useState<any>(null);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,6 +50,7 @@ export default function RegisterClient() {
   const validatePassword = (password: string): boolean => {
     return password.length >= 5;
   };
+
   const persianYear = new Intl.DateTimeFormat("fa-IR", {
     year: "numeric",
   }).format(new Date());
@@ -79,21 +81,31 @@ export default function RegisterClient() {
       newErrors.phone = "لطفاً شماره تلفن معتبر وارد کنید";
     }
 
-    if (!formData.password || !validatePassword(formData.password)) {
-      newErrors.password = "رمز عبور باید حداقل ۶ حرف باشد";
+    // if (!formData.password || !validatePassword(formData.password)) {
+    //   newErrors.password = "رمز عبور باید حداقل ۶ حرف باشد";
+    // }
+    const strength = checkPasswordStrength(formData.password);
+    if (!strength.isStrong) {
+      newErrors.password = "رمز عبور باید قوی باشد";
     }
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return;
+      return false;
     }
+    return true;
   };
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("handleRegisterSubmit");
+    // if (!strength.isStrong) {
+    //   toast.error("رمز عبور به اندازه کافی قوی نیست");
+    //   return;
+    // }
 
     setMessage("");
-    if (!submitValidation()) return;
+    const err = await submitValidation();
+    if (!err) return;
     setIsLoading(true);
 
     try {
@@ -271,9 +283,48 @@ export default function RegisterClient() {
     }
   };
 
-  const renderStepContent = () => {
-    // console.log("renderStepContent", currentStep);
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
 
+    setFormData((prev) => ({
+      ...prev,
+      password: value,
+    }));
+
+    const result = checkPasswordStrength(value);
+    setPasswordRules(result);
+    console.log("ali", result);
+    if (!result.rules.noPersian) {
+      setWarning("رمز عبور نباید شامل کاراکتر فارسی باشد!");
+    } else {
+      setWarning("");
+    }
+
+    if (errors.password) {
+      setErrors((prev) => ({ ...prev, password: undefined }));
+    }
+  };
+
+  const checkPasswordStrength = (password: string) => {
+    const rules = {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+      noPersian: !/[آ-ی]/.test(password),
+    };
+
+    const score = Object.values(rules).filter(Boolean).length;
+
+    return {
+      rules,
+      score,
+      isStrong: score >= 5,
+    };
+  };
+
+  const renderStepContent = () => {
     switch (currentStep) {
       case "signup":
         return (
@@ -378,7 +429,7 @@ export default function RegisterClient() {
             </div>
 
             {/* Password Field */}
-            <div>
+            <div className="flex flex-col">
               <label
                 className="block text-grey-700 mb-2 text-right"
                 style={{ fontSize: "var(--text-body-small)" }}
@@ -388,24 +439,20 @@ export default function RegisterClient() {
               <div className="relative">
                 <Input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
-                  onChange={(e) =>
-                    handleInputChange("password", e.target.value)
-                  }
-                  placeholder="حداقل ۶ کاراکتر"
+                  onChange={handlePasswordChange}
+                  placeholder="حداقل ۸ کاراکتر"
+                  autoComplete="new-password"
                   className={`w-full pr-4 pl-14 py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ${
                     errors.password
                       ? "border-danger focus:border-danger"
                       : "border-grey-300 focus:border-brand-primary"
                   }`}
-                  style={{
-                    borderRadius: "var(--radius-lg)",
-                    fontSize: "var(--text-body-large)",
-                    lineHeight: "var(--text-body-large-lh)",
-                  }}
                   disabled={isLoading}
                 />
+
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -423,22 +470,109 @@ export default function RegisterClient() {
                     <Eye className="w-5 h-5" />
                   )}
                 </button>
-              </div>{" "}
-              {warning && (
-                <p className="text-red-500 mt-2 text-sm">{warning}</p>
-              )}
-              {errors.password && (
-                <p className="text-danger text-body-small mt-1">
-                  {errors.password}
-                </p>
+              </div>
+              <div>
+                {passwordRules && formData.password && (
+                  <div className="mt-2 w-full pb-4">
+                    {/* progress */}
+                    <div className="h-1 w-full bg-gray-200 rounded overflow-hidden">
+                      <div
+                        className={`h-full transition-all ${
+                          passwordRules.score <= 2
+                            ? "bg-red-500 w-1/4"
+                            : passwordRules.score <= 4
+                            ? "bg-yellow-400 w-2/4"
+                            : "bg-green-500 w-full"
+                        }`}
+                      />
+                    </div>
+
+                    {/* rules */}
+                    <ul className="mt-3 flex flex-wrap gap-3 text-xs">
+                      <li
+                        className={
+                          passwordRules.rules.length
+                            ? "text-primary"
+                            : "text-secondary"
+                        }
+                      >
+                        حداقل ۸ کاراکتر
+                      </li>
+                      <li
+                        className={
+                          passwordRules.rules.uppercase
+                            ? "text-primary"
+                            : "text-secondary"
+                        }
+                      >
+                        حرف بزرگ
+                      </li>
+                      <li
+                        className={
+                          passwordRules.rules.lowercase
+                            ? "text-primary"
+                            : "text-secondary"
+                        }
+                      >
+                        حرف کوچک
+                      </li>
+                      <li
+                        className={
+                          passwordRules.rules.number
+                            ? "text-primary"
+                            : "text-secondary"
+                        }
+                      >
+                        عدد
+                      </li>
+                      <li
+                        className={
+                          passwordRules.rules.special
+                            ? "text-primary"
+                            : "text-secondary"
+                        }
+                      >
+                        کاراکتر خاص
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                {warning && (
+                  <div className="text-red-500 mt-2 text-sm">{warning}</div>
+                )}
+                {/* {errors.password && (
+                  <p className="text-danger text-body-small mt-1">
+                    {errors.password}
+                  </p>
+                )} */}
+              </div>
+              {message && (
+                <div className="text-danger text-body-small mt-2">
+                  {message}
+                </div>
               )}
             </div>
-            {message && (
-              <p className="text-danger text-body-small mt-1">{message}</p>
-            )}
+
+            <div className="flex items-start gap-2 bg-grey-50 rounded-lg">
+              {/* <div className="shrink-0 mt-0.5"></div> */}
+              <p className="text-grey-600 text-right text-sm">
+                استفاده از آیوا به معنی پذیرش{" "}
+                <Link
+                  className="hover:opacity-80 text-sm active:opacity-60 text-primary"
+                  href="/policy"
+                >
+                  قوانین و مقررات
+                </Link>{" "}
+                این سرویس است.
+              </p>
+            </div>
             <button
               type="submit"
-              disabled={isLoading}
+              // disabled={isLoading}
+              disabled={
+                isLoading || !checkPasswordStrength(formData.password).isStrong
+              }
               className="w-full text-white py-4 px-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all hover:opacity-90"
               style={{
                 backgroundColor: "var(--brand-primary)",
@@ -463,7 +597,11 @@ export default function RegisterClient() {
 
       case "otp":
         return (
-          <form onSubmit={handleOtpSubmit} className="space-y-4">
+          <form
+            onSubmit={handleOtpSubmit}
+            autoComplete="off"
+            className="space-y-4"
+          >
             <div className="text-center mb-6">
               <h1
                 className="text-grey-900 mb-3"
@@ -643,6 +781,7 @@ export default function RegisterClient() {
               </div>
             </Link>
 
+
             {/* Header Actions - Left Side */}
             <div className="flex items-center gap-3">
               <button
@@ -697,25 +836,7 @@ export default function RegisterClient() {
         <div className="w-full max-w-md">
           {/* register Card */}
           <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
-            {/* Step indicator */}
-            {/* {currentStep !== "success" && (
-              <div className="flex justify-center gap-2 mb-6">
-                <div
-                  className={`w-2 h-2 rounded-full ${
-                    currentStep === "signup"
-                      ? "bg-brand-primary"
-                      : "bg-grey-300"
-                  }`}
-                ></div>
-                <div
-                  className={`w-2 h-2 rounded-full ${
-                    currentStep === "otp" ? "bg-brand-primary" : "bg-grey-300"
-                  }`}
-                ></div>
-              </div>
-            )} */}
-
-            {/* Step Content */}
+            
             {renderStepContent()}
           </div>
         </div>

@@ -17,7 +17,6 @@ import {
   PAYMENT_PURPOSE,
   PLAN_COLORS,
   SUBSCRIPTION_TYPES,
-  TRANSACTION_TYPE,
 } from "@/constants/plans";
 
 export default function Checkout() {

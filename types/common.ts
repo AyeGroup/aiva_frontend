@@ -2,6 +2,8 @@ export type AdminPageType = "home" | "users" | "tickets" | "billing";
 export type PageType =
   | "landing"
   | "register"
+  | "reset-pass"
+  | "forgot-pass"
   | "login"
   | "onboarding"
   | "verification"
@@ -11,7 +13,6 @@ export type PageType =
   | "chatbot-management"
   | "tickets"
   | "billing"
-  // | "upgrade"
   | "activeusers"
   | "checkout"
   | "payment-gateway"
@@ -77,7 +78,7 @@ export interface BotConfig {
   require_user_name: boolean;
   require_user_email: boolean;
   bale_token?: string;
-  bale_enabled?:boolean;
+  bale_enabled?: boolean;
   // -------------------برای آمار
   updated_at?: string;
   conversationsToday?: string;
@@ -135,7 +136,7 @@ export interface Ticket {
   id: string;
   title: string;
   content: string;
-  status:  TicketStatus;
+  status: TicketStatus;
   priority: TicketPriority;
   category: TicketCategory;
   created_at: string;
@@ -266,7 +267,7 @@ export interface SelectorItem {
   value: string;
   label: string;
   id?: string;
-  disabled?:boolean;
+  disabled?: boolean;
 }
 
 export type TreeNodeType = {

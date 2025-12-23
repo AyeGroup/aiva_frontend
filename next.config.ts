@@ -31,24 +31,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-
-// const nextConfig = {
-//   reactStrictMode: false,
-
-//   eslint: {
-//     ignoreDuringBuilds: true,
-//   },
-//   images: {
-//     domains: ["localhost"],
-//     unoptimized: true,
-//   },
-//   async rewrites() {
-//     return [
-//       // { source: "/signup", destination: "/auth/signup" },
-//       // { source: "/login", destination: "/auth/login" },
-//       // { source: "/verification", destination: "/auth/otp-verification" },
-//     ];
-//   },
-// };
-
-// export default nextConfig;
+ 
