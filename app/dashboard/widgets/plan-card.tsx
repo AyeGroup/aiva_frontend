@@ -44,9 +44,16 @@ export function PlanCard({
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat("fa-IR").format(price);
   };
-
+  const safeNumber = (value: unknown): number => {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+  };
   // انتخاب قیمت و متن دوره بر اساس period
-  const price = period === "monthly" ? priceMonthly : priceYearly;
+  // const price = period === "monthly" ? priceMonthly * 10 : priceYearly * 10;
+  const price =
+    period === "monthly"
+      ? safeNumber(priceMonthly) / 10
+      : safeNumber(priceYearly) / 10;
   const periodLabel = period === "monthly" ? "ماهانه" : "سالانه";
 
   return (
@@ -98,7 +105,7 @@ export function PlanCard({
           <span className="plan-card-price-number">
             {price === 0 ? "رایگان" : formatPrice(price)}
           </span>
-          {price > 0 && <span className="plan-card-price-currency">ريال</span>}
+          {price > 0 && <span className="plan-card-price-currency">تومان</span>}
           {price > 0 && (
             <p className="plan-card-price-period text-sm">/ {periodLabel} </p>
           )}
@@ -135,7 +142,7 @@ export function PlanCard({
         type="button"
         className={`plan-card-button ${buttonVariant}`}
         // onClick={onSelect}
-        onClick={() => onSelect?.(period)}  
+        onClick={() => onSelect?.(period)}
         disabled={disabled}
         title={buttonText}
         style={{ textAlign: "center" }}

@@ -7,7 +7,7 @@ import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { MessageCircle } from "lucide-react";
-import { TRANSACTION_TYPE } from "@/constants/plans";
+import { PAYMENT_PURPOSE, TRANSACTION_TYPE } from "@/constants/plans";
 
 interface WalletIncreaseModalProps {
   isOpen: boolean;
@@ -25,16 +25,22 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
 
   const handleFactor = async () => {
     if (!credit || Number(credit) < 1000) {
-      toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰۰ ريال)");
+      toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰۰۰ تومان)");
       return;
     }
-
+    const creditNumber = Number(credit);
+    if (isNaN(creditNumber) || creditNumber <= 0) {
+      throw new Error("مبلغ وارد شده معتبر نیست");
+    }
     try {
       setIsLoading(true);
       const invoicePayload = {
         // purpose: TRANSACTION_TYPE.INCREASE_WALLET,
-        purpose: "wallet_charge",
-        amount_irr: credit,
+        // purpose: "wallet_charge",
+        // amount_irr: credit,
+
+        purpose: PAYMENT_PURPOSE.WALLET_CHARGE,
+        amount_irr: Math.floor(creditNumber * 10),
       };
 
       const res = await axiosInstance.post(
@@ -61,14 +67,18 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
       toast.error("ابتدا فاکتور را ایجاد کنید");
       return;
     }
+    const creditNumber = Number(credit);
+
+    if (isNaN(creditNumber) || creditNumber <= 0) {
+      throw new Error("مبلغ وارد شده معتبر نیست");
+    }
 
     try {
       setIsLoading(true);
       const res = await axiosInstance.post(API_ROUTES.PAYMENT.INITIATE, {
-        purpose: "wallet_charge",
-
-        // purpose: TRANSACTION_TYPE.INCREASE_BALANCE,
-        amount_irr: credit,
+        purpose: PAYMENT_PURPOSE.WALLET_CHARGE,
+        // amount_irr: credit,
+        amount_irr: Math.floor(creditNumber * 10),
       });
 
       const data = res.data;
@@ -132,7 +142,7 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
                 className="w-full px-4 py-2.5 rounded-xl border border-grey-200 focus:border-[#65bcb6] focus:outline-none transition-colors text-right"
                 placeholder="مثال: ۱۰۰٬۰۰۰"
               />
-              <span>ريال</span>
+              <span>تومان</span>
             </div>
 
             {/* دکمه‌های سریع */}
@@ -168,8 +178,10 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
               <div className="flex justify-between">
                 <span className="text-grey-600">مبلغ پایه</span>
                 <span>
-                  {(invoice?.base_amount_irr || 0).toLocaleString("fa-IR")}{" "}
-                  ريال
+                  {((invoice?.base_amount_irr || 0) / 10).toLocaleString(
+                    "fa-IR"
+                  )}{" "}
+                  تومان
                 </span>
               </div>
 
@@ -185,14 +197,20 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
                   مالیات {invoice.tax_percentage.toLocaleString("fa-IR")}٪
                 </span>
                 <span>
-                  {(invoice?.tax_amount_irr || 0).toLocaleString("fa-IR")} ريال
+                  {Math.round(
+                    (invoice?.tax_amount_irr || 0) / 10
+                  ).toLocaleString("fa-IR")}{" "}
+                  تومان
                 </span>
               </div>
 
               <div className="flex justify-between pt-2 border-t border-[#65bcb6]">
                 <span className="font-semibold">قابل پرداخت</span>
                 <span className="text-[#65bcb6] font-bold">
-                  {invoice?.total_amount_irr.toLocaleString("fa-IR")} ريال
+                  {Math.round(
+                    (invoice?.total_amount_irr || 0) / 10
+                  ).toLocaleString("fa-IR")}{" "}
+                  تومان
                 </span>
               </div>
             </div>

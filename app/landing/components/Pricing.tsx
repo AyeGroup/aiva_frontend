@@ -199,12 +199,12 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
             >
               {plan?.price_monthly_irr === 0
                 ? "رایگان"
-                : plan?.price_monthly_irr.toLocaleString("fa-IR")}
+                : (plan?.price_monthly_irr * 10).toLocaleString("fa-IR")}
             </div>
 
             {plan?.price_monthly_irr !== 0 && (
               <div className="flex flex-row lg:flex-col items-center">
-                <span className="text-sm text-gray-500">ريال</span>
+                <span className="text-sm text-gray-500">تومان</span>
                 <span className="text-xs text-gray-400">/ ماه</span>
               </div>
             )}

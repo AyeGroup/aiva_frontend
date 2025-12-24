@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
 import { StatusBadge } from "@/app/dashboard/widgets/status-badge";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { Ticket, ViewType } from "@/types/common";
+import { Ticket, TicketStatus, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
 import { CreateTicketView } from "@/app/dashboard/TicketCreate";
 import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
@@ -274,13 +274,22 @@ export default function AdminTickets() {
   const [view, setView] = useState<ViewType>("list");
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [filterStatus, setFilterStatus] = useState<string>("all");
-  const [filterPriority, setFilterPriority] = useState<string>("all");
+  // const [filterStatus, setFilterStatus] = useState<string>("all");
+    type TicketStatusFilter = TicketStatus | "all";
+  
+    const [filterPriority, setFilterPriority] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<TicketStatusFilter>("all");
 
   const { user, loading } = useAuth();
 
   // Computed values
+  // const filteredTickets = tickets.filter((ticket) => {
+  //   if (filterStatus !== "all" && ticket.status !== filterStatus) return false;
+  //   if (filterPriority !== "all" && ticket.priority !== filterPriority)
+  //     return false;
+  //   return true;
+  // });
   const filteredTickets = tickets.filter((ticket) => {
     if (filterStatus !== "all" && ticket.status !== filterStatus) return false;
     if (filterPriority !== "all" && ticket.priority !== filterPriority)
@@ -421,7 +430,7 @@ export default function AdminTickets() {
             textColor="text-warning"
             progressColor="bg-warning"
             percentage={calculatePercentage(stats.pending, stats.total)}
-            onClick={() => setFilterStatus("pending")}
+            onClick={() => setFilterStatus("in_progress")}
           />
 
           <ProgressStatCard

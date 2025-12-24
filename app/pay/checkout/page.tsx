@@ -117,17 +117,7 @@ export default function Checkout() {
       setIsLoading(false);
     }
   };
-
-  // official_invoice: requestOfficialInvoice
-  //   ? {
-  //       company_name: companyName,
-  //       economic_code: economicCode,
-  //       national_id: nationalId,
-  //     }
-  //   : null,
-
-  // purpose: TRANSACTION_TYPE.BUY_SUBSCRIPTION,
-
+ 
   // ---- ایجاد فاکتور و هدایت به درگاه ----
   const handleProceedToPayment = async () => {
     if (!selectedPlan) {
@@ -231,10 +221,13 @@ export default function Checkout() {
                     </div>
                     <div className="text-left">
                       <p className="text-grey-900">
-                        {(invoice?.base_amount_irr || "").toLocaleString(
+                        {/* {(invoice?.base_amount_irr || "").toLocaleString(
+                          "fa-IR"
+                        )}{" "} */}
+                        {((invoice?.base_amount_irr || 0) / 10).toLocaleString(
                           "fa-IR"
                         )}{" "}
-                        ريال
+                        تومان
                       </p>
                       <p className="text-grey-500 text-sm">
                         {SUBSCRIPTION_TYPES[selectedPlan.billingPeriod]}
@@ -288,15 +281,24 @@ export default function Checkout() {
                 <div className="flex justify-between items-center">
                   <span className="text-grey-600">مبلغ پایه</span>
                   <span>
-                    {(invoice?.base_amount_irr || "").toLocaleString("fa-IR")}{" "}
-                    ريال
+                    {/* {(invoice?.base_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                    ريال */}
+                    {((invoice?.base_amount_irr || 0) / 10).toLocaleString(
+                      "fa-IR"
+                    )}{" "}
+                    تومان
                   </span>
                 </div>
                 {appliedDiscount > 0 && (
                   <div className="flex justify-between items-center text-green-600">
                     <span>تخفیف ({appliedDiscount}%)</span>
                     <span>
-                      -{invoice.discountAmount.toLocaleString("fa-IR")} ريال
+                      {/* -{invoice.discountAmount.toLocaleString("fa-IR")} ريال */}
+                      -
+                      {((invoice?.discountAmount || 0) / 10).toLocaleString(
+                        "fa-IR"
+                      )}{" "}
+                      تومان
                     </span>
                   </div>
                 )}
@@ -305,8 +307,12 @@ export default function Checkout() {
                     مالیات ({convertToPersian(invoice?.tax_percentage || "")}%)
                   </span>
                   <span>
-                    {(invoice?.tax_amount_irr || "").toLocaleString("fa-IR")}{" "}
-                    ريال
+                    {/* {(invoice?.tax_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                    ريال */}
+                    {((invoice?.tax_amount_irr || 0) / 10).toLocaleString(
+                      "fa-IR"
+                    )}{" "}
+                    تومان
                   </span>
                 </div>
               </div>
@@ -343,8 +349,12 @@ export default function Checkout() {
               <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-gradient-to-br from-grey-50 to-white border-2 border-grey-200">
                 <span>مبلغ قابل پرداخت</span>
                 <span className="text-xl font-bold text-[#65BCB6]">
-                  {(invoice?.total_amount_irr || "").toLocaleString("fa-IR")}{" "}
-                  ريال
+                  {/* {(invoice?.total_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                  ريال */}
+                  {((invoice?.total_amount_irr || 0) / 10).toLocaleString(
+                    "fa-IR"
+                  )}{" "}
+                  تومان
                 </span>
               </div>
 

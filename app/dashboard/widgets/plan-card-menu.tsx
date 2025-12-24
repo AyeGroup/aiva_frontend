@@ -41,9 +41,15 @@ export function PlanCardMenu({
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat("fa-IR").format(price);
   };
-
-  const price = period === "monthly" ? priceMonthly : priceYearly;
-
+  const safeNumber = (value: unknown): number => {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+  };
+  // const price = period === "monthly" ? priceMonthly : priceYearly;
+ const price =
+   period === "monthly"
+     ? safeNumber(priceMonthly) / 10
+     : safeNumber(priceYearly) / 10;
   return (
     <article className={`plan-compact-card ${featured ? "featured" : ""}`}>
       {badgeText && <span className="plan-compact-badge">{badgeText}</span>}
@@ -64,7 +70,7 @@ export function PlanCardMenu({
           <h4 className="plan-compact-name">{name}</h4>
           <p className="plan-compact-price">
             {formatPrice(price)}
-            ريال
+            تومان
           </p>
         </div>
       </div>

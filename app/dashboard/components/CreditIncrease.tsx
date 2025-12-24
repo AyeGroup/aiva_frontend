@@ -27,18 +27,21 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
 
   const handleFactor = async () => {
     if (!credit || Number(credit) < 1000) {
-      toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰ ريال)");
+      toast.error("لطفاً مبلغ معتبر وارد کنید (حداقل ۱۰۰۰ تومان)");
       return;
     }
     console.log("chat", selectedChatbot?.chatbot_uuid);
-
+    const creditNumber = Number(credit);
+    if (isNaN(creditNumber) || creditNumber <= 0) {
+      throw new Error("مبلغ وارد شده معتبر نیست");
+    }
     try {
       setIsLoading(true);
       const invoicePayload = {
         purpose: PAYMENT_PURPOSE.BALANCE_INCREASE,
-        // purpose: "balance_increase",
-        amount_irr: credit,
         chatbot_uuid: selectedChatbot?.chatbot_uuid,
+        amount_irr: Math.floor(creditNumber * 10),
+        // amount_irr: credit,
       };
 
       const res = await axiosInstance.post(
@@ -66,14 +69,17 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
       return;
     }
     console.log("chat", selectedChatbot);
+    const creditNumber = Number(credit);
+    if (isNaN(creditNumber) || creditNumber <= 0) {
+      throw new Error("مبلغ وارد شده معتبر نیست");
+    }
     try {
       setIsLoading(true);
       const res = await axiosInstance.post(API_ROUTES.PAYMENT.INITIATE, {
-        // purpose: "balance_increase",
-        // purpose: TRANSACTION_TYPE.INCREASE_BALANCE,
         purpose: PAYMENT_PURPOSE.BALANCE_INCREASE,
-        amount_irr: credit,
         chatbot_uuid: selectedChatbot?.chatbot_uuid,
+        // amount_irr: credit,
+        amount_irr: Math.floor(creditNumber * 10),
       });
 
       const data = res.data;
@@ -137,7 +143,7 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
                 className="w-full px-4 py-2.5 rounded-xl border border-grey-200 focus:border-[#65bcb6] focus:outline-none transition-colors text-right"
                 placeholder="مثال: ۱۰۰٬۰۰۰"
               />
-              <span>ريال</span>
+              <span>تومان</span>
             </div>
 
             {/* دکمه‌های سریع */}
@@ -174,8 +180,12 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
                 <span className="text-grey-600">مبلغ پایه</span>
                 {/* <span>{0} ريال</span> */}
                 <span>
-                  {(invoice?.base_amount_irr || 0).toLocaleString("fa-IR")}{" "}
-                  ريال
+                  {/* {(invoice?.base_amount_irr || 0).toLocaleString("fa-IR")}{" "}
+                  ريال */}
+                  {((invoice?.base_amount_irr || 0) / 10).toLocaleString(
+                    "fa-IR"
+                  )}{" "}
+                  تومان
                 </span>
               </div>
 
@@ -187,16 +197,26 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
               )}
 
               <div className="flex justify-between">
-                <span className="text-grey-600">مالیات ۹٪</span>
+                <span className="text-grey-600">
+                  مالیات {invoice.tax_percentage.toLocaleString("fa-IR")}٪
+                </span>
                 <span>
-                  {(invoice?.tax_amount_irr || 0).toLocaleString("fa-IR")} ريال
+                  {/* {(invoice?.tax_amount_irr || 0).toLocaleString("fa-IR")} ريال */}
+                  {((invoice?.tax_amount_irr || 0) / 10).toLocaleString(
+                    "fa-IR"
+                  )}{" "}
+                  تومان
                 </span>
               </div>
 
               <div className="flex justify-between pt-2 border-t border-[#65bcb6]">
                 <span className="font-semibold">قابل پرداخت</span>
                 <span className="text-[#65bcb6] font-bold">
-                  {invoice?.total_amount_irr.toLocaleString("fa-IR")} ريال
+                  {/* {invoice?.total_amount_irr.toLocaleString("fa-IR")} ريال */}
+                  {((invoice?.total_amount_irr || 0) / 10).toLocaleString(
+                    "fa-IR"
+                  )}{" "}
+                  تومان
                 </span>
               </div>
             </div>
