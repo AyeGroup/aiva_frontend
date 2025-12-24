@@ -327,7 +327,7 @@ export function ChatbotPlanCard({
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <FileText className="w-5 h-5" style={{ color: fileColor }} />
-                <span className="text-grey-700">کاراکتر فایل</span>
+                <span className="text-grey-700">کاراکتر  </span>
               </div>
               <div className="text-grey-900">
                 <span className="text-xl" style={{ color: fileColor }}>

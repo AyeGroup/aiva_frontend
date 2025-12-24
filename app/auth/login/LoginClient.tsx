@@ -369,7 +369,7 @@ function LoginClient() {
                   >
                     ثبت نام
                   </button>
-                  <span className="mx-3 text-gray-400">|</span>
+                  <span className="mx-3 text-secondary">|</span>
                   <button
                     type="button"
                     onClick={() => router.push("/auth/forgot-pass")}

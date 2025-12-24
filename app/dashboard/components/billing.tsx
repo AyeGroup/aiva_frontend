@@ -138,7 +138,7 @@ export function Billing() {
         enabled: true,
       })),
       {
-        text: `${plan.upload_char_limit.toLocaleString("fa-IR")} کاراکتر فایل`,
+        text: `${plan.upload_char_limit.toLocaleString("fa-IR")} کاراکتر  `,
         enabled: true,
       },
     ];
@@ -360,7 +360,11 @@ export function Billing() {
                       const planColor =
                         bots.find((b) => b.uuid === plan.chatbot_uuid)
                           ?.primary_color || "";
-
+                      const fileCharPercent = Math.round(
+                        (plan.subscription.balance /
+                          plan.subscription.balance) *
+                          100
+                      );
                       return (
                         <div
                           key={index}
@@ -432,7 +436,20 @@ export function Billing() {
                               />
                             </div>
                           </div>
-
+                          <div className="flex my-5 items-center justify-between gap-1 sm:gap-2">
+                            <div className="flex gap-1 items-center justify-start text-grey-700 text-xs sm:text-sm">
+                              اعتبار:
+                              <span className="">
+                                {new Intl.NumberFormat("fa-IR").format(
+                                  plan.subscription.balance
+                                )}
+                              </span>
+                              تومان
+                            </div>
+                            <span className="text-grey-500 text-xs">
+                              ({fileCharPercent.toLocaleString("fa-IR")}٪)
+                            </span>
+                          </div>
                           {/* انقضا */}
                           <div className="flex items-center justify-between mb-3 text-xs">
                             <span className="text-grey-600">
@@ -451,6 +468,7 @@ export function Billing() {
 
                           <button
                             disabled={plan.subscription.plan == "0"}
+                            title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
                             onClick={() => handleUpgrade(plan)}
                             className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
                           >
@@ -460,7 +478,6 @@ export function Billing() {
                       );
                     })}
                   </div>
-
                   <table className="hidden lg:table w-full ">
                     <thead>
                       <tr className="border-b border-grey-200 ">
@@ -474,7 +491,8 @@ export function Billing() {
                           کاراکتر
                         </th>
                         <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
-                          اعتبار
+                          اعتبار{" "}
+                          <span className="text-xs text-gray-400">(تومان)</span>
                         </th>
                         <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
                           انقضا
@@ -594,7 +612,7 @@ export function Billing() {
                                   )}
                                 </span>
                                 <span className="text-grey-500 text-xs">
-                                  ({fileCharPercent}٪)
+                                  ({fileCharPercent.toLocaleString("fa-IR")}٪)
                                 </span>
                               </div>
                             </td>
@@ -624,7 +642,7 @@ export function Billing() {
                                   disabled={plan.subscription.plan == "0"}
                                   onClick={() => handleUpgrade(plan)}
                                   className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                  title="افزایش اعتبار پیام"
+                                  title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
                                   type="button"
                                 >
                                   افزایش اعتبار
@@ -639,6 +657,9 @@ export function Billing() {
                 </div>
               )}
             </Card>
+            <div className="text-xs text-gray-400 p-2">
+              افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست
+            </div>
           </section>
 
           {/* Available Plans Section */}

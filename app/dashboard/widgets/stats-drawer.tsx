@@ -132,7 +132,7 @@ export function StatsDrawer({
         enabled: true,
       })),
       {
-        text: `${plan.upload_char_limit.toLocaleString("fa-IR")} کاراکتر فایل`,
+        text: `${plan.upload_char_limit.toLocaleString("fa-IR")} کاراکتر  `,
         enabled: true,
       },
     ];
