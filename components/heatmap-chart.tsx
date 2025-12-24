@@ -43,7 +43,7 @@ export function HeatmapChart({
           // console.log("heatmap",heatmap)
           setStatisticHeatmap(heatmap);
           const peak = utcHourToLocalTime(peak_hour);
-          setPeakHour(peak);
+          setPeakHour(peak_hour);
           setPeakDay(paersianDay(most_active_day));
         }
       } catch (error) {
