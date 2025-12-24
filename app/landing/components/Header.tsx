@@ -11,7 +11,7 @@ const menuItems = [
   { label: "نحوه کار", href: "/#launch" },
   { label: "قیمت‌گذاری", href: "/#pricing" },
   { label: "سوالات متداول", href: "/#faq" },
-  { label: "درباره آیوا", href: "#about" },
+  { label: "درباره آیوا", href: "/#about" },
   { label: "تماس با ما", href: "/contact" },
 ];
 
