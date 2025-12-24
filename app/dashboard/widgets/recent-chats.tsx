@@ -57,14 +57,19 @@ export function RecentChats({
       userName: chat.user_name,
       status: chat.ended_at ? "completed" : "active",
       unreadCount: 0, // در صورت نیاز می‌تونی از بک اضافه کنی
+      // lastActivity: new Date(lastMessage.ts ).toLocaleDateString("fa-IR"),
+      //   ? new Date(lastMessage.ts * 1000).toISOString()
+      //   : new Date().toISOString(),
+      // lastActivity:lastMessage
       lastActivity: lastMessage
-        ? new Date(lastMessage.ts * 1000).toISOString()
-        : new Date().toISOString(),
+        ? new Date(lastMessage.ts).toLocaleDateString("fa-IR")
+        : "",
       messages: chat.messages.map((m) => ({
         id: m.id,
         type: m.role === "assistant" ? "bot" : "user",
         content: m.content,
-        timestamp: new Date(m.ts * 1000).toISOString(),
+        timestamp: new Date(m.ts).toLocaleDateString("fa-IR"),
+        // timestamp: new Date(m.ts * 1000).toISOString(),
       })),
     };
   });
