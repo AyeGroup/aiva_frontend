@@ -66,7 +66,7 @@ export function ChatHistoryCard({
             <div className="chat-meta">
               <div className={`status-indicator ${status}`}>
                 <Circle className="w-2 h-2" />
-                <span>{status === 'active' ? 'فعال' : 'تکمیل شده'}</span>
+                <span>{status === "active" ? "فعال" : "تکمیل شده"}</span>
               </div>
               <div className="last-activity">
                 <Clock className="w-3 h-3" />
@@ -75,15 +75,41 @@ export function ChatHistoryCard({
             </div>
           </div>
         </div>
-        
-        {unreadCount > 0 && (
-          <div className="unread-badge">
-            {unreadCount}
-          </div>
-        )}
+
+        {unreadCount > 0 && <div className="unread-badge">{unreadCount}</div>}
       </div>
 
       {/* Messages Timeline */}
+
+      {messages && messages.length > 0 && (
+        <div className={`messages-timeline ${isExpanded ? "expanded" : ""}`}>
+          {hasMoreMessages && !isExpanded && (
+            <div className="more-messages-indicator">
+              <span>+ {messages.length - 3} پیام دیگر</span>
+            </div>
+          )}
+
+          {(isExpanded ? messages : displayMessages).map((message) => (
+            <div key={message.id} className={`message-item ${message.type}`}>
+              <div className="message-icon">
+                {message.type === "user" ? (
+                  <User className="w-3 h-3" />
+                ) : (
+                  <Bot className="w-3 h-3" />
+                )}
+              </div>
+              <div className="message-content">
+                <div className="message-text">{message.content}</div>
+                <div className="message-time">
+                  {formatTime(message.timestamp)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/*       
       <div className={`messages-timeline ${isExpanded ? 'expanded' : ''}`}>
         {hasMoreMessages && !isExpanded && (
           <div className="more-messages-indicator">
@@ -110,7 +136,7 @@ export function ChatHistoryCard({
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
 
       {/* Footer Actions */}
       <div className="chat-history-footer">
@@ -124,18 +150,17 @@ export function ChatHistoryCard({
             </>
           )}
         </div>
-        
+
         <div className="action-buttons">
-          <button 
+          <button
             className="expand-button"
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
             }}
           >
-            {isExpanded ? 'کمتر' : 'بیشتر'}
+            {isExpanded ? "کمتر" : "بیشتر"}
           </button>
-
         </div>
       </div>
     </div>

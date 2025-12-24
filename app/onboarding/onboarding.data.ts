@@ -106,6 +106,13 @@ export const onboardingData = {
       placeholder: "فایل‌های خود را اینجا بکشید یا کلیک کنید",
     },
     {
+      id: "excel",
+      title: "افزودن جدول",
+      description: "فایل اکسل با فرمت xlsx و xls و csv  ",
+      icon: "file-excel",
+      placeholder: "فایل‌های خود را اینجا بکشید یا کلیک کنید",
+    },
+    {
       id: "website",
       title: "افزودن لینک وب‌سایت",
       description: "صفحات سایت یا منابع آنلاین",

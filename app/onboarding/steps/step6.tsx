@@ -51,7 +51,7 @@ export function WizardStep6({
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const canUploadLogo = useFeatureAccess(botConfig.uuid,"chatbot_logo");
-  // console.log("canUploadLogo: ", canUploadLogo);
+  console.log("canUploadLogo: ", canUploadLogo);
 
   useEffect(() => {
     if (botConfig.logo_url) setPreview(botConfig.logo_url);

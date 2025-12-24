@@ -125,53 +125,118 @@ export const usePricing = () => {
   return context;
 };
 
+// export const useFeatureAccess =  (bot_uuid: string, feature: string) => {
+//   const { featureMinPlan } = usePricing();
+//   const [allowed, setAllowed] = useState<boolean | null>(null);
+
+//   useEffect(() => {
+//     if (!bot_uuid) {
+//       setAllowed(false);
+//       return;
+//     }
+
+//     const checkAccess = async () => {
+//       try {
+//         const response = await axiosInstance.get(
+//           API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid)
+//         );
+
+//         if (!response || response.status !== 200) {
+//           setAllowed(false);
+//           return;
+//         }
+
+//         const currentPlan = response.data.data.plan;
+//         // console.log("currentPlan", currentPlan);
+//         // if (!currentPlan) {
+//       if (typeof currentPlan !== "number" || isNaN(currentPlan)) {
+//         setAllowed(false);
+//         return;
+//       }
+
+//         const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+
+//         const minPlan = featureMinPlan[feature] ?? "FREE";
+//         const minIndex = planOrder.indexOf(minPlan);
+//         // console.log(feature, " : ");
+//         // console.log("minPlan", minPlan);
+//         // console.log("minIndex");
+//         setAllowed(currentPlan >= minIndex);
+//       } catch (err) {
+//         console.error("Failed to check feature access:", err);
+//         setAllowed(false);
+//       }
+//     };
+
+//     checkAccess();
+//   }, [bot_uuid, feature, featureMinPlan]);
+
+//   return allowed;
+// };
 export const useFeatureAccess = (bot_uuid: string, feature: string) => {
   const { featureMinPlan } = usePricing();
   const [allowed, setAllowed] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (!bot_uuid) {
-      setAllowed(false);
-      return;
-    }
+    let isMounted = true;
 
-    const checkAccess = async () => {
-      try {
-        const response = await axiosInstance.get(
-          API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid)
-        );
-
-        if (!response || response.status !== 200) {
-          setAllowed(false);
-          return;
-        }
-
-        const currentPlan = response.data.data.plan;
-        // console.log("currentPlan", currentPlan);
-        // if (!currentPlan) {
-      if (typeof currentPlan !== "number" || isNaN(currentPlan)) {
-        setAllowed(false);
+    const run = async () => {
+      // اگر pricing هنوز لود نشده
+      if (!featureMinPlan || !feature) {
+        setAllowed(null);
         return;
       }
 
-        const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+      const result = await checkFeatureAccess(
+        bot_uuid,
+        feature,
+        featureMinPlan
+      );
 
-        const minPlan = featureMinPlan[feature] ?? "FREE";
-        const minIndex = planOrder.indexOf(minPlan);
-        // console.log(feature, " : ");
-        // console.log("minPlan", minPlan);
-        // console.log("minIndex");
-        setAllowed(currentPlan >= minIndex);
-      } catch (err) {
-        console.error("Failed to check feature access:", err);
-        setAllowed(false);
+      if (isMounted) {
+        setAllowed(result);
       }
     };
 
-    checkAccess();
+    run();
+
+    return () => {
+      isMounted = false;
+    };
   }, [bot_uuid, feature, featureMinPlan]);
 
   return allowed;
+};
+export const checkFeatureAccess = async (
+  bot_uuid: string,
+  feature: string,
+  featureMinPlan: Record<string, string>
+): Promise<boolean> => {
+  if (!bot_uuid) return false;
+
+  try {
+    const response = await axiosInstance.get(
+      API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid)
+    );
+
+    if (!response || response.status !== 200) return false;
+
+    const currentPlan = response.data.data.plan;
+
+    if (typeof currentPlan !== "number" || isNaN(currentPlan)) {
+      return false;
+    }
+
+    const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+
+    const minPlan = featureMinPlan[feature] ?? "FREE";
+    const minIndex = planOrder.indexOf(minPlan);
+
+    return currentPlan >= minIndex;
+  } catch (error) {
+    console.error("Failed to check feature access:", error);
+    return false;
+  }
 };
 
 export const useFeatureRequiredPlan = (feature: string) => {

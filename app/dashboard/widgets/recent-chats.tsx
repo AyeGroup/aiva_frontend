@@ -99,25 +99,24 @@ export function RecentChats({
       </div>
 
       <div className="space-y-4">
-        {chats.length > 0 ? (
-          chats.map((chat, index) => (
-            <ChatHistoryCard
-              key={index}
-              userId={chat.userId}
-              // userName={`کاربر ${convertToPersian(index + 1)}`}
-              // userName={chat.userName}
-              userName={`کاربر ${convertToPersian(
-                userIdToIndexMap.get(chat.userId)!
-              )}`}
-              userAvatar={chat.userAvatar}
-              messages={chat.messages}
-              status={chat.status}
-              unreadCount={chat.unreadCount}
-              lastActivity={chat.lastActivity}
-              // lastActivity={convertNumbersToPersian(chat.lastActivity)}
-              onClick={() => onChatClick?.(chat.userId)}
-            />
-          ))
+        {chats.filter((chat) => chat.messages?.length > 0).length > 0 ? (
+          chats
+            .filter((chat) => chat.messages?.length > 0)
+            .map((chat, index) => (
+              <ChatHistoryCard
+                key={chat.userId}
+                userId={chat.userId}
+                userName={`کاربر ${convertToPersian(
+                  userIdToIndexMap.get(chat.userId)!
+                )}`}
+                userAvatar={chat.userAvatar}
+                messages={chat.messages}
+                status={chat.status}
+                unreadCount={chat.unreadCount}
+                lastActivity={chat.lastActivity}
+                onClick={() => onChatClick?.(chat.userId)}
+              />
+            ))
         ) : (
           <p className="text-center text-grey-500 text-sm py-6">
             هیچ مکالمه‌ای یافت نشد.

@@ -94,7 +94,7 @@ export interface FAQ {
 
 export interface KnowledgeItem {
   id: string;
-  type: "qa_pair" | "file" | "website";
+  type: "qa_pair" | "file" | "website" | "excel";
   title: string;
   content?: string;
   status?: string;

@@ -57,6 +57,8 @@ export const API_ROUTES = {
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents`,
     DOCUMENT_EDIT: (bot_uuid: string, doc_id: string) =>
       `${API_BASE_URL}/chatbots/${bot_uuid}/documents/item/${doc_id}/title`,
+    DOCUMENT_DELETE: (bot_uuid: string, doc_id: string) =>
+      `${API_BASE_URL}/chatbots/${bot_uuid}/documents/item/${doc_id}`,
 
     QA_LIST: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/qa`,
     QA_SAVE: (bot_uuid: string) => `${API_BASE_URL}/chatbots/${bot_uuid}/qa`,

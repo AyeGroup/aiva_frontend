@@ -25,9 +25,10 @@ import {
   CheckCircle,
   AlertTriangle,
   Edit2,
-  FileStack,
+  FileSpreadsheet,
 } from "lucide-react";
 import UploadProgressModal from "@/components/UploadProgressModal";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -38,6 +39,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [selectedType, setSelectedType] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const [isEditing, setIsEditing] = useState(false);
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
@@ -60,6 +62,13 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     botConfig.uuid,
     "website_crawling_level_2"
   );
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    item: any;
+  }>({
+    isOpen: false,
+    item: null,
+  });
   const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
   const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
 
@@ -110,7 +119,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     }
   };
   const processFile = (file: File) => {
-    const maxSize = 1 * 1024 * 1024; // 1MB
+    const maxSize = 50 * 1024 * 1024; // 50MB
 
     if (file.size > maxSize) {
       setSelectedFile(null);
@@ -118,12 +127,16 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       return;
     }
 
-    const allowedExtensions = ["pdf", "doc", "docx", "txt"];
+    const allowedExtensions =
+      selectedType === "excel"
+        ? ["csv", "xls", "xlsx"]
+        : ["pdf", "doc", "docx", "txt"];
+
     const fileExtension = file.name.split(".").pop()?.toLowerCase();
 
     if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
       setSelectedFile(null);
-      toast.error("فرمت فایل مجاز نیست (PDF, DOC, DOCX, TXT)");
+      toast.error("فرمت فایل مجاز نیست  ");
       return;
     }
 
@@ -146,16 +159,15 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     event.target.value = "";
   };
 
-const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-  e.preventDefault();
-  e.stopPropagation();
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const file = e.dataTransfer.files?.[0];
-  if (!file) return;
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
 
-  processFile(file);
-};
-
+    processFile(file);
+  };
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -168,7 +180,20 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsDragging(false);
   };
+  const openConfirmModal = (item: any) => {
+    setConfirmModal({ isOpen: true, item });
+  };
+  const handleConfirmDelete = () => {
+    if (confirmModal.item) {
+      closeConfirmModal();
+      removeItem(confirmModal.item);
+      //  handleDelete(confirmModal.id);
+    }
+  };
 
+  const closeConfirmModal = () => {
+    setConfirmModal({ isOpen: false, item: null });
+  };
   function isValidUrl(url: string): boolean {
     try {
       const isValidUrl = /^https?:\/\/[^\s$.?#].[^\s]*$/i.test(url);
@@ -246,14 +271,17 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         }
 
         const apiPath =
-          selectedType === "file"
+          selectedType === "file" || selectedType === "excel"
             ? API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)
             : selectedType === "website"
             ? API_ROUTES.KNOWLEDGE.URL(botConfig.uuid)
             : API_ROUTES.KNOWLEDGE.QA_SAVE(botConfig.uuid);
 
         //  افزودن آیتم جدید
-        if (selectedType === "file" && selectedFile) {
+        if (
+          (selectedType === "file" || selectedType === "excel") &&
+          selectedFile
+        ) {
           setUploading(true);
           setUploadProgress(0);
           formData.append("title", newItem.title || "");
@@ -312,6 +340,8 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         return HelpCircle;
       case "file":
         return FileText;
+      case "excel":
+        return FileSpreadsheet;
       case "website":
         return Link;
       case "qa_pair":
@@ -435,9 +465,13 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         res = await axiosInstance.delete(
           API_ROUTES.KNOWLEDGE.QA_EDIT(botConfig.uuid, item.qa_id)
         );
-      } else if (item.type === "file" || item.type === "website") {
+      } else if (
+        item.type === "file" ||
+        item.type === "excel" ||
+        item.type === "website"
+      ) {
         res = await axiosInstance.delete(
-          `${API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)}/${item.upload_id}`
+          API_ROUTES.KNOWLEDGE.DOCUMENT_DELETE(botConfig.uuid, item.id)
         );
       } else {
         return;
@@ -693,7 +727,8 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
           <div className="space-y-4">
             <div
               className={`${
-                (selectedType === "file" && !can_upload_docs) ||
+                ((selectedType === "file" || selectedType === "excel") &&
+                  !can_upload_docs) ||
                 (selectedType === "website" && !can_website_crawling) ||
                 (selectedType === "qa_pair" && !can_qa_as_file)
                   ? "pointer-events-none opacity-50"
@@ -808,52 +843,59 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
               </div>
             )}
 
-            {selectedType === "file" && isAdding && (
-              <div
-                className={`${
-                  !can_upload_docs ? "pointer-events-none opacity-50" : ""
-                }`}
-              >
-                <label className="block text-grey-900 mb-2">آپلود فایل</label>
+            {(selectedType === "file" || selectedType === "excel") &&
+              isAdding && (
                 <div
-                  onDrop={handleDrop}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  className={`border-2 border-dashed rounded-lg p-8 text-center transition
-        ${isDragging ? "border-primary bg-primary/5" : "border-grey-300"}`}
+                  className={`${
+                    !can_upload_docs ? "pointer-events-none opacity-50" : ""
+                  }`}
                 >
-                  {selectedFile ? (
-                    <div>{selectedFile.name}</div>
-                  ) : (
-                    <div>
-                      <Upload className="w-8 h-8 text-grey-400 mx-auto mb-4" />
-                      <p className="text-grey-600 mb-4">
-                        فایل خود را اینجا بکشید یا کلیک کنید
-                      </p>
-                    </div>
-                  )}
-                  <input
-                    type="file"
-                    onChange={handleFileUpload}
-                    accept=".pdf,.doc,.docx,.txt"
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() =>
-                      document.getElementById("file-upload")?.click()
-                    }
+                  <label className="block text-grey-900 mb-2">آپلود فایل</label>
+                  <div
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    className={`border-2 border-dashed rounded-lg p-8 text-center transition
+        ${isDragging ? "border-primary bg-primary/5" : "border-grey-300"}`}
                   >
-                    انتخاب فایل
-                  </Button>
-                  <p className="text-grey-500 mt-2 text-body-small">
-                    پشتیبانی از فرمت‌های PDF، Word و متن ساده
-                  </p>
+                    {selectedFile ? (
+                      <div>{selectedFile.name}</div>
+                    ) : (
+                      <div>
+                        <Upload className="w-8 h-8 text-grey-400 mx-auto mb-4" />
+                        <p className="text-grey-600 mb-4">
+                          فایل خود را اینجا بکشید یا کلیک کنید
+                        </p>
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      onChange={handleFileUpload}
+                      accept={
+                        selectedType === "excel"
+                          ? ".csv,.xls,.xlsx"
+                          : ".pdf,.doc,.docx,.txt"
+                      }
+                      className="hidden"
+                      id="file-upload"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() =>
+                        document.getElementById("file-upload")?.click()
+                      }
+                    >
+                      انتخاب فایل
+                    </Button>
+                    <p className="text-grey-500 mt-2 text-body-small">
+                      {selectedType === "excel"
+                        ? "  پشتیبانی از فرمت‌های xlsx و xls و csv  "
+                        : "  پشتیبانی از فرمت‌های PDF و Word و متن ساده"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
           <div className="flex justify-end gap-6 mt-8 pt-6 border-t border-border-soft">
             <Button
@@ -1015,7 +1057,11 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
                         </button>
 
                         <button
-                          onClick={() => removeItem(item)}
+                          // onClick={() => removeItem(item)}
+                          onClick={() => {
+                            openConfirmModal(item);
+                            // setOpenMenuId(null);
+                          }}
                           title="حذف محتوا"
                           className="w-8 h-8 rounded-full text-grey-500 hover:text-grey-700 flex items-center justify-center"
                         >
@@ -1084,6 +1130,16 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         chatbot={selectedChatbot ? { uuid: selectedChatbot.uuid } : undefined}
         show={showCrawl2Modal}
         onClose={handleCloseCrawl2}
+      />
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={closeConfirmModal}
+        onConfirm={handleConfirmDelete}
+        title="حذف پایگاه دانش"
+        message="آیا از حذف این دانش اطمینان دارید؟ این عمل قابل بازگشت نیست."
+        confirmText="بله، حذف کن"
+        cancelText="لغو"
+        type="danger"
       />
     </div>
   );

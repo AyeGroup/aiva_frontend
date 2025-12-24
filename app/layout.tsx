@@ -26,9 +26,7 @@ export default function RootLayout({
           <div className="app-content">
             <AuthProvider>
               <BotProvider>
-                <PricingProvider>
-                  {children}
-                  </PricingProvider>
+                <PricingProvider>{children}</PricingProvider>
               </BotProvider>
             </AuthProvider>
             <Toaster
@@ -39,6 +37,7 @@ export default function RootLayout({
                   fontFamily: "Vazirmatn, sans-serif",
                   direction: "rtl",
                   textAlign: "right",
+                  marginTop:"20%"
                 },
               }}
             />
