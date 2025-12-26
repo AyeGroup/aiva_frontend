@@ -20,6 +20,7 @@ import {
   X,
   Filter,
   ChevronDown,
+  TrendingDown,
 } from "lucide-react";
 import persian from "react-date-object/calendars/persian";
 import DatePicker from "react-multi-date-picker";
@@ -99,20 +100,62 @@ export const Transactions: React.FC = () => {
     // فیلتر بازه زمانی
     if (dateFrom) {
       const from = new Date(dateFrom);
+      from.setHours(0, 0, 0, 0); // Start of day
       data = data.filter((t) => new Date(t.created_at) >= from);
     }
 
     if (dateTo) {
       const to = new Date(dateTo);
+      to.setHours(23, 59, 59, 999); // End of day
       data = data.filter((t) => new Date(t.created_at) <= to);
     }
+
     if (filterBot) {
       data = data.filter((t) => t.chatbot_uuid === filterBot.uuid);
     }
 
+    console.log("date:", dateFrom, dateTo);
+    console.log("transaction", data); // Log 'data' instead of 'filteredTransactions'
+
     setFilteredTransactions(data);
     setCurrentPage(1);
   }, [transactionTypeFilter, dateFrom, dateTo, filterBot, transactions]);
+
+  // useEffect(() => {
+  //   if (!transactions) return;
+
+  //   let data = [...transactions];
+
+  //   // فیلتر نوع تراکنش
+  //   if (transactionTypeFilter !== "all") {
+  //     if (transactionTypeFilter === TRANSACTION_TYPE.BUY_SUBSCRIPTION) {
+  //       data = data.filter((t) => t.type === TRANSACTION_TYPE.BUY_SUBSCRIPTION);
+  //     } else if (transactionTypeFilter === TRANSACTION_TYPE.INCREASE_WALLET) {
+  //       data = data.filter((t) => t.type === TRANSACTION_TYPE.INCREASE_WALLET);
+  //     }
+  //   }
+
+  //   // فیلتر بازه زمانی
+  //   if (dateFrom) {
+  //     const from = new Date(dateFrom);
+  //     data = data.filter((t) => new Date(t.created_at) >= from);
+  //   }
+
+  //   if (dateTo) {
+  //     const to = new Date(dateTo);
+  //     data = data.filter((t) => new Date(t.created_at) <= to);
+  //   }
+
+  //   if (filterBot) {
+  //     data = data.filter((t) => t.chatbot_uuid === filterBot.uuid);
+  //   }
+
+  //   console.log("date:", dateFrom, dateTo);
+  //   console.log("transaction", filteredTransactions);
+
+  //   setFilteredTransactions(data);
+  //   setCurrentPage(1);
+  // }, [transactionTypeFilter, dateFrom, dateTo, filterBot, transactions]);
 
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const paginatedTransactions = filteredTransactions.slice(
@@ -126,10 +169,13 @@ export const Transactions: React.FC = () => {
     try {
       const response = await axiosInstance.get(
         API_ROUTES.FINANCIAL.PDF(transaction_id),
-        { responseType: "blob" } // مهم!!
+        { responseType: "blob" }
       );
-      console.error("response1  :", response);
-
+      if (!response || response?.data?.success == false) {
+        toast.warning("برای این تراکنش فاکتور موجود نیست");
+        console.log("response1  :", response);
+        return;
+      }
       const pdfBlob = new Blob([response.data], { type: "application/pdf" });
 
       // دانلود
@@ -142,27 +188,28 @@ export const Transactions: React.FC = () => {
       toast.success("فایل دانلود شد");
       console.log("PDF downloaded");
     } catch (error: any) {
-      console.error("error  :", error);
-      console.error("error.response  :", error.response);
+      // console.error("error  :", error);
+      // console.error("error.response  :", error.response);
+      toast.warning("برای این تراکنش فاکتور موجود نیست");
 
       // بررسی وجود پاسخ از سرور
-      if (error.response && error.response.data) {
-        // اگر سرور پیام JSON فرستاده باشد
-        try {
-          const serverMsg = JSON.parse(
-            new TextDecoder().decode(error.response.data)
-          );
-          console.error("Server message:", serverMsg.message || serverMsg);
-          toast.error(`خطا: ${serverMsg.message || serverMsg}`);
-        } catch {
-          // اگر پیام ساده باشد
-          console.error("Server message:", error.response.data);
-          toast.error(`خطا: ${error.response.data}`);
-        }
-      } else {
-        console.error("Error downloading PDF:", error.message);
-        toast.error(`خطا: ${error.message}`);
-      }
+      // if (error.response && error.response.data) {
+      //   // اگر سرور پیام JSON فرستاده باشد
+      //   try {
+      //     const serverMsg = JSON.parse(
+      //       new TextDecoder().decode(error.response.data)
+      //     );
+      //     console.error("Server message:", serverMsg.message || serverMsg);
+      //     toast.error(`خطا: ${serverMsg.message || serverMsg}`);
+      //   } catch {
+      //     // اگر پیام ساده باشد
+      //     console.error("Server message:", error.response.data);
+      //     toast.error(`خطا: ${error.response.data}`);
+      //   }
+      // } else {
+      //   console.error("Error downloading PDF:", error.message);
+      //   toast.error(`خطا: ${error.message}`);
+      // }
     }
   };
 
@@ -324,7 +371,9 @@ export const Transactions: React.FC = () => {
                   <button
                     onClick={() => {
                       setDateFrom("");
+                      setDateFromTemp("");
                       setDateTo("");
+                      setDateToTemp("");
                     }}
                     className="w-full px-4 py-2 mt-2 rounded-lg bg-grey-50 text-grey-700 hover:bg-grey-100 transition-colors flex items-center justify-center gap-2"
                     type="button"
@@ -360,7 +409,7 @@ export const Transactions: React.FC = () => {
       </div>
       <Card className="w-full">
         <div className=" ">
-          {filteredTransactions.length === 0 ? (
+          {paginatedTransactions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-grey-500">
               <FileText
                 style={{ width: "48px", height: "48px", strokeWidth: "1.5" }}
@@ -370,7 +419,7 @@ export const Transactions: React.FC = () => {
             </div>
           ) : (
             <>
-              <table className="w-full table-fixed hidden lg:table ">
+              <table className="w-full table-auto hidden lg:table ">
                 <thead>
                   <tr className="border-b border-grey-200 bg-grey-50">
                     <th className="px-6 py-4 text-right text-grey-600">نوع</th>
@@ -406,14 +455,14 @@ export const Transactions: React.FC = () => {
                           className="w-10 h-10 rounded-full flex items-center justify-center"
                           style={{
                             backgroundColor:
-                              transaction.type === "plan"
+                              transaction.type === "buy_subscription"
                                 ? "rgba(101, 188, 182, 0.1)"
-                                : transaction.walletType === "deposit"
+                                : transaction.type === "increase_balance"
                                 ? "rgba(82, 212, 160, 0.1)"
                                 : "rgba(255, 161, 142, 0.1)",
                           }}
                         >
-                          {transaction.type === "plan" ? (
+                          {transaction.type === "buy_subscription" ? (
                             <Bot
                               style={{
                                 width: "18px",
@@ -421,9 +470,8 @@ export const Transactions: React.FC = () => {
                                 color: "#65BCB6",
                                 strokeWidth: "2",
                               }}
-                              aria-hidden="true"
                             />
-                          ) : transaction.walletType === "deposit" ? (
+                          ) : transaction.type === "increase_balance" ? (
                             <TrendingUp
                               style={{
                                 width: "18px",
@@ -431,17 +479,15 @@ export const Transactions: React.FC = () => {
                                 color: "#52d4a0",
                                 strokeWidth: "2",
                               }}
-                              aria-hidden="true"
                             />
                           ) : (
-                            <Download
+                            <TrendingDown
                               style={{
                                 width: "18px",
                                 height: "18px",
                                 color: "#FFA18E",
                                 strokeWidth: "2",
                               }}
-                              aria-hidden="true"
                             />
                           )}
                         </div>
@@ -524,34 +570,15 @@ export const Transactions: React.FC = () => {
 
                       {/* عملیات */}
                       <td className="px-6 py-4">
-                        <div className="flex items-center  justify-center gap-2">
-                          <button
-                            onClick={() => handlePdf(transaction.id)}
-                            className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                            title="دانلود فاکتور"
-                            type="button"
-                          >
-                            <Download
-                              style={{
-                                width: "20px",
-                                height: "20px",
-                                color: "#374151",
-                              }}
-                              aria-hidden="true"
-                            />
-                          </button>
-
-                          {/* پرداخت مجدد - فقط برای ناموفق‌ها */}
-                          {transaction.status === "failed" && (
+                        {transaction.tracking_code && (
+                          <div className="flex items-center  justify-center gap-2">
                             <button
-                              onClick={() =>
-                                toast.info("در حال انتقال به درگاه پرداخت...")
-                              }
-                              className="inline-flex items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                              title="پرداخت مجدد"
+                              onClick={() => handlePdf(transaction.id)}
+                              className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
+                              title="دانلود فاکتور"
                               type="button"
                             >
-                              <RefreshCw
+                              <Download
                                 style={{
                                   width: "20px",
                                   height: "20px",
@@ -560,14 +587,14 @@ export const Transactions: React.FC = () => {
                                 aria-hidden="true"
                               />
                             </button>
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <div className="md:hidden space-y-3">
+              <div className="lg:hidden space-y-3">
                 {filteredTransactions.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 text-gray-500 bg-white rounded-2xl">
                     <FileText className="w-12 h-12" />
@@ -591,12 +618,12 @@ export const Transactions: React.FC = () => {
                                 : "rgba(255, 161, 142, 0.1)",
                           }}
                         >
-                          {transaction.type === "plan" ? (
+                          {transaction.type === "buy_subscription" ? (
                             <Bot className="w-5 h-5 text-teal-500" />
-                          ) : transaction.walletType === "deposit" ? (
+                          ) : transaction.type === "increase_balance" ? (
                             <TrendingUp className="w-5 h-5 text-green-500" />
                           ) : (
-                            <Download className="w-5 h-5 text-orange-400" />
+                            <TrendingDown className="w-5 h-5 text-orange-400" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -667,7 +694,7 @@ export const Transactions: React.FC = () => {
       </Card>
       {/* صفحه بندی */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="hidden lg:flex justify-center gap-2 mt-4">
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i}

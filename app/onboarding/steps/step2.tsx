@@ -999,7 +999,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                   <div className="w-3 h-3 rounded-full bg-danger"></div>
                   <span className="text-xs text-grey-600">
                     {convertToPersian(
-                      botConfig.knowledge.filter((k) => k.status === "error")
+                      botConfig.knowledge.filter((k) => k.status === "failed")
                         .length
                     )}{" "}
                     خطا
