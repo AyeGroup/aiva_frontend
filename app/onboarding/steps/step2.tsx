@@ -508,8 +508,8 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   if (
     canQaFileLoading ||
     canUploadDocsLoading ||
-    canWebsiteCrawling ||
-    canWebsiteCrawlingLevel2
+    canWebsiteCrawlingLoading ||
+    canWebsiteCrawlingLevel2Loading
   )
     return <PageLoader />;
 

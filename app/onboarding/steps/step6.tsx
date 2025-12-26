@@ -71,13 +71,21 @@ export function WizardStep6({
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    // بررسی حجم فایل (حداکثر 3 مگابایت)
+
     const maxSize = 3 * 1024 * 1024; // 3MB
     if (file.size > maxSize) {
       toast.error("حجم فایل نباید بیشتر از ۳ مگابایت باشد  ");
       e.target.value = "";
       return;
     }
+
+    const allowedTypes = ["image/png", "image/jpeg", "image/svg+xml"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.warning("فقط فایل‌های PNG، JPG یا SVG مجاز هستند");
+      e.target.value = "";
+      return;
+    }
+
     const previewUrl = URL.createObjectURL(file);
 
     // به‌روزرسانی لوگو در state
@@ -156,7 +164,7 @@ export function WizardStep6({
   };
 
   if (canUploadLogoLoading) return <PageLoader />;
- 
+
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg ">
       {/* Header */}
@@ -506,7 +514,7 @@ export function WizardStep6({
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/png,image/jpeg,image/svg+xml"
+              accept=".png,.jpg,.jpeg,.svg"
               className="hidden"
               onChange={handleFileSelect}
             />
@@ -567,7 +575,7 @@ export function WizardStep6({
                     e.stopPropagation();
                     fileInputRef.current?.click();
                   }}
-                  className="px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 text-sm"
+                  className="cursor-pointer px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 text-sm"
                 >
                   انتخاب فایل
                 </button>

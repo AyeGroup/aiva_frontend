@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useBot } from "@/providers/BotProvider";
 import { BotConfig } from "@/types/common";
 import { ChevronDown } from "lucide-react";
-import PageLoader from "@/components/pageLoader";
 
 export function ChatbotSelector() {
   const { bots, currentBot, setCurrentBot } = useBot();
@@ -15,7 +14,6 @@ export function ChatbotSelector() {
   useEffect(() => {
     if (currentBot) {
       setSelectedChatbot(currentBot);
-      // console.log("currentBot: ",currentBot.name);
     }
   }, [currentBot]);
 
@@ -25,10 +23,10 @@ export function ChatbotSelector() {
     setIsOpen(false);
   };
 
-  if (!currentBot && bots.length === 0) {
-    return <PageLoader />;
-  }
-  if (!selectedChatbot) return null;
+  // if (!currentBot && bots.length === 0) {
+  //   return <PageLoader />;
+  // }
+  // if (!selectedChatbot) return null;
 
   return (
     <div className="chatbot-selector-container">
@@ -41,9 +39,9 @@ export function ChatbotSelector() {
       >
         <span
           className="chatbot-indicator"
-          style={{ backgroundColor: selectedChatbot.primary_color }}
+          style={{ backgroundColor: selectedChatbot?.primary_color }}
         />
-        <span className="chatbot-name">{selectedChatbot.name}</span>
+        <span className="chatbot-name">{selectedChatbot?.name}</span>
         <ChevronDown
           className={`chatbot-icon ${isOpen ? "rotate" : ""}`}
           size={18}
@@ -68,7 +66,7 @@ export function ChatbotSelector() {
                   key={chatbot.uuid}
                   onClick={() => handleSelect(chatbot)}
                   className={`chatbot-item ${
-                    selectedChatbot.uuid === chatbot.uuid ? "active" : ""
+                    selectedChatbot?.uuid === chatbot.uuid ? "active" : ""
                   }`}
                   type="button"
                   title={`انتخاب ${chatbot.name}`}

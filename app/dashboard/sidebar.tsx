@@ -125,7 +125,7 @@ export function Sidebar({
 
   return (
     <aside
-      className="w-64 flex flex-col  top-0 h-screen relative"
+      className="w-64 flex flex-col  top-0 h-screen relative z-40"
       style={{ backgroundColor: "#F5E6D3" }}
     >
       {isLoading && <PageLoader/>}

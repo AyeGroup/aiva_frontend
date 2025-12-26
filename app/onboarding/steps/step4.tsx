@@ -7,6 +7,7 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { BotConfig, FAQ } from "@/types/common";
 import { useState, useEffect } from "react";
 import { HelpCircle, Trash2, Edit3, Save, X, Info } from "lucide-react";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 interface WizardStep4Props {
   botConfig: BotConfig;
@@ -16,8 +17,17 @@ interface WizardStep4Props {
 export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [newFaq, setNewFaq] = useState({ question: "", answer: "" });
+  const [message, setMessage] = useState<string>("");
   const [isloading, setIsLoading] = useState(false);
+  const [issubmitting, setIsSubmitting] = useState(false);
   const botId = botConfig.uuid;
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    id: any;
+  }>({
+    isOpen: false,
+    id: null,
+  });
 
   //  گرفتن لیست سوالات  در ابتدای فرم
   useEffect(() => {
@@ -55,8 +65,16 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
 
   //   افزودن
   const addFaq = async () => {
-    if (!newFaq.question.trim() || !newFaq.answer.trim()) return;
-    setIsLoading(true);
+    if (!newFaq.question.trim()) {
+      setMessage("متن سوال را وارد کنید");
+      return;
+    }
+    if (!newFaq.answer.trim()) {
+      setMessage("متن پاسخ را وارد کنید");
+      return;
+    }
+    setMessage("");
+    setIsSubmitting(true);
 
     try {
       const payload = {
@@ -78,7 +96,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
 
       console.error("خطا در افزودن FAQ:", err.response || err);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -107,18 +125,23 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     }
   };
 
-  //   حذف
-  const deleteFaq = async (id: string) => {
-    setIsLoading(true);
+  const deleteFaq = async () => {
+    if (!confirmModal.id) {
+      toast.warning("اطلاعات حذف نشد");
+      return;
+    }
+    closeConfirmModal();
 
+    setIsSubmitting(true);
     try {
-      await axiosInstance.delete(`${API_ROUTES.BOTS.FAQ(botId)}/${id}`);
+      await axiosInstance.delete(
+        `${API_ROUTES.BOTS.FAQ(botId)}/${confirmModal.id}`
+      );
       await fetchFaqs();
-      // setFaqs((prev) => prev.filter((f) => f.id !== id));
     } catch (err) {
       console.error("خطا در حذف FAQ:", err);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -128,7 +151,12 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
       prev.map((f) => (f.id === id ? { ...f, isEditing: false } : f))
     );
   };
-
+  const openConfirmModal = (id: any) => {
+    setConfirmModal({ isOpen: true, id });
+  };
+  const closeConfirmModal = () => {
+    setConfirmModal({ isOpen: false, id: null });
+  };
   //   سوالات پیشنهادی
   const suggestedQuestions = [
     "محصولات شما چه هستند؟",
@@ -163,7 +191,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
         </div>
       </div>
       <div className="flex gap-1 items-center text-sm text-secondary mr-4">
-        <Info className="w-7 h-7 bg-secondary/10 p-1 rounded-full"/>
+        <Info className="w-7 h-7 bg-secondary/10 p-1 rounded-full" />
         حداکثر ۵ سوال می توانید ثبت کنید
       </div>
       {/* فرم افزودن سؤال */}
@@ -183,14 +211,16 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
             rows={4}
             className="w-full p-3 border border-border-soft rounded-lg bg-bg-surface resize-none"
           />
+          {message && <div className="text-sm text-red-400 p-0">{message}</div>}
           <div className="flex justify-center mt-4">
             <Button
               variant="primary"
               icon="plus"
               onClick={addFaq}
-              disabled={!newFaq.question.trim() || !newFaq.answer.trim()}
+              disabled={issubmitting}
+              // disabled={!newFaq.question.trim() || !newFaq.answer.trim()}
             >
-              افزودن سؤال
+              {issubmitting ? "منتظر بمانید" : "افزودن سؤال"}
             </Button>
           </div>
         </div>
@@ -244,7 +274,11 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => deleteFaq(faq.id)}
+                      onClick={
+                        () => openConfirmModal(faq.id)
+
+                        // deleteFaq(faq.id)
+                      }
                       title="حذف"
                       className="p-1 hover:text-danger"
                     >
@@ -261,6 +295,16 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
           هنوز سوالی اضافه نکرده‌اید
         </div>
       )}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={closeConfirmModal}
+        onConfirm={deleteFaq}
+        title="حذف سوال"
+        message="آیا از حذف این سوال اطمینان دارید؟ این عمل قابل بازگشت نیست."
+        confirmText="بله، حذف کن"
+        cancelText="لغو"
+        type="danger"
+      />
     </div>
   );
 }
@@ -277,7 +321,11 @@ function EditFaqForm({ faq, onSave, onCancel }: EditFaqFormProps) {
   const [answer, setAnswer] = useState(faq.answer);
 
   const handleSave = () => {
-    if (question.trim() && answer.trim()) onSave(faq.id, question, answer);
+    if (!question || !answer) {
+      toast.warning("لطفا سوال و پاسخ را وارد نمایید");
+      return;
+    }
+    onSave(faq.id, question, answer);
   };
 
   return (
@@ -300,11 +348,15 @@ function EditFaqForm({ faq, onSave, onCancel }: EditFaqFormProps) {
         />
       </div>
       <div className="flex justify-end gap-2">
-        <Button onClick={() => onCancel(faq.id)} variant="secondary">
-          <X className="w-4 h-4" /> انصراف
-        </Button>
         <Button onClick={handleSave} variant="primary">
-          <Save className="w-4 h-4" /> ذخیره
+          <div className="flex items-center">
+            <Save className="w-4 h-4" /> ذخیره
+          </div>
+        </Button>
+        <Button onClick={() => onCancel(faq.id)} variant="secondary">
+          <div className="flex items-center">
+            <X className="w-4 h-4" /> انصراف
+          </div>
         </Button>
       </div>
     </div>

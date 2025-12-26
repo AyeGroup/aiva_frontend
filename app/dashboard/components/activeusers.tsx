@@ -24,7 +24,6 @@ export default function ActiveUsers() {
 
   const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
 
-  // تابع دریافت کاربران فعال با درنظر گرفتن صفحه فعلی
   useEffect(() => {
     const fetchActiveUsers = async () => {
       if (!currentBot) return;
@@ -83,8 +82,11 @@ export default function ActiveUsers() {
               const color = colors[index % colors.length];
               return (
                 <button
-                  key={user.user_id}
-                  onClick={() => setUsername(user.user_id)}
+                  key={index}
+                  onClick={() => {
+                    console.log("name:", user.user_id);
+                    setUsername(user.user_id);
+                  }}
                   className="relative bg-white cursor-pointer rounded-lg pb-3 p-6 text-right shadow-sm hover-lift"
                 >
                   <div
@@ -96,11 +98,11 @@ export default function ActiveUsers() {
                     </div>
                   </div>
                   <div className="flex justify-between items-center gap-3 flex-wrap">
-                    <div className="flex-col font-bold text-grey-900 my-2 truncate">
-                      {user.email ? `ایمیل: ${user.email}` : ""}
-                      {user.name ? `نام: ${user.name}` : ""}
-                      {user.phone ? `تلفن: ${user.phone}` : ""}
-                    </div>
+                    <ul className="flex-col font-bold text-grey-900 my-2 truncate">
+                      <li>{user.email ? `ایمیل: ${user.email}` : ""}</li>
+                      <li> {user.name ? `نام: ${user.name}` : ""}</li>
+                      <li> {user.phone ? `تلفن: ${user.phone}` : ""}</li>
+                    </ul>
 
                     <p className="flex text-sm text-grey-500 gap-1">
                       {convertToPersian(user.session_count)}

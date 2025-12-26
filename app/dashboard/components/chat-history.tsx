@@ -1,19 +1,20 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useBot } from "@/providers/BotProvider";
-import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import PageLoader from "@/components/pageLoader";
+import axiosInstance from "@/lib/axiosInstance";
 
 interface ChatHistoryProps {
   username: string;
 }
 
 export function ChatHistory({ username }: ChatHistoryProps) {
+  console.log("ChatHistory");
   const { currentBot } = useBot();
   const [history, setHistory] = useState<any[]>([]);
 
   useEffect(() => {
+  console.log("useEffect");
     if (!currentBot) return;
     if (!username) return;
     const fetchActiveUsers = async () => {
@@ -89,7 +90,7 @@ export function ChatHistory({ username }: ChatHistoryProps) {
 
               {/* Messages Area */}
               <div className="flex-1 p-6 space-y-4 overflow-y-auto bg-grey-50">
-                {history.map((message,index) => (
+                {history.map((message, index) => (
                   <div
                     key={index}
                     className={`flex items-end gap-3 ${

@@ -7,47 +7,71 @@ import PageLoader from "@/components/pageLoader";
 import LockFeature from "../LockFeature";
 import ToggleSetting from "@/components/toggle-setting";
 import ThreeLevelSlider from "@/components/ThreeLevelSlider";
+import { useEffect } from "react";
 
 interface WizardStep3Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
+  onPermissionsChange?: (permissions: {
+    canChatbotK: boolean;
+    canChatbotEmoji: boolean;
+    canChatbotGreetings: boolean;
+    canChatbotanswerLength: boolean;
+    canChatbotSupportPhone: boolean;
+  }) => void;
 }
 const AnswerLength = ["short", "medium", "long"];
 
-export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
-  // const can_chatbot_k = useFeatureAccess(botConfig.uuid, "chatbot_k");
-  // const can_chatbot_answer_length = useFeatureAccess(
-  //   botConfig.uuid,
-  //   "chatbot_answer_length"
-  // );
-  // const can_chatbot_greetings = useFeatureAccess(
-  //   botConfig.uuid,
-  //   "chatbot_greetings"
-  // );
-  // const can_chatbot_emoji = useFeatureAccess(botConfig.uuid, "chatbot_emoji");
-  // const can_chatbot_support_phone = useFeatureAccess(
-  //   botConfig.uuid,
-  //   "chatbot_support_phone"
-  // );
-
+export function WizardStep3({
+  botConfig,
+  updateConfig,
+  onPermissionsChange,
+}: WizardStep3Props) {
   const { allowed: canChatbotK, loading: canChatbotKLoading } =
     useFeatureAccess(botConfig?.uuid, "chatbot_k");
-
   const {
     allowed: canChatbotanswerLength,
     loading: canChatbotanswerLengthLoading,
   } = useFeatureAccess(botConfig?.uuid, "chatbot_answer_length");
-
   const { allowed: canChatbotGreetings, loading: canChatbotGreetingsLoading } =
     useFeatureAccess(botConfig?.uuid, "chatbot_greetings");
-
   const { allowed: canChatbotEmoji, loading: canChatbotEmojiLoading } =
     useFeatureAccess(botConfig?.uuid, "chatbot_emoji");
-
   const {
     allowed: canChatbotSupportPhone,
     loading: canChatbotSupportPhoneLoading,
   } = useFeatureAccess(botConfig?.uuid, "chatbot_support_phone");
+
+  useEffect(() => {
+    if (
+      onPermissionsChange &&
+      !canChatbotKLoading &&
+      !canChatbotEmojiLoading &&
+      !canChatbotGreetingsLoading &&
+      !canChatbotanswerLengthLoading &&
+      !canChatbotSupportPhoneLoading
+    ) {
+      onPermissionsChange({
+        canChatbotK,
+        canChatbotEmoji,
+        canChatbotGreetings,
+        canChatbotanswerLength,
+        canChatbotSupportPhone,
+      });
+    }
+  }, [
+    canChatbotK,
+    canChatbotEmoji,
+    canChatbotGreetings,
+    canChatbotanswerLength,
+    canChatbotSupportPhone,
+    onPermissionsChange,
+    canChatbotKLoading,
+    canChatbotEmojiLoading,
+    canChatbotGreetingsLoading,
+    canChatbotanswerLengthLoading,
+    canChatbotSupportPhoneLoading,
+  ]);
 
   if (!botConfig.uuid) return null;
   if (
@@ -87,7 +111,9 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           {!canChatbotK && <LockFeature feature="chatbot_k" />}
         </div>
 
-        <div className={`${canChatbotK ? "" : "pointer-events-none opacity-50"}`}>
+        <div
+          className={`${canChatbotK ? "" : "pointer-events-none opacity-50"}`}
+        >
           <ThreeLevelSlider
             value={botConfig.k}
             onChange={(val) => {
@@ -104,7 +130,9 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             <MessageSquare className="w-5 h-5 text-brand-primary" />
             حداکثر طول پاسخ
           </h3>
-          {!canChatbotanswerLength && <LockFeature feature="chatbot_answer_length" />}
+          {!canChatbotanswerLength && (
+            <LockFeature feature="chatbot_answer_length" />
+          )}
         </div>
 
         <div
@@ -146,7 +174,9 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
         <div className="space-y-3">
           <div className="py-4">
             <div className="mr-32">
-              {!canChatbotGreetings && <LockFeature feature="chatbot_greetings" />}
+              {!canChatbotGreetings && (
+                <LockFeature feature="chatbot_greetings" />
+              )}
             </div>
             <ToggleSetting
               label="خوشامدگویی خودکار"
@@ -170,7 +200,9 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           </div>
         </div>
         <div className="-mb-4 mr-28">
-          {!canChatbotSupportPhone && <LockFeature feature="chatbot_support_phone" />}
+          {!canChatbotSupportPhone && (
+            <LockFeature feature="chatbot_support_phone" />
+          )}
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center text-gray-900">
