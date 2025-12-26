@@ -12,7 +12,6 @@ import { BotConfig } from "@/types/common";
 import { BarChart3 } from "lucide-react";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { headerData } from "@/components/header/header.data";
-import { useFeatureAccess, usePricing } from "@/providers/PricingContext";
 import { WizardStep1 } from "./steps/step1";
 import { WizardStep2 } from "./steps/step2";
 import { WizardStep3 } from "./steps/step3";
@@ -35,7 +34,6 @@ export default function OnboardingWizard() {
   const isNew = !id || id === "new";
   const { logo } = headerData;
   const { user, loading } = useAuth();
-  // const { currentPlan } = usePricing();
   const { title, subtitle, steps } = onboardingData;
   const { refreshBots, setCurrentBot } = useBot();
   const [currentStep, setCurrentStep] = useState(1);
@@ -231,7 +229,7 @@ export default function OnboardingWizard() {
 
     return newErrors;
   };
-  // const can_advanced_stats = useFeatureAccess(botConfig.uuid, "advanced_stats");
+  
   //ذخیره استپ 5
   const saveBotBehavior = async () => {
     setIsSaving(true);

@@ -1,12 +1,12 @@
 "use client ";
 
 import Image from "next/image";
-import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
 import ColorPicker from "@/components/color-picker";
+import LockFeature from "../LockFeature";
+import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
-import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { onboardingData } from "../onboarding.data";
@@ -20,7 +20,7 @@ import {
   StepStar,
   StepUpload,
 } from "@/public/icons/AppIcons";
-import LockFeature from "../LockFeature";
+
 const colorPalette1 = [
   "#ec4899",
   "#8b5cf6",
@@ -45,13 +45,10 @@ export function WizardStep6({
   errors,
   setLogoFile,
 }: WizardStep6Props) {
-  // const { user, loading } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedTone, setSelectedTone] = useState(botConfig.tone);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  // const canUploadLogo = useFeatureAccess(botConfig.uuid,"chatbot_logo");
-  // console.log("canUploadLogo: ", canUploadLogo);
 
   const { allowed: canUploadLogo, loading: canUploadLogoLoading } =
     useFeatureAccess(botConfig?.uuid, "chatbot_logo");
@@ -159,8 +156,7 @@ export function WizardStep6({
   };
 
   if (canUploadLogoLoading) return <PageLoader />;
-  // if (!canUploadLogo) return null;
-
+ 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg ">
       {/* Header */}

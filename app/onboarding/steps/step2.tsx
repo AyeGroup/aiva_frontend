@@ -39,7 +39,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [selectedType, setSelectedType] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [isEditing, setIsEditing] = useState(false);
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<KnowledgeItem>>({});
@@ -54,14 +53,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [isDragging, setIsDragging] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const can_website_crawling = useFeatureAccess(
-    botConfig.uuid,
-    "website_crawling"
-  );
-  const can_website_crawling_level2 = useFeatureAccess(
-    botConfig.uuid,
-    "website_crawling_level_2"
-  );
+
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     item: any;
@@ -69,8 +61,25 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     isOpen: false,
     item: null,
   });
-  const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
-  const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
+
+  // const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
+  // const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
+
+  const { allowed: canUploadDocs, loading: canUploadDocsLoading } =
+    useFeatureAccess(botConfig?.uuid, "upload_docs");
+
+  const { allowed: canQaFile, loading: canQaFileLoading } = useFeatureAccess(
+    botConfig?.uuid,
+    "qa_as_file"
+  );
+
+  const { allowed: canWebsiteCrawling, loading: canWebsiteCrawlingLoading } =
+    useFeatureAccess(botConfig?.uuid, "website_crawling");
+
+  const {
+    allowed: canWebsiteCrawlingLevel2,
+    loading: canWebsiteCrawlingLevel2Loading,
+  } = useFeatureAccess(botConfig?.uuid, "website_crawling_level_2");
 
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;
@@ -118,6 +127,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       setSelectedChatbot(null);
     }
   };
+
   const processFile = (file: File) => {
     const maxSize = 50 * 1024 * 1024; // 50MB
 
@@ -180,9 +190,11 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     e.stopPropagation();
     setIsDragging(false);
   };
+
   const openConfirmModal = (item: any) => {
     setConfirmModal({ isOpen: true, item });
   };
+
   const handleConfirmDelete = () => {
     if (confirmModal.item) {
       closeConfirmModal();
@@ -194,6 +206,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const closeConfirmModal = () => {
     setConfirmModal({ isOpen: false, item: null });
   };
+
   function isValidUrl(url: string): boolean {
     try {
       const isValidUrl = /^https?:\/\/[^\s$.?#].[^\s]*$/i.test(url);
@@ -458,7 +471,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
 
   const removeItem = async (item: KnowledgeItem) => {
     setIsLoading(true);
-    // console.log("ali", item);
+
     try {
       let res;
       if (item.type === "qa_pair" && item.qa_id) {
@@ -491,6 +504,14 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       setIsLoading(false);
     }
   };
+
+  if (
+    canQaFileLoading ||
+    canUploadDocsLoading ||
+    canWebsiteCrawling ||
+    canWebsiteCrawlingLevel2
+  )
+    return <PageLoader />;
 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg pt-2 pr-5 pb-4 pl-5">
@@ -621,10 +642,10 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                       (t) => t.id === selectedType
                     )?.title}
               </h3>
-              {selectedType === "website" && !can_website_crawling && (
+              {selectedType === "website" && !canWebsiteCrawling && (
                 <LockFeature feature="website_crawling" />
               )}
-              {selectedType === "qa_pair" && !can_qa_as_file && (
+              {selectedType === "qa_pair" && !canQaFile && (
                 <LockFeature feature="qa_as_file" />
               )}
             </div>
@@ -638,13 +659,13 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
             </Button>
           </div>
 
-          {selectedType === "website" && isAdding && can_website_crawling && (
+          {selectedType === "website" && isAdding && canWebsiteCrawling && (
             <div className="mb-4 flex-col space-y-3">
               {/* Radio #1 */}
               <label
                 className={`flex items-center gap-2 select-none 
                           ${
-                            !can_website_crawling
+                            !canWebsiteCrawling
                               ? "cursor-not-allowed opacity-60"
                               : "cursor-pointer"
                           }
@@ -654,7 +675,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                   type="radio"
                   name="crawlType"
                   value={1}
-                  disabled={!can_website_crawling}
+                  disabled={!canWebsiteCrawling}
                   checked={crawlType === 1}
                   onChange={(e) => handleCrawl(Number(e.target.value))}
                   className="peer absolute opacity-0 w-0 h-0"
@@ -682,18 +703,18 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
               <div className="flex items-center gap-2">
                 <label
                   className={`flex items-center gap-2 select-none 
-        ${
-          !can_website_crawling_level2
-            ? "cursor-not-allowed opacity-60"
-            : "cursor-pointer"
-        }
-      `}
+                    ${
+                      !canWebsiteCrawlingLevel2
+                        ? "cursor-not-allowed opacity-60"
+                        : "cursor-pointer"
+                    }
+                  `}
                 >
                   <input
                     type="radio"
                     name="crawlType"
                     value={2}
-                    disabled={!can_website_crawling_level2}
+                    disabled={!canWebsiteCrawlingLevel2}
                     checked={crawlType === 2}
                     onChange={(e) => handleCrawl(Number(e.target.value))}
                     className="peer absolute opacity-0 w-0 h-0"
@@ -718,7 +739,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                 </label>
 
                 {/* Lock stays normal, NOT disabled */}
-                {selectedType === "website" && !can_website_crawling_level2 && (
+                {selectedType === "website" && !canWebsiteCrawlingLevel2 && (
                   <LockFeature feature="website_crawling_level_2" />
                 )}
               </div>
@@ -728,9 +749,9 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
             <div
               className={`${
                 ((selectedType === "file" || selectedType === "excel") &&
-                  !can_upload_docs) ||
-                (selectedType === "website" && !can_website_crawling) ||
-                (selectedType === "qa_pair" && !can_qa_as_file)
+                  !canUploadDocs) ||
+                (selectedType === "website" && !canWebsiteCrawling) ||
+                (selectedType === "qa_pair" && !canQaFile)
                   ? "pointer-events-none opacity-50"
                   : ""
               }`}
@@ -760,7 +781,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
             {selectedType === "qa_pair" && (
               <div
                 className={`${
-                  !can_qa_as_file ? "pointer-events-none opacity-50" : ""
+                  !canQaFile ? "pointer-events-none opacity-50" : ""
                 }`}
               >
                 <label className="block text-grey-900 mb-2 text-right">
@@ -819,7 +840,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
             {selectedType === "website" && isAdding && (
               <div
                 className={`${
-                  !can_website_crawling ? "pointer-events-none opacity-50" : ""
+                  !canWebsiteCrawling ? "pointer-events-none opacity-50" : ""
                 }`}
               >
                 <label className="block text-grey-900 mb-2">
@@ -847,7 +868,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
               isAdding && (
                 <div
                   className={`${
-                    !can_upload_docs ? "pointer-events-none opacity-50" : ""
+                    !canUploadDocs ? "pointer-events-none opacity-50" : ""
                   }`}
                 >
                   <label className="block text-grey-900 mb-2">آپلود فایل</label>

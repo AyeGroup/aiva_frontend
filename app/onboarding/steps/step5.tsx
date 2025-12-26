@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
+import LockFeature from "../LockFeature";
+import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "sonner";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
@@ -11,11 +12,9 @@ import { Install } from "@/public/icons/AppIcons";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { convertToPersian } from "@/utils/common";
+import { useFeatureAccess } from "@/providers/PricingContext";
 import { useEffect, useState } from "react";
 import { Copy, Globe, CheckCircle2, BarChart3, HelpCircle } from "lucide-react";
-import LockFeature from "../LockFeature";
-import { useFeatureAccess } from "@/providers/PricingContext";
 
 interface WizardStep5Props {
   botConfig: BotConfig;
@@ -103,7 +102,12 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
     }
   };
 
-  const bale_integration = useFeatureAccess(botConfig.uuid, "bale_integration");
+  // const bale_integration = useFeatureAccess(botConfig.uuid, "bale_integration");
+
+   const { allowed: canBaleIntegration, loading: canBaleIntegrationLoading } =
+     useFeatureAccess(botConfig?.uuid, "bale_integration");
+  if (canBaleIntegrationLoading) return <PageLoader />;
+
   return (
     <div className="bg-white w-full rounded-2xl border-2 border-brand-primary/20 shadow overflow-hidden">
       <div className="p-7 space-y-8 cursor-default">
@@ -189,12 +193,12 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
           <div className="flex gap-2 m-2 items-center">
             <Image src="/icons/bale.svg" alt="bale" width={16} height={16} />
             بله
-            {!bale_integration && <LockFeature feature="bale_integration" />}
+            {!canBaleIntegration && <LockFeature feature="bale_integration" />}
           </div>
 
           <div
             className={`flex flex-col gap-3 transition ${
-              !bale_integration ? "opacity-50 pointer-events-none" : ""
+              !canBaleIntegration ? "opacity-50 pointer-events-none" : ""
             }`}
           >
             {botConfig.bale_enabled && !isBaleEditing ? (
@@ -232,7 +236,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   onClick={handleBaleLink}
                   icon="arrow-right"
                   iconPosition="right"
-                  disabled={!bale_integration}
+                  disabled={!canBaleIntegration}
                   className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSaving ? "در حال ثبت" : "ثبت"}

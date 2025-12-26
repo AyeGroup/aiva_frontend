@@ -2,15 +2,14 @@
 import { Input } from "@/components/input";
 import { useState } from "react";
 import { FormInput } from "lucide-react";
+import { StepBigStar } from "@/public/icons/AppIcons";
 import { ToggleSmall } from "@/components/toggleSmall";
+import { TemplateModal } from "../TemplateModal";
 import { onboardingData } from "../onboarding.data";
 import { GenericSelector } from "@/components/selector";
-import { StepBigStar, StepUser } from "@/public/icons/AppIcons";
 import { BotConfig, SelectorItem } from "@/types/common";
-import { TemplateModal } from "../TemplateModal";
 
 type TemplateTarget = "description" | "guidelines" | null;
-
 const TEMPLATE_PLACEHOLDER = "__placeholder__";
 
 export function WizardStep1({
@@ -20,16 +19,12 @@ export function WizardStep1({
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
 }) {
-  /* -------------------- Template States -------------------- */
   const [selectedTemplate, setSelectedTemplate] =
     useState<string>(TEMPLATE_PLACEHOLDER);
-
   const [templateTarget, setTemplateTarget] = useState<TemplateTarget>(null);
-
   const [editableText, setEditableText] = useState("");
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
 
-  /* -------------------- Templates -------------------- */
   const templates = [
     {
       value: "1",
@@ -99,7 +94,6 @@ export function WizardStep1({
     resetTemplateFlow();
   };
 
-  /* -------------------- Language Options -------------------- */
   const languageOptions: SelectorItem[] = onboardingData.languages.map(
     (lang) => ({
       value: lang.code,
@@ -190,7 +184,6 @@ export function WizardStep1({
       {/* Required Fields */}
       <div className="p-4 rounded-xl border-2 border-primary/20">
         <div className="flex gap-2 mb-3">
-          
           <FormInput className="text-secondary" />
           فیلدهای ضروری
         </div>

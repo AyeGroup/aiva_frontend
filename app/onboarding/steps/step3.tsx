@@ -1,12 +1,12 @@
 "use client";
 import { Input } from "@/components/input";
 import { BotConfig } from "@/types/common";
+import { useFeatureAccess } from "@/providers/PricingContext";
 import { Settings, MessageSquare, Shield } from "lucide-react";
+import PageLoader from "@/components/pageLoader";
+import LockFeature from "../LockFeature";
 import ToggleSetting from "@/components/toggle-setting";
 import ThreeLevelSlider from "@/components/ThreeLevelSlider";
-import LockFeature from "../LockFeature";
-import { useFeatureAccess } from "@/providers/PricingContext";
-import PageLoader from "@/components/pageLoader";
 
 interface WizardStep3Props {
   botConfig: BotConfig;
@@ -15,39 +15,49 @@ interface WizardStep3Props {
 const AnswerLength = ["short", "medium", "long"];
 
 export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
-  const can_chatbot_k = useFeatureAccess(botConfig.uuid, "chatbot_k");
-  const can_chatbot_answer_length = useFeatureAccess(
-    botConfig.uuid,
-    "chatbot_answer_length"
-  );
-  const can_chatbot_greetings = useFeatureAccess(
-    botConfig.uuid,
-    "chatbot_greetings"
-  );
-  const can_chatbot_emoji = useFeatureAccess(botConfig.uuid, "chatbot_emoji");
-  const can_chatbot_support_phone = useFeatureAccess(
-    botConfig.uuid,
-    "chatbot_support_phone"
-  );
+  // const can_chatbot_k = useFeatureAccess(botConfig.uuid, "chatbot_k");
+  // const can_chatbot_answer_length = useFeatureAccess(
+  //   botConfig.uuid,
+  //   "chatbot_answer_length"
+  // );
+  // const can_chatbot_greetings = useFeatureAccess(
+  //   botConfig.uuid,
+  //   "chatbot_greetings"
+  // );
+  // const can_chatbot_emoji = useFeatureAccess(botConfig.uuid, "chatbot_emoji");
+  // const can_chatbot_support_phone = useFeatureAccess(
+  //   botConfig.uuid,
+  //   "chatbot_support_phone"
+  // );
 
-  // ⏳ loading واقعی
-  const isLoading = [
-    can_chatbot_k,
-    can_chatbot_answer_length,
-    can_chatbot_greetings,
-    can_chatbot_emoji,
-    can_chatbot_support_phone,
-  ].some((v) => v === undefined);
+  const { allowed: canChatbotK, loading: canChatbotKLoading } =
+    useFeatureAccess(botConfig?.uuid, "chatbot_k");
+
+  const {
+    allowed: canChatbotanswerLength,
+    loading: canChatbotanswerLengthLoading,
+  } = useFeatureAccess(botConfig?.uuid, "chatbot_answer_length");
+
+  const { allowed: canChatbotGreetings, loading: canChatbotGreetingsLoading } =
+    useFeatureAccess(botConfig?.uuid, "chatbot_greetings");
+
+  const { allowed: canChatbotEmoji, loading: canChatbotEmojiLoading } =
+    useFeatureAccess(botConfig?.uuid, "chatbot_emoji");
+
+  const {
+    allowed: canChatbotSupportPhone,
+    loading: canChatbotSupportPhoneLoading,
+  } = useFeatureAccess(botConfig?.uuid, "chatbot_support_phone");
 
   if (!botConfig.uuid) return null;
-  if (isLoading) return <PageLoader />;
-
-  // ✅ مقادیر safe برای JSX
-  const canK = can_chatbot_k === true;
-  const canAnswerLength = can_chatbot_answer_length === true;
-  const canGreetings = can_chatbot_greetings === true;
-  const canEmoji = can_chatbot_emoji === true;
-  const canSupportPhone = can_chatbot_support_phone === true;
+  if (
+    canChatbotKLoading ||
+    canChatbotEmojiLoading ||
+    canChatbotGreetingsLoading ||
+    canChatbotanswerLengthLoading ||
+    canChatbotSupportPhoneLoading
+  )
+    return <PageLoader />;
 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg">
@@ -74,10 +84,10 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             <MessageSquare className="w-5 h-5 text-brand-primary" />
             میزان انطباق پاسخ با اسناد
           </h3>
-          {!canK && <LockFeature feature="chatbot_k" />}
+          {!canChatbotK && <LockFeature feature="chatbot_k" />}
         </div>
 
-        <div className={`${canK ? "" : "pointer-events-none opacity-50"}`}>
+        <div className={`${canChatbotK ? "" : "pointer-events-none opacity-50"}`}>
           <ThreeLevelSlider
             value={botConfig.k}
             onChange={(val) => {
@@ -94,12 +104,12 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
             <MessageSquare className="w-5 h-5 text-brand-primary" />
             حداکثر طول پاسخ
           </h3>
-          {!canAnswerLength && <LockFeature feature="chatbot_answer_length" />}
+          {!canChatbotanswerLength && <LockFeature feature="chatbot_answer_length" />}
         </div>
 
         <div
           className={`grid grid-cols-3 gap-4 ${
-            canAnswerLength ? "" : "pointer-events-none opacity-50"
+            canChatbotanswerLength ? "" : "pointer-events-none opacity-50"
           }`}
         >
           {AnswerLength.map((length) => (
@@ -136,31 +146,31 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
         <div className="space-y-3">
           <div className="py-4">
             <div className="mr-32">
-              {!canGreetings && <LockFeature feature="chatbot_greetings" />}
+              {!canChatbotGreetings && <LockFeature feature="chatbot_greetings" />}
             </div>
             <ToggleSetting
               label="خوشامدگویی خودکار"
               description="پیام خوشامد به صورت خودکار نمایش یابد"
               value={botConfig.greetings}
-              disabled={!canGreetings}
+              disabled={!canChatbotGreetings}
               onToggle={() => updateConfig({ greetings: !botConfig.greetings })}
             />
           </div>
           <div className="py-4">
             <div className="mr-28">
-              {!canEmoji && <LockFeature feature="chatbot_emoji" />}
+              {!canChatbotEmoji && <LockFeature feature="chatbot_emoji" />}
             </div>
             <ToggleSetting
               label="استفاده از ایموجی"
               description="ایموجی در پاسخ‌ها استفاده شود"
-              disabled={!canEmoji}
+              disabled={!canChatbotEmoji}
               value={!botConfig.use_emoji}
               onToggle={() => updateConfig({ use_emoji: !botConfig.use_emoji })}
             />
           </div>
         </div>
         <div className="-mb-4 mr-28">
-          {!canSupportPhone && <LockFeature feature="chatbot_support_phone" />}
+          {!canChatbotSupportPhone && <LockFeature feature="chatbot_support_phone" />}
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center text-gray-900">
@@ -173,7 +183,7 @@ export function WizardStep3({ botConfig, updateConfig }: WizardStep3Props) {
           <Input
             id="phone"
             type="text"
-            disabled={!canSupportPhone}
+            disabled={!canChatbotSupportPhone}
             numeric={true}
             inputMode="numeric"
             value={botConfig.support_phone || ""}
