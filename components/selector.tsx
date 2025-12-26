@@ -63,7 +63,7 @@ export function GenericSelector({
   };
 
   return (
-    <div className="chatbot-selector-container z-99">
+    <div className="chatbot-selector-container">
       {/* Current Selection Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -97,32 +97,7 @@ export function GenericSelector({
             </div>
 
             <div className="chatbot-list">
-              {/* {items.map((item, index) => {
-                const isActive =
-                  item[valueKey as keyof SelectorItem] === selectedValue;
-                const itemColor = showIndicator
-                  ? COLORS[index % COLORS.length]
-                  : undefined;
-
-                return (
-                  <button
-                    key={item.value || item.id || index.toString()}
-                    onClick={() => handleSelect(item)}
-                    className={`chatbot-item ${isActive ? "active" : ""}`}
-                    disabled={disabled}
-                    type="button"
-                    title={`انتخاب ${item.label}`}
-                  >
-                    {showIndicator && itemColor && (
-                      <span
-                        className="chatbot-indicator"
-                        style={{ backgroundColor: itemColor }}
-                      />
-                    )}
-                    <span className="chatbot-name">{item.label}</span>
-                  </button>
-                );
-              })} */}
+              
               {items.map((item, index) => {
                 const isActive =
                   item[valueKey as keyof SelectorItem] === selectedValue;
@@ -130,12 +105,12 @@ export function GenericSelector({
                   ? COLORS[index % COLORS.length]
                   : undefined;
 
-                const isDisabled = disabled || item.disabled; // 🔸 بررسی همزمان
+                const isDisabled = disabled || item.disabled; 
 
                 return (
                   <button
                     key={item.value || item.id || index.toString()}
-                    onClick={() => !isDisabled && handleSelect(item)} // 🔸 کلیک فقط اگر فعال باشد
+                    onClick={() => !isDisabled && handleSelect(item)} 
                     className={`chatbot-item ${isActive ? "active" : ""} ${
                       isDisabled ? "opacity-50 cursor-not-allowed" : ""
                     }`}

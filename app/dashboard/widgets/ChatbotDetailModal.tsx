@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useBot } from "@/providers/BotProvider";
 import { useUniqueId } from "recharts/types/util/useUniqueId";
+import { getDaysRemaining } from "@/utils/common";
 
 interface ChatbotDetailModalProps {
   show: boolean;
@@ -53,13 +54,9 @@ export default function ChatbotDetailModal({
         console.log("SUBSCRIPTION: ", subData);
         // 🟢 2. محاسبه روزهای باقی‌مانده
         if (subData?.end_date) {
-          const today = new Date();
-          const endDate = new Date(subData.end_date);
-          const diffTime = endDate.getTime() - today.getTime();
-          const diffDays = Math.max(
-            Math.ceil(diffTime / (1000 * 60 * 60 * 24)),
-            0
-          );
+          // const endDate = new Date(subData.end_date);
+           
+          const diffDays = getDaysRemaining(subData.end_date)
           setDaysRemaining(diffDays);
         } else {
           setDaysRemaining(0);

@@ -189,7 +189,7 @@ export default function OnboardingWizard() {
           if (response && response.status === 200)
             subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
         }
-        console.log("id: ", id);
+        console.log("bot id: ", id);
         console.log("active SUBSCRIPTION: ", subsc);
         setActiveSubscrp(subsc);
       } catch (error) {
@@ -231,13 +231,13 @@ export default function OnboardingWizard() {
 
     return newErrors;
   };
-  const can_advanced_stats = useFeatureAccess(botConfig.uuid, "advanced_stats");
+  // const can_advanced_stats = useFeatureAccess(botConfig.uuid, "advanced_stats");
   //ذخیره استپ 5
   const saveBotBehavior = async () => {
     setIsSaving(true);
     //check plan
 
-    if (!can_advanced_stats) return true;
+    // if (!can_advanced_stats) return true;
     try {
       console.log("step5 save: ", botConfig);
       const formData = new FormData();

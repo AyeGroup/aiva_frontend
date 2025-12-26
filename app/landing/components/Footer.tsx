@@ -90,24 +90,30 @@ export default function Footer() {
             </div>
 
             <div className="flex items-center gap-2 text-sm sm:text-base">
-              <MapPin size={18} className="text-gray-300 flex-shrink-0" />
+              <MapPin size={18} className="text-gray-300 shrink-0" />
               <span className="text-right">
                 تهران، آزادی، خیابان صادقی، پلاک ۳۳
               </span>
             </div>
 
             <div className="flex items-center gap-2 text-sm sm:text-base">
-              <Phone size={18} className="text-gray-300 flex-shrink-0" />
+              <Phone size={18} className="text-gray-300 shrink-0" />
               <a
                 href="tel:09903202903"
-                className="hover:text-gray-100 transition duration-200"
+                className="md:hidden hover:text-gray-100 transition duration-200"
+              >
+                {convertToPersian("09903202903")}
+              </a>
+              <a
+                href="/contact"
+                className="hidden md:flex hover:text-gray-100 transition duration-200"
               >
                 {convertToPersian("09903202903")}
               </a>
             </div>
 
             <div className="flex items-center gap-2 text-sm sm:text-base">
-              <Mail size={18} className="text-gray-300 flex-shrink-0" />
+              <Mail size={18} className="text-gray-300 shrink-0" />
               <a
                 href="mailto:info@ayehgroup.com"
                 className="hover:text-gray-100 transition duration-200 break-all sm:break-normal"

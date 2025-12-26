@@ -55,7 +55,13 @@ export default function SectionStarting() {
 
           <a
             href="tel:09903202903"
-            className="cursor-pointer border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-[rgba(255,255,255,0.1)] py-4 px-6"
+            className="md:hidden cursor-pointer border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-[rgba(255,255,255,0.1)] py-4 px-6"
+          >
+            مشاوره رایگان
+          </a>
+          <a
+            href="/contact"
+            className="hidden md:flex cursor-pointer border-2 border-[rgba(255,255,255,0.3)] text-white rounded-sm bg-[rgba(255,255,255,0.1)] py-4 px-6"
           >
             مشاوره رایگان
           </a>

@@ -11,17 +11,9 @@ import { useAuth } from "./AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { usePathname } from "next/navigation";
 import { getPlanCodeById } from "@/constants/plans";
-import {
-  Plan,
-  PricingContextType as BasePricingContextType,
-} from "@/types/common";
+import { Plan, PricingContextType } from "@/types/common";
 import axios from "axios";
 import axiosInstance from "@/lib/axiosInstance";
-
-// Extend the base type to include isFeatureMapReady
-type PricingContextType = BasePricingContextType & {
-  isFeatureMapReady: boolean;
-};
 
 export const PricingContext = createContext<PricingContextType | null>(null);
 const PUBLIC_ROUTES = [
@@ -41,7 +33,6 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
   const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
     {}
   );
-  const [isFeatureMapReady, setIsFeatureMapReady] = useState(false);
   const pathname = usePathname();
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
 
@@ -65,7 +56,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     };
 
     fetchPricing();
-  }, [authLoading, user, isPublicRoute]);
+  }, [authLoading]);
 
   // 2) Update user currentPlan WHEN bot changes
   useEffect(() => {
@@ -94,14 +85,11 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     };
 
     fetchUserPlan();
-  }, [authLoading, currentBot, user, isPublicRoute]);
+  }, [authLoading, currentBot]);
 
   // 3) Build feature → minPlan map
   useEffect(() => {
-    if (!plans) {
-      setIsFeatureMapReady(false);
-      return;
-    }
+    if (!plans) return;
 
     const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
     const map: Record<string, string> = {};
@@ -117,7 +105,6 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
       });
     }
     setFeatureMinPlan(map);
-    setIsFeatureMapReady(true);
     console.log("FeatureMinPlan: ", map);
   }, [plans]);
 
@@ -128,7 +115,6 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
         currentPlan,
         setCurrentPlan,
         featureMinPlan,
-        isFeatureMapReady,
       }}
     >
       {children}
@@ -148,7 +134,7 @@ export const usePricing = () => {
 };
 
 export const useFeatureAccess = (bot_uuid?: string, feature?: string) => {
-  const { featureMinPlan, isFeatureMapReady } = usePricing();
+  const { featureMinPlan } = usePricing();
 
   const [state, setState] = useState<{
     allowed: boolean;
@@ -159,14 +145,8 @@ export const useFeatureAccess = (bot_uuid?: string, feature?: string) => {
   });
 
   useEffect(() => {
-    // اگر featureMinPlan هنوز آماده نیست، loading رو true نگه دار
-    if (!isFeatureMapReady) {
+    if (!bot_uuid || !feature || !featureMinPlan) {
       setState({ allowed: false, loading: true });
-      return;
-    }
-
-    if (!bot_uuid || !feature) {
-      setState({ allowed: false, loading: false });
       return;
     }
 
@@ -195,7 +175,7 @@ export const useFeatureAccess = (bot_uuid?: string, feature?: string) => {
     return () => {
       cancelled = true;
     };
-  }, [bot_uuid, feature, featureMinPlan, isFeatureMapReady]);
+  }, [bot_uuid, feature, featureMinPlan]);
 
   return state;
 };
@@ -229,7 +209,7 @@ const checkFeatureAccess = async (
     console.log("minPlan: ", minPlan);
     console.log("minIndex: ", minIndex);
     console.log("currentPlan: ", currentPlan);
-    console.log(feature, rslt);
+    console.log("result: ", rslt);
 
     return rslt;
   } catch (error) {
@@ -242,4 +222,24 @@ export const useFeatureRequiredPlan = (feature: string) => {
   const { featureMinPlan } = usePricing();
   return featureMinPlan[feature] ?? "FREE";
 };
- 
+
+export const useUploadLimits = () => {
+  const { currentPlan } = usePricing();
+  if (!currentPlan) return 0;
+  switch (currentPlan) {
+    case "FREE":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_FREE);
+    case "BASIC":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_BASIC);
+    case "MEDIUM":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_MEDIUM);
+    case "ADVANCE":
+      return Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ADVANCE);
+    case "ENTERPRISE":
+      return process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ENTERPRISE === "Infinity"
+        ? Infinity
+        : Number(process.env.NEXT_PUBLIC_UPLOAD_LIMIT_ENTERPRISE);
+    default:
+      return 0;
+  }
+};

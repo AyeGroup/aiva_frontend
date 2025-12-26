@@ -581,7 +581,7 @@ export const Transactions: React.FC = () => {
                     >
                       <div className="flex items-start gap-3 mb-3">
                         <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                          className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
                           style={{
                             backgroundColor:
                               transaction.type === "plan"
@@ -608,7 +608,7 @@ export const Transactions: React.FC = () => {
                           </p>
                         </div>
                         <div
-                          className="px-2 py-1 rounded-full text-xs flex-shrink-0"
+                          className="px-2 py-1 rounded-full text-xs shrink-0"
                           style={{
                             backgroundColor:
                               transaction.status === "success"

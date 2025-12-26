@@ -293,7 +293,7 @@ export default function RegisterClient() {
 
     const result = checkPasswordStrength(value);
     setPasswordRules(result);
-    console.log("ali", result);
+    // console.log("ali", result);
     if (!result.rules.noPersian) {
       setWarning("رمز عبور نباید شامل کاراکتر فارسی باشد!");
     } else {
@@ -363,6 +363,7 @@ export default function RegisterClient() {
                 <Input
                   id="email"
                   type="email"
+                  maxLength={32}
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="example@domain.com"
@@ -440,17 +441,19 @@ export default function RegisterClient() {
                 <Input
                   id="password"
                   name="password"
+                  maxLength={12}
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handlePasswordChange}
                   placeholder="حداقل ۸ کاراکتر"
                   autoComplete="new-password"
-                  className={`w-full pr-4 pl-14 py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ${
+                  className={`w-full pr-4 pl-14 text-left py-4 border bg-white text-grey-900 placeholder-grey-500 transition-all focus:ring-2 focus:ring-brand-primary/20 focus:outline-none ${
                     errors.password
                       ? "border-danger focus:border-danger"
                       : "border-grey-300 focus:border-brand-primary"
                   }`}
                   disabled={isLoading}
+                  dir="ltr"
                 />
 
                 <button
@@ -541,11 +544,6 @@ export default function RegisterClient() {
                 {warning && (
                   <div className="text-red-500 mt-2 text-sm">{warning}</div>
                 )}
-                {/* {errors.password && (
-                  <p className="text-danger text-body-small mt-1">
-                    {errors.password}
-                  </p>
-                )} */}
               </div>
               {message && (
                 <div className="text-danger text-body-small mt-2">
@@ -561,6 +559,7 @@ export default function RegisterClient() {
                 <Link
                   className="hover:opacity-80 text-sm active:opacity-60 text-primary"
                   href="/policy"
+                  target="_blank"
                 >
                   قوانین و مقررات
                 </Link>{" "}
@@ -731,7 +730,7 @@ export default function RegisterClient() {
                 lineHeight: "var(--text-body-large-lh)",
               }}
             >
-              حساب کاربری شما با موفقیت ایجاد شد. در حال انتقال به دشبورد...
+              حساب کاربری شما با موفقیت ایجاد شد. در حال انتقال ...
             </p>
             <button
               onClick={() => router.push("/auth/login")}
@@ -780,7 +779,6 @@ export default function RegisterClient() {
                 </p>
               </div>
             </Link>
-
 
             {/* Header Actions - Left Side */}
             <div className="flex items-center gap-3">
@@ -836,7 +834,6 @@ export default function RegisterClient() {
         <div className="w-full max-w-md">
           {/* register Card */}
           <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
-            
             {renderStepContent()}
           </div>
         </div>

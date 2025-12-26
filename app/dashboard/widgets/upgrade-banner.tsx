@@ -1,13 +1,11 @@
 import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { Zap, Crown, ArrowUp } from "lucide-react";
+import Link from "next/link";
 
 export function UpgradeBanner() {
   return (
-    <Card
-      className="p-6 border-2"
-     
-    >
+    <Card className="p-6 border-2">
       <div className="text-center">
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
@@ -36,18 +34,23 @@ export function UpgradeBanner() {
           </div>
         </div>
 
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={() => (window.location.href = "tel:09903202903")}
-          className="w-full hover:shadow-md transition-all"
+        <a
+          href="tel:09903202903"
+          className="md:hidden p-3 text-sm flex justify-center items-center mx-auto w-full bg-primary rounded-sm text-white text-center hover:shadow-md transition-all"
         >
-          <div className="flex">
-
           <ArrowUp className="w-4 h-4 ml-2" />
           تماس با ما
+        </a>
+
+        <a
+          href="/contact"
+          className="hidden md:flex p-3 text-sm justify-center items-center mx-auto w-full bg-primary rounded-sm text-white text-center hover:shadow-md transition-all"
+        >
+          <div className="flex">
+            <ArrowUp className="w-4 h-4 ml-2" />
+            تماس با ما
           </div>
-        </Button>
+        </a>
       </div>
     </Card>
   );

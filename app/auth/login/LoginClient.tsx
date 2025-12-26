@@ -243,33 +243,6 @@ function LoginClient() {
                 </div>
               </div>
 
-              {/* Password Field */}
-              {/* <div>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    placeholder="رمز عبور"
-                    onChange={handlePasswordChange}
-                    className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 bg-white! text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none text-center! !placeholder:text-center "
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-grey-400 hover:text-grey-600 transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
-                {warning && (
-                  <p className="text-red-400 mt-2 text-xs">{warning}</p>
-                )}
-              </div> */}
               <div>
                 {/* Anti-autofill fake fields */}
                 <input
@@ -291,9 +264,11 @@ function LoginClient() {
                     name="fake-password"
                     type={showPassword ? "text" : "password"}
                     value={password}
+                    maxLength={12}
                     placeholder="رمز عبور"
                     autoComplete="new-password"
                     onChange={handlePasswordChange}
+                    dir="ltr"
                     className="w-full pr-4 pl-12 rounded-l-lg text-lg leading-2 py-6 border border-grey-300 bg-white! text-grey-900 placeholder-grey-500 transition-all focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 focus:outline-none text-center! !placeholder:text-center"
                   />
 
@@ -317,30 +292,6 @@ function LoginClient() {
                   <p className="text-red-400 mt-2 text-xs">{warning}</p>
                 )}
               </div>
-
-              {/* <div className="text-sm">
-                <Checkbox
-                  id="remember"
-                  label="مرا به یاد داشته باش"
-                  checked={rememberMe}
-                  onChange={setRememberMe}
-                  // onChange={(e) => setRememberMe(e.target.checked)}
-                />
-              </div> */}
-              {/* Terms and conditions info */}
-              {/* <div className="flex items-start gap-2 p-4 bg-grey-50 rounded-lg">
-                <div className="shrink-0 mt-0.5"></div>
-                <p className="text-grey-600 text-right text-sm">
-                  استفاده از آیوا به معنی پذیرش{" "}
-                  <Link
-                    className="hover:opacity-80 text-sm active:opacity-60 text-primary"
-                    href="/policy"
-                  >
-                    قوانین و مقررات
-                  </Link>{" "}
-                  این سرویس است.
-                </p>
-              </div> */}
 
               {/* Submit Button */}
               <button

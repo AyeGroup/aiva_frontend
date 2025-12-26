@@ -427,7 +427,7 @@ function ContainerFooter() {
       </motion.div>
 
       {/* Button */}
-      <motion.a
+      {/* <motion.a
         href="tel:09903202903"
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -437,13 +437,29 @@ function ContainerFooter() {
         whileTap={{ scale: 0.98 }}
         className="bg-[#65bcb6] hover:bg-[#58aaa5] text-white flex items-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-colors shadow-md hover:shadow-lg whitespace-nowrap"
       >
-        {/* Icon - Rotated */}
         <div className="shrink-0 rotate-180">
           <Icon37 />
         </div>
         <span>مشاوره رایگان</span>
-      </motion.a>
-
+      </motion.a> */}
+      <a
+        href="tel:09903202903"
+        className="md:hidden bg-[#65bcb6] hover:bg-[#58aaa5] text-white flex items-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-colors shadow-md hover:shadow-lg whitespace-nowrap"
+      >
+        <div className="shrink-0 rotate-180">
+          <Icon37 />
+        </div>
+        مشاوره رایگان
+      </a>
+      <a
+        href="/contact"
+        className="hidden md:flex bg-[#65bcb6] hover:bg-[#58aaa5] text-white  items-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base  shadow-md hover:shadow-lg whitespace-nowrap hover:scale-105  transition-all  duration-300 ease-out"
+      >
+        <div className="shrink-0 rotate-180">
+          <Icon37 />
+        </div>
+        مشاوره رایگان
+      </a>
       {/* Decorative Icon */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}

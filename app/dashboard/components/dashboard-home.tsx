@@ -282,6 +282,7 @@ export default function Dashboard() {
         API_ROUTES.STATISTIC.ACTIVE_USERS(currentBot?.uuid)
       );
       setActiveUsers(response.data.data);
+      // console.log("au", response.data.data);
     } catch (error) {
       console.error("  خطا در دریافت داده کاربران:", error);
     }
@@ -560,7 +561,7 @@ export default function Dashboard() {
                   })}
 
                   {/* More Users Button */}
-                  {activeUsers && (
+                  {activeUsers && activeUsers.length>0 ? (
                     //  && activeUsers.length > 3
                     <div
                       className="relative rounded-lg p-4 shadow-sm hover-lift   flex items-center justify-center"
@@ -583,6 +584,8 @@ export default function Dashboard() {
                         </div>
                       </button>
                     </div>
+                  ):(
+                    <div className="text-secondary font-bold">کاربری یافت نشد</div>
                   )}
                 </div>
               </div>

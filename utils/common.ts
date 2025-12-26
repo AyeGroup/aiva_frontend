@@ -94,6 +94,7 @@ export const normalizeFileUrl = (path: string) => {
       .replace(/^(\.\/)?data\//, "") // حذف ./data/
   );
 };
+
 export function getDaysRemaining(targetDate: string | Date): number {
   const target = new Date(targetDate);
   const now = new Date();

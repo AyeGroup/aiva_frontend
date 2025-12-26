@@ -195,42 +195,46 @@ export function HeatmapChart({
           border: "1px solid rgba(255, 161, 142, 0.08)",
         }}
       >
-        <div className="text-center flex flex-col" style={{ gap: "2px" }}>
-          <span
-            className="text-grey-600"
-            style={{ fontSize: "10px", fontWeight: "500" }}
-          >
-            پیک استفاده
-          </span>
-          <span
-            style={{
-              fontSize: "14px",
-              color: "#0A0A0A",
-              fontWeight: "700",
-              direction: "ltr",
-            }}
-          >
-            {convertToPersian(peakHour || "0")}
-          </span>
-        </div>
-        <div className="text-center flex flex-col" style={{ gap: "2px" }}>
-          <span
-            className="text-grey-600"
-            style={{ fontSize: "10px", fontWeight: "500" }}
-          >
-            فعال‌ترین روز
-          </span>
-          <span
-            style={{
-              fontSize: "14px",
-              color: "#0A0A0A",
-              fontWeight: "700",
-              direction: "rtl",
-            }}
-          >
-            {peakDay}
-          </span>
-        </div>
+        {peakHour && (
+          <div className="text-center flex flex-col" style={{ gap: "2px" }}>
+            <span
+              className="text-grey-600"
+              style={{ fontSize: "10px", fontWeight: "500" }}
+            >
+              پیک استفاده
+            </span>
+            <span
+              style={{
+                fontSize: "14px",
+                color: "#0A0A0A",
+                fontWeight: "700",
+                direction: "ltr",
+              }}
+            >
+              {convertToPersian(peakHour || "0")}
+            </span>
+          </div>
+        )}
+        {peakDay && (
+          <div className="text-center flex flex-col" style={{ gap: "2px" }}>
+            <span
+              className="text-grey-600"
+              style={{ fontSize: "10px", fontWeight: "500" }}
+            >
+              فعال‌ترین روز
+            </span>
+            <span
+              style={{
+                fontSize: "14px",
+                color: "#0A0A0A",
+                fontWeight: "700",
+                direction: "rtl",
+              }}
+            >
+              {peakDay}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

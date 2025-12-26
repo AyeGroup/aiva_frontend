@@ -3,13 +3,15 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import PageLoader from "@/components/pageLoader";
+import axiosInstance from "@/lib/axiosInstance";
 import { useAuth } from "@/providers/AuthProvider";
 import { PageType } from "@/types/common";
 import { useRouter } from "next/navigation";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import { AddChatbotModal } from "./widgets/add-chatbot-modal";
-import { EditProfileModal } from "./widgets/EditProfileModal";
-import { User, LogOut, ArrowLeft } from "lucide-react";
-import { convertNumbersToPersian, convertToPersian } from "@/utils/common";
+import { EditProfileModal, ProfileForm } from "./widgets/EditProfileModal";
+import { convertToPersian } from "@/utils/common";
+import { User, LogOut, ArrowLeft, X } from "lucide-react";
 
 interface SidebarItemProps {
   label: string;
@@ -49,6 +51,18 @@ export function Sidebar({
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+  // const [profile, setProfile] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
+  const emptyProfile: ProfileForm = {
+    full_name: "",
+    company_name: "",
+    company_role: "",
+    user_logo_url: null,
+    user_logo_file: null,
+  };
+
+  const [profile, setProfile] = useState<ProfileForm>(emptyProfile);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -60,6 +74,43 @@ export function Sidebar({
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    fetchProfile();
+  }, [open]);
+
+  const fetchProfile = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(API_ROUTES.USER.PROFILE);
+      const data = res?.data?.data;
+
+      setName(data?.full_name);
+      setProfile(data);
+
+      if (data?.user_logo_url) {
+        const imgRes = await axiosInstance.get(data.user_logo_url, {
+          responseType: "blob",
+        });
+
+        const imageUrl = URL.createObjectURL(imgRes.data);
+        setPreview(imageUrl);
+
+        setProfile((prev) => ({
+          ...prev,
+          user_logo_url: imageUrl,
+        }));
+      } else {
+        setPreview(null);
+      }
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -77,29 +128,42 @@ export function Sidebar({
       className="w-64 flex flex-col  top-0 h-screen relative"
       style={{ backgroundColor: "#F5E6D3" }}
     >
+      {isLoading && <PageLoader/>}
       {/* Close button (mobile only) */}
       <button
         onClick={onCloseSidebar}
         className=" absolute top-4 left-4 text-gray-700 hover:text-black p-1"
         aria-label="close sidebar"
       >
-        ✕
+        <X/>
       </button>
       {/* Header - User Profile */}
+
       <div className="px-6 py-6 text-center">
         <button
           onClick={() => setIsAddAccountModalOpen(true)}
           className="w-full flex flex-col items-center gap-3 group cursor-pointer"
         >
           <div
-            className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
+            className="w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold"
             style={{ backgroundColor: "#FFA18E" }}
           >
-            <User />
+            {preview ? (
+              <Image
+                src={preview}
+                alt="کاربر"
+                width={56}
+                height={56}
+                className="rounded-full max-w-14 max-h-14 object-cover"
+                priority
+              />
+            ) : (
+              <User />
+            )}
           </div>
           <div className="text-center">
-            <p className="text-grey-900 font-semibold">
-              {user?.name || user?.phone || "کاربر"}
+            <p className="text-grey-700 font-medium">
+              {name || user?.phone || "کاربر"}
             </p>
           </div>
         </button>
@@ -177,7 +241,7 @@ export function Sidebar({
           </div>
         </div>
         <div className="text-xs text-gray-400 mt-1 mr-12">
-          نسخه {convertToPersian(process.env.APP_VERSION||"")}
+          نسخه {convertToPersian(process.env.APP_VERSION || "")}
         </div>
       </div>
       {/* Modals */}
@@ -189,6 +253,8 @@ export function Sidebar({
 
       <EditProfileModal
         open={isAddAccountModalOpen}
+        data={profile}
+        onSaved={fetchProfile}
         onClose={() => setIsAddAccountModalOpen(false)}
       />
     </aside>

@@ -363,10 +363,25 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                 تیم پشتیبانی آیوا آماده کمک به شماست
               </p>
             </div>
-            <a
+            {/* <a
               href="tel:09903202903"
               className="bg-white border-2 border-brand-primary rounded-sm h-12 w-full flex items-center justify-center text-brand-primary text-base  cursor-pointer"
               title="تماس با پشتیبانی"
+            >
+              ۰۹۹۰۳۲۰۲۹۰۳
+            </a> */}
+            {/* موبایل */}
+            <a
+              href="tel:09903202903"
+              className="md:hidden bg-white border-2 border-brand-primary rounded-sm h-12 w-full flex items-center justify-center text-brand-primary text-base"
+            >
+              ۰۹۹۰۳۲۰۲۹۰۳
+            </a>
+
+            {/* دسکتاپ */}
+            <a
+              href="/contact"
+              className="hidden md:flex bg-white border-2 border-brand-primary rounded-sm h-12 w-full items-center justify-center text-brand-primary text-base"
             >
               ۰۹۹۰۳۲۰۲۹۰۳
             </a>

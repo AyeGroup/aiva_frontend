@@ -269,7 +269,7 @@ export function ChatbotManagement() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 items-center   w-full ">
                     <div className="flex items-center m-0 gap-4 grow ">
                       <div
-                        className="w-4 h-4 rounded-full flex-shrink-0"
+                        className="w-4 h-4 rounded-full shrink-0"
                         style={{ backgroundColor: chatbot.primary_color }}
                       />
 

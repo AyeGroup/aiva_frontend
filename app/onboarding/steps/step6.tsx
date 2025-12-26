@@ -50,8 +50,11 @@ export function WizardStep6({
   const [selectedTone, setSelectedTone] = useState(botConfig.tone);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const canUploadLogo = useFeatureAccess(botConfig.uuid,"chatbot_logo");
-  console.log("canUploadLogo: ", canUploadLogo);
+  // const canUploadLogo = useFeatureAccess(botConfig.uuid,"chatbot_logo");
+  // console.log("canUploadLogo: ", canUploadLogo);
+
+  const { allowed: canUploadLogo, loading: canUploadLogoLoading } =
+    useFeatureAccess(botConfig?.uuid, "chatbot_logo");
 
   useEffect(() => {
     if (botConfig.logo_url) setPreview(botConfig.logo_url);
@@ -154,6 +157,9 @@ export function WizardStep6({
   const handleAccentColor = (color: string) => {
     updateConfig({ accent_color: color });
   };
+
+  if (canUploadLogoLoading) return <PageLoader />;
+  // if (!canUploadLogo) return null;
 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg ">
@@ -389,7 +395,6 @@ export function WizardStep6({
                         <h4 className="text-grey-900 text-sm font-medium">
                           {size.name}
                         </h4>
-                        
                       </div>
 
                       {/* Size Preview */}
