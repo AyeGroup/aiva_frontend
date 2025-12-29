@@ -218,7 +218,7 @@ export default function Invoice() {
                 href="/"
                 className="flex items-center gap-3 hover:opacity-90 transition"
               >
-                🌐 ragbuilder.aia-ai.com
+                🌐 aivarobot.com
               </Link>
             </p>
           </div>

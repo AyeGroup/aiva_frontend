@@ -187,7 +187,7 @@ export default function OnboardingWizard() {
           if (response && response.status === 200)
             subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
         }
-        console.log("bot id: ", id);
+        // console.log("bot id: ", id);
         console.log("active SUBSCRIPTION: ", subsc);
         setActiveSubscrp(subsc);
       } catch (error) {
@@ -868,6 +868,7 @@ export default function OnboardingWizard() {
       <StatsDrawer
         isOpen={isStatsDrawerOpen}
         onClose={() => setIsStatsDrawerOpen(false)}
+        chatbot={botConfig}
       />
     </main>
   );

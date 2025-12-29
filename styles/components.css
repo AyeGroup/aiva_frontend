@@ -4112,7 +4112,7 @@
 .chatbot-menu-container {
   position: relative;
 }
- 
+
 .modal-content {
   z-index: 10000 !important;
 }
@@ -4377,7 +4377,7 @@
 }
 
 /* RTL Support */
-[] .credit-summary-card {
+.credit-summary-card {
   text-align: right;
 }
 /* Chatbot Plan Card Styles */
@@ -4527,7 +4527,8 @@
 }
 
 /* RTL Support */
-[] .chatbot-plan-card {
+
+.chatbot-plan-card {
   text-align: right;
 }
 
@@ -5358,7 +5359,8 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(4px);
-  z-index: 1000;
+  z-index: 998;
+
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -5378,7 +5380,7 @@
   height: 100vh;
   background: #ffffff;
   box-shadow: -8px 0 32px rgba(0, 0, 0, 0.08);
-  z-index: 1001;
+  z-index: 999;
   transform: translateX(100%);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;

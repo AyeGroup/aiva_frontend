@@ -17,6 +17,7 @@ import axiosInstance from "@/lib/axiosInstance";
 export default function ForgotPassClient() {
   const router = useRouter();
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -28,8 +29,9 @@ export default function ForgotPassClient() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
+    setError("");
     if (!isValidEmail(email)) {
-      setMessage("لطفاً ایمیل معتبر وارد کنید");
+      setError("لطفاً ایمیل معتبر وارد کنید");
       return;
     }
     setLoading(true);
@@ -40,10 +42,10 @@ export default function ForgotPassClient() {
       });
 
       if (res.status === 200) {
-        setMessage("لینک بازیابی رمز عبور به ایمیل شما ارسال شد.");
+        setMessage(res?.data?.message || "لینک بازیابی رمز عبور به ایمیل شما ارسال شد.");
       }
     } catch (err: any) {
-      setMessage(err?.response?.data?.message || "خطا در ارسال ایمیل");
+      setError(err?.response?.data?.message || "خطا در ارسال ایمیل");
     } finally {
       setLoading(false);
     }
@@ -157,7 +159,12 @@ export default function ForgotPassClient() {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            {message && <p className="text-sm text-center text-red-500">{message}</p>}
+            {error && (
+              <p className="text-sm text-center text-red-500">{error}</p>
+            )}
+            {message && (
+              <p className="text-sm text-center text-primary">{message}</p>
+            )}
 
             <button
               type="submit"

@@ -352,7 +352,7 @@ function LoginClient() {
           className="text-grey-500"
           style={{ fontSize: "var(--text-caption)" }}
         >
-          © {persianYear} تمام حقوق سایت متعلق به گروه آیه است.
+          © {persianYear} تمام حقوق سایت متعلق به شرکت آیه است.
         </p>
       </div>
     </div>

@@ -2,25 +2,30 @@ import { X } from "lucide-react";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { useRouter } from "next/navigation";
+import { BotConfig } from "@/types/common";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { ChatbotList } from "./chatbot-list";
 import { PlanCardMenu } from "./plan-card-menu";
-import { ChatbotSelector } from "./chatbot-selector";
+import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import {
   getFaNameByCode,
   getPlanIcon,
   translateFeature,
 } from "@/constants/plans";
+import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
 
 interface StatsDrawerProps {
   isOpen: boolean;
+  chatbot?: BotConfig | null;
   onClose: () => void;
   selectedPlan?: string;
 }
 
 export function StatsDrawer({
   isOpen,
+  chatbot = null,
   onClose,
   selectedPlan,
 }: StatsDrawerProps) {
@@ -30,9 +35,23 @@ export function StatsDrawer({
   const planRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [plans, setPlans] = useState<any[]>([]);
+  const [selectedBot, setSelectedBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { currentBot } = useBot();
+
+  useEffect(() => {
+    console.log("chatbot", chatbot);
+
+
+    if (chatbot ) {
+      setSelectedBot(chatbot);
+    } else if (currentBot && currentBot?.uuid?.length > 3) {
+      setSelectedBot(currentBot);
+    } else {
+      setSelectedBot(null);
+    }
+  }, [chatbot, currentBot]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -92,8 +111,11 @@ export function StatsDrawer({
   }, []);
 
   const handlePlanPurchase = (planName: string) => {
-    const billingBot = currentBot;
-    if (!billingBot) {
+    // let billingBot;
+    // if (chatbot == null) billingBot = currentBot;
+    // else billingBot = chatbot;
+    // console.log("selectedBot", selectedBot);
+    if (!selectedBot || !selectedBot?.uuid) {
       toast.info("لطفاً چت‌بات مورد نظر را انتخاب کنید");
       return;
     } else if (planName.toLowerCase() === "enterprise".toLowerCase()) {
@@ -117,7 +139,7 @@ export function StatsDrawer({
         "selectedPlan",
         JSON.stringify({
           ...plan,
-          billingBot,
+          billingBot: selectedBot,
           periods: billingPeriod,
         })
       );
@@ -138,8 +160,8 @@ export function StatsDrawer({
     ];
   };
 
-  return (
-    <div className="z-99">
+  return createPortal(
+    <div className="">
       {/* Overlay */}
       <div
         className={`stats-drawer-overlay ${isOpen ? "block" : "hidden"}`}
@@ -148,9 +170,9 @@ export function StatsDrawer({
 
       {/* Drawer */}
       <aside
-        className={`stats-drawer ${isOpen ? "open" : ""}`}
+        className={`stats-drawer   ${isOpen ? "open" : ""}`}
         role="complementary"
-        aria-label="پنل پلن‌های پیشنهادی"
+        aria-label=" پلن‌های پیشنهادی"
       >
         {/* Header */}
         <header className="stats-drawer-header px-4 sm:px-6">
@@ -175,7 +197,12 @@ export function StatsDrawer({
           {/* Billing Period Toggle */}
           <div className="flex items-center justify-center mb-3 sm:mb-4 gap-2 text-sm sm:text-base">
             <span>چت‌بات</span>
-            <ChatbotSelector />
+            {/* <ChatbotSelector /> */}
+            <ChatbotList
+              placeholder="یک چت‌بات را انتخاب کنید"
+              selectedBot={selectedBot}
+              onSelect={(bot) => setSelectedBot(bot)}
+            />
           </div>
 
           <div className="billing-toggle-wrapper  flex-row gap-2 sm:gap-0">
@@ -211,6 +238,7 @@ export function StatsDrawer({
             className="stats-section mt-4 sm:mt-6"
             aria-labelledby="plans-heading"
           >
+            {isLoading && <PageLoader />}
             <div className="flex flex-col gap-3 sm:gap-4">
               {plans.map((plan, index) => (
                 <div
@@ -241,6 +269,7 @@ export function StatsDrawer({
           </section>
         </div>
       </aside>
-    </div>
+    </div>,
+    document.body
   );
 }

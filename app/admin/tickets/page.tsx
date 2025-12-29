@@ -423,7 +423,7 @@ export default function AdminTickets() {
           />
 
           <ProgressStatCard
-            title="در حال بررسی"
+            title="درحال بررسی"
             count={stats.pending}
             icon={<TicketPend />}
             bgColor="bg-warning/10"

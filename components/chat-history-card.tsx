@@ -37,7 +37,7 @@ export function ChatHistoryCard({
   // نمایش آخرین 3 پیام
   const displayMessages = messages.slice(-3);
   const hasMoreMessages = messages.length > 3;
-console.log("lastActivity", lastActivity);
+// console.log("lastActivity", lastActivity);
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();

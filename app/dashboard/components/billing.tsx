@@ -438,7 +438,7 @@ export function Billing() {
                                   )}{" "}
                                   /
                                   {new Intl.NumberFormat("fa-IR").format(
-                                    plan.subscription?.total_characters 
+                                    plan.subscription?.total_characters
                                   )}
                                 </span>
                                 <span className="text-grey-500">
@@ -469,7 +469,7 @@ export function Billing() {
                                 اعتبار:
                                 <span className="">
                                   {new Intl.NumberFormat("fa-IR").format(
-                                    plan.subscription?.balance 
+                                    plan.subscription?.balance
                                   )}
                                 </span>
                                 تومان
@@ -485,7 +485,7 @@ export function Billing() {
                               <span className="text-grey-600">
                                 انقضا:{" "}
                                 {new Date(
-                                  plan.subscription?.end_date  
+                                  plan.subscription?.end_date
                                 ).toLocaleDateString("fa-IR")}
                               </span>
                               <span className="text-grey-600">
@@ -537,7 +537,11 @@ export function Billing() {
                           کاراکتر
                         </th>
                         <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
-                          اعتبار{" "}
+                          اعتبار پلن{" "}
+                          <span className="text-xs text-gray-400">(تومان)</span>
+                        </th>
+                        <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
+                          اعتبار چت‌بات{" "}
                           <span className="text-xs text-gray-400">(تومان)</span>
                         </th>
                         <th className="px-2 sm:px-4 py-3 text-right text-grey-600 text-xs sm:text-sm">
@@ -551,7 +555,8 @@ export function Billing() {
                     <tbody>
                       {activeSubscrp.map((plan, index) => {
                         const creditPercent = Math.round(
-                          ((plan.subscription?.total_characters - plan.subscription?.remaining_upload_chars ) /
+                          ((plan.subscription?.total_characters -
+                            plan.subscription?.remaining_upload_chars) /
                             plan.subscription?.total_characters) *
                             100
                         );
@@ -560,7 +565,9 @@ export function Billing() {
                             ?.primary_color || "";
 
                         const fileCharPercent = Math.round(
-                          (plan.subscription?.balance  / plan.subscription?.balance) * 100
+                          (plan.subscription?.balance /
+                            plan.subscription?.balance) *
+                            100
                         );
 
                         return (
@@ -615,12 +622,13 @@ export function Billing() {
                                   <div className="flex items-center justify-between gap-2">
                                     <span className="text-grey-900 text-xs sm:text-sm">
                                       {new Intl.NumberFormat("fa-IR").format(
-                                        plan.subscription?.total_characters  -
-                                            plan.subscription?.remaining_upload_chars  
+                                        plan.subscription?.total_characters -
+                                          plan.subscription
+                                            ?.remaining_upload_chars
                                       )}{" "}
                                       /{" "}
                                       {new Intl.NumberFormat("fa-IR").format(
-                                        plan.subscription?.total_characters  
+                                        plan.subscription?.total_characters
                                       )}
                                     </span>
                                     <span className="text-grey-500 text-xs">
@@ -658,18 +666,26 @@ export function Billing() {
                                 <div className="flex items-center gap-1 sm:gap-2">
                                   <span className="text-grey-700 text-xs sm:text-sm">
                                     {new Intl.NumberFormat("fa-IR").format(
-                                      plan.subscription?.balance  
+                                      plan.subscription?.balance
                                     )}
                                   </span>
                                   <span className="text-grey-500 text-xs">
-                                    (
-                                    {fileCharPercent.toLocaleString("fa-IR")  }
+                                    ({fileCharPercent.toLocaleString("fa-IR")}
                                     ٪)
                                   </span>
                                 </div>
                               )}
                             </td>
-
+                            <td className="px-2 sm:px-4 py-3">
+                              <div className="flex items-center gap-1 sm:gap-2">
+                                <span className="text-grey-700 text-xs sm:text-sm">
+                                  {new Intl.NumberFormat("fa-IR").format(
+                                    plan?.chatbot_balance
+                                  )}
+                                </span>
+                                 
+                              </div>
+                            </td>
                             <td className="px-2 sm:px-4 py-3">
                               {!plan.subscription ? (
                                 <div className="text-sm text-secondary font-medium">
@@ -689,6 +705,7 @@ export function Billing() {
                                     {getDaysRemaining(
                                       plan.subscription?.end_date
                                     ).toLocaleString("fa-IR")}{" "}
+                                    
                                     روز مانده
                                   </span>
                                 </div>

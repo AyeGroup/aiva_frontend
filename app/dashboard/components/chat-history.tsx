@@ -17,11 +17,15 @@ export function ChatHistory({ username }: ChatHistoryProps) {
   console.log("useEffect");
     if (!currentBot) return;
     if (!username) return;
+
+    const parts = username.split(":");
+    const section2 = parts.length > 1 ? parts[1] : username;
+
     const fetchActiveUsers = async () => {
       try {
         const response = await axiosInstance.get(
           API_ROUTES.PUBLIC.HISTORY(currentBot.uuid),
-          { params: { username: username } }
+          { params: { username: section2 } }
         );
 
         const data = response.data.data;

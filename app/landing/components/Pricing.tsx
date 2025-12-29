@@ -1,10 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { API_ROUTES } from "@/constants/apiRoutes";
 import { PlanImage } from "@/public/icons/landing";
-import { getFaNameByCode, getPlanIcon, getPlanNameById, translateFeature } from "@/constants/plans";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import {
+  getPlanIcon,
+  getPlanNameById,
+  translateFeature,
+} from "@/constants/plans";
 import axios from "axios";
+
+const mapFeatures2 = (plan: any): { text: string; enabled: boolean }[] => {
+  const baseFeatures = [
+    "ساخت چت بات رایگان",
+    "تطبیق ظاهری کامل با هویت بصری شما",
+    "تنظیم رفتار چت بات",
+    "داشبورد تحلیلی مشتریان",
+    "اتصال به سایت (ویجت)",
+  ];
+
+  return [
+    // فیچرهای پلن فعلی با ترجمه
+    ...plan.features.map((f: string) => ({
+      text: translateFeature(f),
+      enabled: true,
+    })),
+
+    // فیچرهای پایه‌ای که همیشه باید باشند
+    ...baseFeatures.map((f) => ({
+      text: f,
+      enabled: true,
+    })),
+
+    // محدودیت کاراکتر آپلود
+    {
+      text: `${plan.upload_char_limit.toLocaleString("fa-IR")} کاراکتر`,
+      enabled: true,
+    },
+  ];
+};
 
 const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
   return [

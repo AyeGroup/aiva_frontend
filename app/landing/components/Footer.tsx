@@ -135,7 +135,7 @@ export default function Footer() {
               href="https://ayehgroup.com/"
               className="text-gray-400 hover:text-gray-100 transition duration-200 font-semibold mx-0.5"
             >
-              گروه آیه
+              شرکت آیه
             </Link>
             <span>است.</span>
           </div>

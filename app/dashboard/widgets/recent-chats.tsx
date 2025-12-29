@@ -53,7 +53,7 @@ export function RecentChats({
   const chats: ChatData[] = data.map((chat) => {
     const lastMessage = chat.messages.at(-1);
     
-    console.log("aaaa", chat);
+    // console.log("aaaa", chat);
     return {
       userId: chat.user_id,
       userName: chat.user_name,
