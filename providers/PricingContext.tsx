@@ -58,7 +58,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
         const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
         const allPlans = res.data?.data?.subscription_plans ?? [];
         setPlans(allPlans);
-        console.log("allPlans", allPlans);
+        // console.log("allPlans", allPlans);
       } catch (error) {
         console.error("Pricing fetch failed:", error);
       }
@@ -118,7 +118,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     }
     setFeatureMinPlan(map);
     setIsFeatureMapReady(true);
-    console.log("FeatureMinPlan: ", map);
+    // console.log("FeatureMinPlan: ", map);
   }, [plans]);
 
   return (

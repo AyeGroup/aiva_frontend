@@ -66,7 +66,9 @@ export default function Checkout() {
           API_ROUTES.PAYMENT.FACTOR,
           invoicePayload
         );
-        const data = res.data;
+        console.log("res", res);
+
+        const data = res?.data;
         console.log("invoice response", data);
 
         if (!data.success) {
@@ -77,7 +79,17 @@ export default function Checkout() {
         // فاکتور را در state ذخیره کنید
         setInvoice(data.data);
       } catch (err: any) {
-        toast.error(err.message || "خطا در ایجاد فاکتور");
+        const serverMessage = err?.response?.data?.message;
+        console.log("a", serverMessage);
+        if (serverMessage == "Downgrading subscription is not allowed") {
+          toast.error("تنزل اشتراک مجاز نیست");
+          const returnUrl = localStorage.getItem("returnUrl");
+          if (returnUrl) {
+            localStorage.removeItem("returnUrl");
+            router.push(returnUrl);
+          }
+          return;
+        } else toast.error(serverMessage || "خطا در ایجاد فاکتور");
       } finally {
         setIsLoading(false);
         setIsPlanLoaded(true);
@@ -117,7 +129,7 @@ export default function Checkout() {
       setIsLoading(false);
     }
   };
- 
+
   // ---- ایجاد فاکتور و هدایت به درگاه ----
   const handleProceedToPayment = async () => {
     if (!selectedPlan) {
@@ -142,7 +154,7 @@ export default function Checkout() {
         subscription_plan: getPlanIdByCode(selectedPlan.plan),
         // subscription_type: selectedPlan.billingPeriod,
         subscription_type: selectedPlan.periods,
-        
+
         description: selectedPlan.description,
       };
 

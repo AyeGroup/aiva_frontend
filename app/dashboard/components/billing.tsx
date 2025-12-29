@@ -438,7 +438,7 @@ export function Billing() {
                                   )}{" "}
                                   /
                                   {new Intl.NumberFormat("fa-IR").format(
-                                    plan.subscription?.total_characters || 0
+                                    plan.subscription?.total_characters 
                                   )}
                                 </span>
                                 <span className="text-grey-500">
@@ -469,7 +469,7 @@ export function Billing() {
                                 اعتبار:
                                 <span className="">
                                   {new Intl.NumberFormat("fa-IR").format(
-                                    plan.subscription?.balance || 0
+                                    plan.subscription?.balance 
                                   )}
                                 </span>
                                 تومان
@@ -485,7 +485,7 @@ export function Billing() {
                               <span className="text-grey-600">
                                 انقضا:{" "}
                                 {new Date(
-                                  plan.subscription?.end_date || ""
+                                  plan.subscription?.end_date  
                                 ).toLocaleDateString("fa-IR")}
                               </span>
                               <span className="text-grey-600">
@@ -551,9 +551,7 @@ export function Billing() {
                     <tbody>
                       {activeSubscrp.map((plan, index) => {
                         const creditPercent = Math.round(
-                          ((plan.subscription?.total_characters ||
-                            0 - plan.subscription?.remaining_upload_chars ||
-                            0) /
+                          ((plan.subscription?.total_characters - plan.subscription?.remaining_upload_chars ) /
                             plan.subscription?.total_characters) *
                             100
                         );
@@ -562,8 +560,7 @@ export function Billing() {
                             ?.primary_color || "";
 
                         const fileCharPercent = Math.round(
-                          (plan.subscription?.balance ||
-                            0 / plan.subscription?.balance) * 100
+                          (plan.subscription?.balance  / plan.subscription?.balance) * 100
                         );
 
                         return (
@@ -618,15 +615,12 @@ export function Billing() {
                                   <div className="flex items-center justify-between gap-2">
                                     <span className="text-grey-900 text-xs sm:text-sm">
                                       {new Intl.NumberFormat("fa-IR").format(
-                                        plan.subscription?.total_characters ||
-                                          0 -
-                                            plan.subscription
-                                              ?.remaining_upload_chars ||
-                                          0
+                                        plan.subscription?.total_characters  -
+                                            plan.subscription?.remaining_upload_chars  
                                       )}{" "}
                                       /{" "}
                                       {new Intl.NumberFormat("fa-IR").format(
-                                        plan.subscription?.total_characters || 0
+                                        plan.subscription?.total_characters  
                                       )}
                                     </span>
                                     <span className="text-grey-500 text-xs">
@@ -664,13 +658,12 @@ export function Billing() {
                                 <div className="flex items-center gap-1 sm:gap-2">
                                   <span className="text-grey-700 text-xs sm:text-sm">
                                     {new Intl.NumberFormat("fa-IR").format(
-                                      plan.subscription?.balance || 0
+                                      plan.subscription?.balance  
                                     )}
                                   </span>
                                   <span className="text-grey-500 text-xs">
                                     (
-                                    {fileCharPercent.toLocaleString("fa-IR") ||
-                                      0}
+                                    {fileCharPercent.toLocaleString("fa-IR")  }
                                     ٪)
                                   </span>
                                 </div>
@@ -707,7 +700,7 @@ export function Billing() {
                                 {plan.subscription &&
                                 plan.subscription?.plan != "0" ? (
                                   <button
-                                    disabled={plan.subscription?.plan == "0"}
+                                    // disabled={plan.subscription?.plan == "0"}
                                     onClick={() => handleUpgrade(plan)}
                                     className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
                                     title=" افزایش اعتبار"

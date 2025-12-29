@@ -37,7 +37,7 @@ export function ChatHistoryCard({
   // نمایش آخرین 3 پیام
   const displayMessages = messages.slice(-3);
   const hasMoreMessages = messages.length > 3;
-
+console.log("lastActivity", lastActivity);
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -64,13 +64,13 @@ export function ChatHistoryCard({
           <div className="user-details">
             <h4 className="user-name">{userName}</h4>
             <div className="chat-meta">
-              <div className={`status-indicator ${status}`}>
+              {/* <div className={`status-indicator ${status}`}>
                 <Circle className="w-2 h-2" />
                 <span>{status === "active" ? "فعال" : "تکمیل شده"}</span>
-              </div>
+              </div> */}
               <div className="last-activity">
                 <Clock className="w-3 h-3" />
-                <span>{formatTime(lastActivity)}</span>
+                <span>{(lastActivity)}</span>
               </div>
             </div>
           </div>

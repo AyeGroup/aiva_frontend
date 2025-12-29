@@ -52,18 +52,19 @@ export function RecentChats({
 }: RecentChatsProps) {
   const chats: ChatData[] = data.map((chat) => {
     const lastMessage = chat.messages.at(-1);
+    
+    console.log("aaaa", chat);
     return {
       userId: chat.user_id,
       userName: chat.user_name,
       status: chat.ended_at ? "completed" : "active",
-      unreadCount: 0, // در صورت نیاز می‌تونی از بک اضافه کنی
-      // lastActivity: new Date(lastMessage.ts ).toLocaleDateString("fa-IR"),
-      //   ? new Date(lastMessage.ts * 1000).toISOString()
-      //   : new Date().toISOString(),
-      // lastActivity:lastMessage
+      unreadCount: 0,
       lastActivity: lastMessage
-        ? new Date(lastMessage.ts).toLocaleDateString("fa-IR")
+        ? new Date(lastMessage.ts).toLocaleDateString("fa-IR", {
+            calendar: "persian",
+          })
         : "",
+
       messages: chat.messages.map((m) => ({
         id: m.id,
         type: m.role === "assistant" ? "bot" : "user",
@@ -111,9 +112,10 @@ export function RecentChats({
               <ChatHistoryCard
                 key={chat.userId}
                 userId={chat.userId}
-                userName={`کاربر ${convertToPersian(
-                  userIdToIndexMap.get(chat.userId)!
-                )}`}
+                // userName={`کاربر ${convertToPersian(
+                //   userIdToIndexMap.get(chat.userId)!
+                // )}`}
+                userName={chat.userName}
                 userAvatar={chat.userAvatar}
                 messages={chat.messages}
                 status={chat.status}
