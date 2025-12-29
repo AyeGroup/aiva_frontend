@@ -139,7 +139,7 @@ export default function Section1() {
 
           {/* Stats */}
           <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-gray-200">
-            <StatItem icon={Tik} text="بیش از ۱۰۰۰ کسب‌وکار فعال" />
+            <StatItem icon={Tik} text="بیش از ۱۰۰ کسب‌وکار فعال" />
             <StatItem icon={Tik} text="راه‌اندازی در کمتر از ۵ دقیقه" />
             <StatItem icon={Tik} text="پشتیبانی ۲۴/۷" />
           </div>

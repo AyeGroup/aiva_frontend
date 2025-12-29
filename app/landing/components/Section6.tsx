@@ -88,7 +88,7 @@ function Header() {
 
       {/* Subtitle */}
       <p className="text-sm sm:text-base lg:text-lg text-center text-gray-600 max-w-2xl">
-        پشتیبانی انسانی گران و خسته‌کننده است، اما بات آیوا همیشه آماده‌است.
+        پشتیبانی انسانی پرهزینه و خسته‌کننده است، اما بات آیوا همیشه آماده‌است.
       </p>
     </motion.div>
   );
@@ -211,8 +211,8 @@ const SOLUTION_DATA: ArticleProps[] = [
   },
   {
     id: 3,
-    title: "هزینه ثابت و کم",
-    desc: "پلان‌های آیوا از چند هزار تومان شروع می‌شن",
+    title: "هزینه  کاملا مقرون به صرفه",
+    desc: "پلن های آیوا کاملا متناسب با کسب و کار شما به صورت اقتصادی تدوین شدن",
     type: "solution",
     Icon: Sec6_Icon10,
   },

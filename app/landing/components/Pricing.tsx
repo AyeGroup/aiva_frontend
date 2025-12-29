@@ -199,7 +199,7 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
             >
               {plan?.price_monthly_irr === 0
                 ? "رایگان"
-                : (plan?.price_monthly_irr * 10).toLocaleString("fa-IR")}
+                : (plan?.price_monthly_irr /10).toLocaleString("fa-IR")}
             </div>
 
             {plan?.price_monthly_irr !== 0 && (

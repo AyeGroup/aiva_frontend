@@ -134,52 +134,49 @@ function Article({
         boxShadow: shadow,
       }}
     >
-      <div className="flex flex-col items-center overflow-clip rounded-2xl w-full">
-        <div className="flex flex-col items-center gap-7 pb-px pt-8 px-4 w-full relative">
-          {/* Icon */}
-
-          <div className="h-16 relative shrink-0 w-60  lg:w-full ">
+      <div className="flex flex-col items-center rounded-2xl w-full overflow-hidden">
+        <div className="flex flex-col items-center gap-7 pt-8 px-4 w-full">
+          {/* Icon + Step */}
+          <div className="relative flex flex-col  items-center gap-3 w-full">
             <div
-              className="absolute flex items-center justify-center left-[88px] rounded-xl size-16 top-0"
+              className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-sm shadow-[0px_4px_12px_rgba(0,0,0,0.2)] 
+                     font-semibold text-white flex items-center justify-center"
+              style={{ backgroundColor: color }}
+            >
+              {convertToPersian(step + 1)}
+            </div>{" "}
+            <div
+              className="relative flex items-center justify-center w-16 h-16 rounded-xl"
               style={{ backgroundColor: "rgba(101,188,182,0.1)", color }}
             >
               {icon}
             </div>
-
-            <div
-              className={`w-6 h-6 rounded-full text-sm shadow-[0px_4px_12px_0px_rgba(0,0,0,0.2)]  p-1 font-semibold text-white flex justify-center items-center`}
-              style={{ backgroundColor: color }}
-            >
-              {convertToPersian(step + 1)}
-            </div>
           </div>
 
           {/* Content */}
-          <div className="h-[141.188px] relative shrink-0 w-60">
-            <h3 className="absolute h-6 left-1/2 top-0 -translate-x-1/2 text-center text-gray-900 font-normal leading-6">
-              {title}
-            </h3>
-            <p className="absolute h-[51.188px] left-1/2 top-8 -translate-x-1/2 text-center text-gray-500 font-normal leading-[25.6px] w-[228px]">
+          <div className="flex flex-col items-center text-center gap-3 w-60">
+            <h3 className="text-gray-900 font-normal leading-6">{title}</h3>
+
+            <p className="text-gray-500 font-normal leading-[25.6px] w-[228px]">
               {description}
             </p>
 
             {/* Duration */}
             <div
-              className="absolute bg-gray-100 h-[42px] left-[70.77px] rounded-full top-[99.19px] flex items-center justify-center"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 text-sm"
               style={{ color }}
             >
-              <div className="flex items-center py-2 px-4 rounded-full bg-gray-100">
-                <div
-                  className={`w-2 h-2 rounded-full ml-2`}
-                  style={{ backgroundColor: color }}
-                ></div>
-                {duration}
-              </div>
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: color }}
+              />
+              {duration}
             </div>
           </div>
 
+          {/* Progress line */}
           <motion.div
-            className="h-[3px] rounded-bl-6 rounded-br-6 shrink-0 w-full transition-colors duration-500"
+            className="h-[3px] w-full rounded-b-6 transition-colors duration-500"
             style={{
               backgroundColor: isActive ? color : "#e5e7eb",
             }}

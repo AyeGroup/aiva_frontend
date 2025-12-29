@@ -102,6 +102,7 @@ export interface KnowledgeItem {
   created_at?: string;
   qa_id?: string;
   upload_id?: string;
+  error?: string;
 }
 
 export interface PurchaseHistory {

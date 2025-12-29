@@ -1091,6 +1091,11 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
                       </div>
                     </div>
                   </div>
+                  {item?.error && (
+                    <div className="bg-secondary/20 text-[#6f4840] text-sm my-1 py-2 px-3 rounded-md">
+                      {item.error}
+                    </div>
+                  )}
                 </Card>
               );
             })}

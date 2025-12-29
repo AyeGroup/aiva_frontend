@@ -47,27 +47,29 @@ export function Billing() {
 
   useEffect(() => {
     if (!user) return;
+    setActiveSubscrp([]);
+
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const response = await axiosInstance.get(
           API_ROUTES.FINANCIAL.SUBSCRIPTIONS
         );
-        const active = response.data.data;
+        const active = response?.data?.data;
         setActiveSubscrp(active);
 
         // محاسبه expiring plans همینجا
         const expiring = active
           .map((p: any) => {
-            const daysRemaining = getDaysRemaining(p.subscription.end_date);
+            const daysRemaining = getDaysRemaining(p?.subscription?.end_date);
             const usagePercent =
               100 -
-              (p.subscription.balance / p.subscription.total_balance) * 100;
+              (p?.subscription?.balance / p?.subscription?.total_balance) * 100;
             return { ...p, daysRemaining, usagePercent };
           })
           .filter(
             (p: any) =>
-              p.daysRemaining <= maxDays || p.usagePercent >= maxCredit
+              p?.daysRemaining <= maxDays || p?.usagePercent >= maxCredit
           );
 
         setExpiringPlan(expiring);
@@ -352,17 +354,17 @@ export function Billing() {
                   <div className="flex flex-col gap-4 lg:hidden mt-4">
                     {activeSubscrp.map((plan, index) => {
                       const creditPercent = Math.round(
-                        ((plan.subscription.total_characters -
-                          plan.subscription.remaining_upload_chars) /
-                          plan.subscription.total_characters) *
+                        ((plan.subscription?.total_characters -
+                          plan.subscription?.remaining_upload_chars) /
+                          plan.subscription?.total_characters) *
                           100
                       );
                       const planColor =
                         bots.find((b) => b.uuid === plan.chatbot_uuid)
                           ?.primary_color || "";
                       const fileCharPercent = Math.round(
-                        (plan.subscription.balance /
-                          plan.subscription.balance) *
+                        (plan.subscription?.balance /
+                          plan.subscription?.balance) *
                           100
                       );
                       return (
@@ -394,12 +396,12 @@ export function Billing() {
                               className="px-2 py-1 rounded-lg text-xs"
                               style={{
                                 backgroundColor: `${
-                                  PLAN_COLORS_BYID[plan.subscription.plan]
+                                  PLAN_COLORS_BYID[plan.subscription?.plan]
                                 }15`,
-                                color: PLAN_COLORS_BYID[plan.subscription.plan],
+                                color: PLAN_COLORS_BYID[plan.subscription?.plan],
                               }}
                             >
-                              {getPlanNameById(plan.subscription.plan)}
+                              {getPlanNameById(plan.subscription?.plan)}
                             </span>
                           </div>
 
@@ -408,12 +410,12 @@ export function Billing() {
                             <div className="flex items-center justify-between text-xs mb-1">
                               <span className="text-grey-700">
                                 {new Intl.NumberFormat("fa-IR").format(
-                                  plan.subscription.total_characters -
-                                    plan.subscription.remaining_upload_chars
+                                  plan.subscription?.total_characters -
+                                    plan.subscription?.remaining_upload_chars
                                 )}{" "}
                                 /
                                 {new Intl.NumberFormat("fa-IR").format(
-                                  plan.subscription.total_characters
+                                  plan.subscription?.total_characters
                                 )}
                               </span>
                               <span className="text-grey-500">
@@ -441,7 +443,7 @@ export function Billing() {
                               اعتبار:
                               <span className="">
                                 {new Intl.NumberFormat("fa-IR").format(
-                                  plan.subscription.balance
+                                  plan.subscription?.balance
                                 )}
                               </span>
                               تومان
@@ -455,19 +457,19 @@ export function Billing() {
                             <span className="text-grey-600">
                               انقضا:{" "}
                               {new Date(
-                                plan.subscription.end_date
+                                plan.subscription?.end_date
                               ).toLocaleDateString("fa-IR")}
                             </span>
                             <span className="text-grey-600">
                               {getDaysRemaining(
-                                plan.subscription.end_date
+                                plan.subscription?.end_date
                               ).toLocaleString("fa-IR")}{" "}
                               روز مانده
                             </span>
                           </div>
 
                           <button
-                            disabled={plan.subscription.plan == "0"}
+                            disabled={plan.subscription?.plan == "0"}
                             title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
                             onClick={() => handleUpgrade(plan)}
                             className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
@@ -505,9 +507,9 @@ export function Billing() {
                     <tbody>
                       {activeSubscrp.map((plan, index) => {
                         const creditPercent = Math.round(
-                          ((plan.subscription.total_characters -
-                            plan.subscription.remaining_upload_chars) /
-                            plan.subscription.total_characters) *
+                          ((plan.subscription?.total_characters -
+                            plan.subscription?.remaining_upload_chars) /
+                            plan.subscription?.total_characters) *
                             100
                         );
                         const planColor =
@@ -515,8 +517,8 @@ export function Billing() {
                             ?.primary_color || "";
 
                         const fileCharPercent = Math.round(
-                          (plan.subscription.balance /
-                            plan.subscription.balance) *
+                          (plan.subscription?.balance /
+                            plan.subscription?.balance) *
                             100
                         );
 
@@ -554,13 +556,13 @@ export function Billing() {
                                 className="inline-block px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm whitespace-nowrap"
                                 style={{
                                   backgroundColor: `${
-                                    PLAN_COLORS_BYID[plan.subscription.plan]
+                                    PLAN_COLORS_BYID[plan.subscription?.plan]
                                   }15`,
                                   color:
-                                    PLAN_COLORS_BYID[plan.subscription.plan],
+                                    PLAN_COLORS_BYID[plan.subscription?.plan],
                                 }}
                               >
-                                {getPlanNameById(plan.subscription.plan)}
+                                {getPlanNameById(plan.subscription?.plan)}
                               </span>
                             </td>
 
@@ -569,12 +571,12 @@ export function Billing() {
                                 <div className="flex items-center justify-between gap-2">
                                   <span className="text-grey-900 text-xs sm:text-sm">
                                     {new Intl.NumberFormat("fa-IR").format(
-                                      plan.subscription.total_characters -
-                                        plan.subscription.remaining_upload_chars
+                                      plan.subscription?.total_characters -
+                                        plan.subscription?.remaining_upload_chars
                                     )}{" "}
                                     /{" "}
                                     {new Intl.NumberFormat("fa-IR").format(
-                                      plan.subscription.total_characters
+                                      plan.subscription?.total_characters
                                     )}
                                   </span>
                                   <span className="text-grey-500 text-xs">
@@ -608,7 +610,7 @@ export function Billing() {
                               <div className="flex items-center gap-1 sm:gap-2">
                                 <span className="text-grey-700 text-xs sm:text-sm">
                                   {new Intl.NumberFormat("fa-IR").format(
-                                    plan.subscription.balance
+                                    plan.subscription?.balance
                                   )}
                                 </span>
                                 <span className="text-grey-500 text-xs">
@@ -620,16 +622,16 @@ export function Billing() {
                             <td className="px-2 sm:px-4 py-3">
                               <div className="flex flex-col gap-1">
                                 <time
-                                  dateTime={plan.subscription.end_date}
+                                  dateTime={plan.subscription?.end_date}
                                   className="text-grey-900 text-xs sm:text-sm whitespace-nowrap"
                                 >
                                   {new Date(
-                                    plan.subscription.end_date
+                                    plan.subscription?.end_date
                                   ).toLocaleDateString("fa-IR")}
                                 </time>
                                 <span className="text-grey-600 text-xs whitespace-nowrap">
                                   {getDaysRemaining(
-                                    plan.subscription.end_date
+                                    plan.subscription?.end_date
                                   ).toLocaleString("fa-IR")}{" "}
                                   روز مانده
                                 </span>
@@ -639,7 +641,7 @@ export function Billing() {
                             <td className="px-2 sm:px-4 py-3">
                               <div className="flex items-center justify-center">
                                 <button
-                                  disabled={plan.subscription.plan == "0"}
+                                  disabled={plan.subscription?.plan == "0"}
                                   onClick={() => handleUpgrade(plan)}
                                   className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
                                   title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"

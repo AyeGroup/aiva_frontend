@@ -50,9 +50,9 @@ export default function Footer() {
       {/* Footer Content */}
       <div className="relative z-10 w-full flex flex-col items-center px-4 sm:px-6 md:px-8 lg:px-20 pt-4">
         {/* Main Grid - Responsive */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-6 sm:gap-8 md:gap-10 lg:gap-12 py-8 md:py-12 text-gray-400 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 py-8 md:pb-1 md:pt-12 text-gray-400 w-full">
           {/* Logo & Description */}
-          <div className="text-right col-span-1 sm:col-span-2 lg:col-span-2">
+          <div className="text-right ">
             <div className="flex items-center gap-2 justify-start">
               <Link href="/" className="flex items-center gap-3">
                 <Image
@@ -68,23 +68,26 @@ export default function Footer() {
               </Link>
             </div>
             <p className="text-gray-400 leading-6 text-right text-sm sm:text-base mt-2">
-              هوشمندترین چت‌بات برای کسب‌وکار شما
+              دستیار هوشمند کسب‌وکار شما
             </p>
           </div>
 
           {/* Description */}
-          <div className="text-justify lg:pt-10 col-span-1 sm:col-span-2 lg:col-span-3 text-sm sm:text-base">
+          <div className="text-justify lg:pt-12 col-span-1 sm:col-span-2 sm:pl-8  text-sm sm:text-base">
             <p className="leading-6">
-              خلاقیت یا آفرینندگی توان ساختن یا خلق نمودن چیزی نو است، راهکاری
-              نو برای حل یک مشکل، یک روش یا یک دستگاه نو، یا یک شیء یا فرم نو
-              هنری. «خلاقیت بشر تعریفی از قابلیت‌های اقتصاد، زندگی، فناوری،
-              صنایع نو، ثروت نو و کلیهٔ چیزهایی است که از یک اقتصاد خوب جریان
-              می‌گیرند.
+              آیوا یک پلتفرم نرم‌افزاری بدون کد است که به شما امکان می‌دهد در
+              کمتر از ۱۰ دقیقه یک چت‌بات هوشمند شخصی‌سازی‌شده برای وب‌سایت،
+              شبکه‌های اجتماعی یا اپلیکیشن خود ایجاد کنید. با اتصال به منابع
+              دانش (وب‌سایت، اسناد، پایگاه داده) و ارائه‌ی تحلیل‌های دقیق از
+              مکالمات، آیوا به‌طور خودکار به سؤالات مشتریان پاسخ می‌دهد، نرخ
+              تعامل را افزایش می‌دهد و هزینه‌های پشتیبانی را کاهش می‌دهد. علاوه
+              بر این با داشتن یک داشبورد تحلیلی دقیق می‌توانید رفتار مشتریان را
+              ارزیابی کنید و فروشتان را افزایش دهید.
             </p>
           </div>
 
           {/* Contact Info */}
-          <div className="flex flex-col gap-y-3 sm:gap-y-4 col-span-1 sm:col-span-2 lg:col-span-2">
+          <div className="flex flex-col gap-y-3 sm:gap-y-4    pt-2">
             <div className="text-gray-100 text-base sm:text-lg font-semibold">
               تماس با ما
             </div>
@@ -92,7 +95,7 @@ export default function Footer() {
             <div className="flex items-center gap-2 text-sm sm:text-base">
               <MapPin size={18} className="text-gray-300 shrink-0" />
               <span className="text-right">
-                تهران، آزادی، خیابان صادقی، پلاک ۳۳
+                تهران، آزادی، دانشگاه صنعتی شریف،خیابان صادقی، پلاک ۳۳
               </span>
             </div>
 
