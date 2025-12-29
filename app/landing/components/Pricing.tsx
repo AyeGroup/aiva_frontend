@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { PlanImage } from "@/public/icons/landing";
-import { getPlanIcon, translateFeature } from "@/constants/plans";
+import { getFaNameByCode, getPlanIcon, getPlanNameById, translateFeature } from "@/constants/plans";
 import axios from "axios";
 
 const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
@@ -180,7 +180,9 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
           </div>
           <div className=" ">
             <h3 className="text-gl font-medium text-gray-900 text-right mb-2 mt-0 lg:mt-5">
-              {pricingPlans[index].name}
+              {/* {pricingPlans[index].name}
+               */}
+              {getPlanNameById(index)}
             </h3>
             <p className="text-xs text-gray-500 text-right">
               {plan.description}
@@ -199,7 +201,7 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
             >
               {plan?.price_monthly_irr === 0
                 ? "رایگان"
-                : (plan?.price_monthly_irr /10).toLocaleString("fa-IR")}
+                : (plan?.price_monthly_irr / 10).toLocaleString("fa-IR")}
             </div>
 
             {plan?.price_monthly_irr !== 0 && (
