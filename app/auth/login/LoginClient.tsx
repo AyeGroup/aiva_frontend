@@ -52,11 +52,12 @@ function LoginClient() {
     setPassword(value);
 
     // بررسی وجود کاراکتر فارسی
-    if (/[آ-ی]/.test(value)) {
-      setWarning("رمز عبور نباید شامل کاراکتر فارسی باشد!");
-    } else {
-      setWarning("");
-    }
+  if (/[آ-ی\u06F0-\u06F9]/.test(value)) {
+    setWarning("رمز عبور نباید شامل حروف یا اعداد فارسی باشد!");
+  } else {
+    setWarning("");
+  }
+
   };
 
   const persianYear = new Intl.DateTimeFormat("fa-IR", {

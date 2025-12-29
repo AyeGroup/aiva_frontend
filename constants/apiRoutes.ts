@@ -98,6 +98,10 @@ export const API_ROUTES = {
       `${API_BASE_URL}/financial/chatbots/${bot_uuid}/usage-stat`,
     PDF: (transaction_id: string) =>
       `${API_BASE_URL}/financial/transactions/${transaction_id}/invoice`,
+    DISCOUNT_VALIDATE: `${API_BASE_URL}/financial/discount-codes/validate`,
+    DISCOUNT_AVAILABLE: `${API_BASE_URL}/financial/discount-codes/my/available`,
+    DISCOUNT_USAGE: (discount_id: string) =>
+      `${API_BASE_URL}/financial/discount-codes/${discount_id}/usages`,
   },
 
   PAYMENT: {

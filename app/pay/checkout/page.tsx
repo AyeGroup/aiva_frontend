@@ -82,7 +82,7 @@ export default function Checkout() {
         const serverMessage = err?.response?.data?.message;
         console.log("a", serverMessage);
         if (serverMessage == "Downgrading subscription is not allowed") {
-          toast.error("تنزل اشتراک مجاز نیست");
+          toast.error("تغییر اشتراک به سطح پایین‌تر مجاز نیست.");
           const returnUrl = localStorage.getItem("returnUrl");
           if (returnUrl) {
             localStorage.removeItem("returnUrl");
@@ -100,31 +100,40 @@ export default function Checkout() {
   }, [router]);
 
   const handleApplyDiscount = async () => {
-    if (!discountCode.trim()) return;
-    toast.info("کد تخفیف نامعتبر است");
-    return;
+    if (!discountCode.trim()) {
+      toast.error("کد تخفیف را وارد کنید");
+      return;
+    }
+
     try {
       setIsLoading(true);
 
-      // ارسال درخواست با axios
-      const res = await axiosInstance.post(API_ROUTES.PAYMENT.DISCOUNT, {
-        code: discountCode,
-      });
+      // 1️⃣ اعتبارسنجی کد تخفیف
+      const res = await axiosInstance.post(
+        API_ROUTES.FINANCIAL.DISCOUNT_VALIDATE,
+        {
+          code: discountCode,
+        amount:1,
+          invoice_id: invoice?.id, // اگر بک‌اند پشتیبانی می‌کند
+        }
+      );
 
-      // axios به‌صورت پیش‌فرض داده را در res.data قرار می‌دهد
       const data = res.data;
 
-      // بررسی درصد تخفیف بازگشتی
-      if (!data?.percent) {
-        throw new Error(data?.message || "کد تخفیف نامعتبر است");
+      if (!data.success) {
+        toast.error(data.message || "کد تخفیف نامعتبر است");
+        return;
       }
 
-      setAppliedDiscount(data.percent);
-      toast.success(`کد تخفیف ${data.percent}% اعمال شد`);
+      // 2️⃣ ذخیره درصد تخفیف
+      setAppliedDiscount(data.data.percent);
+
+      // 3️⃣ آپدیت فاکتور (مهم)
+      setInvoice(data.data.invoice);
+
+      toast.success(`کد تخفیف ${data.data.percent}% اعمال شد`);
     } catch (err: any) {
-      const message =
-        err.response?.data?.message || err.message || "خطا در بررسی کد تخفیف";
-      toast.error(message);
+      toast.error(err?.response?.data?.message || "خطا در بررسی کد تخفیف");
     } finally {
       setIsLoading(false);
     }
@@ -152,7 +161,6 @@ export default function Checkout() {
         amount_irr: invoice?.total_amount_irr,
         chatbot_uuid: currentBot?.uuid,
         subscription_plan: getPlanIdByCode(selectedPlan.plan),
-        // subscription_type: selectedPlan.billingPeriod,
         subscription_type: selectedPlan.periods,
 
         description: selectedPlan.description,

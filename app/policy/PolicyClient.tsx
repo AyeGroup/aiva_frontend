@@ -221,7 +221,7 @@ const PolicyClient = () => (
     <ul className="list-disc pr-6 space-y-2 text-justify">
       <li>
         این قرارداد تحت حاکمیت <strong>قوانین جمهوری اسلامی ایران</strong> تنظیم
-        شده است. آیوا حق
+        شده است. 
       </li>
       <li>
         مرجع صالح رسیدگی به هرگونه اختلاف،

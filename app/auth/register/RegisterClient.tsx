@@ -58,11 +58,12 @@ export default function RegisterClient() {
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    if (/[آ-ی]/.test(value)) {
-      setWarning("رمز عبور نباید شامل کاراکتر فارسی باشد!");
-    } else {
-      setWarning("");
-    }
+if (/[آ-ی\u06F0-\u06F9]/.test(value)) {
+  setWarning("رمز عبور نباید شامل حروف یا اعداد فارسی باشد!");
+} else {
+  setWarning("");
+}
+
     // Clear errors on valid input
     if (errors[field]) {
       const newErrors = { ...errors };
