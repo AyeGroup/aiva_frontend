@@ -226,27 +226,36 @@ export default function CrawlLevel2({
 
   const handleSave = async () => {
     if (!chatbot?.uuid) return;
-
-    const selectedUrl = getSelectedUrls(tree, checkedMap);
-    if (selectedUrl.length === 0) {
-      toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
-      return;
-    }
-
-    const res = await axiosInstance.post(
-      API_ROUTES.BOTS.CRAWL_BATCH(chatbot.uuid),
-      {
-        urls: selectedUrl, // 👈 دقیقاً آرایه urls
+    try {
+      const selectedUrl = getSelectedUrls(tree, checkedMap);
+      if (selectedUrl.length === 0) {
+        toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
+        return;
       }
-    );
 
-    if (!res.data?.success) {
-      toast.error("خطا در دریافت لینک‌ها");
-      return;
+      const res = await axiosInstance.post(
+        API_ROUTES.BOTS.CRAWL_BATCH(chatbot.uuid),
+        { urls: selectedUrl }
+      );
+
+      if (!res.data?.success) {
+        toast.error("خطا در دریافت لینک‌ها");
+        return;
+      }
+
+      toast.success("لینک‌ها ثبت شدند");
+      onClose(true);
+    } catch (err: any) {
+      const backendMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.response?.data?.msg;
+      if (backendMessage) {
+        toast.error(backendMessage);
+      } else {
+        toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
+      }
     }
-
-    toast.success("لینک‌ها ثبت شدند");
-    onClose(true);
   };
 
   const isValidUrl = (value: string) => {

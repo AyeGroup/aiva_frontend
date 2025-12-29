@@ -20,11 +20,23 @@ export function ChatbotList({
   const [internalSelected, setInternalSelected] = useState<BotConfig | null>(
     selectedBot || null
   );
-
-  // همگام‌سازی با prop selectedBot
   useEffect(() => {
-    setInternalSelected(selectedBot || null);
-  }, [selectedBot]);
+    console.log("selectedBot", selectedBot);
+    if (!selectedBot) {
+      setInternalSelected(null);
+      return;
+    }
+
+    const matchedBot = bots.find((b) => String(b.uuid).toLowerCase() === String(selectedBot.uuid).toLowerCase());
+
+    console.log("bots", bots);
+    console.log("matchedBot", matchedBot);
+    if (matchedBot) {
+      setInternalSelected(matchedBot);
+    } else {
+      setInternalSelected(selectedBot);
+    }
+  }, [selectedBot, bots]);
 
   const handleSelect = (chatbot: BotConfig | null) => {
     setInternalSelected(chatbot);

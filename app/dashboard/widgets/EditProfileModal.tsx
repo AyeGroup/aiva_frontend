@@ -65,6 +65,24 @@ export function EditProfileModal({
   const handleLogoUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+
+    
+    const maxSize = 1 * 1024 * 1024; // 3MB
+    if (file.size > maxSize) {
+      toast.warning("حجم فایل نباید بیشتر از یک مگابایت باشد  ");
+      e.target.value = "";
+      return;
+    }
+
+    const allowedTypes = ["image/png", "image/jpeg", "image/svg+xml"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.warning("فقط فایل‌های PNG، JPG یا SVG مجاز هستند");
+      e.target.value = "";
+      return;
+    }
+
+
     const previewUrl = URL.createObjectURL(file);
 
     setForm((prev) => ({
@@ -133,8 +151,15 @@ export function EditProfileModal({
                 />
               )}
 
-              <Input type="file" accept="image/*" onChange={handleLogoUpload} />
+              <Input
+                type="file"
+                accept=".png,.jpg,.jpeg,.svg"
+                onChange={handleLogoUpload}
+              />
             </div>
+              <p className="text-grey-500 text-xs">
+                PNG، JPG یا SVG • حداکثر یک مگابایت
+              </p>
           </div>
 
           {/* Full name */}

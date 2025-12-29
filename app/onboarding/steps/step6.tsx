@@ -568,6 +568,7 @@ export function WizardStep6({
                   <p className="text-grey-500 text-xs">
                     PNG، JPG یا SVG • حداکثر ۳ مگابایت
                   </p>
+                  
                 </div>
                 <button
                   type="button"

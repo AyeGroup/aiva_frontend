@@ -9,7 +9,7 @@ import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { PlanCard } from "../widgets/plan-card";
 import { BotConfig } from "@/types/common";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { WalletCard } from "../widgets/wallet-card";
 import { ChatbotList } from "../widgets/chatbot-list";
@@ -29,7 +29,6 @@ export function Billing() {
   const { bots } = useBot();
   const { user, loading } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const maxDays = 7;
   const maxCredit = 85;
   const [showDiscountHint, setShowDiscountHint] = useState(true);
@@ -145,6 +144,7 @@ export function Billing() {
       },
     ];
   };
+
   const handlePeriodChange = (
     planCode: string,
     newPeriod: "monthly" | "yearly"
@@ -191,6 +191,24 @@ export function Billing() {
   const handleUpgrade = (chatbot: any) => {
     setSelectedChatbot(chatbot);
     setIsCreditIncreaseModalOpen(true);
+  };
+
+  const handlePlan = (chatbotId: string) => {
+    // console.log("sara", chatbot);
+
+    // ذخیره timeout برای کنترل بهتر
+
+    const matchedBot = bots.find((b) => b.uuid === chatbotId);
+    if (!matchedBot) return;
+
+    setBillingBot(matchedBot);
+
+    sessionStorage.setItem("scrollTo", "chooseplan");
+
+    requestAnimationFrame(() => {
+      const el = document.getElementById("chooseplan");
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   };
 
   return (
@@ -391,91 +409,117 @@ export function Billing() {
                                 {plan.chatbot_name}
                               </span>
                             </div>
-
-                            <span
-                              className="px-2 py-1 rounded-lg text-xs"
-                              style={{
-                                backgroundColor: `${
-                                  PLAN_COLORS_BYID[plan.subscription?.plan]
-                                }15`,
-                                color: PLAN_COLORS_BYID[plan.subscription?.plan],
-                              }}
-                            >
-                              {getPlanNameById(plan.subscription?.plan)}
-                            </span>
-                          </div>
-
-                          {/* کاراکتر مصرفی */}
-                          <div className="mb-3">
-                            <div className="flex items-center justify-between text-xs mb-1">
-                              <span className="text-grey-700">
-                                {new Intl.NumberFormat("fa-IR").format(
-                                  plan.subscription?.total_characters -
-                                    plan.subscription?.remaining_upload_chars
-                                )}{" "}
-                                /
-                                {new Intl.NumberFormat("fa-IR").format(
-                                  plan.subscription?.total_characters
-                                )}
-                              </span>
-                              <span className="text-grey-500">
-                                {creditPercent.toLocaleString("fa-IR")}٪
-                              </span>
-                            </div>
-
-                            <div className="w-full h-1.5 bg-grey-100 rounded-full">
-                              <div
-                                className="h-full rounded-full"
+                            {plan.subscription && (
+                              <span
+                                className="px-2 py-1 rounded-lg text-xs"
                                 style={{
-                                  width: `${creditPercent}%`,
-                                  backgroundColor:
-                                    creditPercent > 90
-                                      ? "#ef4444"
-                                      : creditPercent > 70
-                                      ? "#FFA18E"
-                                      : planColor,
+                                  backgroundColor: `${
+                                    PLAN_COLORS_BYID[plan.subscription?.plan]
+                                  }15`,
+                                  color:
+                                    PLAN_COLORS_BYID[plan.subscription?.plan],
                                 }}
-                              />
-                            </div>
-                          </div>
-                          <div className="flex my-5 items-center justify-between gap-1 sm:gap-2">
-                            <div className="flex gap-1 items-center justify-start text-grey-700 text-xs sm:text-sm">
-                              اعتبار:
-                              <span className="">
-                                {new Intl.NumberFormat("fa-IR").format(
-                                  plan.subscription?.balance
-                                )}
+                              >
+                                {getPlanNameById(plan.subscription?.plan)}
                               </span>
-                              تومان
-                            </div>
-                            <span className="text-grey-500 text-xs">
-                              ({fileCharPercent.toLocaleString("fa-IR")}٪)
-                            </span>
+                            )}
                           </div>
-                          {/* انقضا */}
-                          <div className="flex items-center justify-between mb-3 text-xs">
-                            <span className="text-grey-600">
-                              انقضا:{" "}
-                              {new Date(
-                                plan.subscription?.end_date
-                              ).toLocaleDateString("fa-IR")}
-                            </span>
-                            <span className="text-grey-600">
-                              {getDaysRemaining(
-                                plan.subscription?.end_date
-                              ).toLocaleString("fa-IR")}{" "}
-                              روز مانده
-                            </span>
-                          </div>
+                          {/* کاراکتر مصرفی */}
+                          {plan.subscription && (
+                            <div className="mb-3">
+                              <div className="flex items-center justify-between text-xs mb-1">
+                                <span className="text-grey-700">
+                                  {new Intl.NumberFormat("fa-IR").format(
+                                    plan.subscription?.total_characters ||
+                                      0 -
+                                        plan.subscription
+                                          ?.remaining_upload_chars ||
+                                      0
+                                  )}{" "}
+                                  /
+                                  {new Intl.NumberFormat("fa-IR").format(
+                                    plan.subscription?.total_characters || 0
+                                  )}
+                                </span>
+                                <span className="text-grey-500">
+                                  {creditPercent.toLocaleString("fa-IR")}٪
+                                </span>
+                              </div>
 
-                          <button
-                            disabled={plan.subscription?.plan == "0"}
-                            title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
-                            onClick={() => handleUpgrade(plan)}
-                            className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                          >
-                            افزایش اعتبار
-                          </button>
+                              <div className="w-full h-1.5 bg-grey-100 rounded-full">
+                                <div
+                                  className="h-full rounded-full"
+                                  style={{
+                                    width: `${creditPercent}%`,
+                                    backgroundColor:
+                                      creditPercent > 90
+                                        ? "#ef4444"
+                                        : creditPercent > 70
+                                        ? "#FFA18E"
+                                        : planColor,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {plan.subscription && (
+                            <div className="flex my-5 items-center justify-between gap-1 sm:gap-2">
+                              <div className="flex gap-1 items-center justify-start text-grey-700 text-xs sm:text-sm">
+                                اعتبار:
+                                <span className="">
+                                  {new Intl.NumberFormat("fa-IR").format(
+                                    plan.subscription?.balance || 0
+                                  )}
+                                </span>
+                                تومان
+                              </div>
+                              <span className="text-grey-500 text-xs">
+                                ({fileCharPercent.toLocaleString("fa-IR")}٪)
+                              </span>
+                            </div>
+                          )}
+                          {/* انقضا */}
+                          {plan.subscription ? (
+                            <div className="flex items-center justify-between mb-3 text-xs">
+                              <span className="text-grey-600">
+                                انقضا:{" "}
+                                {new Date(
+                                  plan.subscription?.end_date || ""
+                                ).toLocaleDateString("fa-IR")}
+                              </span>
+                              <span className="text-grey-600">
+                                {getDaysRemaining(
+                                  plan.subscription?.end_date
+                                ).toLocaleString("fa-IR")}{" "}
+                                روز مانده
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="text-sm font-medium text-secondary mr-6 mb-3">
+                              منقضی
+                            </div>
+                          )}
+                          {!plan.subscription ||
+                          plan.subscription?.plan == "0" ? (
+                            <button
+                              // disabled={plan.subscription?.plan == "0"}
+                              title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
+                              onClick={() => handlePlan(plan?.chatbot_uuid)}
+                              className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                            >
+                              ارتقای پلن
+                            </button>
+                          ) : (
+                            <button
+                              // disabled={plan.subscription?.plan == "0"}
+                              title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
+                              onClick={() => handleUpgrade(plan)}
+                              className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                            >
+                              افزایش اعتبار
+                            </button>
+                          )}
                         </div>
                       );
                     })}
@@ -507,8 +551,9 @@ export function Billing() {
                     <tbody>
                       {activeSubscrp.map((plan, index) => {
                         const creditPercent = Math.round(
-                          ((plan.subscription?.total_characters -
-                            plan.subscription?.remaining_upload_chars) /
+                          ((plan.subscription?.total_characters ||
+                            0 - plan.subscription?.remaining_upload_chars ||
+                            0) /
                             plan.subscription?.total_characters) *
                             100
                         );
@@ -517,9 +562,8 @@ export function Billing() {
                             ?.primary_color || "";
 
                         const fileCharPercent = Math.round(
-                          (plan.subscription?.balance /
-                            plan.subscription?.balance) *
-                            100
+                          (plan.subscription?.balance ||
+                            0 / plan.subscription?.balance) * 100
                         );
 
                         return (
@@ -552,103 +596,137 @@ export function Billing() {
                             </td>
 
                             <td className="px-2 sm:px-4 py-3">
-                              <span
-                                className="inline-block px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm whitespace-nowrap"
-                                style={{
-                                  backgroundColor: `${
-                                    PLAN_COLORS_BYID[plan.subscription?.plan]
-                                  }15`,
-                                  color:
-                                    PLAN_COLORS_BYID[plan.subscription?.plan],
-                                }}
-                              >
-                                {getPlanNameById(plan.subscription?.plan)}
-                              </span>
+                              {plan.subscription && (
+                                <span
+                                  className="inline-block px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm whitespace-nowrap"
+                                  style={{
+                                    backgroundColor: `${
+                                      PLAN_COLORS_BYID[plan.subscription?.plan]
+                                    }15`,
+                                    color:
+                                      PLAN_COLORS_BYID[plan.subscription?.plan],
+                                  }}
+                                >
+                                  {getPlanNameById(plan.subscription?.plan)}
+                                </span>
+                              )}
                             </td>
 
                             <td className="px-2 sm:px-4 py-3">
-                              <div className="flex flex-col gap-1.5 min-w-[120px]">
-                                <div className="flex items-center justify-between gap-2">
-                                  <span className="text-grey-900 text-xs sm:text-sm">
+                              {plan.subscription && (
+                                <div className="flex flex-col gap-1.5 min-w-[120px]">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className="text-grey-900 text-xs sm:text-sm">
+                                      {new Intl.NumberFormat("fa-IR").format(
+                                        plan.subscription?.total_characters ||
+                                          0 -
+                                            plan.subscription
+                                              ?.remaining_upload_chars ||
+                                          0
+                                      )}{" "}
+                                      /{" "}
+                                      {new Intl.NumberFormat("fa-IR").format(
+                                        plan.subscription?.total_characters || 0
+                                      )}
+                                    </span>
+                                    <span className="text-grey-500 text-xs">
+                                      {creditPercent.toLocaleString("fa-IR") ||
+                                        0}
+                                      ٪
+                                    </span>
+                                  </div>
+                                  <div
+                                    className="w-full rounded-full overflow-hidden"
+                                    style={{
+                                      height: "4px",
+                                      backgroundColor: "rgba(0, 0, 0, 0.05)",
+                                    }}
+                                  >
+                                    <div
+                                      className="h-full rounded-full billing-progress-bar"
+                                      style={{
+                                        width: `${creditPercent}%`,
+                                        backgroundColor:
+                                          creditPercent > 90
+                                            ? "#ef4444"
+                                            : creditPercent > 70
+                                            ? "#FFA18E"
+                                            : planColor,
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </td>
+
+                            <td className="px-2 sm:px-4 py-3">
+                              {plan.subscription && (
+                                <div className="flex items-center gap-1 sm:gap-2">
+                                  <span className="text-grey-700 text-xs sm:text-sm">
                                     {new Intl.NumberFormat("fa-IR").format(
-                                      plan.subscription?.total_characters -
-                                        plan.subscription?.remaining_upload_chars
-                                    )}{" "}
-                                    /{" "}
-                                    {new Intl.NumberFormat("fa-IR").format(
-                                      plan.subscription?.total_characters
+                                      plan.subscription?.balance || 0
                                     )}
                                   </span>
                                   <span className="text-grey-500 text-xs">
-                                    {creditPercent.toLocaleString("fa-IR")}٪
+                                    (
+                                    {fileCharPercent.toLocaleString("fa-IR") ||
+                                      0}
+                                    ٪)
                                   </span>
                                 </div>
-                                <div
-                                  className="w-full rounded-full overflow-hidden"
-                                  style={{
-                                    height: "4px",
-                                    backgroundColor: "rgba(0, 0, 0, 0.05)",
-                                  }}
-                                >
-                                  <div
-                                    className="h-full rounded-full billing-progress-bar"
-                                    style={{
-                                      width: `${creditPercent}%`,
-                                      backgroundColor:
-                                        creditPercent > 90
-                                          ? "#ef4444"
-                                          : creditPercent > 70
-                                          ? "#FFA18E"
-                                          : planColor,
-                                    }}
-                                  />
+                              )}
+                            </td>
+
+                            <td className="px-2 sm:px-4 py-3">
+                              {!plan.subscription ? (
+                                <div className="text-sm text-secondary font-medium">
+                                  منقضی
                                 </div>
-                              </div>
-                            </td>
-
-                            <td className="px-2 sm:px-4 py-3">
-                              <div className="flex items-center gap-1 sm:gap-2">
-                                <span className="text-grey-700 text-xs sm:text-sm">
-                                  {new Intl.NumberFormat("fa-IR").format(
-                                    plan.subscription?.balance
-                                  )}
-                                </span>
-                                <span className="text-grey-500 text-xs">
-                                  ({fileCharPercent.toLocaleString("fa-IR")}٪)
-                                </span>
-                              </div>
-                            </td>
-
-                            <td className="px-2 sm:px-4 py-3">
-                              <div className="flex flex-col gap-1">
-                                <time
-                                  dateTime={plan.subscription?.end_date}
-                                  className="text-grey-900 text-xs sm:text-sm whitespace-nowrap"
-                                >
-                                  {new Date(
-                                    plan.subscription?.end_date
-                                  ).toLocaleDateString("fa-IR")}
-                                </time>
-                                <span className="text-grey-600 text-xs whitespace-nowrap">
-                                  {getDaysRemaining(
-                                    plan.subscription?.end_date
-                                  ).toLocaleString("fa-IR")}{" "}
-                                  روز مانده
-                                </span>
-                              </div>
+                              ) : (
+                                <div className="flex flex-col gap-1">
+                                  <time
+                                    dateTime={plan.subscription?.end_date}
+                                    className="text-grey-900 text-xs sm:text-sm whitespace-nowrap"
+                                  >
+                                    {new Date(
+                                      plan.subscription?.end_date
+                                    ).toLocaleDateString("fa-IR")}
+                                  </time>
+                                  <span className="text-grey-600 text-xs whitespace-nowrap">
+                                    {getDaysRemaining(
+                                      plan.subscription?.end_date
+                                    ).toLocaleString("fa-IR")}{" "}
+                                    روز مانده
+                                  </span>
+                                </div>
+                              )}
                             </td>
 
                             <td className="px-2 sm:px-4 py-3">
                               <div className="flex items-center justify-center">
-                                <button
-                                  disabled={plan.subscription?.plan == "0"}
-                                  onClick={() => handleUpgrade(plan)}
-                                  className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                  title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
-                                  type="button"
-                                >
-                                  افزایش اعتبار
-                                </button>
+                                {plan.subscription &&
+                                plan.subscription?.plan != "0" ? (
+                                  <button
+                                    disabled={plan.subscription?.plan == "0"}
+                                    onClick={() => handleUpgrade(plan)}
+                                    className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                    title=" افزایش اعتبار"
+                                    type="button"
+                                  >
+                                    افزایش اعتبار
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() =>
+                                      handlePlan(plan?.chatbot_uuid)
+                                    }
+                                    className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                    type="button"
+                                    title=" ارتقای پلن"
+                                  >
+                                    ارتقای پلن
+                                  </button>
+                                )}
                               </div>
                             </td>
                           </tr>
