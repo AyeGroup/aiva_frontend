@@ -188,7 +188,11 @@ export function Sidebar({
         >
           <div
             className="w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold"
-            style={{ backgroundColor: "#FFA18E" }}
+            style={
+              !preview
+                ? { backgroundColor: "#FFA18E" }
+                : { backgroundColor: "transparent" }
+            }
           >
             {preview ? (
               <Image

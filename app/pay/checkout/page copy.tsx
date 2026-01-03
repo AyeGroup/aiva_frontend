@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/checkbox";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { convertToPersian } from "@/utils/common";
-import { ArrowRight, Tag, Receipt, CreditCard, Wallet } from "lucide-react";
+import { ArrowRight, Tag, Receipt, CreditCard } from "lucide-react";
 import {
   getFaNameByCode,
   getPlanIdByCode,
@@ -17,8 +17,6 @@ import {
   PLAN_COLORS,
   SUBSCRIPTION_TYPES,
 } from "@/constants/plans";
-
-type PaymentMethod = "wallet" | "online";
 
 export default function Checkout() {
   const [discountCode, setDiscountCode] = useState("");
@@ -31,34 +29,7 @@ export default function Checkout() {
   const [discountMessage, setDiscountMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [invoice, setInvoice] = useState<any>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("online");
-  const [walletBalance, setWalletBalance] = useState<number>(0);
-  const [isLoadingWallet, setIsLoadingWallet] = useState(false);
   const router = useRouter();
-
-  // دریافت موجودی کیف پول
-  useEffect(() => {
-    const fetchWalletBalance = async () => {
-      try {
-        setIsLoadingWallet(true);
-        const res = await axiosInstance.get(
-          API_ROUTES.FINANCIAL.WALLET
-        );
-        const data = res?.data;
-
-        if (data?.success) {
-          // موجودی به تومان است، پس به ریال تبدیل می‌کنیم
-          setWalletBalance((data?.data?.wallet_balance || 0) * 10);
-        }
-      } catch (err: any) {
-        console.error("خطا در دریافت موجودی کیف پول:", err);
-      } finally {
-        setIsLoadingWallet(false);
-      }
-    };
-
-    fetchWalletBalance();
-  }, []);
 
   useEffect(() => {
     const fetchPlanAndInvoice = async () => {
@@ -70,13 +41,16 @@ export default function Checkout() {
 
       const parsed = JSON.parse(planData);
       setSelectedPlan(parsed);
-
+      // console.log("parsed", parsed);
+      // discount_code:"dis101",
+      // use_wallet:"false",
       try {
         setIsLoading(true);
         const invoicePayload = {
           purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
           subscription_type: parsed.periods,
           subscription_plan: getPlanIdByCode(parsed.plan),
+
           amount_irr:
             parsed.periods === "monthly"
               ? parsed.price_monthly_irr
@@ -94,9 +68,11 @@ export default function Checkout() {
           return;
         }
 
+        // فاکتور را در state ذخیره کنید
         setInvoice(data.data);
       } catch (err: any) {
         const serverMessage = err?.response?.data?.message;
+        // console.log("a", serverMessage);
         if (serverMessage == "Downgrading subscription is not allowed") {
           toast.error("تغییر اشتراک به سطح پایین‌تر مجاز نیست.");
           const returnUrl = localStorage.getItem("returnUrl");
@@ -115,6 +91,55 @@ export default function Checkout() {
     fetchPlanAndInvoice();
   }, [router]);
 
+  const handleApplyDiscount1 = async () => {
+    if (!discountCode.trim()) {
+      toast.error("کد تخفیف را وارد کنید");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const res = await axiosInstance.post(
+        API_ROUTES.FINANCIAL.DISCOUNT_VALIDATE,
+        {
+          code: discountCode,
+          amount: 1,
+        }
+      );
+
+      const data = res.data;
+
+      if (!data.success || data.is_valid !== "true") {
+        setDiscountMessage(data.message || "کد تخفیف نامعتبر است");
+        return;
+      } else {
+        setDiscountMessage(data.message);
+      }
+      // "is_valid": true,
+      //     "message": "کد تخفیف معتبر است",
+      //     "discount_code_id": 4,
+      //     "discount_amount": 0,
+      //     "final_amount": 1,
+      //     "discount_details": {
+      //       "discount_type": "percentage",
+      //       "discount_value": 10,
+      //       "max_discount_amount": 100000
+      //     }
+      // 2️⃣ ذخیره درصد تخفیف
+      setAppliedDiscount(data.data.discount_details.discount_value);
+
+      setInvoice(data.data.invoice);
+
+      setDiscountMessage(`کد تخفیف ${data.data.percent}% اعمال شد`);
+    } catch (err: any) {
+      setDiscountMessage(
+        err?.response?.data?.message || "خطا در بررسی کد تخفیف"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const handleApplyDiscount = async () => {
     if (!discountCode.trim()) {
       toast.error("کد تخفیف را وارد کنید");
@@ -129,6 +154,7 @@ export default function Checkout() {
     try {
       setIsLoading(true);
 
+      // 1️⃣ اعتبارسنجی کد تخفیف
       const validateRes = await axiosInstance.post(
         API_ROUTES.FINANCIAL.DISCOUNT_VALIDATE,
         {
@@ -138,12 +164,14 @@ export default function Checkout() {
       );
 
       const validateData = validateRes.data;
+      console.log("validateData", validateData);
 
       if (!validateData?.success || validateData?.data?.is_valid !== true) {
         setDiscountMessage(validateData?.message || "کد تخفیف نامعتبر است");
         return;
       }
 
+      //   ساخت مجدد فاکتور با کد تخفیف
       const invoicePayload = {
         purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
         subscription_type: selectedPlan.periods,
@@ -155,7 +183,7 @@ export default function Checkout() {
         chatbot_uuid: selectedPlan?.billingBot?.uuid,
         discount_code: discountCode,
       };
-
+      console.log("invoicePayload", invoicePayload);
       const invoiceRes = await axiosInstance.post(
         API_ROUTES.PAYMENT.FACTOR,
         invoicePayload
@@ -168,8 +196,13 @@ export default function Checkout() {
         return;
       }
 
+      // 3️⃣ ست کردن فاکتور جدید
       setInvoice(invoiceData.data);
+
+      // 4️⃣ فقط برای UI
       const discountPercent = invoiceData.data.discount_amount || 0;
+      // validateData?.data?.discount_details?.discount_value || 0;
+
       setAppliedDiscount(discountPercent);
       setDiscountMessage("کد تخفیف با موفقیت اعمال شد");
     } catch (err: any) {
@@ -191,16 +224,7 @@ export default function Checkout() {
       if (!companyName.trim()) return toast.error("نام شرکت الزامی است");
       if (!nationalId.trim()) return toast.error("شناسه ملی الزامی است");
     }
-
-    // بررسی موجودی کیف پول
-    if (paymentMethod === "wallet") {
-      const finalAmount = invoice?.final_amount_irr || 0;
-      if (walletBalance < finalAmount) {
-        toast.error("موجودی کیف پول کافی نیست");
-        return;
-      }
-    }
-
+    // console.log("invoice",invoice)
     try {
       setIsLoading(true);
 
@@ -214,7 +238,7 @@ export default function Checkout() {
         subscription_type: invoice?.subscription_type,
         description: invoice.description,
         discount_code: discountCode,
-        use_wallet: paymentMethod === "wallet",
+        use_wallet: false,
       };
 
       const res = await axiosInstance.post(
@@ -232,14 +256,8 @@ export default function Checkout() {
       localStorage.setItem("lastInvoiceId", invoiceId);
       localStorage.setItem(`invoice-${invoiceId}`, JSON.stringify(data.data));
 
-      // اگر پرداخت با کیف پول بود، ممکن است نیازی به انتقال به درگاه نباشد
-      if (paymentMethod === "wallet" && data.data.payment_completed) {
-        toast.success("پرداخت با موفقیت از کیف پول انجام شد");
-        router.push("/dashboard?tab=billing");
-      } else {
-        toast.success("فاکتور با موفقیت ایجاد شد. در حال انتقال به درگاه...");
-        router.push(data.data.gateway_url);
-      }
+      toast.success("فاکتور با موفقیت ایجاد شد. در حال انتقال به درگاه...");
+      router.push(data.data.gateway_url);
     } catch (err: any) {
       toast.error(err.message || "خطا در اتصال به درگاه پرداخت");
     } finally {
@@ -248,10 +266,6 @@ export default function Checkout() {
   };
 
   if (!isPlanLoaded) return <PageLoader />;
-
-  const finalAmount = invoice?.final_amount_irr || 0;
-  // موجودی کیف پول به ریال است، پس باید با مبلغ نهایی (که به ریال است) مقایسه شود
-  const canPayWithWallet = walletBalance >= finalAmount;
 
   return (
     <div className="min-h-screen bg-grey-50 py-12 px-4">
@@ -297,6 +311,9 @@ export default function Checkout() {
                     </div>
                     <div className="text-left">
                       <p className="text-grey-900">
+                        {/* {(invoice?.base_amount_irr || "").toLocaleString(
+                          "fa-IR"
+                        )}{" "} */}
                         {((invoice?.base_amount_irr || 0) / 10).toLocaleString(
                           "fa-IR"
                         )}{" "}
@@ -346,95 +363,12 @@ export default function Checkout() {
                 )}
               </Card>
             </section>
-
             {/* نوع پرداخت */}
             <section>
               <Card className="p-6">
-                <h2 className="text-grey-900 mb-4 flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" /> روش پرداخت
-                </h2>
-                <div className="space-y-3">
-                  {/* کیف پول */}
-                  <div
-                    onClick={() =>
-                      canPayWithWallet && setPaymentMethod("wallet")
-                    }
-                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                      paymentMethod === "wallet"
-                        ? "border-[#65BCB6] bg-[rgba(101,188,182,0.05)]"
-                        : "border-grey-200 hover:border-grey-300"
-                    } ${
-                      !canPayWithWallet ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                            paymentMethod === "wallet"
-                              ? "border-[#65BCB6] bg-[#65BCB6]"
-                              : "border-grey-300"
-                          }`}
-                        >
-                          {paymentMethod === "wallet" && (
-                            <div className="w-2.5 h-2.5 rounded-full bg-white" />
-                          )}
-                        </div>
-                        <Wallet className="w-5 h-5 text-grey-600" />
-                        <div>
-                          <p className="text-grey-900 font-medium">کیف پول</p>
-                          <p className="text-grey-500 text-sm">
-                            موجودی:{" "}
-                            {isLoadingWallet
-                              ? "..."
-                              : (walletBalance / 10).toLocaleString(
-                                  "fa-IR"
-                                )}{" "}
-                            تومان
-                          </p>
-                        </div>
-                      </div>
-                      {!canPayWithWallet && (
-                        <span className="text-red-500 text-sm">
-                          موجودی ناکافی
-                        </span>
-                      )}
-                    </div>
-                  </div>
+               {/* کیف پول */}
 
-                  {/* پرداخت آنلاین */}
-                  <div
-                    onClick={() => setPaymentMethod("online")}
-                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                      paymentMethod === "online"
-                        ? "border-[#65BCB6] bg-[rgba(101,188,182,0.05)]"
-                        : "border-grey-200 hover:border-grey-300"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                          paymentMethod === "online"
-                            ? "border-[#65BCB6] bg-[#65BCB6]"
-                            : "border-grey-300"
-                        }`}
-                      >
-                        {paymentMethod === "online" && (
-                          <div className="w-2.5 h-2.5 rounded-full bg-white" />
-                        )}
-                      </div>
-                      <CreditCard className="w-5 h-5 text-grey-600" />
-                      <div>
-                        <p className="text-grey-900 font-medium">
-                          پرداخت آنلاین
-                        </p>
-                        <p className="text-grey-500 text-sm">
-                          پرداخت با کارت بانکی
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+               {/* آنلاین */}
               </Card>
             </section>
           </div>
@@ -450,6 +384,8 @@ export default function Checkout() {
                 <div className="flex justify-between items-center">
                   <span className="text-grey-600">مبلغ پایه</span>
                   <span>
+                    {/* {(invoice?.base_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                    ريال */}
                     {((invoice?.base_amount_irr || 0) / 10).toLocaleString(
                       "fa-IR"
                     )}{" "}
@@ -473,6 +409,8 @@ export default function Checkout() {
                     مالیات ({convertToPersian(invoice?.tax_percentage || "")}%)
                   </span>
                   <span>
+                    {/* {(invoice?.tax_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                    ريال */}
                     {((invoice?.tax_amount_irr || 0) / 10).toLocaleString(
                       "fa-IR"
                     )}{" "}
@@ -513,6 +451,8 @@ export default function Checkout() {
               <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-gradient-to-br from-grey-50 to-white border-2 border-grey-200">
                 <span>مبلغ قابل پرداخت</span>
                 <span className="text-xl font-bold text-[#65BCB6]">
+                  {/* {(invoice?.total_amount_irr || "").toLocaleString("fa-IR")}{" "}
+                  ريال */}
                   {((invoice?.final_amount_irr || 0) / 10).toLocaleString(
                     "fa-IR"
                   )}{" "}
@@ -522,18 +462,10 @@ export default function Checkout() {
 
               <button
                 onClick={handleProceedToPayment}
-                disabled={
-                  isLoading ||
-                  !selectedPlan ||
-                  (paymentMethod === "wallet" && !canPayWithWallet)
-                }
-                className="w-full py-4 rounded-2xl cursor-pointer bg-linear-to-br from-[#65BCB6] to-[#5AA8A2] text-white hover:from-[#5AA8A2] hover:to-[#4E9690] transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isLoading || !selectedPlan}
+                className="w-full py-4 rounded-2xl cursor-pointer bg-linear-to-br from-[#65BCB6] to-[#5AA8A2] text-white hover:from-[#5AA8A2] hover:to-[#4E9690] transition-all duration-300 shadow-lg"
               >
-                {isLoading
-                  ? "در حال پردازش..."
-                  : paymentMethod === "wallet"
-                  ? "پرداخت از کیف پول"
-                  : "پرداخت آنلاین"}
+                {isLoading ? "در حال پردازش..." : "پرداخت "}
               </button>
             </Card>
           </div>

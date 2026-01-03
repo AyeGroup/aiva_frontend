@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import axiosInstance from "@/lib/axiosInstance";
-import { User } from "lucide-react";
+import { Check, CheckCheck, TicketCheck, User, X } from "lucide-react";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/dialog";
+import { Tick } from "@/public/icons/AppIcons";
 
 export interface ProfileForm {
   full_name: string | null;
@@ -28,16 +29,18 @@ interface EditProfileModalProps {
   open: boolean;
   data: any;
   onClose: () => void;
- onSaved: () => void;  
-} 
+  onSaved: () => void;
+}
 
 export function EditProfileModal({
   open,
   data,
-  onClose,onSaved
+  onClose,
+  onSaved,
 }: EditProfileModalProps) {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<ProfileForm>({
     full_name: "",
@@ -49,7 +52,7 @@ export function EditProfileModal({
 
   useEffect(() => {
     if (!open || !data) return;
-
+    console.log("data", data);
     setForm({
       full_name: data.full_name ?? "",
       company_name: data.company_name ?? "",
@@ -66,8 +69,6 @@ export function EditProfileModal({
     const file = e.target.files?.[0];
     if (!file) return;
 
-
-    
     const maxSize = 1 * 1024 * 1024; // 3MB
     if (file.size > maxSize) {
       toast.warning("حجم فایل نباید بیشتر از یک مگابایت باشد  ");
@@ -82,7 +83,6 @@ export function EditProfileModal({
       return;
     }
 
-
     const previewUrl = URL.createObjectURL(file);
 
     setForm((prev) => ({
@@ -95,7 +95,7 @@ export function EditProfileModal({
   // Save changes
   const handleSave = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const formData = new FormData();
       formData.append("full_name", form.full_name || "");
       formData.append("company_name", form.company_name || "");
@@ -110,20 +110,19 @@ export function EditProfileModal({
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("اطلاعات با موفقیت ذخیره شد.");
-   onSaved();
+      onSaved();
       onClose();
     } catch (err) {
       toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
       console.error("Error saving profile:", err);
-    }
-    finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md z-999">
+      <DialogContent className="max-w-md z-999 max-h-screen overflow-auto">
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center gap-2">
@@ -135,12 +134,10 @@ export function EditProfileModal({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
-          {/* Logo */}
-
-          <div>
-            <label className="block mb-1 text-sm">عکس پروفایل</label>
-            <div className="flex items-end gap-8 p-2">
+        <div className="gap-4 space-y-2">
+          <div className="bg-gray-100 rounded-lg p-4">
+            <div className="flex items-end justify-start gap-4 ">
+              <label className="block mb-1 text-sm">عکس پروفایل</label>
               {preview && (
                 <Image
                   src={preview}
@@ -151,17 +148,59 @@ export function EditProfileModal({
                 />
               )}
 
-              <Input
-                type="file"
-                accept=".png,.jpg,.jpeg,.svg"
-                onChange={handleLogoUpload}
-              />
+              <div onClick={() => fileInputRef.current?.click()}>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".png,.jpg,.jpeg,.svg"
+                  className="hidden"
+                  onChange={handleLogoUpload}
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fileInputRef.current?.click();
+                  }}
+                  className="cursor-pointer px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 text-sm"
+                >
+                  انتخاب فایل
+                </button>
+              </div>
             </div>
-              <p className="text-grey-500 text-xs">
-                PNG، JPG یا SVG • حداکثر یک مگابایت
-              </p>
+            <p className="text-grey-500 text-xs mt-4">
+              PNG، JPG یا SVG • حداکثر یک مگابایت
+            </p>
           </div>
 
+          <div className="flex items-center gap-2">
+            {data?.email_verified ? (
+              <Check className="text-primary" width={16}>
+                <title>ایمیل تأیید شده است</title>
+              </Check>
+            ) : (
+              <X className="text-secondary" width={16}>
+                <title>ایمیل تأیید نشده است</title>
+              </X>
+            )}
+
+            <label className="block mb-1 text-sm">ایمیل</label>
+            <label className="block mb-1 text-primary"> {data?.email}</label>
+          </div>
+          <div className="flex items-center gap-2">
+            {data?.phone_verified ? (
+              <Check className="text-primary" width={16}>
+                <title>موبایل تأیید شده است</title>
+              </Check>
+            ) : (
+              <X className="text-secondary" width={16}>
+                <title>موبایل تأیید نشده است</title>
+              </X>
+            )}
+
+            <label className="block mb-1 text-sm">موبایل</label>
+            <label className="block mb-1 text-primary"> {data?.phone}</label>
+          </div>
           {/* Full name */}
           <div>
             <label className="block mb-1 text-sm">نام و نام خانوادگی</label>
