@@ -26,6 +26,11 @@ export default function VerificationClient() {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [isResending, setIsResending] = useState(false);
   const [countdown, setCountdown] = useState(otpTime);
+  const focusFirstOtp = () => {
+    requestAnimationFrame(() => {
+      inputRefs.current[0]?.focus();
+    });
+  };
 
   // Countdown timer
   useEffect(() => {
@@ -38,6 +43,11 @@ export default function VerificationClient() {
   useEffect(() => {
     handleSendOtp();
   }, []);
+  useEffect(() => {
+    if (otp.every((d) => d === "")) {
+      inputRefs.current[0]?.focus();
+    }
+  }, [otp]);
 
   const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) return;
@@ -63,31 +73,45 @@ export default function VerificationClient() {
       handleVerify(newOtp.join(""));
     }
   };
+  const isValidEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  };
 
   const handleSendOtp = async () => {
-    const cleanedPhone = cleanPhoneNumber(phoneNumber);
+    try {
+      const cleanedPhone = cleanPhoneNumber(phoneNumber);
+      const verifyemail = isValidEmail(phoneNumber);
 
-    if (!cleanedPhone) {
-      toast.error(" شماره تلفن صحیح نیست");
-      return;
-    }
+      if (!cleanedPhone && !verifyemail) {
+        toast.error("شماره تلفن یا ایمیل صحیح نیست");
+        return;
+      }
 
-    if (cleanedPhone.length < 11) {
-      toast.error("لطفاً شماره تلفن معتبر وارد کنید");
-      return;
-    }
+      setIsLoading(true);
 
-    setIsLoading(true);
-    const res = await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
-      identity: phoneNumber,
-    });
-    if (res.status === 200) {
-    }
+      await axiosInstance.post(API_ROUTES.AUTH.SEND_CODE, {
+        identity: phoneNumber,
+      });
 
-    setTimeout(() => {
+      setOtp(["", "", "", "", ""]);
+      setCountdown(otpTime);
       setIsLoading(false);
-      toast.success("کد تایید به شماره شما ارسال شد");
-    }, 2000);
+      focusFirstOtp();
+
+      toast.success("کد تایید ارسال شد");
+    } catch (error: any) {
+      const backendMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "خطایی رخ داده است. لطفاً مجدداً تلاش کنید.";
+
+      setError(backendMessage);
+    }
+    finally{
+      setIsLoading(false);
+
+    }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
@@ -132,7 +156,7 @@ export default function VerificationClient() {
 
     try {
       const res = await axiosInstance.post(API_ROUTES.AUTH.VERIFY_PHONE, {
-        phone: phoneNumber,
+        identity: phoneNumber,
         code: codeToVerify,
       });
       if (res.status === 200) {
@@ -144,8 +168,12 @@ export default function VerificationClient() {
       }
     } catch (error: any) {
       setOtp(["", "", "", "", ""]);
-      if (error.response) setError(error.message);
-      else setError("خطایی رخ داده است. لطفاً مجدداً تلاش کنید.");
+      const backendMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "خطایی رخ داده است. لطفاً مجدداً تلاش کنید.";
+
+      setError(backendMessage);
     } finally {
       setIsSubmit(false);
     }
@@ -170,8 +198,14 @@ export default function VerificationClient() {
 
       // Show success message
       setError("");
-    } catch (error) {
-      setError("خطا در ارسال مجدد کد. لطفاً چند لحظه دیگر تلاش کنید.");
+    } catch (error: any) {
+      const backendMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "خطایی رخ داده است. لطفاً مجدداً تلاش کنید.";
+
+      setError(backendMessage);
+      // setError("خطا در ارسال مجدد کد. لطفاً چند لحظه دیگر تلاش کنید.");
     } finally {
       setIsResending(false);
     }
@@ -375,13 +409,14 @@ export default function VerificationClient() {
           <div className="w-full max-w-md">
             <div className="bg-white rounded-2xl p-4 shadow-lg border border-grey-200">
               <div className="text-center mb-8">
-                <h1 className="text-grey-900 mb-3">تأیید کد امنیتی</h1>
+                <h1 className="text-grey-900 font-semibold mb-3">
+                  تأیید کد امنیتی
+                </h1>
+                <span className="font-medium text-brand-primary mx-1">
+                  {contactInfo}
+                </span>
                 <p className="text-grey-600 leading-relaxed">
-                  کد ۵ رقمی ارسال شده به {contactType}
-                  <span className="font-medium text-brand-primary mx-1">
-                    {contactInfo}
-                  </span>
-                  را وارد کنید
+                  کد ۵ رقمی ارسال شده را وارد کنید
                 </p>
               </div>
 
@@ -431,7 +466,7 @@ export default function VerificationClient() {
               <button
                 onClick={() => handleVerify()}
                 disabled={isSubmit || otp.some((digit) => digit === "")}
-                className="w-full py-4 px-4 flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 px-4 flex items-center justify-center gap-2  text-white font-medium text-base rounded-lg border-none  bg-brand-primary hover:opacity-90 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isSubmit ? "در حال تأیید..." : "تأیید کد"}
               </button>
@@ -449,7 +484,7 @@ export default function VerificationClient() {
                   <button
                     onClick={handleResendCode}
                     disabled={isResending}
-                    className="text-brand-primary text-sm font-medium hover:text-brand-secondary transition-colors disabled:opacity-50"
+                    className="text-brand-primary text-sm font-medium hover:text-brand-secondary cursor-pointer transition-colors disabled:opacity-50"
                   >
                     {isResending ? "در حال ارسال..." : "ارسال مجدد کد"}
                   </button>

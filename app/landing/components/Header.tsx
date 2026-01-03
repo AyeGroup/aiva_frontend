@@ -56,17 +56,13 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-2">
+        <nav className="hidden md:flex items-center gap-2">
           {menuItems.map(({ label, href }) => (
             <a
               key={href}
               href={href}
               className="px-3 py-2 rounded-2xl transition-all duration-200 text-sm whitespace-nowrap text-gray-700 hover:text-[#65bcb6]"
-              // ${
-              //   active
-              //     ? "bg-gray-100 text-[#65bcb6]"
-              //     : "text-gray-700 hover:text-[#65bcb6]"
-              // }`}
+               
             >
               {label}
             </a>
@@ -163,18 +159,12 @@ export default function Header() {
               href={href}
               onClick={closeMenu}
               className="px-4 py-3 rounded-lg transition-all duration-200 text-right text-gray-700 hover:bg-gray-100 hover:text-[#65bcb6]"
-              // ${
-              //   active
-              //     ? "bg-gray-100 text-[#65bcb6]"
-              //     : "text-gray-700 hover:bg-gray-100 hover:text-[#65bcb6]"
-              // }`}
+             
             >
               {label}
             </a>
           ))}
           <button
-            // href="/onboarding"
-            // onClick={ closeMenu}
             onClick={handleOnboardingMobile}
             className="flex items-center w-fit justify-end gap-2 bg-[#65bcb6] text-white px-4 py-3 rounded-lg shadow hover:bg-[#58aaa5] transition mt-2"
           >

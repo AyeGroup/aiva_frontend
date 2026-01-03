@@ -219,7 +219,7 @@ if (/[آ-ی\u06F0-\u06F9]/.test(value)) {
       const reversed = otpValue.split("").reverse().join("");
 
       const res = await axiosInstance.post(API_ROUTES.AUTH.VERIFY_PHONE, {
-        phone: formData.phone,
+        identity: formData.phone,
         code: reversed,
         // code: otpValue,
       });

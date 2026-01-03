@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -8,37 +9,6 @@ import {
   getPlanNameById,
   translateFeature,
 } from "@/constants/plans";
-import axios from "axios";
-
-const mapFeatures2 = (plan: any): { text: string; enabled: boolean }[] => {
-  const baseFeatures = [
-    "ساخت چت بات رایگان",
-    "تطبیق ظاهری کامل با هویت بصری شما",
-    "تنظیم رفتار چت بات",
-    "داشبورد تحلیلی مشتریان",
-    "اتصال به سایت (ویجت)",
-  ];
-
-  return [
-    // فیچرهای پلن فعلی با ترجمه
-    ...plan.features.map((f: string) => ({
-      text: translateFeature(f),
-      enabled: true,
-    })),
-
-    // فیچرهای پایه‌ای که همیشه باید باشند
-    ...baseFeatures.map((f) => ({
-      text: f,
-      enabled: true,
-    })),
-
-    // محدودیت کاراکتر آپلود
-    {
-      text: `${plan.upload_char_limit.toLocaleString("fa-IR")} کاراکتر`,
-      enabled: true,
-    },
-  ];
-};
 
 const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
   return [
@@ -164,10 +134,15 @@ const pricingPlans: any[] = [
 // PricingCard Component
 const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
   const isPriceNumeric = plan.id === "enterprise" || plan.id === "advanced";
-  const router = useRouter();
-  const handlePlan = () => {
-    router.push("/dashboard?tab=billing");
+   const router = useRouter();
+
+  const handlePlan = (planid:string) => {
+     console.log("planid", planid);
+  
+    if (planid ==="enterprise") router.push("/contact");
+    else router.push("/dashboard?tab=billing");
   };
+
   return (
     <div className="bg-white rounded-3xl border-2 overflow-hidden border-gray-300 shadow-sm relative h-full flex flex-col">
       {/* Popular Badge */}
@@ -263,7 +238,7 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
 
         {/* Button */}
         <button
-          onClick={handlePlan}
+          onClick={() => handlePlan(pricingPlans[index].id)}
           className={`w-full py-3 lg:py-4 px-6 cursor-pointer rounded-xl text-lg font-normal transition-all ${
             plan.buttonVariant === "primary"
               ? "text-white shadow-md hover:shadow-lg"
@@ -275,7 +250,6 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
               : { borderColor: "#65BCB6", color: "#65BCB6" }
           }
         >
-          {/* {plan.buttonText} */}
           {pricingPlans[index].buttonText}
         </button>
       </div>

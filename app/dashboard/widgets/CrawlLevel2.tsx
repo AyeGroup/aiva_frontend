@@ -3,15 +3,14 @@ import React, { useEffect, useState } from "react";
 import LoadingModal from "../../../components/LoadingModal";
 import axiosInstance from "@/lib/axiosInstance";
 import TreeViewContainer from "@/components/TreeViewContainer";
+import { Tick } from "@/public/icons/AppIcons";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { Checkbox } from "@/components/checkbox";
-import { LayoutRow } from "@/public/icons/dashboard";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { TreeNodeType } from "@/types/common";
 import { buildSitemapTree } from "@/utils/buildSitemapTree";
-import { Tick } from "@/public/icons/AppIcons";
 
 interface ChatbotDetailModalProps {
   show: boolean;
@@ -29,6 +28,7 @@ export default function CrawlLevel2({
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedUrl, setSelectedUrl] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -38,8 +38,6 @@ export default function CrawlLevel2({
   }, [chatbot]);
 
   const handleCrawl = async () => {
-    console.log("handleCrawl");
-
     if (!url) return;
     if (!chatbot?.uuid) return;
     setTree([]);
@@ -66,158 +64,22 @@ export default function CrawlLevel2({
       }
 
       const allurls = res.data?.data?.discovered_links || [];
-      // const allurls = [
-      //   {
-      //     url: "https://aia-ai.com/chatbots",
-      //     title: "فروش چت‌بات‌ها",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/chatbots/chat-gpt",
-      //     title: "خرید اکانت Chat GPT پلاس",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/pdf-courses",
-      //     title: "جزوات آموزشی",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/courses",
-      //     title: "دوره‌های آموزشی",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/webinar",
-      //     title: "وبینار هوش مصنوعی",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/my-account",
-      //     title: "ورود / عضویت",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/courses-2",
-      //     title:
-      //       "دوره‌های آموزشیبه روز‌ترین دانش و مهارت‌ها را از متخصصان این حوزه بیاموزید.",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/product/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab-%d9%be%db%8c%d8%b4%d8%b1%d9%81%d8%aa%d9%87-%d8%af%d8%b1-%da%a9%d8%a7%d8%b1-%d8%a8%d8%a7-%d9%85%d8%af%d9%84%d9%87%d8%a7%db%8c-%d8%b2%d8%a8%d8%a7%d9%86%db%8c",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/product/%d8%a2%d8%b4%d9%86%d8%a7%db%8c%db%8c-%d8%a8%d8%a7-%da%a9%d8%aa%d8%a7%d8%a8%d8%ae%d8%a7%d9%86%d9%87-numpy",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/product/gpt-%da%86%da%af%d9%88%d9%86%d9%87-%d9%85%d8%aa%d9%88%d9%84%d8%af-%d8%b4%d8%af%d8%9f",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/product/%d9%85%da%a9%d8%a7%d9%86%db%8c%d8%b2%d9%85-%d8%aa%d9%88%d8%ac%d9%87-%da%86%da%af%d9%88%d9%86%d9%87-%d8%a8%d9%87-%d9%88%d8%ac%d9%88%d8%af-%d8%a2%d9%85%d8%af%d8%9f",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/product/%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%aa%d8%b5%d9%88%db%8c%d8%b1-%d9%88-%d8%a8%db%8c%d9%86%d8%a7%db%8c%db%8c-%d9%85%d8%a7%d8%b4%db%8c%d9%86",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/product/%d8%b3%db%8c%d8%b3%d8%aa%d9%85%d9%87%d8%a7%db%8c-%d8%aa%d9%88%d8%b5%db%8c%d9%87%da%af%d8%b1",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/product/%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%b5%d9%88%d8%aa",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/product/pandas",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/course/%d8%ad%d9%84-%d8%aa%d9%85%d8%b1%db%8c%d9%86-%d8%af%d8%b1%d9%88%d8%b3-%d8%b3%d8%b1%d9%88%db%8c%d8%b3-%d8%a8%d8%a7-%d9%87%d9%88%d8%b4-%d9%85%d8%b5%d9%86%d9%88%d8%b9%db%8c",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/course-category/webinar",
-      //     title: "کاربردی",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/course/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab-%d9%be%db%8c%d8%b4%d8%b1%d9%81%d8%aa%d9%87-%d8%af%d8%b1-%d9%be%d8%b1%d8%af%d8%a7%d8%b2%d8%b4-%d8%b2%d8%a8%d8%a7%d9%86-%d8%b7%d8%a8%db%8c%d8%b9%db%8c",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/course-category/natural-language-processing",
-      //     title: "پردازش زبان طبیعی",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/course/%d8%aa%d9%86%d8%b8%db%8c%d9%85-%d9%87%d8%a7%db%8c%d9%be%d8%b1%d9%be%d8%a7%d8%b1%d8%a7%d9%85%d8%aa%d8%b1%d9%87%d8%a7%db%8c-%d8%af%d8%b1-%d8%b4%d8%a8%da%a9%d9%87%d9%87%d8%a7%db%8c-%d8%b9%d9%85",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/course-category/deep-learning",
-      //     title: "یادگیری عمیق",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/course/%da%86%d8%aa-%d8%a8%d8%a7%d8%aa",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/wp-content/uploads/2024/11/IMG_20241125_095507.png",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/webinar/management-and-ai-webinars/وبینار-هوش-مصنوعی-صنعتی-از-تئوری-تا-عمل",
-      //     title: "مشاهده وبینار",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/wp-content/uploads/2024/11/IMG_20241118_162949.jpg",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/course/انجام-یک-پایان-نامه-از-صفر-تا-صد",
-      //     title: "مشاهده وبینار",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/wp-content/uploads/2024/09/photo_2024-09-29_20-05-25.jpg",
-      //     title: null,
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/webinar/management-and-ai-webinars/وبینار-نقش-هوش-مصنوعی-در-کسب-و-کارها-و-م",
-      //     title: "مشاهده وبینار",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/subject-cat/basic-mathematics-of-intelligence",
-      //     title: "ریاضیات پایه هوش",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/subject-cat/machine-learning",
-      //     title: "یادگیری ماشین",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/subject-cat/deep-learning",
-      //     title: "یادگیری عمیق",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/subject-cat/natural-language-processing",
-      //     title: "پردازش زبان طبیعی",
-      //   },
-      //   {
-      //     url: "https://aia-ai.com/subject-cat/image-processing-and-machine-vision",
-      //     title: "پردازش تصویر و بینایی ماشین",
-      //   },
-      // ];
-      // console.log("allurls: ", allurls);
 
       if (allurls.length === 0) {
         toast.error("لینکی یافت نشد");
         return;
       }
-      // setAllUrl(allurls);
+
       const tree = buildSitemapTree(allurls);
       console.log("tree: ", tree);
       setTree(tree);
       toast.success("لینک‌ها دریافت شد");
     } catch (err: any) {
       console.error("خطا در دریافت لینک‌ها:", err);
-      const backendMessage = "";
-      // err.response?.data?.message ||
-      // err.response?.data?.error ||
-      // err.response?.data?.msg;
+      const backendMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.response?.data?.msg;
       toast.error(backendMessage || "خطا در دریافت لینک‌ها");
     } finally {
       setLoading(false);
@@ -226,13 +88,14 @@ export default function CrawlLevel2({
 
   const handleSave = async () => {
     if (!chatbot?.uuid) return;
-    try {
-      const selectedUrl = getSelectedUrls(tree, checkedMap);
-      if (selectedUrl.length === 0) {
-        toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
-        return;
-      }
+    const selectedUrl = getSelectedUrls(tree, checkedMap);
+    if (selectedUrl.length === 0) {
+      toast.error("لطفاً حداقل یک لینک را انتخاب کنید.");
+      return;
+    }
 
+    try {
+      setIsSubmitting(true);
       const res = await axiosInstance.post(
         API_ROUTES.BOTS.CRAWL_BATCH(chatbot.uuid),
         { urls: selectedUrl }
@@ -243,8 +106,9 @@ export default function CrawlLevel2({
         return;
       }
 
+      setIsSubmitting(false);
       toast.success("لینک‌ها ثبت شدند");
-      onClose(true);
+      // onClose(true);
     } catch (err: any) {
       const backendMessage =
         err.response?.data?.message ||
@@ -255,6 +119,8 @@ export default function CrawlLevel2({
       } else {
         toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -266,7 +132,44 @@ export default function CrawlLevel2({
       return false;
     }
   };
+  const hasCheckedChild = (
+    node: TreeNodeType,
+    checkedMap: Record<string, boolean>
+  ): boolean => {
+    if (!node.children || node.children.length === 0) return false;
+
+    return node.children.some(
+      (child) => checkedMap[child.id] || hasCheckedChild(child, checkedMap)
+    );
+  };
+
   const getSelectedUrls = (
+    nodes: TreeNodeType[],
+    checkedMap: Record<string, boolean>
+  ): string[] => {
+    let result: string[] = [];
+
+    nodes.forEach((node) => {
+      const isChecked = checkedMap[node.id];
+      const hasChildChecked = hasCheckedChild(node, checkedMap);
+
+      // ✅ فقط اگر:
+      // - خود نود انتخاب شده
+      // - لینک داشته باشد
+      // - و فرزند انتخاب‌شده نداشته باشد (leaf یا انتخاب نهایی)
+      if (isChecked && node.url && !hasChildChecked) {
+        result.push(node.url);
+      }
+
+      if (node.children && node.children.length > 0) {
+        result = result.concat(getSelectedUrls(node.children, checkedMap));
+      }
+    });
+
+    return result;
+  };
+
+  const getSelectedUrls1 = (
     nodes: TreeNodeType[],
     checkedMap: Record<string, boolean>
   ): string[] => {
@@ -306,7 +209,7 @@ export default function CrawlLevel2({
   return (
     <div
       className=" fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-      onClick={() => onClose(false)}
+      // onClick={() => onClose(false)}
     >
       {loading && (
         <LoadingModal
@@ -314,7 +217,6 @@ export default function CrawlLevel2({
           message="در حال بررسی لینک‌ها... لطفاً منتظر بمانید. این عملیات ممکن است کمی طول بکشد."
         />
       )}
-      {/* {loading && <PageLoader />} */}
       <div
         className="bg-white max-h-[95vh] rounded-3xl max-w-2xl w-full overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
@@ -349,7 +251,7 @@ export default function CrawlLevel2({
                 variant="primary"
                 onClick={handleCrawl}
                 disabled={!url || !isValidUrl(url) || loading}
-                className="px-12 py-3 my-3 min-w-40 shadow-lg hover:shadow-xl w-fit"
+                className="px-12 py-3 my-3 min-w-40 shadow-lg hover:shadow-xl w-fit cursor-pointer"
               >
                 {loading ? "در حال بررسی..." : "بررسی"}
               </Button>
@@ -357,9 +259,9 @@ export default function CrawlLevel2({
                 variant="secondary"
                 onClick={() => onClose(false)}
                 disabled={loading}
-                className="px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
+                className="px-12 py-3 min-w-40 shadow-lg hover:shadow-xl cursor-pointer"
               >
-                انصراف
+                بستن
               </Button>
             </div>
           </div>
@@ -380,7 +282,6 @@ export default function CrawlLevel2({
 
               {/* لیست URLها */}
               <div className="flex flex-col gap-2 max-h-64 overflow-y-auto border rounded-lg p-2 w-full  bg-gray-50">
-                {/* <TreeViewContainer data={tree} /> */}
                 <TreeViewContainer
                   data={tree}
                   checkedMap={checkedMap}
@@ -388,23 +289,6 @@ export default function CrawlLevel2({
                     setCheckedMap((prev) => ({ ...prev, [id]: checked }))
                   }
                 />
-                {/* {allUrl.map((link: any, index: number) => (
-                  <label
-                    key={index}
-                    dir="ltr"
-                    className="flex items-center gap-2 cursor-pointer text-left"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedUrl.includes(link.url)}
-                      onChange={() => toggleSelectUrl(link.url)}
-                      className="w-4 h-4"
-                    />
-                    <span className="truncate">
-                      {decodeURIComponent(link.url)}
-                    </span>
-                  </label>
-                ))} */}
               </div>
               <div className="text-sm">
                 <Checkbox
@@ -414,14 +298,14 @@ export default function CrawlLevel2({
                   onChange={handleSelectAll}
                 />
               </div>
-              {/* دکمه در وسط */}
               <div className="w-full flex justify-center">
                 <Button
                   variant="primary"
+                  disabled={isSubmitting}
                   onClick={handleSave}
                   className="mt-2 px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
                 >
-                  ثبت انتخاب‌ها
+                  {isSubmitting ? "منتظر بمانید ..." : " ثبت انتخاب‌ها"}
                 </Button>
               </div>
             </div>

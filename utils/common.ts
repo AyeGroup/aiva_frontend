@@ -119,3 +119,58 @@ export function utcHourToLocalTime(hourUTC: number) {
     minute: "2-digit",
   });
 }
+
+export const jalaliToGregorian = (jy: number, jm: number, jd: number) => {
+  const gy = jy <= 979 ? 621 : 1600;
+  const days =
+    365 * (jy - (jy <= 979 ? 0 : 979)) +
+    Math.floor((jy - (jy <= 979 ? 0 : 979)) / 33) * 8 +
+    Math.floor((((jy - (jy <= 979 ? 0 : 979)) % 33) + 3) / 4) +
+    jd +
+    (jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186);
+
+  let gDay = days + 79;
+  let gy2 = gy + 400 * Math.floor(gDay / 146097);
+  gDay %= 146097;
+
+  if (gDay >= 36525) {
+    gDay--;
+    gy2 += 100 * Math.floor(gDay / 36524);
+    gDay %= 36524;
+    if (gDay >= 365) gDay++;
+  }
+
+  gy2 += 4 * Math.floor(gDay / 1461);
+  gDay %= 1461;
+
+  if (gDay >= 366) {
+    gy2 += Math.floor((gDay - 1) / 365);
+    gDay = (gDay - 1) % 365;
+  }
+
+  const gd = gDay + 1;
+  const sal_a = [
+    0,
+    31,
+    (gy2 % 4 === 0 && gy2 % 100 !== 0) || gy2 % 400 === 0 ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ];
+
+  let gm = 1;
+  let d = gd;
+  while (gm < 13 && d > sal_a[gm]) {
+    d -= sal_a[gm];
+    gm++;
+  }
+
+  return new Date(gy2, gm - 1, d);
+};

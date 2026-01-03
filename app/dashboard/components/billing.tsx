@@ -683,7 +683,6 @@ export function Billing() {
                                     plan?.chatbot_balance
                                   )}
                                 </span>
-                                 
                               </div>
                             </td>
                             <td className="px-2 sm:px-4 py-3">
@@ -705,7 +704,6 @@ export function Billing() {
                                     {getDaysRemaining(
                                       plan.subscription?.end_date
                                     ).toLocaleString("fa-IR")}{" "}
-                                    
                                     روز مانده
                                   </span>
                                 </div>
@@ -779,6 +777,7 @@ export function Billing() {
               {plans.map((plan, index) => (
                 <PlanCard
                   key={index}
+                  plan={plan?.plan}
                   name={getFaNameByCode(plan?.plan) || plan?.plan}
                   description={plan?.description}
                   priceMonthly={Number(plan?.price_monthly_irr || 0)}
@@ -787,13 +786,14 @@ export function Billing() {
                   onPeriodChange={(p) => handlePeriodChange(plan.plan, p)}
                   icon={getPlanIcon(plan.plan)}
                   features={mapFeatures(plan)}
-                  // onSelect={() => {
-                  //   handlePlanPurchase(plan.plan);
-                  // }}
                   onSelect={(selectedPeriod) => {
-                    handlePlanPurchase(plan.plan, selectedPeriod); // دریافت period
+                    handlePlanPurchase(plan.plan, selectedPeriod);
                   }}
-                  buttonText="خرید پلن"
+                  buttonText={
+                    plan?.plan.toLowerCase() === "enterprise"
+                      ? "تماس بگیرید"
+                      : "خرید پلن"
+                  }
                   buttonVariant="secondary"
                 />
               ))}

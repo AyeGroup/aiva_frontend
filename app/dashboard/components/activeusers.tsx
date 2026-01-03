@@ -9,9 +9,11 @@ import { ChatHistory } from "./chat-history";
 import { ChatbotSelector } from "../widgets/chatbot-selector";
 import { convertToPersian } from "@/utils/common";
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {  ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ActiveUsers() {
+ const router=useRouter()
   const [users, setUsers] = useState<any[]>([]);
   const [username, setUsername] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
@@ -64,11 +66,15 @@ export default function ActiveUsers() {
       <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
         <header className="mb-2 sm:mb-0">
           <h1 className="text-grey-900 font-medium text-right text-lg sm:text-xl">
-            کاربران فعال
+            فعال‌ترین کاربران
           </h1>
         </header>
-        <div className="mt-2 sm:mt-0">
+        <div className="flex items-center mt-2 sm:mt-0 gap-4">
           <ChatbotSelector />
+          <button onClick={()=>router.push("/dashboard")} className="cursor-pointer">
+
+          <ChevronLeft className="text-secondary" size={28} strokeWidth={2.5} />
+          </button>
         </div>
       </div>
 

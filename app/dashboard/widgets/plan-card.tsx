@@ -1,5 +1,6 @@
 import React from "react";
 import { Check, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface PlanFeature {
   text: string;
@@ -7,13 +8,13 @@ interface PlanFeature {
 }
 
 interface PlanCardProps {
+  plan: string;
   name: string;
   description: string;
   priceMonthly: number;
   priceYearly: number;
   period: "monthly" | "yearly";
   onPeriodChange: (newPeriod: "monthly" | "yearly") => void;
-
   features: PlanFeature[];
   icon: React.ReactNode;
   featured?: boolean;
@@ -26,6 +27,7 @@ interface PlanCardProps {
 }
 
 export function PlanCard({
+  plan,
   name,
   description,
   priceMonthly,
@@ -41,6 +43,7 @@ export function PlanCard({
   onSelect,
   disabled = false,
 }: PlanCardProps) {
+  const router=useRouter()
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat("fa-IR").format(price);
   };
@@ -48,8 +51,6 @@ export function PlanCard({
     const n = Number(value);
     return Number.isFinite(n) ? n : 0;
   };
-  // انتخاب قیمت و متن دوره بر اساس period
-  // const price = period === "monthly" ? priceMonthly * 10 : priceYearly * 10;
   const price =
     period === "monthly"
       ? safeNumber(priceMonthly) / 10
@@ -141,8 +142,11 @@ export function PlanCard({
       <button
         type="button"
         className={`plan-card-button ${buttonVariant}`}
-        // onClick={onSelect}
-        onClick={() => onSelect?.(period)}
+        onClick={() => {
+          plan.toLowerCase() === "enterprise"
+            ? router.push("/contact")
+            : onSelect?.(period);
+        }}
         disabled={disabled}
         title={buttonText}
         style={{ textAlign: "center" }}

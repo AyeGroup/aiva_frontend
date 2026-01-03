@@ -17,7 +17,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 export function HeatmapChart({
   botId,
   title = "ساعات فعالیت چت بات",
-  subtitle = "توزیع حجم گفتگوها در ساعات مختلف هفته",
+  subtitle = "توزیع حجم پیام‌ها در ساعات مختلف هفته",
 }: HeatmapChartProps) {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -174,7 +174,7 @@ export function HeatmapChart({
                         }}
                         title={`${dayFa} - ساعت ${convertToPersian(
                           hour
-                        )} | ${convertToPersian(value)} گفتگو`}
+                        )} | ${convertToPersian(value)} پیام`}
                       />
                     );
                   })}
@@ -195,7 +195,7 @@ export function HeatmapChart({
           border: "1px solid rgba(255, 161, 142, 0.08)",
         }}
       >
-        {peakHour && (
+        {peakHour!==null && (
           <div className="text-center flex flex-col" style={{ gap: "2px" }}>
             <span
               className="text-grey-600"

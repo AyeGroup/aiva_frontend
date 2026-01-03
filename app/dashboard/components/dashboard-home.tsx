@@ -116,24 +116,26 @@ export default function Dashboard() {
     {
       icon: DashMints,
       value: convertToPersian(statisticCover?.avg_duration_minutes || "0"),
-      label: "دقیقه متوسط گفتگو",
+      label: " متوسط گفتگو",
+      desc: "(دقیقه)",
       colorScheme: "accent",
       rotate: 1,
     },
     {
       icon: DashTime,
       value: convertToPersian(statisticCover?.avg_response_time_seconds || "0"),
-      label: "زمان پاسخ متوسط",
+      label: "متوسط زمان پاسخ ",
+      desc: "(ثانیه)",
       colorScheme: "emerald",
       rotate: -1,
     },
-    {
-      icon: DashRate,
-      value: convertToPersian(statisticCover?.satisfaction_rate || "0"),
-      label: "نرخ رضایت کاربران",
-      colorScheme: "success",
-      rotate: 1,
-    },
+    // {
+    //   icon: DashRate,
+    //   value: convertToPersian(statisticCover?.satisfaction_rate || "0"),
+    //   label: "نرخ رضایت کاربران",
+    //   colorScheme: "success",
+    //   rotate: 1,
+    // },
     {
       icon: DashMsg,
       value: convertToPersian(statisticCover?.messages_per_conversation || "0"),
@@ -377,7 +379,7 @@ export default function Dashboard() {
                   نگاهی سریع به عملکرد چت‌بات
                 </p>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {stats.map((stat, index) => {
                   const scheme =
                     myColors[stat.colorScheme as keyof typeof myColors];
@@ -417,6 +419,7 @@ export default function Dashboard() {
                           style={{ color: "#A6A6A6" }}
                         >
                           {stat.label}
+                        <span className="text-xs font-extralight mr-0.5">{stat.desc}</span>
                         </div>
                       </div>
                     </div>
@@ -561,7 +564,7 @@ export default function Dashboard() {
                   })}
 
                   {/* More Users Button */}
-                  {activeUsers && activeUsers.length>0 ? (
+                  {activeUsers && activeUsers.length > 0 ? (
                     //  && activeUsers.length > 3
                     <div
                       className="relative rounded-lg p-4 shadow-sm hover-lift   flex items-center justify-center"
@@ -584,8 +587,10 @@ export default function Dashboard() {
                         </div>
                       </button>
                     </div>
-                  ):(
-                    <div className="text-secondary font-bold">کاربری یافت نشد</div>
+                  ) : (
+                    <div className="text-secondary font-bold">
+                      کاربری یافت نشد
+                    </div>
                   )}
                 </div>
               </div>

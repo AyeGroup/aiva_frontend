@@ -3,19 +3,18 @@
 import React, { useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
-import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { GenericSelector } from "@/components/selector";
+import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 import {
   SelectorItem,
   Ticket,
   TicketCategory,
   TicketPriority,
 } from "@/types/common";
-import { GenericSelector } from "@/components/selector";
-import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 
 interface Props {
   onSubmit: (ticket: Ticket) => void;
@@ -41,30 +40,52 @@ export function CreateTicketView({ onSubmit }: Props) {
     { value: "medium", label: getPriorityLabel("medium") },
     { value: "low", label: getPriorityLabel("low") },
   ];
-  const handleSubmit = async (e: React.FormEvent) => {
-    setIsLoading(true);
-    try {
-      const response = await axiosInstance.post(
-        API_ROUTES.TICKETS.CREATE,
-        formData
-      );
-      const newTicket: Ticket = response.data.data;
+const [errors, setErrors] = useState<{
+  title?: string;
+  content?: string;
+}>({});
 
-      toast.success("تیکت جدید با موفقیت ارسال شد");
-      onSubmit(newTicket);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-      // const newTicket: Ticket = response.data.data;
-      // clear
-      // setTickets((prev) => [...prev, newTicket]);
-      // setSelectedTicketId(newTicket.id);
-      // setView("view");
-      // toast.success("تیکت جدید با موفقیت ارسال شد");
-    } catch (error) {
-      toast.error("ارسال تیکت با مشکل مواجه شد");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const newErrors: typeof errors = {};
+
+  if (!formData.title.trim()) {
+    newErrors.title = "عنوان تیکت الزامی است";
+  }
+
+  if (!formData.content.trim()) {
+    newErrors.content = "توضیحات تیکت الزامی است";
+  }
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  setErrors({});
+  setIsLoading(true);
+
+  try {
+    const response = await axiosInstance.post(
+      API_ROUTES.TICKETS.CREATE,
+      formData
+    );
+
+    const newTicket: Ticket = response.data.data;
+    toast.success("تیکت جدید با موفقیت ارسال شد");
+    onSubmit(newTicket);
+  } catch (error: any) {
+    const backendMessage =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      "ارسال تیکت با مشکل مواجه شد";
+
+    toast.error(backendMessage);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <section className="flex-1 overflow-y-auto bg-bg-shell">
@@ -85,13 +106,23 @@ export function CreateTicketView({ onSubmit }: Props) {
               {/* Title */}
               <Input
                 label="عنوان تیکت"
-                required
                 placeholder="عنوان کوتاه و واضح از مشکل یا درخواست شما"
                 value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
+                maxLength={64}
+                onChange={(e) => {
+                  setFormData({ ...formData, title: e.target.value });
+                  if (errors.title) {
+                    setErrors({ ...errors, title: undefined });
+                  }
+                }}
+                className={
+                  errors.title ? "border-red-500! focus:border-red-500" : ""
                 }
               />
+
+              {errors.title && (
+                <p className="text-xs text-red-500 mr-2">{errors.title}</p>
+              )}
 
               {/* Description */}
               <div className="input-container">
@@ -99,15 +130,23 @@ export function CreateTicketView({ onSubmit }: Props) {
                   توضیحات تکمیلی
                   <span className="input-required">*</span>
                 </label>
+
                 <textarea
-                  className="input-base input-default input-medium min-h-[150px] resize-none"
+                  className={`input-base input-default input-medium min-h-[150px] resize-none
+      ${errors.content ? "border-red-500! focus:border-red-500" : ""}`}
                   placeholder="لطفاً مشکل یا درخواست خود را به طور کامل توضیح دهید..."
                   value={formData.content}
-                  onChange={(e) =>
-                    setFormData({ ...formData, content: e.target.value })
-                  }
-                  required
+                  onChange={(e) => {
+                    setFormData({ ...formData, content: e.target.value });
+                    if (errors.content) {
+                      setErrors({ ...errors, content: undefined });
+                    }
+                  }}
                 />
+
+                {errors.content && (
+                  <p className="text-xs text-red-500 mr-2">{errors.content}</p>
+                )}
               </div>
 
               {/* Category & Priority */}
@@ -128,22 +167,6 @@ export function CreateTicketView({ onSubmit }: Props) {
                     }
                     showIndicator={true}
                   />
-
-                  {/* <select
-                    className="input-base input-default input-medium"
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        category: e.target.value as TicketCategory,
-                      })
-                    }
-                  >
-                    <option value="general">عمومی</option>
-                    <option value="technical">فنی</option>
-                    <option value="financial">مالی</option>
-                    <option value="others">سایر</option>
-                  </select> */}
                 </div>
 
                 <div className=" flex items-center gap-2">
@@ -160,22 +183,6 @@ export function CreateTicketView({ onSubmit }: Props) {
                     }
                     showIndicator={true}
                   />
-
-                  {/* <select
-                    className="input-base input-default input-medium"
-                    value={formData.priority}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        priority: e.target.value as TicketPriority,
-                      })
-                    }
-                  >
-                    <option value="low">پایین</option>
-                    <option value="medium">متوسط</option>
-                    <option value="high">بالا</option>
-                    <option value="urgent">اورژانسی</option>
-                  </select> */}
                 </div>
               </div>
             </div>
@@ -187,6 +194,7 @@ export function CreateTicketView({ onSubmit }: Props) {
                 size="lg"
                 title="ارسال تیکت"
                 type="submit"
+                className="cursor-pointer"
               >
                 ارسال تیکت
               </Button>
