@@ -91,55 +91,7 @@ export default function Checkout() {
     fetchPlanAndInvoice();
   }, [router]);
 
-  const handleApplyDiscount1 = async () => {
-    if (!discountCode.trim()) {
-      toast.error("کد تخفیف را وارد کنید");
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-
-      const res = await axiosInstance.post(
-        API_ROUTES.FINANCIAL.DISCOUNT_VALIDATE,
-        {
-          code: discountCode,
-          amount: 1,
-        }
-      );
-
-      const data = res.data;
-
-      if (!data.success || data.is_valid !== "true") {
-        setDiscountMessage(data.message || "کد تخفیف نامعتبر است");
-        return;
-      } else {
-        setDiscountMessage(data.message);
-      }
-      // "is_valid": true,
-      //     "message": "کد تخفیف معتبر است",
-      //     "discount_code_id": 4,
-      //     "discount_amount": 0,
-      //     "final_amount": 1,
-      //     "discount_details": {
-      //       "discount_type": "percentage",
-      //       "discount_value": 10,
-      //       "max_discount_amount": 100000
-      //     }
-      // 2️⃣ ذخیره درصد تخفیف
-      setAppliedDiscount(data.data.discount_details.discount_value);
-
-      setInvoice(data.data.invoice);
-
-      setDiscountMessage(`کد تخفیف ${data.data.percent}% اعمال شد`);
-    } catch (err: any) {
-      setDiscountMessage(
-        err?.response?.data?.message || "خطا در بررسی کد تخفیف"
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+ 
   const handleApplyDiscount = async () => {
     if (!discountCode.trim()) {
       toast.error("کد تخفیف را وارد کنید");
@@ -448,7 +400,7 @@ export default function Checkout() {
                 )}
               </div>
 
-              <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-gradient-to-br from-grey-50 to-white border-2 border-grey-200">
+              <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-linear-to-br from-grey-50 to-white border-2 border-grey-200">
                 <span>مبلغ قابل پرداخت</span>
                 <span className="text-xl font-bold text-[#65BCB6]">
                   {/* {(invoice?.total_amount_irr || "").toLocaleString("fa-IR")}{" "}

@@ -510,7 +510,7 @@ export default function Checkout() {
                 )}
               </div>
 
-              <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-gradient-to-br from-grey-50 to-white border-2 border-grey-200">
+              <div className="flex justify-between items-center mb-6 p-4 rounded-xl bg-linear-to-br from-grey-50 to-white border-2 border-grey-200">
                 <span>مبلغ قابل پرداخت</span>
                 <span className="text-xl font-bold text-[#65BCB6]">
                   {((invoice?.final_amount_irr || 0) / 10).toLocaleString(

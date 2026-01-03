@@ -52,7 +52,7 @@ export function RecentChats({
 }: RecentChatsProps) {
   const chats: ChatData[] = data.map((chat) => {
     const lastMessage = chat.messages.at(-1);
-    
+
     // console.log("aaaa", chat);
     return {
       userId: chat.user_id,
@@ -97,11 +97,6 @@ export function RecentChats({
             </p>
           </div>
         </div>
-
-        {/* <Button variant="tertiary" size="md" onClick={onViewAll}>
-          مشاهده همه
-          <ArrowLeft className="w-4 h-4 mr-2" />
-        </Button> */}
       </div>
 
       <div className="space-y-4">
@@ -111,14 +106,11 @@ export function RecentChats({
             .map((chat, index) => (
               <ChatHistoryCard
                 key={chat.userId}
-                userId={chat.userId}
-                // userName={`کاربر ${convertToPersian(
-                //   userIdToIndexMap.get(chat.userId)!
-                // )}`}
+                // userId={chat.userId}
                 userName={chat.userName}
                 userAvatar={chat.userAvatar}
                 messages={chat.messages}
-                status={chat.status}
+                // status={chat.status}
                 unreadCount={chat.unreadCount}
                 lastActivity={chat.lastActivity}
                 onClick={() => onChatClick?.(chat.userId)}
