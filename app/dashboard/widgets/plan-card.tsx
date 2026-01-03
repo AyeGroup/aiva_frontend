@@ -21,7 +21,6 @@ interface PlanCardProps {
   buttonText?: string;
   buttonVariant?: "primary" | "secondary";
   onSelect?: (selectedPeriod: "monthly" | "yearly") => void;
-
   disabled?: boolean;
 }
 
@@ -54,8 +53,8 @@ export function PlanCard({
       ? safeNumber(priceMonthly) / 10
       : safeNumber(priceYearly) / 10;
   const periodLabel = period === "monthly" ? "ماهانه" : "سالانه";
-const isEnterprise = plan.toLowerCase() === "enterprise";
-const showPriceMeta = price > 0 && !isEnterprise;
+  const isEnterprise = plan.toLowerCase() === "enterprise";
+  const showPriceMeta = price > 0 && !isEnterprise;
 
   return (
     <article className={`plan-card ${featured ? "featured" : ""}`}>

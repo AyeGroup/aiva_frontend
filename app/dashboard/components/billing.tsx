@@ -167,12 +167,14 @@ export function Billing() {
       return;
     }
 
-    console.log("planName", planName);
-    // Navigate to checkout page
     const plan = plans.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
-    // console.log("ali:", plan);
+    console.log("planName", planName);
+    console.log("billingBot", billingBot.name);
+    console.log("selectedPeriod", selectedPeriod);
+    console.log("plan find", plan);
+
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
       //

@@ -83,6 +83,48 @@ export function Sidebar({
 
   const fetchProfile = async () => {
     setIsLoading(true);
+
+    try {
+      const res = await axiosInstance.get(API_ROUTES.USER.PROFILE);
+      const data = res?.data?.data;
+
+      setName(data?.full_name);
+      setProfile(data);
+
+      if (data?.user_logo_url) {
+        const imgRes = await axiosInstance.get(data.user_logo_url, {
+          responseType: "blob",
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        });
+
+        const imageUrl = URL.createObjectURL(imgRes.data);
+
+        setPreview((prev) => {
+          if (prev) URL.revokeObjectURL(prev);
+          return imageUrl;
+        });
+
+        setProfile((prev) => ({
+          ...prev,
+          user_logo_url: imageUrl,
+        }));
+      } else {
+        setPreview((prev) => {
+          if (prev) URL.revokeObjectURL(prev);
+          return null;
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchProfile1 = async () => {
+    setIsLoading(true);
     try {
       const res = await axiosInstance.get(API_ROUTES.USER.PROFILE);
       const data = res?.data?.data;
@@ -128,14 +170,14 @@ export function Sidebar({
       className="w-64 flex flex-col  top-0 h-screen relative z-40"
       style={{ backgroundColor: "#F5E6D3" }}
     >
-      {isLoading && <PageLoader/>}
+      {isLoading && <PageLoader />}
       {/* Close button (mobile only) */}
       <button
         onClick={onCloseSidebar}
         className=" absolute top-4 left-4 text-gray-700 hover:text-black p-1"
         aria-label="close sidebar"
       >
-        <X/>
+        <X />
       </button>
       {/* Header - User Profile */}
 

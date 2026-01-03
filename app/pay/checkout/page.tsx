@@ -5,7 +5,6 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { Input } from "@/components/input";
-import { useBot } from "@/providers/BotProvider";
 import { Checkbox } from "@/components/checkbox";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
@@ -29,7 +28,6 @@ export default function Checkout() {
   const [nationalId, setNationalId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [invoice, setInvoice] = useState<any>(null);
-  const { currentBot } = useBot();
   const router = useRouter();
 
   useEffect(() => {
@@ -41,35 +39,33 @@ export default function Checkout() {
       }
 
       const parsed = JSON.parse(planData);
-      console.log("parsed", parsed);
+      // console.log("parsed", parsed);
       setSelectedPlan(parsed);
 
       try {
         setIsLoading(true);
-        // ایجاد فاکتور در بک‌اند
         const invoicePayload = {
           purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
-          // purpose: "subscription_purchase",
           subscription_type: parsed.periods,
-          // subscription_type: parsed.billingPeriod,
           subscription_plan: getPlanIdByCode(parsed.plan),
-
+          // discount_code:"dis101",
+          // use_wallet:"false",
           amount_irr:
             parsed.billingPeriod === "monthly"
               ? parsed.price_monthly_irr
               : parsed.price_yearly_irr,
           chatbot_uuid: parsed?.billingBot?.uuid,
         };
-        console.log("invoice payload", invoicePayload);
+        // console.log("invoice payload", invoicePayload);
 
         const res = await axiosInstance.post(
           API_ROUTES.PAYMENT.FACTOR,
           invoicePayload
         );
-        console.log("res", res);
+        // console.log("res", res);
 
         const data = res?.data;
-        console.log("invoice response", data);
+        // console.log("invoice response", data);
 
         if (!data.success) {
           toast.error(data.message || "خطا در ایجاد فاکتور");
@@ -80,7 +76,7 @@ export default function Checkout() {
         setInvoice(data.data);
       } catch (err: any) {
         const serverMessage = err?.response?.data?.message;
-        console.log("a", serverMessage);
+        // console.log("a", serverMessage);
         if (serverMessage == "Downgrading subscription is not allowed") {
           toast.error("تغییر اشتراک به سطح پایین‌تر مجاز نیست.");
           const returnUrl = localStorage.getItem("returnUrl");
@@ -108,25 +104,33 @@ export default function Checkout() {
     try {
       setIsLoading(true);
 
-      // 1️⃣ اعتبارسنجی کد تخفیف
       const res = await axiosInstance.post(
         API_ROUTES.FINANCIAL.DISCOUNT_VALIDATE,
         {
           code: discountCode,
-        amount:1,
-          invoice_id: invoice?.id, // اگر بک‌اند پشتیبانی می‌کند
+          amount: 1,
+          // invoice_id: invoice?.id,
         }
       );
 
       const data = res.data;
 
-      if (!data.success) {
+      if (!data.success || data.is_valid !== "true") {
         toast.error(data.message || "کد تخفیف نامعتبر است");
         return;
       }
-
+      // "is_valid": true,
+      //     "message": "کد تخفیف معتبر است",
+      //     "discount_code_id": 4,
+      //     "discount_amount": 0,
+      //     "final_amount": 1,
+      //     "discount_details": {
+      //       "discount_type": "percentage",
+      //       "discount_value": 10,
+      //       "max_discount_amount": 100000
+      //     }
       // 2️⃣ ذخیره درصد تخفیف
-      setAppliedDiscount(data.data.percent);
+      setAppliedDiscount(data.data.discount_details.discount_value);
 
       // 3️⃣ آپدیت فاکتور (مهم)
       setInvoice(data.data.invoice);
@@ -150,20 +154,19 @@ export default function Checkout() {
       if (!companyName.trim()) return toast.error("نام شرکت الزامی است");
       if (!nationalId.trim()) return toast.error("شناسه ملی الزامی است");
     }
-
+    // console.log("invoice",invoice)
     try {
       setIsLoading(true);
 
       const invoicePayload = {
-        purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
+        purpose: invoice?.purpose,
         company_name: companyName,
         national_id: nationalId,
         amount_irr: invoice?.total_amount_irr,
-        chatbot_uuid: currentBot?.uuid,
-        subscription_plan: getPlanIdByCode(selectedPlan.plan),
-        subscription_type: selectedPlan.periods,
-
-        description: selectedPlan.description,
+        chatbot_uuid: invoice?.chatbot_uuid,
+        subscription_plan: getPlanIdByCode(invoice?.subscription_plan),
+        subscription_type: invoice?.subscription_type,
+        description: invoice.description,
       };
 
       const res = await axiosInstance.post(
@@ -177,7 +180,6 @@ export default function Checkout() {
         return;
       }
 
-      // ✅ فاکتور را قبل از ریدایرکت در localStorage ذخیره کن
       const invoiceId = data.data.invoice_id;
       localStorage.setItem("lastInvoiceId", invoiceId);
       localStorage.setItem(`invoice-${invoiceId}`, JSON.stringify(data.data));
