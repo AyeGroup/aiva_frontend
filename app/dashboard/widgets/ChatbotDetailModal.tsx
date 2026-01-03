@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
-import { Card } from "@/components/card";
+import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
 import { BotConfig } from "@/types/common";
 import { API_ROUTES } from "@/constants/apiRoutes";
+import { getDaysRemaining } from "@/utils/common";
 import { getPlanCodeById, PLAN_TYPES } from "@/constants/plans";
 import {
   MessageSquare,
@@ -15,10 +16,8 @@ import {
   Calendar,
   TrendingUp,
   BarChart3,
+  Info,
 } from "lucide-react";
-import { useBot } from "@/providers/BotProvider";
-import { useUniqueId } from "recharts/types/util/useUniqueId";
-import { getDaysRemaining } from "@/utils/common";
 
 interface ChatbotDetailModalProps {
   show: boolean;
@@ -37,6 +36,7 @@ export default function ChatbotDetailModal({
   const [usagePercentage, setUsagePercentage] = useState<number>(100);
   const [totalMessages, setTotalMessages] = useState<number>();
   const [daysRemaining, setDaysRemaining] = useState<number>(0);
+  const [isExpired, setIsExpired] = useState<boolean>(false);
   const { setCurrentBot } = useBot();
 
   useEffect(() => {
@@ -49,14 +49,20 @@ export default function ChatbotDetailModal({
         const subRes = await axiosInstance.get(
           API_ROUTES.FINANCIAL.SUBSCRIPTION(chatbot.uuid)
         );
+
         const subData = subRes.data.data;
+
+        if (!subData) {
+          setIsExpired(true);
+          return;
+        }
+
+        setIsExpired(false);
         setChatbotSubsc(subData);
-        console.log("SUBSCRIPTION: ", subData);
+
         // 🟢 2. محاسبه روزهای باقی‌مانده
         if (subData?.end_date) {
-          // const endDate = new Date(subData.end_date);
-           
-          const diffDays = getDaysRemaining(subData.end_date)
+          const diffDays = getDaysRemaining(subData.end_date);
           setDaysRemaining(diffDays);
         } else {
           setDaysRemaining(0);
@@ -65,23 +71,20 @@ export default function ChatbotDetailModal({
         // 🟢 3. گرفتن لیست pricing
         const pricingRes = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
         const pricingData = pricingRes.data.data.subscription_plans;
-        console.log("pricingData: ", pricingData);
 
         // 🟢 4. پیدا کردن پلن فعلی
         const currentPlan = pricingData.find(
           (plan: any) => plan.plan === getPlanCodeById(subData?.plan)
         );
-        // console.log("currentPlan: ", currentPlan);
 
-        // 🟢 5. تنظیم totalMessages بر اساس upload_char_limit
+        // 🟢 5. تنظیم totalMessages
         if (currentPlan) {
           setTotalMessages(currentPlan.upload_char_limit || 0);
         } else {
-          console.warn("Plan not found in pricing data:", subData?.plan);
           setTotalMessages(0);
         }
 
-        // 🟢 6. محاسبه درصد استفاده از پیام‌ها
+        // 🟢 6. درصد مصرف
         if (
           subData?.remaining_upload_chars !== undefined &&
           currentPlan?.upload_char_limit
@@ -90,15 +93,25 @@ export default function ChatbotDetailModal({
             100 -
             (subData.remaining_upload_chars / currentPlan.upload_char_limit) *
               100;
-          console.log("remaining: ", subData.remaining_upload_chars);
-          console.log("total: ", currentPlan.upload_char_limit);
-          console.log("percentage: ", percentage);
 
           setUsagePercentage(percentage);
         } else {
           setUsagePercentage(0);
         }
-      } catch (err) {
+      } catch (err: any) {
+        // 🔴 هندل 404 اشتراک
+        const status = err?.response?.status;
+        const message = err?.response?.data?.message;
+
+        if (status === 404 && message === "No active subscription found") {
+          setIsExpired(true);
+          setChatbotSubsc(null);
+          setDaysRemaining(0);
+          setUsagePercentage(0);
+          setTotalMessages(0);
+          return;
+        }
+
         console.error("Error fetching subscription or pricing:", err);
       } finally {
         setLoading(false);
@@ -217,140 +230,152 @@ export default function ChatbotDetailModal({
         {/* Content */}
 
         <div className=" space-y-1 overflow-y-auto  ">
-          <div
-            className={`p-2 relative   overflow-hidden h-full flex flex-col items-center justify-center   border-[${chatbot?.primary_color}30]`}
-          >
+          {!isExpired ? (
             <div
-              className="absolute top-0 left-0 w-32 h-32 rounded-full opacity-5 blur-3xl"
-              style={{ backgroundColor: chatbot?.primary_color }}
-            />
-
-            {/* Usage Circle */}
-            <div className="relative mb-2">
-              <svg
-                width="140"
-                height="140"
-                viewBox="0 0 140 140"
-                className="transform -rotate-90"
-              >
-                <circle
-                  cx="70"
-                  cy="70"
-                  r="60"
-                  fill="none"
-                  stroke="#F3F4F6"
-                  strokeWidth="10"
-                />
-                <circle
-                  cx="70"
-                  cy="70"
-                  r="60"
-                  fill="none"
-                  stroke={
-                    usagePercentage > 80
-                      ? "#EF4444"
-                      : usagePercentage > 50
-                      ? "#F59E0B"
-                      : chatbot?.primary_color
-                  }
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  strokeDasharray={`${(usagePercentage / 100) * 376.99} 376.99`}
-                  className="transition-all duration-1000"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <p
-                  className="mb-0.5"
-                  style={{
-                    fontSize: "28px",
-                    fontWeight: "700",
-                    lineHeight: "1",
-                  }}
-                >
-                  {(usagePercentage || "0").toLocaleString("fa-IR")}٪
-                </p>
-                <p className="text-grey-600" style={{ fontSize: "11px" }}>
-                  مصرف شده
-                </p>
-              </div>
-            </div>
-
-            {/* Info Blocks */}
-            <div className="grid grid-cols-2 gap-3 w-full mb-1">
-              <div className="text-center p-3 bg-grey-50 rounded-xl border border-grey-100">
-                <p className="text-grey-600 text-xs mb-1">باقی‌مانده</p>
-                <p className="text-grey-900 text-base font-semibold">
-                  {(chatbotSubsc?.remaining_upload_chars || "").toLocaleString(
-                    "fa-IR"
-                  )}
-                </p>
-              </div>
-              <div className="text-center p-3 bg-grey-50 rounded-xl border border-grey-100">
-                <p className="text-grey-600 text-xs mb-1">کل ظرفیت</p>
-                <p className="text-grey-900 text-base font-semibold">
-                  {(totalMessages || "").toLocaleString("fa-IR")}
-                </p>
-              </div>
-            </div>
-
-            {/* Expiry Date */}
-            <div className="w-full p-3 bg-grey-50 rounded-xl border border-grey-100 mb-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-grey-500" />
-                  <span className="text-grey-600 text-sm">تاریخ انقضا</span>
-                </div>
-                <span className="text-grey-900 text-sm">
-                  {new Date(chatbotSubsc?.end_date).toLocaleDateString("fa-IR")}
-                </span>
-              </div>
+              className={`p-2 relative   overflow-hidden h-full flex flex-col items-center justify-center   border-[${chatbot?.primary_color}30]`}
+            >
               <div
-                className="px-2.5 py-1.5 rounded-lg text-center text-sm"
-                style={{
-                  backgroundColor:
-                    daysRemaining < 7
-                      ? "#FFA18E15"
-                      : chatbot?.primary_color + "15",
-                  color: daysRemaining < 7 ? "#FFA18E" : chatbot?.primary_color,
-                  border: `1.5px solid ${
-                    daysRemaining < 7
-                      ? "#FFA18E30"
-                      : chatbot?.primary_color + "30"
-                  }`,
-                }}
-              >
-                {daysRemaining > 0
-                  ? `${daysRemaining.toLocaleString("fa-IR")} روز باقیمانده`
-                  : "بدون محدودیت زمانی"}
-              </div>
-            </div>
+                className="absolute top-0 left-0 w-32 h-32 rounded-full opacity-5 blur-3xl"
+                style={{ backgroundColor: chatbot?.primary_color }}
+              />
 
-            {/* Warning */}
-            {usagePercentage > 70 && (
-              <div className="w-full p-2 bg-orange-50 border border-orange-200 rounded-xl">
-                <div className="flex items-start gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center">
-                    <TrendingUp className="w-3.5 h-3.5 text-orange-600" />
-                  </div>
-                  <p className="text-orange-800 text-right text-xs leading-relaxed">
-                    برای استفاده بهتر، ارتقا پلن خود را در نظر بگیرید.
+              {/* Usage Circle */}
+              <div className="relative mb-2">
+                <svg
+                  width="140"
+                  height="140"
+                  viewBox="0 0 140 140"
+                  className="transform -rotate-90"
+                >
+                  <circle
+                    cx="70"
+                    cy="70"
+                    r="60"
+                    fill="none"
+                    stroke="#F3F4F6"
+                    strokeWidth="10"
+                  />
+                  <circle
+                    cx="70"
+                    cy="70"
+                    r="60"
+                    fill="none"
+                    stroke={
+                      usagePercentage > 80
+                        ? "#EF4444"
+                        : usagePercentage > 50
+                        ? "#F59E0B"
+                        : chatbot?.primary_color
+                    }
+                    strokeWidth="10"
+                    strokeLinecap="round"
+                    strokeDasharray={`${
+                      (usagePercentage / 100) * 376.99
+                    } 376.99`}
+                    className="transition-all duration-1000"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <p
+                    className="mb-0.5"
+                    style={{
+                      fontSize: "28px",
+                      fontWeight: "700",
+                      lineHeight: "1",
+                    }}
+                  >
+                    {(usagePercentage || "0").toLocaleString("fa-IR")}٪
+                  </p>
+                  <p className="text-grey-600" style={{ fontSize: "11px" }}>
+                    مصرف شده
                   </p>
                 </div>
               </div>
-            )}
-          </div>
+
+              {/* Info Blocks */}
+              <div className="grid grid-cols-2 gap-3 w-full mb-1">
+                <div className="text-center p-3 bg-grey-50 rounded-xl border border-grey-100">
+                  <p className="text-grey-600 text-xs mb-1">باقی‌مانده</p>
+                  <p className="text-grey-900 text-base font-semibold">
+                    {(
+                      chatbotSubsc?.remaining_upload_chars || ""
+                    ).toLocaleString("fa-IR")}
+                  </p>
+                </div>
+                <div className="text-center p-3 bg-grey-50 rounded-xl border border-grey-100">
+                  <p className="text-grey-600 text-xs mb-1">کل ظرفیت</p>
+                  <p className="text-grey-900 text-base font-semibold">
+                    {(totalMessages || "").toLocaleString("fa-IR")}
+                  </p>
+                </div>
+              </div>
+
+              {/* Expiry Date */}
+              <div className="w-full p-3 bg-grey-50 rounded-xl border border-grey-100 mb-3">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-grey-500" />
+                    <span className="text-grey-600 text-sm">تاریخ انقضا</span>
+                  </div>
+                  <span className="text-grey-900 text-sm">
+                    {new Date(chatbotSubsc?.end_date).toLocaleDateString(
+                      "fa-IR"
+                    )}
+                  </span>
+                </div>
+                <div
+                  className="px-2.5 py-1.5 rounded-lg text-center text-sm"
+                  style={{
+                    backgroundColor:
+                      daysRemaining < 7
+                        ? "#FFA18E15"
+                        : chatbot?.primary_color + "15",
+                    color:
+                      daysRemaining < 7 ? "#FFA18E" : chatbot?.primary_color,
+                    border: `1.5px solid ${
+                      daysRemaining < 7
+                        ? "#FFA18E30"
+                        : chatbot?.primary_color + "30"
+                    }`,
+                  }}
+                >
+                  {daysRemaining > 0
+                    ? `${daysRemaining.toLocaleString("fa-IR")} روز باقیمانده`
+                    : "بدون محدودیت زمانی"}
+                </div>
+              </div>
+
+              {/* Warning */}
+              {usagePercentage > 70 && (
+                <div className="w-full p-2 bg-orange-50 border border-orange-200 rounded-xl">
+                  <div className="flex items-start gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center">
+                      <TrendingUp className="w-3.5 h-3.5 text-orange-600" />
+                    </div>
+                    <p className="text-orange-800 text-right text-xs leading-relaxed">
+                      برای استفاده بهتر، ارتقا پلن خود را در نظر بگیرید.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-2 p-10 text-secondary font-extrabold">
+            <Info/>
+              چت‌بات پلن فعال ندارد
+            </div>
+          )}
 
           {/* Buttons */}
           <div className="   pt-2 pb-2 px-5 bg-white">
             <div className="grid grid-cols-2 gap-3">
-              <Button variant="primary" size="sm" onClick={handlePlan}>
+              <Button variant="primary" size="sm" onClick={handlePlan} className="cursor-pointer">
                 <div className="flex">
                   <Zap className="w-4 h-4 ml-2" />
                   ارتقا پلن
                 </div>
               </Button>
-              <Button variant="secondary" size="sm" onClick={handleDashboard}>
+              <Button variant="secondary" size="sm" onClick={handleDashboard} className="cursor-pointer">
                 <div className="flex">
                   <BarChart3 className="w-4 h-4 ml-2" />
                   مشاهده داشبورد

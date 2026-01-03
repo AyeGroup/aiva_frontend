@@ -1,6 +1,5 @@
 import React from "react";
 import { Check, X } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 interface PlanFeature {
   text: string;
@@ -43,7 +42,6 @@ export function PlanCard({
   onSelect,
   disabled = false,
 }: PlanCardProps) {
-  const router=useRouter()
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat("fa-IR").format(price);
   };
@@ -56,6 +54,8 @@ export function PlanCard({
       ? safeNumber(priceMonthly) / 10
       : safeNumber(priceYearly) / 10;
   const periodLabel = period === "monthly" ? "ماهانه" : "سالانه";
+const isEnterprise = plan.toLowerCase() === "enterprise";
+const showPriceMeta = price > 0 && !isEnterprise;
 
   return (
     <article className={`plan-card ${featured ? "featured" : ""}`}>
@@ -101,14 +101,34 @@ export function PlanCard({
         </button>
       </div>
 
-      <div className="plan-card-price">
+      {/* <div className="plan-card-price">
         <div className="plan-card-price-amount">
           <span className="plan-card-price-number">
-            {price === 0 ? "رایگان" : formatPrice(price)}
+            {price === 0 ? "رایگان" :plan.toLowerCase() === "enterprise"?"تماس بگیرید": formatPrice(price)}
+       
           </span>
           {price > 0 && <span className="plan-card-price-currency">تومان</span>}
           {price > 0 && (
             <p className="plan-card-price-period text-sm">/ {periodLabel} </p>
+          )}
+        </div>
+      </div> */}
+      <div className="plan-card-price">
+        <div className="plan-card-price-amount">
+          <span className="plan-card-price-number">
+            {price === 0
+              ? "رایگان"
+              : isEnterprise
+              ? "تماس بگیرید"
+              : formatPrice(price)}
+          </span>
+
+          {showPriceMeta && (
+            <span className="plan-card-price-currency">تومان</span>
+          )}
+
+          {showPriceMeta && (
+            <p className="plan-card-price-period text-sm">/ {periodLabel}</p>
           )}
         </div>
       </div>
@@ -143,9 +163,11 @@ export function PlanCard({
         type="button"
         className={`plan-card-button ${buttonVariant}`}
         onClick={() => {
-          plan.toLowerCase() === "enterprise"
-            ? router.push("/contact")
-            : onSelect?.(period);
+          if (plan.toLowerCase() === "enterprise") {
+            window.open("/contact", "_blank", "noopener,noreferrer");
+          } else {
+            onSelect?.(period);
+          }
         }}
         disabled={disabled}
         title={buttonText}

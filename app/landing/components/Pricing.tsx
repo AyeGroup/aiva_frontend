@@ -17,7 +17,9 @@ const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
       enabled: true,
     })),
     {
-      text: `${plan.upload_char_limit.toLocaleString("fa-IR")} کاراکتر  `,
+      text: `بارگذاری اسناد تا  ${plan.upload_char_limit.toLocaleString(
+        "fa-IR"
+      )} کاراکتر  `,
       enabled: true,
     },
   ];
@@ -134,12 +136,12 @@ const pricingPlans: any[] = [
 // PricingCard Component
 const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
   const isPriceNumeric = plan.id === "enterprise" || plan.id === "advanced";
-   const router = useRouter();
+  const router = useRouter();
 
-  const handlePlan = (planid:string) => {
-     console.log("planid", planid);
-  
-    if (planid ==="enterprise") router.push("/contact");
+  const handlePlan = (planid: string) => {
+    console.log("planid", planid);
+
+    if (planid === "enterprise") router.push("/contact");
     else router.push("/dashboard?tab=billing");
   };
 
@@ -210,15 +212,18 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
             >
               {plan?.price_monthly_irr === 0
                 ? "رایگان"
+                : plan?.plan.toLowerCase() === "enterprise"
+                ? "تماس بگیرید"
                 : (plan?.price_monthly_irr / 10).toLocaleString("fa-IR")}
             </div>
 
-            {plan?.price_monthly_irr !== 0 && (
-              <div className="flex flex-row lg:flex-col items-center">
-                <span className="text-sm text-gray-500">تومان</span>
-                <span className="text-xs text-gray-400">/ ماه</span>
-              </div>
-            )}
+            {(plan?.price_monthly_irr !== 0 &&
+              plan?.plan.toLowerCase() !== "enterprise") && (
+                <div className="flex flex-row lg:flex-col items-center">
+                  <span className="text-sm text-gray-500">تومان</span>
+                  <span className="text-xs text-gray-400">/ ماه</span>
+                </div>
+              )}
           </div>
         </div>
 

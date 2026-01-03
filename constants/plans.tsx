@@ -63,21 +63,34 @@ export const translateFeature = (key: string): string => {
     base_stats: "آمار پایه",
     choosing_llm: "انتخاب مدل هوش مصنوعی",
     usage_reports: "گزارش مصرف",
-    upload_docs: "آپلود فایل",
+    upload_docs: "آموزش چت بات از طریق آپلود فایل",
     chatbot_logo: "لوگوی چت‌بات اختصاصی",
     advanced_stats: "آمار پیشرفته",
-    website_crawling: "خزش وب‌سایت",
+    website_crawling: "جمع آوری اطلاعات از سایت شما برای آموزش",
     website_crawling_level_2: "خزش وب‌سایت سطح ۲ ",
     qa_as_file: "سوال و پاسخ از فایل",
     chatbot_greetings: "پیام خوش‌آمدگویی",
     chatbot_k: "حافظه چت‌بات",
     chatbot_emoji: "استفاده از ایموجی",
-    chatbot_support_phone: "پشتیبانی تلفنی",
+    chatbot_support_phone: "اضافه کردن پشتیبان انسانی",
     chatbot_answer_length: "کنترل طول پاسخ",
-    bale_integration: "اتصال به ربات بله",
+    bale_integration: "اتصال به پیامرسان بله",
+    create_free_bot: "ساخت چت‌بات رایگان",
+    customize_design: "تطبیق ظاهری کامل با هویت بصری شما",
+    customize_behavior: "تنظیم رفتار چت‌بات",
+    widget: "اتصال به سایت (ویجت)",
+    api_as_tool: "اتصال به api‌های خارجی",
+    sql_as_tool: "اتصال به دیتابیس",
+    specialized_agent: "اضافه شدن ایجنت های هوش مصنوعی سفارشی",
+    onboarding: "آموزش و آنبوردینگ اختصاصی",
+    optimize_answers: "مشاوره بهینه سازی پاسخ‌ها",
+    voice_chat: "گفتگوی صوتی",
   };
   return dict[key] || key;
 };
+
+// داشبورد تحلیلی مشتریان
+
 export const getPlanIcon = (planCode: string) => {
   switch (planCode.toUpperCase()) {
     case "FREE":

@@ -249,6 +249,7 @@ export function StatsDrawer({
                 >
                   <PlanCardMenu
                     key={index}
+                    plan={plan?.plan}
                     name={getFaNameByCode(plan?.plan) || plan?.plan}
                     description=""
                     priceMonthly={Number(plan?.price_monthly_irr || 0)}
@@ -260,7 +261,11 @@ export function StatsDrawer({
                     onSelect={() => {
                       handlePlanPurchase(plan.plan);
                     }}
-                    buttonText="خرید پلن"
+                    buttonText={
+                      plan?.plan.toLowerCase() === "enterprise"
+                        ? "تماس بگیرید"
+                        : "خرید پلن"
+                    }
                     buttonVariant="secondary"
                   />
                 </div>

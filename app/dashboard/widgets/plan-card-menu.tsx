@@ -6,13 +6,13 @@ interface PlanFeature {
 }
 
 interface PlanCardProps {
+  plan: string;
   name: string;
   description: string;
   priceMonthly: number;
   priceYearly: number;
   period: "monthly" | "yearly";
   onPeriodChange: (newPeriod: "monthly" | "yearly") => void;
-
   features: PlanFeature[];
   icon: React.ReactNode;
   featured?: boolean;
@@ -24,6 +24,7 @@ interface PlanCardProps {
 }
 
 export function PlanCardMenu({
+  plan,
   name,
   priceMonthly,
   priceYearly,
@@ -37,19 +38,30 @@ export function PlanCardMenu({
   onSelect,
   disabled = false,
 }: PlanCardProps) {
+  const handleClick = () => {
+    if (plan.toLowerCase() === "enterprise") {
+      window.open("/contact", "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    onSelect?.();
+  };
 
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat("fa-IR").format(price);
   };
+
   const safeNumber = (value: unknown): number => {
     const n = Number(value);
     return Number.isFinite(n) ? n : 0;
   };
-  // const price = period === "monthly" ? priceMonthly : priceYearly;
- const price =
-   period === "monthly"
-     ? safeNumber(priceMonthly) / 10
-     : safeNumber(priceYearly) / 10;
+  const price =
+    period === "monthly"
+      ? safeNumber(priceMonthly) / 10
+      : safeNumber(priceYearly) / 10;
+  const isEnterprise = plan.toLowerCase() === "enterprise";
+  const showPriceMeta = price > 0 && !isEnterprise;
+
   return (
     <article className={`plan-compact-card ${featured ? "featured" : ""}`}>
       {badgeText && <span className="plan-compact-badge">{badgeText}</span>}
@@ -69,8 +81,20 @@ export function PlanCardMenu({
         <div>
           <h4 className="plan-compact-name">{name}</h4>
           <p className="plan-compact-price">
-            {formatPrice(price)}
-            تومان
+            {/* {formatPrice(price)} */}
+            {/* تومان */}
+
+            <span className="plan-card-price-number">
+              {price === 0
+                ? "رایگان"
+                : isEnterprise
+                ? "تماس بگیرید"
+                : formatPrice(price)}
+            </span>
+
+            {showPriceMeta && (
+              <span className="mr-1 text-primary ">تومان</span>
+            )}
           </p>
         </div>
       </div>
@@ -86,7 +110,7 @@ export function PlanCardMenu({
       <button
         type="button"
         className={`plan-compact-button ${buttonVariant}`}
-        onClick={onSelect}
+        onClick={handleClick}
         disabled={disabled}
         title={buttonText}
         style={{ textAlign: "center" }}

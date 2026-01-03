@@ -94,8 +94,21 @@ export const normalizeFileUrl = (path: string) => {
       .replace(/^(\.\/)?data\//, "") // حذف ./data/
   );
 };
-
 export function getDaysRemaining(targetDate: string | Date): number {
+  const target = new Date(targetDate);
+  const now = new Date();
+
+  // صفر کردن ساعت (فقط تاریخ)
+  target.setHours(0, 0, 0, 0);
+  now.setHours(0, 0, 0, 0);
+
+  const diffMs = target.getTime() - now.getTime();
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+  return diffDays;
+}
+
+export function getDaysRemainingWithTime(targetDate: string | Date): number {
   const target = new Date(targetDate);
   const now = new Date();
 
