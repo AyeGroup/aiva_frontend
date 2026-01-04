@@ -1,11 +1,11 @@
 import Image from "next/image";
+import { Info } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
 import { BotConfig } from "@/types/common";
 import { API_BASE_URL } from "@/config";
 import { onboardingData } from "./onboarding.data";
 import { Delete, SendMessage } from "@/public/icons/AppIcons";
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "@/providers/AuthProvider";
-import { Info } from "lucide-react";
 
 interface ChatPreviewProps {
   botConfig: BotConfig;
@@ -56,10 +56,8 @@ export function ChatPreview({
     if (botConfig.greetings) setMessages(getGreetingMessages());
   };
 
-  // console.log("pre bot",botConfig)
-
   const handleFaqClick = (faq: any) => {
-    setShowFaqs(false);
+    // setShowFaqs(false);
 
     // افزودن پیام کاربر
     const userMessage: Message = {
@@ -360,6 +358,19 @@ export function ChatPreview({
 
               {/* Messages Area */}
               <div className="flex-1 p-6 space-y-4 overflow-y-auto bg-grey-50">
+                {showFaqs && botConfig.faqs && botConfig.faqs.length > 0 && (
+                  <div className="flex flex-wrap justify-center gap-2 my-4">
+                    {botConfig.faqs.map((faq) => (
+                      <button
+                        key={faq.id}
+                        onClick={() => handleFaqClick(faq)}
+                        className="text-xs px-3 py-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary rounded-full max-w-[200px] truncate"
+                      >
+                        {faq.question}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -400,7 +411,6 @@ export function ChatPreview({
                     <div ref={messagesEndRef} />
                   </div>
                 ))}
-
                 {/* Typing Indicator */}
                 {isTyping && (
                   <div className="flex items-end gap-3 justify-start">
@@ -432,19 +442,7 @@ export function ChatPreview({
                 )}
               </div>
               {/* FAQ Buttons */}
-              {showFaqs && botConfig.faqs && botConfig.faqs.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-2 my-4">
-                  {botConfig.faqs.map((faq) => (
-                    <button
-                      key={faq.id}
-                      onClick={() => handleFaqClick(faq)}
-                      className="text-xs px-3 py-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary rounded-full max-w-[200px] truncate"
-                    >
-                      {faq.question}
-                    </button>
-                  ))}
-                </div>
-              )}
+
               {/* Input Area */}
               <div className="px-4 bg-white/80 backdrop-blur-sm border-t border-grey-100">
                 <div className="flex items-center py-4 gap-3">

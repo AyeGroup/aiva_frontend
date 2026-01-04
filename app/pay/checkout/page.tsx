@@ -41,9 +41,7 @@ export default function Checkout() {
     const fetchWalletBalance = async () => {
       try {
         setIsLoadingWallet(true);
-        const res = await axiosInstance.get(
-          API_ROUTES.FINANCIAL.WALLET
-        );
+        const res = await axiosInstance.get(API_ROUTES.FINANCIAL.WALLET);
         const data = res?.data;
 
         if (data?.success) {
@@ -222,7 +220,7 @@ export default function Checkout() {
         invoicePayload
       );
       const data = res.data;
-
+      console.log("initiate data:", data);
       if (!data.success) {
         toast.error(data.message || "خطا در ایجاد فاکتور");
         return;
@@ -231,17 +229,24 @@ export default function Checkout() {
       const invoiceId = data.data.invoice_id;
       localStorage.setItem("lastInvoiceId", invoiceId);
       localStorage.setItem(`invoice-${invoiceId}`, JSON.stringify(data.data));
+      console.log("paymentMethod  :", paymentMethod === "wallet");
 
-      // اگر پرداخت با کیف پول بود، ممکن است نیازی به انتقال به درگاه نباشد
-      if (paymentMethod === "wallet" && data.data.payment_completed) {
-        toast.success("پرداخت با موفقیت از کیف پول انجام شد");
+      if (paymentMethod === "wallet") {
+        // console.log("2");
+        toast.success(data.message || "پرداخت با موفقیت از کیف پول انجام شد");
+
         router.push("/dashboard?tab=billing");
       } else {
+        // console.log("1");
         toast.success("فاکتور با موفقیت ایجاد شد. در حال انتقال به درگاه...");
         router.push(data.data.gateway_url);
       }
     } catch (err: any) {
-      toast.error(err.message || "خطا در اتصال به درگاه پرداخت");
+      const serverMessage =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "یک خطای ناشناخته رخ داد.";
+      toast.error(serverMessage);
     } finally {
       setIsLoading(false);
     }

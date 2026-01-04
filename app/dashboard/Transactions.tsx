@@ -543,28 +543,28 @@ export const Transactions: React.FC = () => {
                             backgroundColor:
                               transaction.status === "success"
                                 ? "#f0fdf4"
-                                : transaction.status === "cancelled"
+                                : transaction.status === "failed"
                                 ? "#fef2f2"
                                 : "#fefce8",
                             borderColor:
                               transaction.status === "success"
                                 ? "#b9f8cf"
-                                : transaction.status === "cancelled"
+                                : transaction.status === "failed"
                                 ? "#fecaca"
                                 : "#fde68a",
                             color:
                               transaction.status === "success"
                                 ? "#008236"
-                                : transaction.status === "cancelled"
+                                : transaction.status === "failed"
                                 ? "#dc2626"
                                 : "#ca8a04",
                           }}
                         >
                           {transaction.status === "success"
                             ? "موفق"
-                            : transaction.status === "cancelled"
+                            : transaction.status === "failed"
                             ? "ناموفق"
-                            : "در انتظار"}
+                            : "نا مشخص"}
                         </div>
                       </td>
 
@@ -640,22 +640,22 @@ export const Transactions: React.FC = () => {
                             backgroundColor:
                               transaction.status === "success"
                                 ? "#f0fdf4"
-                                : transaction.status === "cancelled"
+                                : transaction.status === "failed"
                                 ? "#fef2f2"
                                 : "#fefce8",
                             color:
                               transaction.status === "success"
                                 ? "#008236"
-                                : transaction.status === "cancelled"
+                                : transaction.status === "failed"
                                 ? "#dc2626"
                                 : "#ca8a04",
                           }}
                         >
                           {transaction.status === "success"
                             ? "موفق"
-                            : transaction.status === "cancelled"
+                            : transaction.status === "failed"
                             ? "ناموفق"
-                            : "در انتظار"}
+                            : "نامشخص"}
                         </div>
                       </div>
 

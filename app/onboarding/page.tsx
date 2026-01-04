@@ -628,7 +628,7 @@ export default function OnboardingWizard() {
 
   if (loading || isLoading) return <PageLoader />;
   if (!user) return null;
-  const showButton = isNew || currentStep < totalSteps;
+  const showButton = isNew || (currentStep ===1 || currentStep ===2 || currentStep ===5);
 
   return (
     <main className="onboarding-wizard h-screen overflow-y-auto bg-bg-app">
