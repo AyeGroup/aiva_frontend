@@ -20,6 +20,7 @@ interface Props {
 export function ViewTicketDetail({ ticket, onClose }: Props) {
   const [replyText, setReplyText] = useState("");
   const [thisTicket, setThisTicket] = useState<Ticket>(ticket);
+  const isTicketClosed = thisTicket.status === "closed";
 
   const getStatusConfig = (status: string) => {
     const configs = {
@@ -108,15 +109,19 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
   };
 
   const handleSendReply = async () => {
+    if (thisTicket.status === "closed") {
+      toast.error("این تیکت بسته شده و امکان ارسال پاسخ وجود ندارد");
+      return;
+    }
+
     if (!replyText.trim()) return;
 
     setIsLoading(true);
     try {
-      const response = await axiosInstance.post(
-        API_ROUTES.TICKETS.ADD_MESSAGE(thisTicket.id),
-        { content: replyText }
-      );
-      // const newTicket: Ticket = response.data.data;
+      await axiosInstance.post(API_ROUTES.TICKETS.ADD_MESSAGE(thisTicket.id), {
+        content: replyText,
+      });
+
       await loadTicket();
       toast.success("پاسخ شما ارسال شد");
       setReplyText("");
@@ -302,27 +307,40 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
           </Card>
 
           {/* Reply Form */}
-          <Card className="p-6">
-            <h3 className="text-grey-900 mb-4 text-right">پاسخ جدید</h3>
-            <div className="space-y-4">
-              <textarea
-                className="input-base input-default input-medium min-h-[120px] resize-none w-full"
-                placeholder="پاسخ خود را بنویسید..."
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-              />
-              <div className="text-left">
-                <Button
-                  variant="primary"
-                  size="md"
-                  title="ارسال پاسخ"
-                  onClick={handleSendReply}
-                >
-                  ارسال پاسخ
-                </Button>
-              </div>
+          {isTicketClosed ? (
+            <div className="p-4 rounded-xl shadow-md text-secondary text-center">
+              این تیکت بسته شده است و امکان ارسال پیام جدید وجود ندارد
             </div>
-          </Card>
+          ) : (
+            <Card className="p-6">
+              <h3 className="text-grey-900 mb-4 text-right">پاسخ جدید</h3>
+              <div className="space-y-4">
+                <textarea
+                  className="input-base input-default input-medium min-h-[120px] resize-none w-full disabled:bg-grey-100 disabled:cursor-not-allowed"
+                  placeholder={
+                    isTicketClosed
+                      ? "این تیکت بسته شده و امکان ارسال پیام وجود ندارد"
+                      : "پاسخ خود را بنویسید..."
+                  }
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  disabled={isTicketClosed}
+                />
+
+                <div className="text-left">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    title="ارسال پاسخ"
+                    disabled={isTicketClosed}
+                    onClick={handleSendReply}
+                  >
+                    ارسال پاسخ
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
     </section>
