@@ -43,7 +43,7 @@ export default function SectionStarting() {
           آماده شروع هستید؟
         </p>
         <p className="font-medium  my-8 text-[rgba(255,255,255,0.95)] text-center lg:text-nowrap  ">
-          آیوا را رایگان امتحان کنید و تفاوت را در همان روز اول احساس کنید
+          آیوا را رایگان امتحان کنید و تفاوت را در همان روز اول احساس کنید.
         </p>
         <div className="flex gap-8">
           <Link

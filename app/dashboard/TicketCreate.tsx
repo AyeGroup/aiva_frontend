@@ -40,55 +40,55 @@ export function CreateTicketView({ onSubmit }: Props) {
     { value: "medium", label: getPriorityLabel("medium") },
     { value: "low", label: getPriorityLabel("low") },
   ];
-const [errors, setErrors] = useState<{
-  title?: string;
-  content?: string;
-}>({});
+  const [errors, setErrors] = useState<{
+    title?: string;
+    content?: string;
+  }>({});
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const newErrors: typeof errors = {};
+    const newErrors: typeof errors = {};
 
-  if (!formData.title.trim()) {
-    newErrors.title = "عنوان تیکت الزامی است";
-  }
+    if (!formData.title.trim()) {
+      newErrors.title = "عنوان تیکت الزامی است";
+    }
 
-  if (!formData.content.trim()) {
-    newErrors.content = "توضیحات تیکت الزامی است";
-  }
+    if (!formData.content.trim()) {
+      newErrors.content = "توضیحات تیکت الزامی است";
+    }
 
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    return;
-  }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
-  setErrors({});
-  setIsLoading(true);
+    setErrors({});
+    setIsLoading(true);
 
-  try {
-    const response = await axiosInstance.post(
-      API_ROUTES.TICKETS.CREATE,
-      formData
-    );
+    try {
+      const response = await axiosInstance.post(
+        API_ROUTES.TICKETS.CREATE,
+        formData
+      );
 
-    const newTicket: Ticket = response.data.data;
-    toast.success("تیکت جدید با موفقیت ارسال شد");
-    onSubmit(newTicket);
-  } catch (error: any) {
-    const backendMessage =
-      error?.response?.data?.message ||
-      error?.response?.data?.error ||
-      "ارسال تیکت با مشکل مواجه شد";
+      const newTicket: Ticket = response.data.data;
+      toast.success("تیکت جدید با موفقیت ارسال شد");
+      onSubmit(newTicket);
+    } catch (error: any) {
+      const backendMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "ارسال تیکت با مشکل مواجه شد";
 
-    toast.error(backendMessage);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      toast.error(backendMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <section className="flex-1 overflow-y-auto bg-bg-shell">
+    <section className="flex-1  bg-bg-shell">
       {isLoading && <PageLoader />}
       <div className="max-w-4xl mx-auto p-8">
         <div
@@ -132,10 +132,13 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </label>
 
                 <textarea
-                  className={`input-base input-default input-medium min-h-[150px] resize-none
-      ${errors.content ? "border-red-500! focus:border-red-500" : ""}`}
+                  
+                  className={`input-base input-default input-medium h-[150px] resize-none overflow-y-auto ${
+                    errors.content ? "border-red-500! focus:border-red-500" : ""
+                  }`}
                   placeholder="لطفاً مشکل یا درخواست خود را به طور کامل توضیح دهید..."
                   value={formData.content}
+                  maxLength={1000}
                   onChange={(e) => {
                     setFormData({ ...formData, content: e.target.value });
                     if (errors.content) {
@@ -143,7 +146,22 @@ const handleSubmit = async (e: React.FormEvent) => {
                     }
                   }}
                 />
+                <div className="mt-1 flex justify-between text-xs">
+                  <span
+                    className={`${
+                      formData.content.length === 1000
+                        ? "text-red-500"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    {formData.content.length === 1000 &&
+                      "حداکثر تعداد کاراکتر مجاز ۱۰۰۰ کاراکتر است"}
+                  </span>
 
+                  <span className="text-gray-400">
+                    {formData.content.length} / 1000
+                  </span>
+                </div>
                 {errors.content && (
                   <p className="text-xs text-red-500 mr-2">{errors.content}</p>
                 )}

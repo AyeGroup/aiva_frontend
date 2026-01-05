@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useBot } from "@/providers/BotProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import axiosInstance from "@/lib/axiosInstance";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 
 interface ChatHistoryProps {
   username: string;
@@ -14,7 +15,7 @@ export function ChatHistory({ username }: ChatHistoryProps) {
   const [history, setHistory] = useState<any[]>([]);
 
   useEffect(() => {
-  console.log("useEffect");
+    console.log("useEffect");
     if (!currentBot) return;
     if (!username) return;
 
@@ -38,6 +39,27 @@ export function ChatHistory({ username }: ChatHistoryProps) {
     };
     fetchActiveUsers();
   }, [currentBot, username]);
+
+  function MessageFeedbackView({
+    feedback,
+  }: {
+    feedback?: "like" | "dislike" | null;
+  }) {
+    if (!feedback) return null;
+
+    return (
+      <div className="flex items-center gap-2 mt-2">
+        <ThumbsUp
+          size={16}
+          className={feedback === "like" ? "text-green-600" : "text-gray-300"}
+        />
+        <ThumbsDown
+          size={16}
+          className={feedback === "dislike" ? "text-red-600" : "text-gray-300"}
+        />
+      </div>
+    );
+  }
 
   if (!currentBot) return;
 
@@ -117,6 +139,9 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                       }
                     >
                       {message.content}
+                      {message.role === "user" && (
+                        <MessageFeedbackView feedback={message.feedback} />
+                      )}
                       <div
                         className={`text-xs mt-1 opacity-70 ${
                           message.role === "user"

@@ -302,7 +302,7 @@ export default function PricingPage() {
           {/* Subtitle */}
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             از رایگان شروع کن یا با پلن‌های حرفه‌ای، کسب‌وکارت رو به سطح جدیدی
-            ببر
+            ببر.
           </p>
         </div>
 

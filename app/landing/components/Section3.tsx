@@ -20,7 +20,7 @@ const STEPS_DATA = [
     color: "#65BCB6",
     icon: <Sec3_Icon8 />,
     title: "ثبت‌نام",
-    description: "حساب کاربری خود را در کمتر از ۳۰ ثانیه ایجاد کنید",
+    description: "حساب کاربری خود را در کمتر از ۳۰ ثانیه ایجاد کنید.",
     duration: "۳۰ ثانیه",
   },
   {
@@ -28,7 +28,7 @@ const STEPS_DATA = [
     color: "#52D4A0",
     icon: <Sec3_Icon6 />,
     title: "آموزش",
-    description: "منابع و اطلاعات کسب‌وکار خود را آپلود کنید",
+    description: "منابع و اطلاعات کسب‌وکار خود را آپلود کنید.",
     duration: "۲ دقیقه",
   },
   {
@@ -36,7 +36,7 @@ const STEPS_DATA = [
     color: "#ffa18e",
     icon: <Sec3_Icon5 />,
     title: "شخصی‌سازی",
-    description: "ظاهر و رفتار چت‌بات را مطابق برند خود تنظیم کنید",
+    description: "ظاهر و رفتار چت‌بات را مطابق برند خود تنظیم کنید.",
     duration: "۵ دقیقه",
   },
   {
@@ -44,7 +44,7 @@ const STEPS_DATA = [
     color: "#B07CC6",
     icon: <Sec3_Icon4 />,
     title: "راه‌اندازی",
-    description: "چت‌بات را روی وب‌سایت یا اپلیکیشن خود نصب کنید",
+    description: "چت‌بات را روی وب‌سایت یا اپلیکیشن خود نصب کنید.",
     duration: "۲ دقیقه",
   },
 ];
@@ -85,12 +85,12 @@ function Header() {
 
       {/* Title */}
       <p className="font-extrabold text-2xl sm:text-3xl lg:text-4xl text-gray-900">
-        آیوا را در ۴ مرحله ساده راه‌اندازی کنید
+        آیوا را در ۴ مرحله ساده راه‌اندازی کنید.
       </p>
 
       {/* Subtitle */}
       <p className="text-center text-gray-600 text-sm sm:text-base">
-        از ثبت‌نام تا اولین گفت‌وگو، تنها چند دقیقه فاصله دارید
+        از ثبت‌نام تا اولین گفت‌وگو، تنها چند دقیقه فاصله دارید.
       </p>
     </motion.div>
   );
@@ -273,7 +273,7 @@ function CTASection() {
       <div className="flex flex-wrap items-center justify-center gap-2 text-center text-sm sm:text-base">
         <span>کل فرآیند کمتر از</span>
         <span className="text-[#65bcb6] font-bold">۱۰ دقیقه</span>
-        <span>زمان می‌برد</span>
+        <span>زمان می‌برد.</span>
       </div>
 
       {/* CTA Button */}

@@ -45,7 +45,7 @@ const faqData: FAQItem[] = [
     icon: <FileText className="w-6 h-6 text-teal-500" />,
     question: "چه فرمت‌هایی رو پشتیبانی می‌کنه؟",
     answer:
-      "PDF, Word, Excel, CSV ساده، می‌تونید محتوای وب‌سایت خودتون رو هم اضافه کنید.",
+      "PDF, Word, Excel و CSV ساده، می‌تونید محتوای وب‌سایت خودتون رو هم اضافه کنید.",
   },
   {
     icon: <Users className="w-6 h-6 text-teal-500" />,
@@ -102,7 +102,7 @@ const FAQSection: React.FC = () => {
             سؤالات پرتکرار
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            پاسخ‌های سریع برای سؤالاتی که ممکنه داشته باشید
+            پاسخ‌های سریع برای سؤالاتی که ممکنه داشته باشید.
           </p>
         </header>
 

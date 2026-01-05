@@ -323,10 +323,26 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                       : "پاسخ خود را بنویسید..."
                   }
                   value={replyText}
+                  maxLength={1000}
                   onChange={(e) => setReplyText(e.target.value)}
                   disabled={isTicketClosed}
                 />
+                <div className="mt-1 flex justify-between text-xs">
+                  <span
+                    className={`${
+                      replyText.length === 1000
+                        ? "text-red-500"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    {replyText.length === 1000 &&
+                      "حداکثر تعداد کاراکتر مجاز ۱۰۰۰ کاراکتر است"}
+                  </span>
 
+                  <span className="text-gray-400">
+                    {replyText.length} / 1000
+                  </span>
+                </div>
                 <div className="text-left">
                   <Button
                     variant="primary"

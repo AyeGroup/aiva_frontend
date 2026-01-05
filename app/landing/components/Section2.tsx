@@ -42,7 +42,7 @@ function Header() {
 
       {/* Subtitle */}
       <p className="text-center text-gray-600 text-sm sm:text-base max-w-2xl">
-        چت‌بات هوشمند مبتنی بر AI که کسب‌وکار شما را متحول می‌کند
+        چت‌بات هوشمند مبتنی بر AI که کسب‌وکار شما را متحول می‌کند.
       </p>
     </div>
   );
@@ -52,7 +52,7 @@ const articlesData = [
   {
     title: "یکپارچه‌سازی آسان",
     description:
-      "به راحتی با وب‌سایت، واتساپ، تلگرام، اینستاگرام و سایر پلتفرم‌ها یکپارچه شوید",
+      "به راحتی با وب‌سایت، واتساپ، تلگرام، اینستاگرام و سایر پلتفرم‌ها یکپارچه شوید.",
     bgColor: "#FFA18E",
     iconBgColor: "rgba(255,161,142,0.08)",
     IconComponent: Sec2_IconYekparche,
@@ -60,7 +60,7 @@ const articlesData = [
   {
     title: "پشتیبانی چندزبانه",
     description:
-      "به فارسی، انگلیسی و بیش از ۵۰ زبان دیگر با مشتریان خود گفت‌وگو کنید",
+      "به فارسی، انگلیسی و بیش از ۵۰ زبان دیگر با مشتریان خود گفت‌وگو کنید.",
     bgColor: "#52D4A0",
     iconBgColor: "rgba(82,212,160,0.08)",
     IconComponent: Sec2_IconPoshtibani,
@@ -68,14 +68,14 @@ const articlesData = [
   {
     title: "یادگیری هوشمند",
     description:
-      "آیوا از محتوای وب‌سایت، فایل‌ها و مستندات شما یاد می‌گیرد و پاسخ‌های دقیق و شخصی‌سازی شده ارائه می‌ده",
+      "آیوا از محتوای وب‌سایت، فایل‌ها و مستندات شما یاد می‌گیرد و پاسخ‌های دقیق و شخصی‌سازی شده ارائه می‌دهد.",
     bgColor: "#65BCB6",
     iconBgColor: "rgba(101,188,182,0.08)",
     IconComponent: Sec2_IconYadgiri,
   },
   {
     title: "امنیت بالا",
-    description: "داده‌های شما با بالاترین استانداردهای امنیتی محافظت می‌شود",
+    description: "داده‌های شما با بالاترین استانداردهای امنیتی محافظت می‌شود.",
     bgColor: "#FFA18E",
     iconBgColor: "rgba(255,137,112,0.08)",
     IconComponent: Sec2_IconAmniat,
@@ -83,7 +83,7 @@ const articlesData = [
   {
     title: "جمع‌آوری سرنخ",
     description:
-      "اطلاعات مشتریان بالقوه را به صورت هوشمند جمع‌آوری و مدیریت کنید",
+      "اطلاعات مشتریان بالقوه را به صورت هوشمند جمع‌آوری و مدیریت کنید.",
     bgColor: "#4460F7",
     iconBgColor: "rgba(68,96,247,0.08)",
     IconComponent: Sec2_IconSarNakh,
@@ -91,7 +91,7 @@ const articlesData = [
   {
     title: "تحلیل و گزارش‌گیری",
     description:
-      "آمار کامل از گفت‌وگوها، رضایت مشتریان و عملکرد چت‌بات دریافت کنید",
+      "آمار کامل از گفت‌وگوها، رضایت مشتریان و عملکرد چت‌بات دریافت کنید.",
     bgColor: "#B07CC6",
     iconBgColor: "rgba(176,124,198,0.08)",
     IconComponent: Sec2_IconTahlil,
@@ -223,7 +223,7 @@ function StatsList() {
         "linear-gradient(90deg, rgb(17, 24, 39) 0%, rgb(17, 24, 39) 100%), linear-gradient(138.366deg, rgb(101, 188, 182) 0%, rgb(82, 212, 160) 100%)",
     },
     {
-      value: "+۱۰۰۰",
+      value: "+۱۰۰",
       label: "کسب‌وکار فعال",
       gradient:
         "linear-gradient(90deg, rgb(17, 24, 39) 0%, rgb(17, 24, 39) 100%), linear-gradient(146.31deg, rgb(101, 188, 182) 0%, rgb(82, 212, 160) 100%)",
