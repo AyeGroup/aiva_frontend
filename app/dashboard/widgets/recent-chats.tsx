@@ -25,7 +25,7 @@ interface ApiMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
-  ts: number;
+  ts: string;
   feedback: any;
 }
 
@@ -42,14 +42,12 @@ interface ApiChat {
 interface RecentChatsProps {
   data: ApiChat[];
   onChatClick?: (chatId: string) => void;
-  onViewAll?: () => void;
-}
+ }
 
 export function RecentChats({
   data,
   onChatClick,
-  onViewAll,
-}: RecentChatsProps) {
+ }: RecentChatsProps) {
   const chats: ChatData[] = data.map((chat) => {
     const lastMessage = chat.messages.at(-1);
 
@@ -69,7 +67,8 @@ export function RecentChats({
         id: m.id,
         type: m.role === "assistant" ? "bot" : "user",
         content: m.content,
-        timestamp: new Date(m.ts).toLocaleDateString("fa-IR"),
+        timestamp: m.ts,
+        // timestamp: new Date(m.ts).toLocaleDateString("fa-IR"),
         // timestamp: new Date(m.ts * 1000).toISOString(),
       })),
     };
@@ -105,12 +104,10 @@ export function RecentChats({
             .filter((chat) => chat.messages?.length > 0)
             .map((chat, index) => (
               <ChatHistoryCard
-                key={chat.userId}
-                // userId={chat.userId}
+                key={index}
                 userName={chat.userName}
                 userAvatar={chat.userAvatar}
                 messages={chat.messages}
-                // status={chat.status}
                 unreadCount={chat.unreadCount}
                 lastActivity={chat.lastActivity}
                 onClick={() => onChatClick?.(chat.userId)}

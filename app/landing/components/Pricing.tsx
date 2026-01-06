@@ -17,9 +17,13 @@ const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
       enabled: true,
     })),
     {
-      text: `بارگذاری اسناد تا  ${plan.upload_char_limit.toLocaleString(
-        "fa-IR"
-      )} کاراکتر  `,
+      text:
+        plan.plan === "ENTERPRISE"
+          ? "کاراکتر نامحدود در بارگذاری اسناد "
+          : `بارگذاری اسناد تا ${plan.upload_char_limit.toLocaleString(
+              "fa-IR"
+            )} کاراکتر`,
+
       enabled: true,
     },
   ];

@@ -8,6 +8,7 @@ import { BotConfig, FAQ } from "@/types/common";
 import { useState, useEffect } from "react";
 import { HelpCircle, Trash2, Edit3, Save, X, Info } from "lucide-react";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import LoadingModal from "@/components/LoadingModal";
 
 interface WizardStep4Props {
   botConfig: BotConfig;
@@ -176,7 +177,14 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   return (
     <div className="space-y-4 bg-bg-surface p-6 border-2 border-brand-primary/20 rounded-xl shadow-lg">
       {isloading && <PageLoader />}
-      <div className="flex items-start gap-4">
+           {issubmitting && (
+             <LoadingModal
+               show={issubmitting}
+               message="در حال ثبت اطلاعات... لطفاً منتظر بمانید. ."
+             />
+           )}
+           
+            <div className="flex items-start gap-4">
         <div className="w-16 h-16 bg-primary/10  rounded-xl flex items-center justify-center shrink-0">
           <HelpCircle className="w-8 h-8 text-primary" />
         </div>

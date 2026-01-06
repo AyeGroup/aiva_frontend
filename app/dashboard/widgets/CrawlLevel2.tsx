@@ -108,7 +108,7 @@ export default function CrawlLevel2({
 
       setIsSubmitting(false);
       toast.success("لینک‌ها ثبت شدند");
-      // onClose(true);
+      onClose(true);
     } catch (err: any) {
       const backendMessage =
         err.response?.data?.message ||
@@ -261,7 +261,7 @@ export default function CrawlLevel2({
                 disabled={loading}
                 className="px-12 py-3 min-w-40 shadow-lg hover:shadow-xl cursor-pointer"
               >
-                بستن
+                انصراف
               </Button>
             </div>
           </div>
@@ -298,7 +298,7 @@ export default function CrawlLevel2({
                   onChange={handleSelectAll}
                 />
               </div>
-              <div className="w-full flex justify-center">
+              <div className="w-full flex justify-center items-center gap-2">
                 <Button
                   variant="primary"
                   disabled={isSubmitting}
@@ -306,6 +306,15 @@ export default function CrawlLevel2({
                   className="mt-2 px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
                 >
                   {isSubmitting ? "منتظر بمانید ..." : " ثبت انتخاب‌ها"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => onClose(false)}
+                  disabled={loading}
+                  className="mt-2 px-12 py-3 min-w-40 shadow-lg hover:shadow-xl"
+                  
+                >
+                  بستن
                 </Button>
               </div>
             </div>

@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 import { useBot } from "@/providers/BotProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import axiosInstance from "@/lib/axiosInstance";
+import { useState, useEffect } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 
 interface ChatHistoryProps {
@@ -10,7 +10,6 @@ interface ChatHistoryProps {
 }
 
 export function ChatHistory({ username }: ChatHistoryProps) {
-  console.log("ChatHistory");
   const { currentBot } = useBot();
   const [history, setHistory] = useState<any[]>([]);
 
@@ -60,12 +59,13 @@ export function ChatHistory({ username }: ChatHistoryProps) {
       </div>
     );
   }
-
+  const myDate = new Date(history[0]?.timestamp * 1000).toLocaleDateString(
+    "fa-IR"
+  );
   if (!currentBot) return;
 
   return (
     <div className="chat-preview-container">
-      {/* Single Column Layout: Live Chat Only */}
       <div className="max-w-md mx-auto ">
         <div
           key={`${currentBot.primary_color}-${currentBot.name}-${currentBot.widget_position}-${currentBot.button_size}`}
@@ -109,7 +109,8 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                   </div>
                   <div className="flex items-center gap-2 mt-1 justify-start">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <p className="text-sm opacity-90">آنلاین و آماده پاسخ</p>
+                    {/* <p className="text-sm opacity-90">آنلاین و آماده پاسخ</p> */}
+                    <p className="text-sm opacity-90"> {myDate}</p>
                   </div>
                 </div>
               </div>
@@ -132,9 +133,7 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                       }`}
                       style={
                         message.role === "user"
-                          ? {
-                              background: currentBot.primary_color,
-                            }
+                          ? { background: currentBot.primary_color }
                           : {}
                       }
                     >
@@ -149,13 +148,12 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                             : "text-grey-500"
                         }`}
                       >
-                        {new Date(message.timestamp).toLocaleTimeString(
-                          "fa-IR",
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
+                        {new Date(
+                          history[0]?.timestamp * 1000
+                        ).toLocaleTimeString("fa-IR", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </div>
                     </div>
                   </div>

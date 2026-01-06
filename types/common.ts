@@ -91,6 +91,7 @@ export interface FAQ {
   answer: string;
   isEditing?: boolean;
 }
+export type PaymentMethod = "wallet" | "online";
 
 export interface KnowledgeItem {
   id: string;

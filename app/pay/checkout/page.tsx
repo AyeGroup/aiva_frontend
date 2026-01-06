@@ -17,8 +17,7 @@ import {
   PLAN_COLORS,
   SUBSCRIPTION_TYPES,
 } from "@/constants/plans";
-
-type PaymentMethod = "wallet" | "online";
+import { PaymentMethod } from "@/types/common";
 
 export default function Checkout() {
   const [discountCode, setDiscountCode] = useState("");
@@ -222,7 +221,7 @@ export default function Checkout() {
       const data = res.data;
       console.log("initiate data:", data);
       if (!data.success) {
-        toast.error(data.message || "خطا در ایجاد فاکتور");
+        toast.error(data.message || "خطا در پرداخت");
         return;
       }
 
@@ -232,12 +231,10 @@ export default function Checkout() {
       console.log("paymentMethod  :", paymentMethod === "wallet");
 
       if (paymentMethod === "wallet") {
-        // console.log("2");
         toast.success(data.message || "پرداخت با موفقیت از کیف پول انجام شد");
 
         router.push("/dashboard?tab=billing");
       } else {
-        // console.log("1");
         toast.success("فاکتور با موفقیت ایجاد شد. در حال انتقال به درگاه...");
         router.push(data.data.gateway_url);
       }
@@ -245,7 +242,7 @@ export default function Checkout() {
       const serverMessage =
         err?.response?.data?.message ||
         err?.response?.data?.error ||
-        "یک خطای ناشناخته رخ داد.";
+        "خطا در پرداخت";
       toast.error(serverMessage);
     } finally {
       setIsLoading(false);

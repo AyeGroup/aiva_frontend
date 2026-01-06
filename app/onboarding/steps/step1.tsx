@@ -199,7 +199,7 @@ export function WizardStep1({
             }
           />
           <ToggleSmall
-            label="تلفن"
+            label="موبایل"
             checked={botConfig.require_user_phone}
             onChange={() =>
               updateConfig({

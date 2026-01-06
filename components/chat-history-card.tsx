@@ -1,14 +1,7 @@
 import React, { useState } from "react";
-import {
-  User,
-  Bot,
-  Clock,
-  MessageSquare,
-  ChevronLeft,
-  Circle,
-} from "lucide-react";
+import { User, Bot, Clock, MessageSquare } from "lucide-react";
 import "@/styles/components.css";
-import { convertToEnglish, convertToPersian, jalaliToGregorian } from "@/utils/common";
+import { convertToPersian } from "@/utils/common";
 import Image from "next/image";
 
 interface Message {
@@ -39,28 +32,8 @@ export function ChatHistoryCard({
   // نمایش آخرین 3 پیام
   const displayMessages = messages.slice(-3);
   const hasMoreMessages = messages.length > 3;
-  
-  const formatTime = (jalaliDate: string) => {
-    const cleanDate = convertToEnglish(jalaliDate);
-    const [jy, jm, jd] = cleanDate.split("/").map(Number);
 
-    if (!jy || !jm || !jd) return "";
-
-    const date = jalaliToGregorian(jy, jm, jd);
-    const now = new Date();
-
-    const diffMinutes = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60)
-    );
-
-    if (diffMinutes < 1) return "همین حالا";
-    if (diffMinutes < 60) return `${convertToPersian(diffMinutes)} دقیقه پیش`;
-    if (diffMinutes < 1440)
-      return `${convertToPersian(Math.floor(diffMinutes / 60))} ساعت پیش`;
-
-    return `${convertToPersian(Math.floor(diffMinutes / 1440))} روز پیش`;
-  };
-
+  console.log("s", messages);
 
   return (
     <div className="chat-history-card" onClick={onClick}>
@@ -77,7 +50,6 @@ export function ChatHistoryCard({
           <div className="user-details">
             <h4 className="user-name">{userName}</h4>
             <div className="chat-meta">
-              
               <div className="last-activity">
                 <Clock className="w-3 h-3" />
                 <span>{lastActivity}</span>
@@ -111,7 +83,13 @@ export function ChatHistoryCard({
               <div className="message-content">
                 <div className="message-text">{message.content}</div>
                 <div className="message-time">
-                  {formatTime(message.timestamp)}
+                  {/* {message.timestamp} */}
+                  {/* {new Date(message.timestamp).toLocaleTimeString()} */}
+                  {new Date(message.timestamp).toLocaleTimeString("fa-IR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })}
                 </div>
               </div>
             </div>

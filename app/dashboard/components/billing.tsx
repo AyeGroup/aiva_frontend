@@ -43,6 +43,8 @@ export function Billing() {
   const [periods, setPeriods] = useState<Record<string, "monthly" | "yearly">>(
     {}
   );
+  const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [walletLoading, setWalletLoading] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -120,6 +122,21 @@ export function Billing() {
       sessionStorage.removeItem("scrollTo");
     }
   }, []);
+  const refreshWalletBalance = async () => {
+    setWalletLoading(true);
+    try {
+      const res = await axiosInstance.get(API_ROUTES.FINANCIAL.WALLET);
+      setWalletBalance(res.data?.data?.wallet_balance ?? 0);
+    } catch (e) {
+      console.warn("wallet fetch failed", e);
+    } finally {
+      setWalletLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshWalletBalance();
+  }, []);
 
   useEffect(() => {
     const billingChatbotId = sessionStorage.getItem("billingchatbotId");
@@ -133,13 +150,19 @@ export function Billing() {
   }, []);
 
   const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
+    console.log("m", plan);
     return [
       ...plan.features.map((f: string) => ({
         text: translateFeature(f),
         enabled: true,
       })),
       {
-        text: `${plan.upload_char_limit.toLocaleString("fa-IR")} کاراکتر  `,
+        text:
+          plan.plan === "ENTERPRISE"
+            ? "کاراکتر نامحدود در بارگذاری اسناد "
+            : `بارگذاری اسناد تا ${plan.upload_char_limit.toLocaleString(
+                "fa-IR"
+              )} کاراکتر`,
         enabled: true,
       },
     ];
@@ -230,7 +253,10 @@ export function Billing() {
           </header>
 
           <section className="mb-6 sm:mb-8" aria-label="خلاصه اعتبار">
-            <WalletCard />
+            <WalletCard
+              walletBalance={walletBalance}
+              isLoading={walletLoading}
+            />
           </section>
 
           {/* Discount & Expiring Alert */}
@@ -810,6 +836,7 @@ export function Billing() {
           isOpen={isCreditIncreaseModalOpen}
           onClose={() => setIsCreditIncreaseModalOpen(false)}
           selectedChatbot={selectedChatbot}
+          onSuccessWalletPayment={refreshWalletBalance}
         />
       </div>
     </div>

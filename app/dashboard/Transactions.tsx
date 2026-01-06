@@ -564,6 +564,8 @@ export const Transactions: React.FC = () => {
                             ? "موفق"
                             : transaction.status === "failed"
                             ? "ناموفق"
+                            : transaction.status === "cancelled"
+                            ? "لغو شده"
                             : "نا مشخص"}
                         </div>
                       </td>
@@ -655,6 +657,8 @@ export const Transactions: React.FC = () => {
                             ? "موفق"
                             : transaction.status === "failed"
                             ? "ناموفق"
+                            : transaction.status === "cancelled"
+                            ? "لغو شده"
                             : "نامشخص"}
                         </div>
                       </div>
@@ -677,7 +681,8 @@ export const Transactions: React.FC = () => {
                           >
                             <Download className="w-5 h-5 text-gray-600" />
                           </button>
-                          {transaction.status === "failed" && (
+                          {(transaction.status === "failed" ||
+                            transaction.status === "cancelled") && (
                             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                               <RefreshCw className="w-5 h-5 text-gray-600" />
                             </button>
