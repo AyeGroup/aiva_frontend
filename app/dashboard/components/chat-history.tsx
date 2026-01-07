@@ -59,9 +59,12 @@ export function ChatHistory({ username }: ChatHistoryProps) {
       </div>
     );
   }
-  const myDate = new Date(history[0]?.timestamp * 1000).toLocaleDateString(
+  const myDateTs = new Date(history[0]?.timestamp * 1000).toLocaleDateString(
     "fa-IR"
   );
+
+  const myDate = new Date(history[0]?.datetime).toLocaleDateString("fa-IR");
+
   if (!currentBot) return;
 
   return (
@@ -109,7 +112,6 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                   </div>
                   <div className="flex items-center gap-2 mt-1 justify-start">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    {/* <p className="text-sm opacity-90">آنلاین و آماده پاسخ</p> */}
                     <p className="text-sm opacity-90"> {myDate}</p>
                   </div>
                 </div>
@@ -148,12 +150,20 @@ export function ChatHistory({ username }: ChatHistoryProps) {
                             : "text-grey-500"
                         }`}
                       >
-                        {new Date(
+                        {/* {new Date(
                           history[0]?.timestamp * 1000
                         ).toLocaleTimeString("fa-IR", {
                           hour: "2-digit",
                           minute: "2-digit",
-                        })}
+                        })} */}
+
+                        {new Date(message?.datetime).toLocaleTimeString(
+                          "fa-IR",
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
                       </div>
                     </div>
                   </div>

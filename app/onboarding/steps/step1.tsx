@@ -8,6 +8,8 @@ import { TemplateModal } from "../TemplateModal";
 import { onboardingData } from "../onboarding.data";
 import { GenericSelector } from "@/components/selector";
 import { BotConfig, SelectorItem } from "@/types/common";
+import { useBot } from "@/providers/BotProvider";
+import { prompt_templates, templates } from "../templates.data";
 
 type TemplateTarget = "description" | "guidelines" | null;
 const TEMPLATE_PLACEHOLDER = "__placeholder__";
@@ -22,26 +24,10 @@ export function WizardStep1({
   const [selectedTemplate, setSelectedTemplate] =
     useState<string>(TEMPLATE_PLACEHOLDER);
   const [templateTarget, setTemplateTarget] = useState<TemplateTarget>(null);
+  const [nameMessage, setNameMessage] = useState("");
   const [editableText, setEditableText] = useState("");
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
-
-  const templates = [
-    {
-      value: "1",
-      label: "آموزشی",
-      text: "تمرکز پاسخ‌ها روی محصولات، قیمت، موجودی و نحوه ارسال باشد...",
-    },
-    {
-      value: "2",
-      label: "خدماتی",
-      text: "پاسخ‌ها باید بر پایه‌ی اطلاعات رسمی دوره‌ها باشند...",
-    },
-    {
-      value: "3",
-      label: "مالی",
-      text: "فقط بر اساس راهنمای فنی رسمی پاسخ بده...",
-    },
-  ];
+  const { bots } = useBot();
 
   const TEMPLATE_OPTIONS = templates.map((t, i) => ({
     label: t.label,
@@ -49,7 +35,13 @@ export function WizardStep1({
     text: t.text,
   }));
 
-  const TEMPLATE_OPTIONS_WITH_PLACEHOLDER = [
+  const PROMPT_TEMPLATE_OPTIONS = prompt_templates.map((t, i) => ({
+    label: t.label,
+    value: String(i),
+    text: t.text,
+  }));
+
+  const TEMPLATE_OPTIONS_PLACEHOLDER = [
     {
       label: "انتخاب قالب آماده",
       value: TEMPLATE_PLACEHOLDER,
@@ -58,6 +50,14 @@ export function WizardStep1({
     ...TEMPLATE_OPTIONS,
   ];
 
+  const PROMPT_TEMPLATE_OPTIONS_PLACEHOLDER = [
+    {
+      label: "انتخاب قالب آماده",
+      value: TEMPLATE_PLACEHOLDER,
+      disabled: true,
+    },
+    ...PROMPT_TEMPLATE_OPTIONS,
+  ];
   /* -------------------- Helpers -------------------- */
   const resetTemplateFlow = () => {
     setSelectedTemplate(TEMPLATE_PLACEHOLDER);
@@ -75,6 +75,28 @@ export function WizardStep1({
     setTemplateTarget(target);
     setEditableText(template.text);
     setIsTemplateModalOpen(true);
+  };
+  const handleSelectPromptTemplate = (
+    value: string,
+    target: TemplateTarget
+  ) => {
+    if (value === TEMPLATE_PLACEHOLDER) return;
+
+    const template = PROMPT_TEMPLATE_OPTIONS.find((t) => t.value === value);
+    if (!template) return;
+
+    setSelectedTemplate(value);
+    setTemplateTarget(target);
+    setEditableText(template.text);
+    setIsTemplateModalOpen(true);
+  };
+
+  const checkName = (name: string) => {
+    if (!name.trim()) return false;
+    setNameMessage("");
+    const exists = bots.some((bot) => bot.name === name);
+
+    if (exists) setNameMessage("نام دستیار تکراری است");
   };
 
   const handleConfirmTemplate = () => {
@@ -126,8 +148,17 @@ export function WizardStep1({
           <label className="block mb-3">نام دستیار</label>
           <Input
             value={botConfig.name}
-            onChange={(e) => updateConfig({ name: e.target.value })}
+            onChange={(e) => {
+              checkName(e.target.value);
+              updateConfig({ name: e.target.value });
+            }}
           />
+          {nameMessage && (
+            <div className="text-xs text-secondary mt-1 mr-2">
+              {nameMessage}
+            </div>
+          )}
+          <div></div>
         </div>
 
         <div>
@@ -146,7 +177,7 @@ export function WizardStep1({
         <div className="flex justify-between items-center mb-2">
           <label>توضیحات کلی دستیار</label>
           <GenericSelector
-            items={TEMPLATE_OPTIONS_WITH_PLACEHOLDER}
+            items={TEMPLATE_OPTIONS_PLACEHOLDER}
             selectedValue={selectedTemplate}
             onSelect={(value) => handleSelectTemplate(value, "description")}
             showIndicator
@@ -166,9 +197,11 @@ export function WizardStep1({
         <div className="flex justify-between items-center mb-2">
           <label>دستورالعمل‌ها</label>
           <GenericSelector
-            items={TEMPLATE_OPTIONS_WITH_PLACEHOLDER}
+            items={PROMPT_TEMPLATE_OPTIONS_PLACEHOLDER}
             selectedValue={selectedTemplate}
-            onSelect={(value) => handleSelectTemplate(value, "guidelines")}
+            onSelect={(value) =>
+              handleSelectPromptTemplate(value, "guidelines")
+            }
             showIndicator
           />
         </div>

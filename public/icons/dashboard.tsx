@@ -11,6 +11,48 @@ export const AI = () => (
   </svg>
 );
 
+export const ArrowUp = () => (
+  <svg viewBox="0 0 32 32" enable-background="new 0 0 32 32">
+    <line
+      fill="none"
+      stroke="CurrentColor"
+      strokeWidth="3"
+      strokeMiterlimit="10"
+      x1="16"
+      y1="6"
+      x2="16"
+      y2="28"
+    />
+    <polyline
+      fill="none"
+      stroke="CurrentColor"
+      strokeWidth="3"
+      strokeMiterlimit="10"
+      points="7.5,14 16,5.5 24.5,14 "
+    />
+  </svg>
+);
+
+export const ArrowDown = () => (
+  <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <line
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      x1="16"
+      y1="4"
+      x2="16"
+      y2="26"
+    />
+    <polyline
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      points="7.5,18 16,26.5 24.5,18"
+    />
+  </svg>
+);
+
 export const TreeMinus = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <path

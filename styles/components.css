@@ -6149,3 +6149,11 @@
 .plans-trigger-special:hover .plans-trigger-badge {
   animation: badge-shake 0.5s ease-in-out;
 }
+
+#template .scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+#template .scrollbar-hide {
+  -ms-overflow-style: none; /* IE */
+  scrollbar-width: none; /* Firefox */
+}

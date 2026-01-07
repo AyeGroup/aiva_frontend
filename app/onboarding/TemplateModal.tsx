@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 
 interface TemplateModalProps {
   open: boolean;
@@ -18,6 +18,16 @@ export function TemplateModal({
   onCancel,
   onConfirm,
 }: TemplateModalProps) {
+
+  const highlightRef = useRef<HTMLDivElement>(null);
+
+  const highlightText = (text: string) => {
+    return text.replace(
+      /\[([^\]]+)\]/g,
+      `<span class="text-secondary font-medium">[$1]</span>`
+    );
+  };
+
   if (!open) return null;
 
   return (
@@ -25,13 +35,32 @@ export function TemplateModal({
       <div className="w-full max-w-lg rounded-xl bg-white p-5 shadow-lg">
         <h3 className="mb-3 text-sm font-semibold text-gray-800">{title}</h3>
 
-        <textarea
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          rows={6}
-          className="w-full rounded-lg border border-gray-300 p-3 text-sm
-            focus:outline-none focus:ring-2 focus:ring-brand-primary"
-        />
+        {/* WRAPPER */}
+        <div className="relative w-full h-40 overflow-hidden rounded-lg">
+          {/* Highlight */}
+          <div
+            ref={highlightRef}
+            className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words p-3 text-sm leading-6"
+            dangerouslySetInnerHTML={{
+              __html: highlightText(value || ""),
+            }}
+          />
+
+          {/* Textarea */}
+          <textarea
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onScroll={(e) => {
+              if (highlightRef.current) {
+                highlightRef.current.scrollTop = e.currentTarget.scrollTop;
+              }
+            }}
+            className="relative h-full w-full resize-none overflow-auto rounded-lg border border-gray-300 bg-transparent
+              p-3 text-sm leading-6 text-transparent caret-black
+              focus:outline-none focus:ring-2 focus:ring-brand-primary
+              scrollbar-hide"
+          />
+        </div>
 
         <div className="mt-4 flex justify-end gap-2">
           <button

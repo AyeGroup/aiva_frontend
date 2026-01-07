@@ -6,14 +6,18 @@ import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
 import { useBot } from "@/providers/BotProvider";
 import { BotConfig } from "@/types/common";
-import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ChatbotList } from "./widgets/chatbot-list";
 import { convertToPersian } from "@/utils/common";
+import { ArrowUp, ArrowDown } from "@/public/icons/dashboard";
 import { getTransactionTitle, TRANSACTION_TYPE } from "@/constants/plans";
+import persian from "react-date-object/calendars/persian";
+import DatePicker from "react-multi-date-picker";
+import PageLoader from "@/components/pageLoader";
+import persian_fa from "react-date-object/locales/persian_fa";
+import axiosInstance from "@/lib/axiosInstance";
 import {
   Download,
-  RefreshCw,
   FileText,
   Bot,
   TrendingUp,
@@ -22,11 +26,6 @@ import {
   ChevronDown,
   TrendingDown,
 } from "lucide-react";
-import persian from "react-date-object/calendars/persian";
-import DatePicker from "react-multi-date-picker";
-import PageLoader from "@/components/pageLoader";
-import persian_fa from "react-date-object/locales/persian_fa";
-import axiosInstance from "@/lib/axiosInstance";
 
 export const Transactions: React.FC = () => {
   const { user, loading } = useAuth();
@@ -58,7 +57,6 @@ export const Transactions: React.FC = () => {
         );
 
         setTransactions(res.data?.data);
-        // console.log("HISTORY :", res.data?.data);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
       } finally {
@@ -82,7 +80,6 @@ export const Transactions: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isFilterOpen]);
 
-  // اعمال فیلتر
   useEffect(() => {
     if (!transactions) return;
 
@@ -120,42 +117,6 @@ export const Transactions: React.FC = () => {
     setFilteredTransactions(data);
     setCurrentPage(1);
   }, [transactionTypeFilter, dateFrom, dateTo, filterBot, transactions]);
-
-  // useEffect(() => {
-  //   if (!transactions) return;
-
-  //   let data = [...transactions];
-
-  //   // فیلتر نوع تراکنش
-  //   if (transactionTypeFilter !== "all") {
-  //     if (transactionTypeFilter === TRANSACTION_TYPE.BUY_SUBSCRIPTION) {
-  //       data = data.filter((t) => t.type === TRANSACTION_TYPE.BUY_SUBSCRIPTION);
-  //     } else if (transactionTypeFilter === TRANSACTION_TYPE.INCREASE_WALLET) {
-  //       data = data.filter((t) => t.type === TRANSACTION_TYPE.INCREASE_WALLET);
-  //     }
-  //   }
-
-  //   // فیلتر بازه زمانی
-  //   if (dateFrom) {
-  //     const from = new Date(dateFrom);
-  //     data = data.filter((t) => new Date(t.created_at) >= from);
-  //   }
-
-  //   if (dateTo) {
-  //     const to = new Date(dateTo);
-  //     data = data.filter((t) => new Date(t.created_at) <= to);
-  //   }
-
-  //   if (filterBot) {
-  //     data = data.filter((t) => t.chatbot_uuid === filterBot.uuid);
-  //   }
-
-  //   console.log("date:", dateFrom, dateTo);
-  //   console.log("transaction", filteredTransactions);
-
-  //   setFilteredTransactions(data);
-  //   setCurrentPage(1);
-  // }, [transactionTypeFilter, dateFrom, dateTo, filterBot, transactions]);
 
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const paginatedTransactions = filteredTransactions.slice(
@@ -517,10 +478,20 @@ export const Transactions: React.FC = () => {
                       </td>
 
                       {/* مبلغ */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 flex items-center justify-center">
                         <p className="text-grey-900">
                           {transaction?.amount.toLocaleString("fa-IR")}
                         </p>
+                        {transaction?.direction === "income" && (
+                          <div className="w-4 text-primary">
+                            <ArrowUp />
+                          </div>
+                        )}
+                        {transaction?.direction === "outcome" && (
+                          <div className="w-4 text-secondary">
+                            <ArrowDown />
+                          </div>
+                        )}
                       </td>
 
                       {/* تاریخ */}
@@ -572,7 +543,8 @@ export const Transactions: React.FC = () => {
 
                       {/* عملیات */}
                       <td className="px-6 py-4">
-                        {transaction.tracking_code && (
+                        {/* {transaction.tracking_code && ( */}
+                        {transaction.subscription_id && (
                           <div className="flex items-center  justify-center gap-2">
                             <button
                               onClick={() => handlePdf(transaction.id)}
@@ -675,16 +647,12 @@ export const Transactions: React.FC = () => {
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <button
-                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-                            onClick={() => handlePdf(transaction.id)}
-                          >
-                            <Download className="w-5 h-5 text-gray-600" />
-                          </button>
-                          {(transaction.status === "failed" ||
-                            transaction.status === "cancelled") && (
-                            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                              <RefreshCw className="w-5 h-5 text-gray-600" />
+                          {transaction.subscription_id && (
+                            <button
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                              onClick={() => handlePdf(transaction.id)}
+                            >
+                              <Download className="w-5 h-5 text-gray-600" />
                             </button>
                           )}
                         </div>

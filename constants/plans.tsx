@@ -15,6 +15,7 @@ export enum PAYMENT_PURPOSE {
 
 export enum TRANSACTION_TITLE {
   increase_wallet = "افزایش موجودی کیف پول",
+  decrease_wallet="خرید از کیف پول",
   increase_balance = "افزایش اعتبار",
   buy_subscription = "خرید پلن",
   message_cost = "هزینه پیام",
