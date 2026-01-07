@@ -43,8 +43,8 @@ export default function Dashboard() {
   const [faqList, setFaqList] = useState<any[]>([]);
   const [timeRange, setTimeRange] = useState("7d");
   const [chartType, setChartType] = useState<"users" | "chats">("users");
-  const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
+  const colors = ["#e19f87", "#65bcb6", "#52d4a0", "#b07cc6", "#f9c74f"];
   const currentData = chartType === "users" ? usersData : chatsData;
   const chartColor =
     chartType === "users" ? "var(--brand-primary)" : "var(--brand-secondary)";

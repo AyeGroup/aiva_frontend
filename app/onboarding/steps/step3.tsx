@@ -1,5 +1,6 @@
 "use client";
 import { Input } from "@/components/input";
+import { useEffect } from "react";
 import { BotConfig } from "@/types/common";
 import { useFeatureAccess } from "@/providers/PricingContext";
 import { Settings, MessageSquare, Shield } from "lucide-react";
@@ -7,7 +8,6 @@ import PageLoader from "@/components/pageLoader";
 import LockFeature from "../LockFeature";
 import ToggleSetting from "@/components/toggle-setting";
 import ThreeLevelSlider from "@/components/ThreeLevelSlider";
-import { useEffect } from "react";
 
 interface WizardStep3Props {
   botConfig: BotConfig;
@@ -18,9 +18,11 @@ interface WizardStep3Props {
     canChatbotGreetings: boolean;
     canChatbotanswerLength: boolean;
     canChatbotSupportPhone: boolean;
+    canChoosing_llm: boolean;
   }) => void;
 }
 const AnswerLength = ["short", "medium", "long"];
+const LlmModel = ["gpt-4o", "gpt-4o-mini"];
 
 export function WizardStep3({
   botConfig,
@@ -42,6 +44,9 @@ export function WizardStep3({
     loading: canChatbotSupportPhoneLoading,
   } = useFeatureAccess(botConfig?.uuid, "chatbot_support_phone");
 
+  const { allowed: canChoosing_llm, loading: canChoosing_llmLoading } =
+    useFeatureAccess(botConfig?.uuid, "choosing_llm");
+
   useEffect(() => {
     if (
       onPermissionsChange &&
@@ -49,7 +54,8 @@ export function WizardStep3({
       !canChatbotEmojiLoading &&
       !canChatbotGreetingsLoading &&
       !canChatbotanswerLengthLoading &&
-      !canChatbotSupportPhoneLoading
+      !canChatbotSupportPhoneLoading &&
+      !canChoosing_llmLoading
     ) {
       onPermissionsChange({
         canChatbotK,
@@ -57,6 +63,7 @@ export function WizardStep3({
         canChatbotGreetings,
         canChatbotanswerLength,
         canChatbotSupportPhone,
+        canChoosing_llm,
       });
     }
   }, [
@@ -67,6 +74,8 @@ export function WizardStep3({
     canChatbotSupportPhone,
     onPermissionsChange,
     canChatbotKLoading,
+    canChoosing_llm,
+    canChoosing_llmLoading,
     canChatbotEmojiLoading,
     canChatbotGreetingsLoading,
     canChatbotanswerLengthLoading,
@@ -79,10 +88,11 @@ export function WizardStep3({
     canChatbotEmojiLoading ||
     canChatbotGreetingsLoading ||
     canChatbotanswerLengthLoading ||
+    canChoosing_llmLoading ||
     canChatbotSupportPhoneLoading
   )
     return <PageLoader />;
-
+  console.log("canChoosing_llm", canChoosing_llm);
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg">
       {/* Header */}
@@ -101,8 +111,41 @@ export function WizardStep3({
         </div>
       </div>
 
-      {/* Response Style */}
+      {/* llm */}
       <div className="space-y-4">
+        <div className="flex">
+          <h3 className="text-grey-900 font-semibold flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-brand-primary" />
+            مدل هوش مصنوعی
+          </h3>
+          {!canChoosing_llm && <LockFeature feature="choosing_llm" />}
+        </div>
+
+        <div
+          className={`grid grid-cols-3 gap-4 ${
+            canChoosing_llm ? "" : "pointer-events-none opacity-50"
+          }`}
+        >
+          {LlmModel.map((model) => (
+            <button
+              key={model}
+              onClick={() => updateConfig({ llm_model: model })}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                botConfig.llm_model === String(model)
+                  ? "border-brand-primary bg-brand-primary/5"
+                  : "border-border-soft hover:border-brand-primary/50"
+              }`}
+            >
+              <div className="text-center text-grey-600 text-body-small">
+                {model === "gpt-4o" ? "دقیق" : "سریع"}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Response Style */}
+      <div className="space-y-4 mt-4">
         <div className="flex">
           <h3 className="text-grey-900 font-semibold flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-brand-primary" />

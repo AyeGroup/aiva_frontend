@@ -210,13 +210,14 @@ export default function OnboardingWizard() {
     localStorage.setItem("aiva-onboarding-data", JSON.stringify(dataToSave));
   }, [botConfig, currentStep]);
 
-   const [permissions, setPermissions] = useState({
-     canChatbotK: false,
-     canChatbotEmoji: false,
-     canChatbotGreetings: false,
-     canChatbotanswerLength: false,
-     canChatbotSupportPhone: false,
-   });
+  const [permissions, setPermissions] = useState({
+    canChatbotK: false,
+    canChatbotEmoji: false,
+    canChatbotGreetings: false,
+    canChatbotanswerLength: false,
+    canChatbotSupportPhone: false,
+    canChoosing_llm: false,
+  });
 
   const validateFields = (step: number) => {
     const newErrors: { [key: string]: string } = {};
@@ -239,7 +240,6 @@ export default function OnboardingWizard() {
   };
 
   //ذخیره استپ 5
-
   const saveBotBehavior = async () => {
     setIsSaving(true);
 
@@ -252,23 +252,28 @@ export default function OnboardingWizard() {
         permissions.canChatbotanswerLength ||
         permissions.canChatbotGreetings ||
         permissions.canChatbotEmoji ||
+        permissions.canChoosing_llm ||
         permissions.canChatbotSupportPhone;
 
       // اگر هیچ permission نداشت، API کال نشود
       console.log("hasAnyPermission: ", hasAnyPermission);
       if (!hasAnyPermission) {
         console.log("No permissions available, skipping save");
-        return true; // یا false بسته به منطق شما
+        return true;
       }
 
       const formData = new FormData();
       formData.append("uuid", botConfig.uuid);
 
-      // فقط فیلدهایی که permission دارند را ارسال کنید
+      if (permissions.canChoosing_llm) {
+        formData.append(
+          "llm_model",
+          String(botConfig?.llm_model) || "gpt-4o-mini"
+        );
+      }
       if (permissions.canChatbotK) {
         formData.append("k", String(botConfig?.k) || "5");
       }
-
       if (permissions.canChatbotanswerLength) {
         formData.append(
           "answer_length",
@@ -293,43 +298,6 @@ export default function OnboardingWizard() {
         formData
       );
 
-      if (res.data.success) return true;
-      else return false;
-    } catch (error: any) {
-      console.error(error);
-      const errorMessage =
-        error.response?.data?.message || "خطایی در ذخیره تنظیمات رخ داده است.";
-
-      toast.info(errorMessage);
-
-      return false;
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const saveBotBehavior1 = async () => {
-    setIsSaving(true);
-
-    // if (!can_advanced_stats) return true;
-    try {
-      console.log("step5 save: ", botConfig);
-      const formData = new FormData();
-      formData.append("uuid", botConfig.uuid);
-
-      formData.append("k", String(botConfig?.k) || "5");
-      formData.append(
-        "answer_length",
-        String(botConfig?.answer_length) || "short"
-      );
-      formData.append("greetings", String(botConfig?.greetings) || "false");
-      formData.append("use_emoji", botConfig?.use_emoji ? "true" : "false");
-      formData.append("support_phone", botConfig?.support_phone || "");
-
-      const res = await axiosInstance.put(
-        `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
-        formData
-      );
       if (res.data.success) return true;
       else return false;
     } catch (error: any) {
@@ -628,7 +596,8 @@ export default function OnboardingWizard() {
 
   if (loading || isLoading) return <PageLoader />;
   if (!user) return null;
-  const showButton = isNew || (currentStep ===1 || currentStep ===2 || currentStep ===5);
+  const showButton =
+    isNew || currentStep === 1 || currentStep === 2 || currentStep === 5;
 
   return (
     <main className="onboarding-wizard h-screen overflow-y-auto bg-bg-app">
