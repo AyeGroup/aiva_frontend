@@ -5,15 +5,15 @@ import { BotConfig } from "@/types/common";
 import { ChevronDown } from "lucide-react";
 
 interface ChatbotListProps {
-  selectedBot?: BotConfig | null; // انتخاب اولیه از parent
-  onSelect?: (chatbot: BotConfig | null) => void; // callback برای parent
-  placeholder?: string; // متن اختیاری وقتی هیچ چت‌باتی انتخاب نشده
+  selectedBot?: BotConfig | null;
+  onSelect?: (chatbot: BotConfig | null) => void;
+  placeholder?: string;
 }
 
 export function ChatbotList({
   selectedBot,
   onSelect,
-  placeholder = "همه چت‌بات‌ها", // مقدار پیش‌فرض
+  placeholder = "همه چت‌بات‌ها",
 }: ChatbotListProps) {
   const { bots } = useBot();
   const [isOpen, setIsOpen] = useState(false);
@@ -21,16 +21,18 @@ export function ChatbotList({
     selectedBot || null
   );
   useEffect(() => {
-    console.log("selectedBot", selectedBot);
     if (!selectedBot) {
       setInternalSelected(null);
       return;
     }
 
-    const matchedBot = bots.find((b) => String(b.uuid).toLowerCase() === String(selectedBot.uuid).toLowerCase());
+    const matchedBot = bots.find(
+      (b) =>
+        String(b.uuid).toLowerCase() === String(selectedBot.uuid).toLowerCase()
+    );
 
-    // console.log("bots", bots);
-    // console.log("matchedBot", matchedBot);
+    console.log("matchedBot", matchedBot);
+    console.log("selectedBot", selectedBot);
     if (matchedBot) {
       setInternalSelected(matchedBot);
     } else {

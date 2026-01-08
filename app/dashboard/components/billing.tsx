@@ -75,7 +75,7 @@ export function Billing() {
 
         setExpiringPlan(expiring);
 
-        // console.log("expiringPlan", expiring);
+        console.log("expiringPlan", expiring);
       } catch (error) {
         console.error("خطا در دریافت داده کاربران:", error);
       } finally {
@@ -122,17 +122,6 @@ export function Billing() {
       sessionStorage.removeItem("scrollTo");
     }
   }, []);
-  const refreshWalletBalance = async () => {
-    setWalletLoading(true);
-    try {
-      const res = await axiosInstance.get(API_ROUTES.FINANCIAL.WALLET);
-      setWalletBalance(res.data?.data?.wallet_balance ?? 0);
-    } catch (e) {
-      console.warn("wallet fetch failed", e);
-    } finally {
-      setWalletLoading(false);
-    }
-  };
 
   useEffect(() => {
     refreshWalletBalance();
@@ -149,8 +138,19 @@ export function Billing() {
     setBillingBot(myBot);
   }, []);
 
+  const refreshWalletBalance = async () => {
+    setWalletLoading(true);
+    try {
+      const res = await axiosInstance.get(API_ROUTES.FINANCIAL.WALLET);
+      setWalletBalance(res.data?.data?.wallet_balance ?? 0);
+    } catch (e) {
+      console.warn("wallet fetch failed", e);
+    } finally {
+      setWalletLoading(false);
+    }
+  };
+
   const mapFeatures = (plan: any): { text: string; enabled: boolean }[] => {
-    console.log("m", plan);
     return [
       ...plan.features.map((f: string) => ({
         text: translateFeature(f),
@@ -193,14 +193,9 @@ export function Billing() {
     const plan = plans.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
-    console.log("planName", planName);
-    console.log("billingBot", billingBot.name);
-    console.log("selectedPeriod", selectedPeriod);
-    console.log("plan find", plan);
-
+    console.log("elham", plan);
     if (plan) {
       localStorage.setItem("returnUrl", window.location.href);
-      //
       localStorage.setItem(
         "selectedPlan",
         JSON.stringify({
@@ -213,22 +208,66 @@ export function Billing() {
     }
   };
 
-  const handleUpgrade = (chatbot: any) => {
-    setSelectedChatbot(chatbot);
-    setIsCreditIncreaseModalOpen(true);
+  const handleRenewalPlan = (plan: any) => {
+    if (!plan) return;
+    if (!plan.chatbot_uuid) return;
+    console.log("plan", plan);
+
+    const matchedBot = bots.find((b) => b.uuid === plan?.chatbot_uuid);
+
+    localStorage.setItem("returnUrl", window.location.href);
+    localStorage.setItem(
+      "selectedPlan",
+      JSON.stringify({
+        ...plan,
+        billingBot: matchedBot,
+        periods: plan?.subscription.type || "yearly",
+      })
+    );
+    router.push("/pay/checkout");
   };
 
-  const handlePlan = (chatbotId: string) => {
-    const matchedBot = bots.find((b) => b.uuid === chatbotId);
-    if (!matchedBot) return;
+  const handleUpgaredePlan = (chatbotId: string) => {
+    if (!chatbotId) return;
+    const matchedBot = bots.find(
+      (b) => String(b.uuid).toLowerCase() === String(chatbotId).toLowerCase()
+    );
+    // console.log("matchedBot", matchedBot);
 
-    setBillingBot(matchedBot);
+    setBillingBot(matchedBot || null);
     sessionStorage.setItem("scrollTo", "chooseplan");
 
     requestAnimationFrame(() => {
       const el = document.getElementById("chooseplan");
       el?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+  };
+
+  const handleBuyPlan = async (chatbot: any) => {
+    if (!chatbot) return;
+
+    const matchedBot = bots.find(
+      (b) =>
+        String(b.uuid).toLowerCase() ===
+        String(
+          (chatbot as any).uuid ?? (chatbot as any).chatbot_uuid
+        ).toLowerCase()
+    );
+
+    setBillingBot(matchedBot || null);
+
+    sessionStorage.setItem("scrollTo", "chooseplan");
+
+    requestAnimationFrame(() => {
+      document
+        .getElementById("chooseplan")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const handleExtendCredit = (chatbot: BotConfig) => {
+    setSelectedChatbot(chatbot);
+    setIsCreditIncreaseModalOpen(true);
   };
 
   return (
@@ -322,12 +361,20 @@ export function Billing() {
                         )}
                       </div>
 
-                      {plan.daysRemaining <= maxDays ? (
+                      {plan.subscription?.plan == 0 ? (
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => handleUpgaredePlan(plan)}
+                        >
+                          ارتقا پلن
+                        </Button>
+                      ) : plan.daysRemaining <= maxDays ? (
                         <Button
                           variant="primary"
                           size="sm"
                           title="تمدید"
-                          onClick={() => handleUpgrade(plan)}
+                          onClick={() => handleRenewalPlan(plan)}
                         >
                           تمدید پلن
                         </Button>
@@ -336,7 +383,7 @@ export function Billing() {
                           variant="secondary"
                           size="sm"
                           title="افزایش اعتبار"
-                          onClick={() => handleUpgrade(plan)}
+                          onClick={() => handleExtendCredit(plan)}
                         >
                           افزایش اعتبار
                         </Button>
@@ -416,6 +463,13 @@ export function Billing() {
                           : `${days.toLocaleString("fa-IR")} روز مانده`;
                       };
 
+                      const isExpire = () => {
+                        const days = getDaysRemaining(
+                          plan.subscription?.end_date
+                        );
+                        if (days < maxDays) return true;
+                        else return false;
+                      };
                       const planColor =
                         bots.find((b) => b.uuid === plan.chatbot_uuid)
                           ?.primary_color || "";
@@ -424,6 +478,7 @@ export function Billing() {
                           plan.subscription?.balance) *
                           100
                       );
+                      console.log("ww", plan.subscription?.plan);
                       return (
                         <div
                           key={index}
@@ -539,24 +594,45 @@ export function Billing() {
                               منقضی
                             </div>
                           )}
-                          {!plan.subscription ||
-                          plan.subscription?.plan == "0" ? (
-                            <button
-                              title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
-                              onClick={() => handlePlan(plan?.chatbot_uuid)}
-                              className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                            >
-                              ارتقای پلن
-                            </button>
-                          ) : (
-                            <button
-                              title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
-                              onClick={() => handleUpgrade(plan)}
-                              className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                            >
-                              افزایش اعتبار
-                            </button>
-                          )}
+                          <div className="flex items-center justify-center">
+                            {!plan.subscription ? (
+                              <button
+                                onClick={() => handleBuyPlan(plan)}
+                                className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                type="button"
+                              >
+                                خرید پلن
+                              </button>
+                            ) : plan.subscription.plan == 0 ? (
+                              <button
+                                onClick={() =>
+                                  handleUpgaredePlan(plan?.chatbot_uuid)
+                                }
+                                className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                type="button"
+                              >
+                                ارتقای پلن
+                              </button>
+                            ) : isExpire() ? (
+                              <button
+                                onClick={() => handleRenewalPlan(plan)}
+                                className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                type="button"
+                              >
+                                تمدید پلن
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() =>
+                                  handleExtendCredit(plan?.chatbot_uuid)
+                                }
+                                className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                type="button"
+                              >
+                                افزایش اعتبار
+                              </button>
+                            )}
+                          </div>
                         </div>
                       );
                     })}
@@ -611,7 +687,7 @@ export function Billing() {
                           const days = getDaysRemaining(
                             plan.subscription?.end_date
                           );
-                          if (days < 8) return true;
+                          if (days < maxDays) return true;
                           else return false;
                         };
 
@@ -764,76 +840,44 @@ export function Billing() {
 
                             <td className="px-2 sm:px-4 py-3">
                               <div className="flex items-center justify-center">
-                                {!plan.subscription && (
+                                {!plan.subscription ? (
                                   <button
-                                    onClick={() => handleUpgrade(plan)}
+                                    onClick={() => handleBuyPlan(plan)}
                                     className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                    
                                     type="button"
                                   >
                                     خرید پلن
                                   </button>
-                                )}
-                                {plan.subscription && isExpire() && (
+                                ) : plan.subscription?.plan === "0" ? (
                                   <button
-                                    onClick={() => handleUpgrade(plan)}
+                                    onClick={() =>
+                                      handleUpgaredePlan(plan?.chatbot_uuid)
+                                    }
+                                    className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                    type="button"
+                                  >
+                                    ارتقای پلن
+                                  </button>
+                                ) : isExpire() ? (
+                                  <button
+                                    onClick={() => handleRenewalPlan(plan)}
                                     className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                     
                                     type="button"
                                   >
                                     تمدید پلن
                                   </button>
-                                )}
-                                {plan.subscription &&
-                                  plan.subscription?.plan === "0" && (
-                                    <button
-                                      onClick={() =>
-                                        handlePlan(plan?.chatbot_uuid)
-                                      }
-                                      className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                      type="button"
-                                      
-                                    >
-                                      ارتقای پلن
-                                    </button>
-                                  )}
-
-                                {plan.subscription &&
-                                  plan.subscription?.plan != "0" && (
-                                    <button
-                                      onClick={() =>
-                                        handlePlan(plan?.chatbot_uuid)
-                                      }
-                                      className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                      type="button"
-                                     
-                                    >
-                                      ارتقای پلن
-                                    </button>
-                                  )}
-                              </div>
-                              {/* {plan.subscription &&
-                                plan.subscription?.plan != "0" ? (
+                                ) : (
                                   <button
-                                    onClick={() => handleUpgrade(plan)}
-                                    className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                    title=" افزایش اعتبار"
+                                    onClick={() =>
+                                      handleExtendCredit(plan?.chatbot_uuid)
+                                    }
+                                    className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
                                     type="button"
                                   >
                                     افزایش اعتبار
                                   </button>
-                                ) : (
-                                  <button
-                                    onClick={() =>
-                                      handlePlan(plan?.chatbot_uuid)
-                                    }
-                                    className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
-                                    type="button"
-                                    title=" ارتقای پلن"
-                                  >
-                                    ارتقای پلن
-                                  </button>
-                                )} */}
+                                )}
+                              </div>
                             </td>
                           </tr>
                         );
@@ -861,7 +905,7 @@ export function Billing() {
               >
                 پلن‌های قابل خرید
               </h2>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-grey-600 text-right text-sm sm:text-base">
+              <div className="flex  items-center gap-2 sm:gap-3 text-grey-600 text-right text-sm sm:text-base">
                 <span>پلن مناسب خود را انتخاب کنید</span>
                 <ChatbotList
                   placeholder="یک چت‌بات را انتخاب کنید"
