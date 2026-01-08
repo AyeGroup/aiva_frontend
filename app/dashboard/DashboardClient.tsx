@@ -68,6 +68,7 @@ export default function DashboardClient() {
               width={40}
               height={40}
               className="w-10 h-10"
+              priority
             />
             <div className="text-right leading-tight">
               <p className="text-base text-gray-900 font-semibold">آیوا</p>

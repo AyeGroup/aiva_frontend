@@ -226,10 +226,10 @@ const checkFeatureAccess = async (
     const minIndex = planOrder.indexOf(minPlan);
     const rslt = currentPlan >= minIndex;
 
-    console.log("minPlan: ", minPlan);
-    console.log("minIndex: ", minIndex);
-    console.log("currentPlan: ", currentPlan);
-    console.log(feature, rslt);
+    // console.log("minPlan: ", minPlan);
+    // console.log("minIndex: ", minIndex);
+    // console.log("currentPlan: ", currentPlan);
+    // console.log(feature, rslt);
 
     return rslt;
   } catch (error) {

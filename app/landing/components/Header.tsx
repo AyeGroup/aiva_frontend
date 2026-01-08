@@ -45,6 +45,7 @@ export default function Header() {
             alt="لوگوی آیوا"
             width={40}
             height={40}
+            priority
             className="sm:w-12 sm:h-12 w-10 h-10"
           />
           <div className="text-right leading-tight">
@@ -62,7 +63,6 @@ export default function Header() {
               key={href}
               href={href}
               className="px-3 py-2 rounded-2xl transition-all duration-200 text-sm whitespace-nowrap text-gray-700 hover:text-[#65bcb6]"
-               
             >
               {label}
             </a>
@@ -159,7 +159,6 @@ export default function Header() {
               href={href}
               onClick={closeMenu}
               className="px-4 py-3 rounded-lg transition-all duration-200 text-right text-gray-700 hover:bg-gray-100 hover:text-[#65bcb6]"
-             
             >
               {label}
             </a>

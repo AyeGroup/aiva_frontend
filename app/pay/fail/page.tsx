@@ -45,6 +45,7 @@ export default function PaymentFailed() {
             alt="لوگوی آیوا"
             width={40}
             height={40}
+            priority
             className="sm:w-12 sm:h-12 w-10 h-10"
           />
           <div className="text-right leading-tight">

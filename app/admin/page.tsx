@@ -23,7 +23,7 @@ export default function AdminPage() {
         const response = await axiosInstance.get(API_ROUTES.ADMIN.STATISTICS);
         if (response.status == 200 && response.data) {
           setData(response.data.data);
-          console.log("data", response.data);
+          // console.log("data", response.data);
         }
       } catch (error) {
         console.error("Error fetching bots:", error);

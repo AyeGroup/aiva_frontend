@@ -26,6 +26,7 @@ import {
   AlertTriangle,
   Edit2,
   FileSpreadsheet,
+  Check,
 } from "lucide-react";
 import UploadProgressModal from "@/components/UploadProgressModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
@@ -53,7 +54,6 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
   const [isDragging, setIsDragging] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
-
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     item: any;
@@ -61,21 +61,14 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     isOpen: false,
     item: null,
   });
-
-  // const can_qa_as_file = useFeatureAccess(botConfig.uuid, "qa_as_file");
-  // const can_upload_docs = useFeatureAccess(botConfig.uuid, "upload_docs");
-
   const { allowed: canUploadDocs, loading: canUploadDocsLoading } =
     useFeatureAccess(botConfig?.uuid, "upload_docs");
-
   const { allowed: canQaFile, loading: canQaFileLoading } = useFeatureAccess(
     botConfig?.uuid,
     "qa_as_file"
   );
-
   const { allowed: canWebsiteCrawling, loading: canWebsiteCrawlingLoading } =
     useFeatureAccess(botConfig?.uuid, "website_crawling");
-
   const {
     allowed: canWebsiteCrawlingLevel2,
     loading: canWebsiteCrawlingLevel2Loading,
@@ -97,13 +90,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     try {
       try {
         const response = await axiosInstance.get(
-          API_ROUTES.KNOWLEDGE.DOCUMENT(botUuid),
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
+          API_ROUTES.KNOWLEDGE.DOCUMENT(botUuid)
         );
 
         botConfig.knowledge = response.data.data;
@@ -428,23 +415,15 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
       setIsEditing(true);
       setSelectedType(item.type);
 
-      // console.log("start edit >> ", item);
       if (item.qa_id) {
         const apiPath =
           item.type === "qa_pair"
             ? API_ROUTES.KNOWLEDGE.QA_GET(botConfig.uuid, item?.qa_id)
             : API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(botConfig.uuid, item?.id);
-        const response = await axiosInstance.get(apiPath, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
+        const response = await axiosInstance.get(apiPath);
 
         const myItem = response.data.data;
         myItem.content = response.data.data.answer;
-        // console.log("read qa: ", response.data.data);
-        // console.log("myitem: ", myItem);
 
         setEditingItem(myItem);
         setNewItem(myItem);
@@ -944,7 +923,7 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           <div className="flex items-center justify-between">
             <h3 className="text-grey-900 flex items-center gap-3">
               <div className="w-6 h-6 bg-brand-primary rounded-full flex items-center justify-center">
-                <span className="text-white text-sm">✅</span>
+                <Check size={12} color="white" />
               </div>
               دانش اضافه شده ({botConfig.knowledge.length})
             </h3>

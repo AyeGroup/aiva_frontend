@@ -52,7 +52,7 @@ export function EditProfileModal({
 
   useEffect(() => {
     if (!open || !data) return;
-    console.log("data", data);
+    // console.log("data", data);
     setForm({
       full_name: data.full_name ?? "",
       company_name: data.company_name ?? "",

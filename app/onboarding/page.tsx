@@ -620,7 +620,7 @@ export default function OnboardingWizard() {
                   height={40}
                   alt="Logo"
                   className="mt-1"
-                  style={{ width: "auto", height: "40px" }}
+                  priority
                 />
               ) : (
                 <div className="h-8 w-8 lg:h-10 lg:w-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">

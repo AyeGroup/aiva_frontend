@@ -33,7 +33,6 @@ export function StatsDrawer({
     "monthly"
   );
   const planRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
   const [plans, setPlans] = useState<any[]>([]);
   const [selectedBot, setSelectedBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,9 +40,8 @@ export function StatsDrawer({
   const { currentBot } = useBot();
 
   useEffect(() => {
-    console.log("chatbot", chatbot);
-
-
+    // console.log("chatbot", chatbot);
+    if(!isOpen ) return
     if (chatbot ) {
       setSelectedBot(chatbot);
     } else if (currentBot && currentBot?.uuid?.length > 3) {
@@ -51,7 +49,7 @@ export function StatsDrawer({
     } else {
       setSelectedBot(null);
     }
-  }, [chatbot, currentBot]);
+  }, [chatbot, currentBot,isOpen]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -111,10 +109,7 @@ export function StatsDrawer({
   }, []);
 
   const handlePlanPurchase = (planName: string) => {
-    // let billingBot;
-    // if (chatbot == null) billingBot = currentBot;
-    // else billingBot = chatbot;
-    // console.log("selectedBot", selectedBot);
+    
     if (!selectedBot || !selectedBot?.uuid) {
       toast.info("لطفاً چت‌بات مورد نظر را انتخاب کنید");
       return;
@@ -165,6 +160,7 @@ export function StatsDrawer({
     ];
   };
 
+  if(!isOpen) return
   return createPortal(
     <div className="">
       {/* Overlay */}

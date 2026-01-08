@@ -56,6 +56,7 @@ export function Header({
                   width={50}
                   height={40}
                   alt="Logo"
+                  priority
                   style={{ width: "auto", height: "40px" }}
                 />
               ) : (

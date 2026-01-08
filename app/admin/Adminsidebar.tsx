@@ -153,6 +153,7 @@ export function AdminSidebar({
               src="logo.webp"
               alt="آیوا - دستیار هوشمند"
               className="w-8 h-8 object-cover"
+              priority
             />
           </div>
           <div className="text-right">

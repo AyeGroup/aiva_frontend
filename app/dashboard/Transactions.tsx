@@ -111,8 +111,8 @@ export const Transactions: React.FC = () => {
       data = data.filter((t) => t.chatbot_uuid === filterBot.uuid);
     }
 
-    console.log("date:", dateFrom, dateTo);
-    console.log("transaction", data); // Log 'data' instead of 'filteredTransactions'
+    // console.log("date:", dateFrom, dateTo);
+    // console.log("transaction", data); // Log 'data' instead of 'filteredTransactions'
 
     setFilteredTransactions(data);
     setCurrentPage(1);

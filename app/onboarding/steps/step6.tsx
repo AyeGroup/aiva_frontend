@@ -49,6 +49,7 @@ export function WizardStep6({
   const [selectedTone, setSelectedTone] = useState(botConfig.tone);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { allowed: canUploadLogo, loading: canUploadLogoLoading } =
     useFeatureAccess(botConfig?.uuid, "chatbot_logo");
@@ -63,9 +64,22 @@ export function WizardStep6({
     }
   }, [botConfig?.tone]);
 
-  const handleToneChange = (toneId: string) => {
+  const handleToneChange = async (toneId: string) => {
     setSelectedTone(toneId);
     updateConfig({ tone: toneId });
+console.log("toneId", toneId);
+    try {
+      setIsSubmitting(true);
+
+      const res = await axiosInstance.put(
+        `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
+        { tone: toneId }
+      );
+    } catch (err: any) {
+      console.error("save tone:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,6 +178,7 @@ export function WizardStep6({
   };
 
   if (canUploadLogoLoading) return <PageLoader />;
+  if (isSubmitting) return <PageLoader />;
 
   return (
     <div className="space-y-8 bg-bg-surface px-5 py-4 border-2 border-brand-primary/20 rounded-xl shadow-lg ">
@@ -568,7 +583,6 @@ export function WizardStep6({
                   <p className="text-grey-500 text-xs">
                     PNG، JPG یا SVG • حداکثر ۳ مگابایت
                   </p>
-                  
                 </div>
                 <button
                   type="button"

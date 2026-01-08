@@ -87,8 +87,8 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
     return configs[priority as keyof typeof configs];
   };
 
-  const statusConfig = getStatusConfig(thisTicket.status);
-  const priorityConfig = getPriorityConfig(thisTicket.priority);
+  // const statusConfig = getStatusConfig(thisTicket.status);
+  // const priorityConfig = getPriorityConfig(thisTicket.priority);
   const [isLoading, setIsLoading] = useState(false);
 
   const loadTicket = async () => {

@@ -27,8 +27,10 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
   const [isloading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [baleToken, setBaleToken] = useState<string>("");
+  const [knowledgeCount, setKnowledgeCount] = useState<number>(0);
   const [isBaleEditing, setIsBaleEditing] = useState(!botConfig?.bale_enabled);
   const { loading } = useAuth();
+  // console.log("aaa", botConfig.knowledge);
 
   useEffect(() => {
     const fetchCode = async () => {
@@ -45,6 +47,12 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
       }
     };
     fetchCode();
+  }, [botConfig.uuid]);
+
+  useEffect(() => {
+    if (!botConfig.uuid) return;
+
+    loadQaCount();
   }, [botConfig.uuid]);
 
   const copyToClipboard = async () => {
@@ -66,12 +74,14 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
       console.error("Failed to copy:", err);
     }
   };
+
   const getLanguageTitle = (value: string) => {
     if (value == "arabic") return "عربی";
     else if (value == "turkish") return "ترکی";
     else if (value == "english") return "انگلیسی";
     else return "فارسی";
   };
+
   const handleBaleLink = async () => {
     if (!baleToken || baleToken.length === 0) return;
     setIsSaving(true);
@@ -102,10 +112,33 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
     }
   };
 
-  // const bale_integration = useFeatureAccess(botConfig.uuid, "bale_integration");
+  const loadQaCount = async () => {
+    setIsLoading(true);
+    setKnowledgeCount(0);
+    try {
+      try {
+        const response = await axiosInstance.get(
+          API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)
+        );
 
-   const { allowed: canBaleIntegration, loading: canBaleIntegrationLoading } =
-     useFeatureAccess(botConfig?.uuid, "bale_integration");
+  const data =
+    response?.data?.data?.filter((item: any) => item.status === "done")
+      .length ?? 0;
+
+        // console.log("dat", data);
+        setKnowledgeCount(data);
+      } catch (apiError: any) {
+        console.warn("API fetch failed, using local data:", apiError);
+      }
+    } catch (error) {
+      console.warn("خطا در بارگذاری اطلاعات ذخیره شده:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const { allowed: canBaleIntegration, loading: canBaleIntegrationLoading } =
+    useFeatureAccess(botConfig?.uuid, "bale_integration");
   if (canBaleIntegrationLoading) return <PageLoader />;
 
   return (
@@ -130,6 +163,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   height={64}
                   width={64}
                   alt="آیوا"
+                  priority
                   className="w-8 h-8 object-cover rounded-full"
                 />
               </div>
@@ -153,7 +187,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   className="size-2 ml-2 rounded-full"
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
-                <div className=" text-grey-600 pl-2">زبان :</div>
+                <div className=" text-grey-600 pl-2">زبان:</div>
                 <span className="text-base font-medium text-grey-900">
                   {getLanguageTitle(botConfig.language)}
                 </span>
@@ -164,9 +198,9 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
                   className="size-2 ml-2 rounded-full"
                   style={{ backgroundColor: botConfig.primary_color }}
                 ></div>
-                <div className=" text-grey-600 pl-2"> منابع دانش :</div>
+                <div className=" text-grey-600 pl-2"> منابع دانش:</div>
                 <span className="text-base font-medium text-grey-900">
-                  {(botConfig.knowledge?.length || 0).toLocaleString("fa-IR")}
+                  {(knowledgeCount || 0).toLocaleString("fa-IR")}
                 </span>
               </div>
             </div>

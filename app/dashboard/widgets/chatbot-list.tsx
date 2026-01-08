@@ -29,8 +29,8 @@ export function ChatbotList({
 
     const matchedBot = bots.find((b) => String(b.uuid).toLowerCase() === String(selectedBot.uuid).toLowerCase());
 
-    console.log("bots", bots);
-    console.log("matchedBot", matchedBot);
+    // console.log("bots", bots);
+    // console.log("matchedBot", matchedBot);
     if (matchedBot) {
       setInternalSelected(matchedBot);
     } else {

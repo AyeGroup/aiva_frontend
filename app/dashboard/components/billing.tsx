@@ -219,15 +219,10 @@ export function Billing() {
   };
 
   const handlePlan = (chatbotId: string) => {
-    // console.log("sara", chatbot);
-
-    // ذخیره timeout برای کنترل بهتر
-
     const matchedBot = bots.find((b) => b.uuid === chatbotId);
     if (!matchedBot) return;
 
     setBillingBot(matchedBot);
-
     sessionStorage.setItem("scrollTo", "chooseplan");
 
     requestAnimationFrame(() => {
@@ -302,10 +297,19 @@ export function Billing() {
                         پلن چت‌بات <strong>{plan.chatbot_name}</strong>{" "}
                         {plan.daysRemaining <= maxDays ? (
                           <>
-                            <strong className="text-red-600">
-                              {plan.daysRemaining.toLocaleString("fa-IR")} روز
-                            </strong>{" "}
-                            دیگر منقضی می‌شود.
+                            {plan.daysRemaining === 0 ? (
+                              <strong className="text-red-600">
+                                کمتر از یک روز دیگر منقضی می‌شود
+                              </strong>
+                            ) : (
+                              <>
+                                <strong className="text-red-600">
+                                  {plan.daysRemaining.toLocaleString("fa-IR")}{" "}
+                                  روز
+                                </strong>{" "}
+                                دیگر منقضی می‌شود.
+                              </>
+                            )}
                           </>
                         ) : (
                           <>
@@ -405,6 +409,13 @@ export function Billing() {
                           plan.subscription?.total_characters) *
                           100
                       );
+                      const renderRemainingDays = (endDate: string) => {
+                        const days = getDaysRemaining(endDate);
+                        return days === 0
+                          ? "کمتر از یک روز دیگر منقضی می‌شود"
+                          : `${days.toLocaleString("fa-IR")} روز مانده`;
+                      };
+
                       const planColor =
                         bots.find((b) => b.uuid === plan.chatbot_uuid)
                           ?.primary_color || "";
@@ -516,11 +527,11 @@ export function Billing() {
                                   plan.subscription?.end_date
                                 ).toLocaleDateString("fa-IR")}
                               </span>
+
                               <span className="text-grey-600">
-                                {getDaysRemaining(
+                                {renderRemainingDays(
                                   plan.subscription?.end_date
-                                ).toLocaleString("fa-IR")}{" "}
-                                روز مانده
+                                )}
                               </span>
                             </div>
                           ) : (
@@ -531,7 +542,6 @@ export function Billing() {
                           {!plan.subscription ||
                           plan.subscription?.plan == "0" ? (
                             <button
-                              // disabled={plan.subscription?.plan == "0"}
                               title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
                               onClick={() => handlePlan(plan?.chatbot_uuid)}
                               className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
@@ -540,7 +550,6 @@ export function Billing() {
                             </button>
                           ) : (
                             <button
-                              // disabled={plan.subscription?.plan == "0"}
                               title="افزایش اعتبار برای پلن آغازین امکان‌پذیر نیست"
                               onClick={() => handleUpgrade(plan)}
                               className="text-center w-fit px-6 py-2 rounded-lg text-sm   cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
@@ -597,6 +606,23 @@ export function Billing() {
                             plan.subscription?.balance) *
                             100
                         );
+
+                        const isExpire = () => {
+                          const days = getDaysRemaining(
+                            plan.subscription?.end_date
+                          );
+                          if (days < 8) return true;
+                          else return false;
+                        };
+
+                        const renderRemainingDays = () => {
+                          const days = getDaysRemaining(
+                            plan.subscription?.end_date
+                          );
+                          return days === 0
+                            ? "کمتر از یک روز دیگر منقضی می‌شود"
+                            : `${days.toLocaleString("fa-IR")} روز مانده`;
+                        };
 
                         return (
                           <tr
@@ -728,11 +754,9 @@ export function Billing() {
                                       plan.subscription?.end_date
                                     ).toLocaleDateString("fa-IR")}
                                   </time>
+
                                   <span className="text-grey-600 text-xs whitespace-nowrap">
-                                    {getDaysRemaining(
-                                      plan.subscription?.end_date
-                                    ).toLocaleString("fa-IR")}{" "}
-                                    روز مانده
+                                    {renderRemainingDays()}
                                   </span>
                                 </div>
                               )}
@@ -740,10 +764,57 @@ export function Billing() {
 
                             <td className="px-2 sm:px-4 py-3">
                               <div className="flex items-center justify-center">
+                                {!plan.subscription && (
+                                  <button
+                                    onClick={() => handleUpgrade(plan)}
+                                    className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                    
+                                    type="button"
+                                  >
+                                    خرید پلن
+                                  </button>
+                                )}
+                                {plan.subscription && isExpire() && (
+                                  <button
+                                    onClick={() => handleUpgrade(plan)}
+                                    className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                     
+                                    type="button"
+                                  >
+                                    تمدید پلن
+                                  </button>
+                                )}
                                 {plan.subscription &&
+                                  plan.subscription?.plan === "0" && (
+                                    <button
+                                      onClick={() =>
+                                        handlePlan(plan?.chatbot_uuid)
+                                      }
+                                      className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                      type="button"
+                                      
+                                    >
+                                      ارتقای پلن
+                                    </button>
+                                  )}
+
+                                {plan.subscription &&
+                                  plan.subscription?.plan != "0" && (
+                                    <button
+                                      onClick={() =>
+                                        handlePlan(plan?.chatbot_uuid)
+                                      }
+                                      className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
+                                      type="button"
+                                     
+                                    >
+                                      ارتقای پلن
+                                    </button>
+                                  )}
+                              </div>
+                              {/* {plan.subscription &&
                                 plan.subscription?.plan != "0" ? (
                                   <button
-                                    // disabled={plan.subscription?.plan == "0"}
                                     onClick={() => handleUpgrade(plan)}
                                     className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
                                     title=" افزایش اعتبار"
@@ -762,8 +833,7 @@ export function Billing() {
                                   >
                                     ارتقای پلن
                                   </button>
-                                )}
-                              </div>
+                                )} */}
                             </td>
                           </tr>
                         );

@@ -239,6 +239,7 @@ export default function VerificationClient() {
                   width={80}
                   height={80}
                   alt="آیوا"
+                  priority
                   className="w-20 h-20 object-cover"
                 />
                 <div className="flex flex-col">
