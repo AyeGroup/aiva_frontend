@@ -292,7 +292,6 @@ export function Tickets() {
     return true;
   });
 
-  
   const stats: TicketStats = {
     total: tickets.length,
     open: tickets.filter((t) => t.status === "open").length,
@@ -331,7 +330,7 @@ export function Tickets() {
   };
 
   const handleTicketClick = (ticketId: string) => {
-    console.log("wwww");
+    // console.log("wwww");
     setSelectedTicketId(ticketId);
     setView("view");
   };

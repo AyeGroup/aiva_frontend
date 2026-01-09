@@ -336,7 +336,7 @@ export default function AdminTickets() {
   };
 
   const handleTicketClick = (ticketId: string) => {
-    console.log("wwww");
+    // console.log("wwww");
     setSelectedTicketId(ticketId);
     setView("view");
   };

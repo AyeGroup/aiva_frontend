@@ -67,13 +67,14 @@ export default function Checkout() {
 
       const parsed = JSON.parse(planData);
       setSelectedPlan(parsed);
+      console.log("parsed",parsed)
 
       try {
         setIsLoading(true);
         const invoicePayload = {
           purpose: PAYMENT_PURPOSE.SUBSCRIPTION_PURCHASE,
           subscription_type: parsed.periods,
-          subscription_plan: getPlanIdByCode(parsed.plan),
+          subscription_plan:parsed.planId?parsed.planId: getPlanIdByCode(parsed.plan),
           amount_irr:
             parsed.periods === "monthly"
               ? parsed.price_monthly_irr

@@ -19,6 +19,7 @@ import { getDaysRemaining } from "@/utils/common";
 import { AlertCircle, X, Bot } from "lucide-react";
 import {
   getFaNameByCode,
+  getPlanCodeById,
   getPlanIcon,
   getPlanNameById,
   PLAN_COLORS_BYID,
@@ -219,7 +220,11 @@ export function Billing() {
     localStorage.setItem(
       "selectedPlan",
       JSON.stringify({
-        ...plan,
+        planId: plan.subscription.plan,
+        plan: getPlanCodeById(plan.subscription.plan),
+        price_monthly_irr: 10000,
+        price_yearly_irr: 10000,
+        description: "",
         billingBot: matchedBot,
         periods: plan?.subscription.type || "yearly",
       })
@@ -228,11 +233,11 @@ export function Billing() {
   };
 
   const handleUpgaredePlan = (chatbotId: string) => {
+    console.log("aaaa", chatbotId);
     if (!chatbotId) return;
     const matchedBot = bots.find(
       (b) => String(b.uuid).toLowerCase() === String(chatbotId).toLowerCase()
     );
-    // console.log("matchedBot", matchedBot);
 
     setBillingBot(matchedBot || null);
     sessionStorage.setItem("scrollTo", "chooseplan");
@@ -337,9 +342,12 @@ export function Billing() {
                         {plan.daysRemaining <= maxDays ? (
                           <>
                             {plan.daysRemaining === 0 ? (
-                              <strong className="text-red-600">
-                                کمتر از یک روز دیگر منقضی می‌شود
-                              </strong>
+                              <span>
+                                <strong className="text-red-600">
+                                  کمتر از یک روز
+                                </strong>
+                                دیگر منقضی می‌شود
+                              </span>
                             ) : (
                               <>
                                 <strong className="text-red-600">
@@ -365,7 +373,9 @@ export function Billing() {
                         <Button
                           variant="primary"
                           size="sm"
-                          onClick={() => handleUpgaredePlan(plan)}
+                          onClick={() =>
+                            handleUpgaredePlan(plan?.chatbot_uuid)
+                          }
                         >
                           ارتقا پلن
                         </Button>
@@ -478,7 +488,7 @@ export function Billing() {
                           plan.subscription?.balance) *
                           100
                       );
-                      console.log("ww", plan.subscription?.plan);
+                      // console.log("ww", plan.subscription?.plan);
                       return (
                         <div
                           key={index}
