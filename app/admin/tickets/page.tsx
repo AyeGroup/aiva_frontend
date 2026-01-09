@@ -20,6 +20,8 @@ import {
   TicketPend,
 } from "@/public/icons/AppIcons";
 import { ViewTicketDetail } from "./TicketView";
+import { ArrowLeft, Eye, View, ViewIcon } from "lucide-react";
+import { ProfileModal } from "../users/ProfileModal";
 
 interface TicketStats {
   total: number;
@@ -168,12 +170,11 @@ const TicketCard: React.FC<{
   onClick: () => void;
 }> = ({ ticket, onClick }) => {
   const badgeStatus = getBadgeStatus(ticket.status);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [profileData, setProfileData] = useState<any>(null);
 
   return (
-    <Card
-      className="p-3 lg:p-6 hover:shadow-hover border border-border-soft cursor-pointer group transition-all"
-      onClick={onClick}
-    >
+    <Card className="p-3 lg:p-6 hover:shadow-hover border border-border-soft   group transition-all">
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-6">
           <div className="">
@@ -198,13 +199,16 @@ const TicketCard: React.FC<{
           </div>
 
           <div className="flex items-center ">
-            <div className="w-5 h-5 text-gray-500">
+            <div
+              className="w-5 h-5 text-gray-500 cursor-pointer"
+              onClick={onClick}
+            >
               <Back />
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 items-center gap-1 lg:gap-3 lg:pr-2">
+        <div className="grid grid-cols-2 lg:grid-cols-4 items-center gap-1 lg:gap-3 lg:pr-2">
           <div className="flex items-center gap-2">
             <span className="text-xs text-grey-500">وضعیت:</span>
             <StatusBadge status={badgeStatus} />
@@ -227,7 +231,29 @@ const TicketCard: React.FC<{
               {getCategoryLabel(ticket.category)}
             </span>
           </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-grey-500">کاربر:</span>
+            <span className=" px-3 py-1 font-medium rounded-lg text-xs bg-grey-100 text-grey-700">
+              {ticket?.user?.phone}
+            </span>
+            <Eye
+              size={16}
+              className="text-primary cursor-pointer"
+              onClick={() => {
+                setProfileData(ticket?.user);
+                setIsModalOpen(true);
+              }}
+            />
+          </div>
         </div>
+        <ProfileModal
+          open={isModalOpen}
+          data={profileData}
+          onClose={() => {
+            setIsModalOpen(false);
+            setProfileData(null);
+          }}
+        />
       </div>
     </Card>
   );
@@ -271,26 +297,16 @@ const EmptyState: React.FC<{
 
 // Main component
 export default function AdminTickets() {
+  type TicketStatusFilter = TicketStatus | "all";
   const [view, setView] = useState<ViewType>("list");
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  // const [filterStatus, setFilterStatus] = useState<string>("all");
-    type TicketStatusFilter = TicketStatus | "all";
-  
-    const [filterPriority, setFilterPriority] = useState<string>("all");
+  const [filterPriority, setFilterPriority] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(false);
   const [filterStatus, setFilterStatus] = useState<TicketStatusFilter>("all");
-
   const { user, loading } = useAuth();
 
-  // Computed values
-  // const filteredTickets = tickets.filter((ticket) => {
-  //   if (filterStatus !== "all" && ticket.status !== filterStatus) return false;
-  //   if (filterPriority !== "all" && ticket.priority !== filterPriority)
-  //     return false;
-  //   return true;
-  // });
-  const filteredTickets = tickets.filter((ticket) => {
+  const filteredTickets = tickets?.filter((ticket) => {
     if (filterStatus !== "all" && ticket.status !== filterStatus) return false;
     if (filterPriority !== "all" && ticket.priority !== filterPriority)
       return false;
@@ -316,9 +332,10 @@ export default function AdminTickets() {
   // Handlers
   const loadTickets = async () => {
     setIsLoading(true);
+    setTickets([]);
     try {
       const response = await axiosInstance.get(API_ROUTES.ADMIN.TICKETS);
-      setTickets(response.data.data);
+      setTickets(response?.data?.data.items);
       // console.log("ticket list ", response.data.data);
     } catch (apiError: any) {
       console.warn("API fetch failed, using local data:", apiError);

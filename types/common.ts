@@ -146,6 +146,7 @@ export interface Ticket {
   assignee?: string;
   tags?: string[];
   messages?: any[];
+  user?:any;
 }
 
 export interface ButtonProps extends BaseComponentProps {
