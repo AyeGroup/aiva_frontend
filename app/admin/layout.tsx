@@ -8,6 +8,7 @@ import AdminChatbots from "./chatbots/page";
 import AdminTickets from "./tickets/page";
 import AdminBilling from "./billing/page";
 import { Menu } from "lucide-react";
+import { Discount } from "./discount/page";
 
 export default function AdminLayout() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function AdminLayout() {
   const currentPage = (searchParams.get("tab") ?? "home") as
     | "home"
     | "users"
+    | "discount"
     | "tickets"
     | "billing";
   const pages: Record<string, JSX.Element> = {
@@ -23,6 +25,7 @@ export default function AdminLayout() {
     chatbots: <AdminChatbots />,
     tickets: <AdminTickets />,
     billing: <AdminBilling />,
+    discount: <Discount />,
     home: <Home />,
   };
 

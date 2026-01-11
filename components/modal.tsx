@@ -15,7 +15,7 @@ export function Modal({
   onClose, 
   title, 
   children, 
-  size = 'md',
+  size = 'lg',
   closeOnBackdrop = true,
   showCloseButton = true 
 }: ModalProps) {
@@ -71,7 +71,7 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 w-full"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"

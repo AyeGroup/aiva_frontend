@@ -67,9 +67,7 @@ export function AdminSidebar({
         ✕
       </button>
       <div className="px-6 py-6 text-center">
-        <button
-          className="w-full flex flex-col items-center gap-3 group"
-        >
+        <button className="w-full flex flex-col items-center gap-3 group">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
             style={{ backgroundColor: "#FFA18E" }}
@@ -84,18 +82,7 @@ export function AdminSidebar({
         </button>
       </div>
       {loading && <PageLoader />}
-      {/* Bot Selector Dropdown */}
-      <div className="px-4   text-lg font-bold flex justify-center items-center">
-        {/* {bots && bots.length > 0 && (
-          <>
-            <label className="block   font-medium text-gray-700 m-1">
-              چت‌بات
-            </label>
-          <ChatbotSelector/>
-            
-          </>
-        )} */}
-      </div>
+      
       {/* Navigation Menu */}
       <nav className="flex-1 py-1">
         <SidebarItem
@@ -103,25 +90,30 @@ export function AdminSidebar({
           active={currentPage === "home"}
           onClick={() => router.push("/admin?tab=home")}
         />
-        <SidebarItem
+        {/* <SidebarItem
           label="کاربران"
           active={currentPage === "users"}
           onClick={() => router.push("/admin?tab=users")}
-        />
-        <SidebarItem
+        /> */}
+        {/* <SidebarItem
           label="چت‌بات‌ها"
           active={currentPage === "tickets"}
           onClick={() => router.push("/admin?tab=chatbots")}
-        />
+        /> */}
+        {/* <SidebarItem
+          label="مالی"
+          active={currentPage === "billing"}
+          onClick={() => router.push("/admin?tab=billing")}
+        /> */}
         <SidebarItem
           label="تیکت‌ها"
           active={currentPage === "tickets"}
           onClick={() => router.push("/admin?tab=tickets")}
         />
         <SidebarItem
-          label="مالی"
-          active={currentPage === "billing"}
-          onClick={() => router.push("/admin?tab=billing")}
+          label="کد تخفیف"
+          active={currentPage === "discount"}
+          onClick={() => router.push("/admin?tab=discount")}
         />
       </nav>
       {/* Bottom Actions */}

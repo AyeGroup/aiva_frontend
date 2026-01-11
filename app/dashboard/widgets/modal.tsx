@@ -56,14 +56,14 @@ export function Modal({
 
   return (
     <div
-      className="modal-overlay "
+      className="modal-overlay w-full "
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
       <div
-        className={`modal-content w-11/12 md:w-9/12 lg:w-1/2  `}
+        className={`modal-content w-11/12 md:w-9/12 lg:w-2/3  `}
         onClick={(e) => e.stopPropagation()}
       >
         <header className="modal-header">

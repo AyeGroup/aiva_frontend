@@ -1,4 +1,4 @@
-export type AdminPageType = "home" | "users" | "tickets" | "billing";
+export type AdminPageType = "home" | "users" | "tickets" | "billing" | "discount";
 export type PageType =
   | "landing"
   | "register"

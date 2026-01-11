@@ -51,7 +51,7 @@ export default function DashboardClient() {
   }, []);
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && (!user || !user?.token)) {
       router.push("/auth/login");
     }
   }, [loading, user, router]);

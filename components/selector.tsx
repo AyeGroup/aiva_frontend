@@ -5,12 +5,10 @@ import { SelectorItem } from "@/types/common";
 
 const COLORS = ["#e19f87", "#65bcb6", "#b07cc6", "#f9c74f", "#52d4a0"];
 
-
 interface GenericSelectorProps {
   items: SelectorItem[];
   selectedValue: string;
   onSelect: (value: string) => void;
-  labelKey?: keyof SelectorItem;
   valueKey?: keyof SelectorItem;
   disabled?: boolean;
   showIndicator?: boolean;
@@ -22,7 +20,6 @@ export function GenericSelector({
   items,
   selectedValue,
   onSelect,
-  labelKey = "label",
   valueKey = "value",
   disabled = false,
   showIndicator = true,
@@ -42,7 +39,7 @@ export function GenericSelector({
       (item) => item[valueKey as keyof SelectorItem] === selectedValue
     );
   }, [items, selectedValue, valueKey]);
-
+  console.log("aaa", items);
   const currentItemColor =
     currentItemIndex !== -1
       ? COLORS[currentItemIndex % COLORS.length]
@@ -97,7 +94,6 @@ export function GenericSelector({
             </div>
 
             <div className="chatbot-list">
-              
               {items.map((item, index) => {
                 const isActive =
                   item[valueKey as keyof SelectorItem] === selectedValue;
@@ -105,12 +101,12 @@ export function GenericSelector({
                   ? COLORS[index % COLORS.length]
                   : undefined;
 
-                const isDisabled = disabled || item.disabled; 
+                const isDisabled = disabled || item.disabled;
 
                 return (
                   <button
                     key={item.value || item.id || index.toString()}
-                    onClick={() => !isDisabled && handleSelect(item)} 
+                    onClick={() => !isDisabled && handleSelect(item)}
                     className={`chatbot-item ${isActive ? "active" : ""} ${
                       isDisabled ? "opacity-50 cursor-not-allowed" : ""
                     }`}

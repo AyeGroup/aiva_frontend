@@ -125,5 +125,15 @@ export const API_ROUTES = {
     TICKET: (ticket_id: string) => `${API_BASE_URL}/tickets/admin/${ticket_id}`,
     TICKET_UPDATE: (ticket_id: string) =>
       `${API_BASE_URL}/tickets/admin/${ticket_id}`,
+
+    // ---------------------------------------
+    DISCOUNTS: `${API_BASE_URL}/financial/discount-codes`,
+    DISCOUNT_CREATE: `${API_BASE_URL}/financial/discount-codes`,
+    DISCOUNT: (discount_id: string) =>
+      `${API_BASE_URL}/financial/discount-codes/${discount_id}`,
+    DISCOUNT_UPDATE: (discount_id: string) =>
+      `${API_BASE_URL}/financial/discount-codes/${discount_id}`,
+    DISCOUNT_DELETE: (discount_id: string) =>
+      `${API_BASE_URL}/financial/discount-codes/${discount_id}`,
   },
 };

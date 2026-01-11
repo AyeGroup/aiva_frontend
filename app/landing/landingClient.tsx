@@ -17,6 +17,7 @@ import SectionSecurity from "./components/Section-security";
 import SectionStarting from "./components/Section-starting";
 
 export default function LandingClient() {
+
   const pathname = usePathname();
   useEffect(() => {
     if (window.location.hash) {
