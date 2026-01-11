@@ -11,7 +11,7 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { Check, Edit, Eye, Plus, X } from "lucide-react";
 
-export function Discount() {
+export default function Discount() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [codes, setCodes] = useState<any>([]);
