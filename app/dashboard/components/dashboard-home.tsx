@@ -419,7 +419,9 @@ export default function Dashboard() {
                           style={{ color: "#A6A6A6" }}
                         >
                           {stat.label}
-                        <span className="text-xs font-extralight mr-0.5">{stat.desc}</span>
+                          <span className="text-xs font-extralight mr-0.5">
+                            {stat.desc}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -474,6 +476,7 @@ export default function Dashboard() {
                       handleTimeRangeChange(value);
                     }}
                     showIndicator={true}
+                    className="border border-gray-200 rounded-3xl"
                   />
                 </div>
                 <div className="mb-4">

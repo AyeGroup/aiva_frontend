@@ -28,7 +28,7 @@ export interface CodeForm {
   discount_value: string;
   description: string;
   usage_type: string;
-  valid_until: string ;
+  valid_until: string;
   max_discount_amount: string | null;
   max_total_uses: string | null;
 }
@@ -83,12 +83,58 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
     }
   };
 
+  const validateForm = (): boolean => {
+    if (!form.code || form.code.trim() === "") {
+      toast.error("کد تخفیف باید وارد شود.");
+      return false;
+    }
+    if (!form.description || form.description.trim() === "") {
+      toast.error("توضیحات باید وارد شود.");
+      return false;
+    }
+    if (!form.discount_type || form.discount_type === "") {
+      toast.error("نوع تخفیف باید انتخاب شود.");
+      return false;
+    }
+    if (!form.discount_value || form.discount_value === "") {
+      toast.error("مقدار تخفیف باید وارد شود.");
+      return false;
+    }
+    if (
+      form.discount_type === "percentage" &&
+      !/^\d+$/.test(form.discount_value)
+    ) {
+      toast.error("مقدار تخفیف باید یک عدد باشد.");
+      return false;
+    }
+    if (
+      form.discount_type === "amount" &&
+      !/^\d+(\.\d+)?$/.test(form.discount_value)
+    ) {
+      toast.error("مقدار تخفیف باید یک عدد اعشاری باشد.");
+      return false;
+    }
+    if (!form.valid_until) {
+      // if (!form.valid_until || form.valid_until.invalid) {
+      toast.error("تاریخ اعتبار باید انتخاب شود.");
+      return false;
+    }
+    if (form.max_total_uses && !/^\d+$/.test(form.max_total_uses)) {
+      toast.error("حداکثر تعداد استفاده باید یک عدد باشد.");
+      return false;
+    }
+    return true;
+  };
+
   const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
     try {
       setIsSubmitting(true);
       const formData = new FormData();
 
-      await axiosInstance.put(API_ROUTES.ADMIN.DISCOUNT_CREATE, formData);
+      await axiosInstance.post(API_ROUTES.ADMIN.DISCOUNT_CREATE, formData);
       toast.success("اطلاعات با موفقیت ذخیره شد.");
       onSaved();
       onClose();
@@ -145,6 +191,7 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
                 setForm((p) => ({ ...p, usage_type: value }))
               }
               showIndicator
+              className="border-2 border-primary rounded-3xl w-full"
             />
           </div>
           <div>
@@ -156,6 +203,7 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
                 setForm((p) => ({ ...p, discount_type: value }))
               }
               showIndicator
+              className="border-2 border-primary rounded-3xl w-full"
             />
           </div>
           <div>

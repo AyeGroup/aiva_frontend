@@ -132,7 +132,6 @@ export function CreateTicketView({ onSubmit }: Props) {
                 </label>
 
                 <textarea
-                  
                   className={`input-base input-default input-medium h-[150px] resize-none overflow-y-auto ${
                     errors.content ? "border-red-500! focus:border-red-500" : ""
                   }`}
@@ -184,6 +183,7 @@ export function CreateTicketView({ onSubmit }: Props) {
                       })
                     }
                     showIndicator={true}
+                    className="border-2 border-primary rounded-3xl"
                   />
                 </div>
 
@@ -200,6 +200,7 @@ export function CreateTicketView({ onSubmit }: Props) {
                       })
                     }
                     showIndicator={true}
+                    className="border-2 border-primary rounded-3xl"
                   />
                 </div>
               </div>

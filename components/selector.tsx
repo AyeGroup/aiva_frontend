@@ -14,6 +14,7 @@ interface GenericSelectorProps {
   showIndicator?: boolean;
   initialOpen?: boolean;
   headerTitle?: string;
+  className?: string;
 }
 
 export function GenericSelector({
@@ -25,6 +26,7 @@ export function GenericSelector({
   showIndicator = true,
   initialOpen = false,
   headerTitle = "انتخاب‌ها",
+  className = "",
 }: GenericSelectorProps) {
   const [isOpen, setIsOpen] = useState(initialOpen);
 
@@ -60,7 +62,7 @@ export function GenericSelector({
   };
 
   return (
-    <div className="chatbot-selector-container">
+    <div className={`chatbot-selector-container ${className}`}>
       {/* Current Selection Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}

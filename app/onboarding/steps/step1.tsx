@@ -168,6 +168,7 @@ export function WizardStep1({
             selectedValue={botConfig.language}
             onSelect={(value) => updateConfig({ language: value })}
             showIndicator
+            className="border-2 border-primary rounded-3xl"
           />
         </div>
       </div>
@@ -181,6 +182,7 @@ export function WizardStep1({
             selectedValue={selectedTemplate}
             onSelect={(value) => handleSelectTemplate(value, "description")}
             showIndicator
+            className="border border-primary rounded-4xl"
           />
         </div>
 
@@ -203,6 +205,7 @@ export function WizardStep1({
               handleSelectPromptTemplate(value, "guidelines")
             }
             showIndicator
+            className="border border-primary rounded-4xl"
           />
         </div>
 

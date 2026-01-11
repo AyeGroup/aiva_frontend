@@ -52,12 +52,11 @@ function LoginClient() {
     setPassword(value);
 
     // بررسی وجود کاراکتر فارسی
-  if (/[آ-ی\u06F0-\u06F9]/.test(value)) {
-    setWarning("رمز عبور نباید شامل حروف یا اعداد فارسی باشد!");
-  } else {
-    setWarning("");
-  }
-
+    if (/[آ-ی\u06F0-\u06F9]/.test(value)) {
+      setWarning("رمز عبور نباید شامل حروف یا اعداد فارسی باشد!");
+    } else {
+      setWarning("");
+    }
   };
 
   const persianYear = new Intl.DateTimeFormat("fa-IR", {
@@ -90,10 +89,13 @@ function LoginClient() {
       }
       // console.log("user role", res.user.role);
       const storedUrl = localStorage.getItem("alogUrl");
+      const returnUrla = localStorage.getItem("returnUrla");
       localStorage.removeItem("alogUrl");
 
-      if (res.user.role === "admin") router.push("/admin");
-      else if (storedUrl) router.push(storedUrl);
+      if (res.user.role === "admin") {
+        if (returnUrla) router.push(returnUrla);
+        else router.push("/admin");
+      } else if (storedUrl) router.push(storedUrl);
       else router.push("/dashboard");
 
       // console.log("user");

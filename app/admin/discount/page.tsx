@@ -9,6 +9,7 @@ import { ConfirmModal } from "@/components/ConfirmModal";
 import { Check, Edit, Eye, Plus, X } from "lucide-react";
 import { Delete } from "@/public/icons/AppIcons";
 import { CodeModal } from "./CodeModal";
+import { useRouter } from "next/navigation";
 
 export function Discount() {
   const { user, loading } = useAuth();
@@ -23,11 +24,15 @@ export function Discount() {
     isOpen: false,
     id: null,
   });
+  const router=useRouter()
 
   useEffect(() => {
     console.log("s",user)
-    if (!user?.token) return;
-    const fetchCodes = async () => {
+    if (!user?.token) {
+      localStorage.setItem("returnUrla", window.location.href);
+      router.push("/auth/login")
+      return;
+     } const fetchCodes = async () => {
       await loadCodes();
     };
 

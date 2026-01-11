@@ -3958,10 +3958,10 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.625rem 1rem;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
+  padding:  1rem;
+  /* background: white;
+  border: 2px solid #65BCB6;
+  border-radius: 2rem; */
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 180px;
