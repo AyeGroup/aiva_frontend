@@ -1,19 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getPlanIcon } from "@/constants/plans";
 import { StatsDrawer } from "../dashboard/widgets/stats-drawer";
 import { BotConfig } from "@/types/common";
 import { toast } from "sonner";
-// import { usePricing } from "@/providers/PricingContext";
 
 export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("BASIC");
   const [selectedBot, setSelectedBot] = useState<BotConfig | null>(null);
-  // const { currentPlan } = usePricing();
-  // console.log("currentPlan", currentPlan);
-  // console.log("activePlan", activePlan);
   const menuItems = [
     { icon: getPlanIcon("FREE"), label: "آغازین", key: "FREE" },
     { icon: getPlanIcon("BASIC"), label: "پایه", key: "BASIC" },
@@ -23,7 +19,6 @@ export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
   ];
 
   const handleGetBot = () => {
-
     const stored = localStorage.getItem("aiva-onboarding-data");
     if (!stored) return null;
 
@@ -31,19 +26,19 @@ export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
       const parsed = JSON.parse(stored);
       console.log("2", parsed?.botConfig);
       if (parsed?.botConfig) {
-        return(parsed.botConfig as BotConfig);
+        return parsed.botConfig as BotConfig;
       } else {
-        return(null);
+        return null;
       }
     } catch (err) {
       console.error("Invalid aiva-onboarding-data in localStorage", err);
-      return(null);
+      return null;
     }
-  } 
+  };
 
   const handleClick = (planKey: string) => {
     console.log("ali selectedBot : ", selectedBot);
-   const mybot= handleGetBot();
+    const mybot = handleGetBot();
     if (!mybot || !mybot.uuid) {
       toast.warning(
         "ابتدا چت‌بات را ایجاد کنید سپس می‌توانید پلن خریداری کنید"
@@ -51,7 +46,6 @@ export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
       return;
     }
     setSelectedBot(mybot);
-    // localStorage.setItem("selectedBot", JSON.stringify(selectedBot));
     setSelectedPlan(planKey);
     setIsStatsDrawerOpen(true);
   };
@@ -63,7 +57,6 @@ export default function FloatSideMenu({ activePlan }: { activePlan: string }) {
         <div className="group flex flex-col gap-2 bg-white/40 backdrop-blur-md shadow-lg border-r border-gray-200 rounded-r-xl p-1">
           {menuItems.map((item, index) => {
             const active = activePlan === item.key;
-            // const active = currentPlan === item.key;
 
             return (
               <button

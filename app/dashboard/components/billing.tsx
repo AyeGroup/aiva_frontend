@@ -25,10 +25,12 @@ import {
   PLAN_COLORS_BYID,
   translateFeature,
 } from "@/constants/plans";
+import { usePricing } from "@/providers/PricingContext";
 
 export function Billing() {
   const { bots } = useBot();
   const { user, loading } = useAuth();
+  const { plans } = usePricing();
   const router = useRouter();
   const maxDays = 7;
   const maxCredit = 85;
@@ -40,7 +42,7 @@ export function Billing() {
   const [activeSubscrp, setActiveSubscrp] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expiringPlan, setExpiringPlan] = useState<any>(null);
-  const [plans, setPlans] = useState<any[]>([]);
+  const [plansData, setPlansData] = useState<any[]>([]);
   const [periods, setPeriods] = useState<Record<string, "monthly" | "yearly">>(
     {}
   );
@@ -93,14 +95,16 @@ export function Billing() {
       setIsLoading(true);
 
       try {
-        const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
+        // const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
 
         // setPlans(res.data?.data?.subscription_plans ?? []);
-        const allPlans = res.data?.data?.subscription_plans ?? [];
+        // const allPlans = res.data?.data?.subscription_plans ?? [];
+        const allPlans = plans ?? [];
+
         const filteredPlans = allPlans.filter(
           (p: any) => p.plan?.toLowerCase() !== "free"
         );
-        setPlans(filteredPlans);
+        setPlansData(filteredPlans);
 
         // console.log("allPlans :", allPlans);
         // console.log("filteredPlans :", filteredPlans);
@@ -191,7 +195,7 @@ export function Billing() {
       return;
     }
 
-    const plan = plans.find(
+    const plan = plansData.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
     console.log("elham", plan);
@@ -373,9 +377,7 @@ export function Billing() {
                         <Button
                           variant="primary"
                           size="sm"
-                          onClick={() =>
-                            handleUpgaredePlan(plan?.chatbot_uuid)
-                          }
+                          onClick={() => handleUpgaredePlan(plan?.chatbot_uuid)}
                         >
                           ارتقا پلن
                         </Button>
@@ -926,7 +928,7 @@ export function Billing() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 px-0 sm:px-6">
-              {plans.map((plan, index) => (
+              {plansData.map((plan, index) => (
                 <PlanCard
                   key={index}
                   plan={plan?.plan}

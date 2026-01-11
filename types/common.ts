@@ -132,6 +132,7 @@ export interface Plan {
   recommended?: boolean;
   color: string;
   current?: boolean;
+  upload_char_limit?:number;
 }
 
 export interface Ticket {

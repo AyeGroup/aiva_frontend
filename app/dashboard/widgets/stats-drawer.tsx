@@ -15,6 +15,7 @@ import {
 } from "@/constants/plans";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
+import { usePricing } from "@/providers/PricingContext";
 
 interface StatsDrawerProps {
   isOpen: boolean;
@@ -33,11 +34,12 @@ export function StatsDrawer({
     "monthly"
   );
   const planRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const [plans, setPlans] = useState<any[]>([]);
+  const [plansData, setPlansData] = useState<any[]>([]);
   const [selectedBot, setSelectedBot] = useState<BotConfig | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { currentBot } = useBot();
+  const { plans } = usePricing();
 
   useEffect(() => {
     // console.log("chatbot", chatbot);
@@ -91,13 +93,15 @@ export function StatsDrawer({
       setIsLoading(true);
 
       try {
-        const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
+        // const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
 
-        const allPlans = res.data?.data?.subscription_plans ?? [];
+        // const allPlans = res.data?.data?.subscription_plans ?? [];
+       
+       const allPlans =plans ??[];
         const filteredPlans = allPlans.filter(
           (p: any) => p.plan?.toLowerCase() !== "free"
         );
-        setPlans(filteredPlans);
+        setPlansData(filteredPlans);
       } catch (apiError: any) {
         console.warn("API fetch failed:", apiError);
       } finally {
@@ -121,7 +125,7 @@ export function StatsDrawer({
       return;
     }
     console.log("planName", planName);
-    const plan = plans.find(
+    const plan = plansData.find(
       (p) => p.plan.toLowerCase() === planName.toLowerCase()
     );
     // console.log("plan:", plan);
@@ -161,6 +165,7 @@ export function StatsDrawer({
   };
 
   if(!isOpen) return
+  
   return createPortal(
     <div className="">
       {/* Overlay */}
@@ -241,7 +246,7 @@ export function StatsDrawer({
           >
             {isLoading && <PageLoader />}
             <div className="flex flex-col gap-3 sm:gap-4">
-              {plans.map((plan, index) => (
+              {plansData.map((plan, index) => (
                 <div
                   key={index}
                   ref={(el) => {

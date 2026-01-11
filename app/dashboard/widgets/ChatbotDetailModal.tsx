@@ -18,6 +18,7 @@ import {
   BarChart3,
   Info,
 } from "lucide-react";
+import { usePricing } from "@/providers/PricingContext";
 
 interface ChatbotDetailModalProps {
   show: boolean;
@@ -38,6 +39,7 @@ export default function ChatbotDetailModal({
   const [daysRemaining, setDaysRemaining] = useState<number>(0);
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const { setCurrentBot } = useBot();
+  const { plans } = usePricing();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,9 +71,9 @@ export default function ChatbotDetailModal({
         }
 
         // 🟢 3. گرفتن لیست pricing
-        const pricingRes = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
-        const pricingData = pricingRes.data.data.subscription_plans;
-
+        // const pricingRes = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
+        // const pricingData = pricingRes.data.data.subscription_plans;
+        const pricingData = plans ?? [];
         // 🟢 4. پیدا کردن پلن فعلی
         const currentPlan = pricingData.find(
           (plan: any) => plan.plan === getPlanCodeById(subData?.plan)
@@ -79,7 +81,7 @@ export default function ChatbotDetailModal({
 
         // 🟢 5. تنظیم totalMessages
         if (currentPlan) {
-          setTotalMessages(currentPlan.upload_char_limit || 0);
+          setTotalMessages(currentPlan?.upload_char_limit || 0);
         } else {
           setTotalMessages(0);
         }
@@ -361,7 +363,7 @@ export default function ChatbotDetailModal({
             </div>
           ) : (
             <div className="flex items-center justify-center gap-2 p-10 text-secondary font-extrabold">
-            <Info/>
+              <Info />
               چت‌بات پلن فعال ندارد
             </div>
           )}
@@ -369,13 +371,23 @@ export default function ChatbotDetailModal({
           {/* Buttons */}
           <div className="   pt-2 pb-2 px-5 bg-white">
             <div className="grid grid-cols-2 gap-3">
-              <Button variant="primary" size="sm" onClick={handlePlan} className="cursor-pointer">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handlePlan}
+                className="cursor-pointer"
+              >
                 <div className="flex">
                   <Zap className="w-4 h-4 ml-2" />
                   ارتقا پلن
                 </div>
               </Button>
-              <Button variant="secondary" size="sm" onClick={handleDashboard} className="cursor-pointer">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleDashboard}
+                className="cursor-pointer"
+              >
                 <div className="flex">
                   <BarChart3 className="w-4 h-4 ml-2" />
                   مشاهده داشبورد

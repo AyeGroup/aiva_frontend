@@ -1,11 +1,6 @@
 "use client";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { useBot } from "./BotProvider";
 import { useAuth } from "./AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
@@ -15,10 +10,14 @@ import {
   Plan,
   PricingContextType as BasePricingContextType,
 } from "@/types/common";
-import axios from "axios";
-import axiosInstance from "@/lib/axiosInstance";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-// Extend the base type to include isFeatureMapReady
 type PricingContextType = BasePricingContextType & {
   isFeatureMapReady: boolean;
 };
@@ -47,12 +46,10 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
 
   // 1) Load pricing ONCE
   useEffect(() => {
-    if (isPublicRoute) {
-      return;
-    }
-
+    if (isPublicRoute) return;
     if (authLoading) return;
     if (!user) return;
+    
     const fetchPricing = async () => {
       try {
         const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
@@ -242,4 +239,3 @@ export const useFeatureRequiredPlan = (feature: string) => {
   const { featureMinPlan } = usePricing();
   return featureMinPlan[feature] ?? "FREE";
 };
- 
