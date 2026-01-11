@@ -37,6 +37,7 @@ interface WizardStep6Props {
   errors?: { [key: string]: string };
   setLogoFile: (file: File | null) => void;
   updateConfig: (updates: Partial<BotConfig>) => void;
+  activeSubscription: number;
 }
 
 export function WizardStep6({
@@ -44,15 +45,17 @@ export function WizardStep6({
   updateConfig,
   errors,
   setLogoFile,
+  activeSubscription,
 }: WizardStep6Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedTone, setSelectedTone] = useState(botConfig.tone);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  console.log("step6 subsc: ", activeSubscription);
 
   const { allowed: canUploadLogo, loading: canUploadLogoLoading } =
-    useFeatureAccess(botConfig?.uuid, "chatbot_logo");
+    useFeatureAccess(botConfig?.uuid, "chatbot_logo", activeSubscription ?? 0);
 
   useEffect(() => {
     if (botConfig.logo_url) setPreview(botConfig.logo_url);
@@ -67,7 +70,7 @@ export function WizardStep6({
   const handleToneChange = async (toneId: string) => {
     setSelectedTone(toneId);
     updateConfig({ tone: toneId });
-console.log("toneId", toneId);
+    console.log("toneId", toneId);
     try {
       setIsSubmitting(true);
 

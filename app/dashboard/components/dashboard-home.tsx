@@ -390,7 +390,7 @@ export default function Dashboard() {
                   return (
                     <div
                       key={index}
-                      className={`group bg-white/80 backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 ${rotateClass} relative`}
+                      className={`group bg-white/80 overflow-hidden backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 ${rotateClass} relative`}
                     >
                       <div
                         className={`absolute top-0 right-0 w-20 h-20 ${scheme.bg} rounded-full -translate-y-2 translate-x-2`}

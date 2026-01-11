@@ -25,7 +25,12 @@ import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getPlanCodeById, getPlanIcon, PlanCode } from "@/constants/plans";
+import {
+  getPlanCodeById,
+  getPlanIcon,
+  getPlanIconById,
+  PlanCode,
+} from "@/constants/plans";
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -43,7 +48,7 @@ export default function OnboardingWizard() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeSubscrp, setActiveSubscrp] = useState<PlanCode>("FREE");
+  const [activeSubscrp, setActiveSubscrp] = useState<number>(-1);
   const totalSteps = steps.length;
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
@@ -179,15 +184,14 @@ export default function OnboardingWizard() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        let subsc: PlanCode = "FREE";
+        let subsc = 0;
         if (id && id.length > 3) {
           const response = await axiosInstance.get(
             API_ROUTES.FINANCIAL.SUBSCRIPTION(id)
           );
           if (response && response.status === 200)
-            subsc = getPlanCodeById(response.data.data.plan) ?? "FREE";
+            subsc = response.data.data.plan ?? 0;
         }
-        // console.log("bot id: ", id);
         console.log("active SUBSCRIPTION: ", subsc);
         setActiveSubscrp(subsc);
       } catch (error) {
@@ -197,7 +201,7 @@ export default function OnboardingWizard() {
       }
     };
     fetchData();
-  }, [user]);
+  }, [user, id]);
 
   //   ذخیره‌ی داده‌ها
   useEffect(() => {
@@ -556,11 +560,17 @@ export default function OnboardingWizard() {
             errors={errors}
             logoFile={logoFile}
             setLogoFile={setLogoFile}
+            activeSubscription={activeSubscrp}
           />
         );
 
       case 3:
-        return <WizardStep2 botConfig={botConfig} />;
+        return (
+          <WizardStep2
+            botConfig={botConfig}
+            activeSubscription={activeSubscrp}
+          />
+        );
       case 4:
         return (
           <WizardStep4 botConfig={botConfig} updateConfig={updateBotConfig} />
@@ -571,10 +581,16 @@ export default function OnboardingWizard() {
             botConfig={botConfig}
             updateConfig={updateBotConfig}
             onPermissionsChange={setPermissions}
+            activeSubscription={activeSubscrp}
           />
         );
       case 6:
-        return <WizardStep5 botConfig={botConfig} />;
+        return (
+          <WizardStep5
+            botConfig={botConfig}
+            activeSubscription={activeSubscrp}
+          />
+        );
       default:
         return (
           <WizardStep1 botConfig={botConfig} updateConfig={updateBotConfig} />
@@ -603,7 +619,11 @@ export default function OnboardingWizard() {
     <main className="onboarding-wizard h-screen overflow-y-auto bg-bg-app">
       <div className="container   mx-auto px-6 lg:pr-2 lg:pl-12 py-4 relative z-10">
         {/* Clean Minimal Header */}
-        {isNew && <FloatSideMenu activePlan={activeSubscrp} />}
+        {isNew && (
+          <FloatSideMenu
+            activePlan={getPlanCodeById(activeSubscrp) ?? "FREE"}
+          />
+        )}
         <div className="flex justify-between items-center px-10">
           <div className="flex items-center ">
             <button
@@ -661,7 +681,7 @@ export default function OnboardingWizard() {
           <div className="flex items-center justify-center w-14 h-14 bg-brand-primary rounded-xl shadow-lg mb-6">
             <div className="text-white w-7 h-7">
               {/* <AivaWhite /> */}
-              {getPlanIcon(activeSubscrp || "FREE")}
+              {getPlanIconById(activeSubscrp || 0)}
             </div>
           </div>
 

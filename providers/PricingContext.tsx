@@ -49,7 +49,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     if (isPublicRoute) return;
     if (authLoading) return;
     if (!user) return;
-    
+
     const fetchPricing = async () => {
       try {
         const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
@@ -136,15 +136,17 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
 // HOOKS
 export const usePricing = () => {
   const context = useContext(PricingContext);
-
-  if (!context) {
+  if (!context)
     throw new Error("usePricing must be used inside PricingProvider");
-  }
 
   return context;
 };
 
-export const useFeatureAccess = (bot_uuid?: string, feature?: string) => {
+export const useFeatureAccess = (
+  bot_uuid: string,
+  feature: string,
+  planId: number,
+) => {
   const { featureMinPlan, isFeatureMapReady } = usePricing();
 
   const [state, setState] = useState<{
@@ -156,7 +158,6 @@ export const useFeatureAccess = (bot_uuid?: string, feature?: string) => {
   });
 
   useEffect(() => {
-    // اگر featureMinPlan هنوز آماده نیست، loading رو true نگه دار
     if (!isFeatureMapReady) {
       setState({ allowed: false, loading: true });
       return;
@@ -171,11 +172,9 @@ export const useFeatureAccess = (bot_uuid?: string, feature?: string) => {
 
     const run = async () => {
       try {
-        const result = await checkFeatureAccess(
-          bot_uuid,
-          feature,
-          featureMinPlan
-        );
+        const minPlan = featureMinPlan[feature] ?? "FREE";
+        const minIndex = planOrder.indexOf(minPlan);
+        const result = (planId ?? 0) >= minIndex;
 
         if (!cancelled) {
           setState({ allowed: result, loading: false });
@@ -196,32 +195,32 @@ export const useFeatureAccess = (bot_uuid?: string, feature?: string) => {
 
   return state;
 };
+const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
 
 const checkFeatureAccess = async (
   bot_uuid: string,
   feature: string,
+  planId: number,
   featureMinPlan: Record<string, string>
 ): Promise<boolean> => {
   if (!bot_uuid) return false;
 
   try {
-    const response = await axiosInstance.get(
-      API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid)
-    );
+    // const response = await axiosInstance.get(
+    //   API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid)
+    // );
 
-    if (!response || response.status !== 200) return false;
+    // if (!response || response.status !== 200) return false;
 
-    const currentPlan = response.data.data.plan;
+    // const currentPlan = response.data.data.plan;
 
-    if (typeof currentPlan !== "number" || isNaN(currentPlan)) {
-      return false;
-    }
-
-    const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
+    // if (typeof currentPlan !== "number" || isNaN(currentPlan)) {
+    //   return false;
+    // }
 
     const minPlan = featureMinPlan[feature] ?? "FREE";
     const minIndex = planOrder.indexOf(minPlan);
-    const rslt = currentPlan >= minIndex;
+    const rslt = planId >= minIndex;
 
     // console.log("minPlan: ", minPlan);
     // console.log("minIndex: ", minIndex);

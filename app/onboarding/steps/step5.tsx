@@ -18,9 +18,10 @@ import { Copy, Globe, CheckCircle2, BarChart3, HelpCircle } from "lucide-react";
 
 interface WizardStep5Props {
   botConfig: BotConfig;
+  activeSubscription: number;
 }
 
-export function WizardStep5({ botConfig }: WizardStep5Props) {
+export function WizardStep5({ botConfig, activeSubscription }: WizardStep5Props) {
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [installCode, setInstallCode] = useState("");
@@ -31,6 +32,7 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
   const [isBaleEditing, setIsBaleEditing] = useState(!botConfig?.bale_enabled);
   const { loading } = useAuth();
   // console.log("aaa", botConfig.knowledge);
+  console.log("step5 subsc: ", activeSubscription);
 
   useEffect(() => {
     const fetchCode = async () => {
@@ -121,9 +123,9 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
           API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)
         );
 
-  const data =
-    response?.data?.data?.filter((item: any) => item.status === "done")
-      .length ?? 0;
+        const data =
+          response?.data?.data?.filter((item: any) => item.status === "done")
+            .length ?? 0;
 
         // console.log("dat", data);
         setKnowledgeCount(data);
@@ -138,7 +140,11 @@ export function WizardStep5({ botConfig }: WizardStep5Props) {
   };
 
   const { allowed: canBaleIntegration, loading: canBaleIntegrationLoading } =
-    useFeatureAccess(botConfig?.uuid, "bale_integration");
+    useFeatureAccess(
+      botConfig?.uuid,
+      "bale_integration",
+      activeSubscription ?? 0
+    );
   if (canBaleIntegrationLoading) return <PageLoader />;
 
   return (

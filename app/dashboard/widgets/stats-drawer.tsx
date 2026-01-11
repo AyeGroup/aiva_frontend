@@ -1,9 +1,10 @@
+import PageLoader from "@/components/pageLoader";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { useRouter } from "next/navigation";
 import { BotConfig } from "@/types/common";
-import { API_ROUTES } from "@/constants/apiRoutes";
+import { usePricing } from "@/providers/PricingContext";
 import { ChatbotList } from "./chatbot-list";
 import { PlanCardMenu } from "./plan-card-menu";
 import { createPortal } from "react-dom";
@@ -13,9 +14,6 @@ import {
   getPlanIcon,
   translateFeature,
 } from "@/constants/plans";
-import PageLoader from "@/components/pageLoader";
-import axiosInstance from "@/lib/axiosInstance";
-import { usePricing } from "@/providers/PricingContext";
 
 interface StatsDrawerProps {
   isOpen: boolean;
@@ -42,16 +40,15 @@ export function StatsDrawer({
   const { plans } = usePricing();
 
   useEffect(() => {
-    // console.log("chatbot", chatbot);
-    if(!isOpen ) return
-    if (chatbot ) {
+    if (!isOpen) return;
+    if (chatbot) {
       setSelectedBot(chatbot);
     } else if (currentBot && currentBot?.uuid?.length > 3) {
       setSelectedBot(currentBot);
     } else {
       setSelectedBot(null);
     }
-  }, [chatbot, currentBot,isOpen]);
+  }, [chatbot, currentBot, isOpen]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -96,8 +93,8 @@ export function StatsDrawer({
         // const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
 
         // const allPlans = res.data?.data?.subscription_plans ?? [];
-       
-       const allPlans =plans ??[];
+
+        const allPlans = plans ?? [];
         const filteredPlans = allPlans.filter(
           (p: any) => p.plan?.toLowerCase() !== "free"
         );
@@ -113,7 +110,6 @@ export function StatsDrawer({
   }, []);
 
   const handlePlanPurchase = (planName: string) => {
-    
     if (!selectedBot || !selectedBot?.uuid) {
       toast.info("لطفاً چت‌بات مورد نظر را انتخاب کنید");
       return;
@@ -164,8 +160,8 @@ export function StatsDrawer({
     ];
   };
 
-  if(!isOpen) return
-  
+  if (!isOpen) return;
+
   return createPortal(
     <div className="">
       {/* Overlay */}
@@ -200,10 +196,8 @@ export function StatsDrawer({
 
         {/* Content */}
         <div className="stats-drawer-content px-4 sm:px-6">
-          {/* Billing Period Toggle */}
           <div className="flex items-center justify-center mb-3 sm:mb-4 gap-2 text-sm sm:text-base">
             <span>چت‌بات</span>
-            {/* <ChatbotSelector /> */}
             <ChatbotList
               placeholder="یک چت‌بات را انتخاب کنید"
               selectedBot={selectedBot}

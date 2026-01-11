@@ -92,6 +92,23 @@ export const translateFeature = (key: string): string => {
 
 // داشبورد تحلیلی مشتریان
 
+export const getPlanIconById = (plan: number) => {
+  switch (plan) {
+    case 0:
+      return <Gift />;
+    case 1:
+      return <Rocket />;
+    case 2:
+      return <Crown />;
+    case 3:
+      return <Star />;
+    case 4:
+      return <Users />;
+    default:
+      return <Gift />;
+  }
+};
+
 export const getPlanIcon = (planCode: string) => {
   switch (planCode.toUpperCase()) {
     case "FREE":

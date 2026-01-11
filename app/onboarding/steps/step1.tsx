@@ -17,9 +17,11 @@ const TEMPLATE_PLACEHOLDER = "__placeholder__";
 export function WizardStep1({
   botConfig,
   updateConfig,
+ 
 }: {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
+ 
 }) {
   const [selectedTemplate, setSelectedTemplate] =
     useState<string>(TEMPLATE_PLACEHOLDER);

@@ -33,9 +33,10 @@ import { ConfirmModal } from "@/components/ConfirmModal";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
+  activeSubscription:number;
 }
 
-export function WizardStep2({ botConfig }: WizardStep2Props) {
+export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) {
   const { user, loading } = useAuth();
   const [selectedType, setSelectedType] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
@@ -61,18 +62,29 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     isOpen: false,
     item: null,
   });
+  console.log("step2 subsc: ", activeSubscription);
+
   const { allowed: canUploadDocs, loading: canUploadDocsLoading } =
-    useFeatureAccess(botConfig?.uuid, "upload_docs");
+    useFeatureAccess(botConfig?.uuid, "upload_docs",activeSubscription ??0);
   const { allowed: canQaFile, loading: canQaFileLoading } = useFeatureAccess(
     botConfig?.uuid,
-    "qa_as_file"
+    "qa_as_file",
+    activeSubscription ?? 0
   );
   const { allowed: canWebsiteCrawling, loading: canWebsiteCrawlingLoading } =
-    useFeatureAccess(botConfig?.uuid, "website_crawling");
+    useFeatureAccess(
+      botConfig?.uuid,
+      "website_crawling",
+      activeSubscription ?? 0
+    );
   const {
     allowed: canWebsiteCrawlingLevel2,
     loading: canWebsiteCrawlingLevel2Loading,
-  } = useFeatureAccess(botConfig?.uuid, "website_crawling_level_2");
+  } = useFeatureAccess(
+    botConfig?.uuid,
+    "website_crawling_level_2",
+    activeSubscription ?? 0
+  );
 
   useEffect(() => {
     if (!user?.token || !botConfig?.uuid) return;

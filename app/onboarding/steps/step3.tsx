@@ -12,6 +12,8 @@ import ThreeLevelSlider from "@/components/ThreeLevelSlider";
 interface WizardStep3Props {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
+  activeSubscription: number;
+
   onPermissionsChange?: (permissions: {
     canChatbotK: boolean;
     canChatbotEmoji: boolean;
@@ -27,25 +29,53 @@ const LlmModel = ["gpt-4o", "gpt-4o-mini"];
 export function WizardStep3({
   botConfig,
   updateConfig,
+  activeSubscription,
   onPermissionsChange,
 }: WizardStep3Props) {
+  console.log("step3 subsc: ", activeSubscription);
+
   const { allowed: canChatbotK, loading: canChatbotKLoading } =
-    useFeatureAccess(botConfig?.uuid, "chatbot_k");
+    useFeatureAccess(
+      botConfig?.uuid,
+      "chatbot_k",
+      activeSubscription ?? 0
+    );
   const {
     allowed: canChatbotanswerLength,
     loading: canChatbotanswerLengthLoading,
-  } = useFeatureAccess(botConfig?.uuid, "chatbot_answer_length");
+  } = useFeatureAccess(
+    botConfig?.uuid,
+    "chatbot_answer_length",
+    activeSubscription ?? 0
+  );
+
   const { allowed: canChatbotGreetings, loading: canChatbotGreetingsLoading } =
-    useFeatureAccess(botConfig?.uuid, "chatbot_greetings");
+    useFeatureAccess(
+      botConfig?.uuid,
+      "chatbot_greetings",
+      activeSubscription ?? 0
+    );
   const { allowed: canChatbotEmoji, loading: canChatbotEmojiLoading } =
-    useFeatureAccess(botConfig?.uuid, "chatbot_emoji");
+    useFeatureAccess(
+      botConfig?.uuid,
+      "chatbot_emoji",
+      activeSubscription ?? 0
+    );
   const {
     allowed: canChatbotSupportPhone,
     loading: canChatbotSupportPhoneLoading,
-  } = useFeatureAccess(botConfig?.uuid, "chatbot_support_phone");
+  } = useFeatureAccess(
+    botConfig?.uuid,
+    "chatbot_support_phone",
+    activeSubscription ?? 0
+  );
 
   const { allowed: canChoosing_llm, loading: canChoosing_llmLoading } =
-    useFeatureAccess(botConfig?.uuid, "choosing_llm");
+    useFeatureAccess(
+      botConfig?.uuid,
+      "choosing_llm",
+      activeSubscription ?? 0
+    );
 
   useEffect(() => {
     if (

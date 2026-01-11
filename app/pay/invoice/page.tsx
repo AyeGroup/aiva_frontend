@@ -5,11 +5,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/button";
 import { convertToPersian } from "@/utils/common";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Download, ArrowRight, CheckCircle } from "lucide-react";
+import {  ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 interface InvoiceData {
   invoiceId: string;
@@ -52,7 +50,6 @@ export default function Invoice() {
   useEffect(() => {
     const status = searchParams.get("status");
 
-    // 🟢 بررسی وضعیت پرداخت
     if (!status) {
       toast.error("اطلاعات پرداخت نامعتبر است");
       router.push("/dashboard?tab=billing");
@@ -69,7 +66,6 @@ export default function Invoice() {
       toast.success("پرداخت با موفقیت انجام شد 🎉");
     }
 
-    // 🧾 بارگذاری داده فاکتور از localStorage
     const invoiceId = localStorage.getItem("lastInvoiceId");
     if (invoiceId) {
       const data = localStorage.getItem(`invoice-${invoiceId}`);
@@ -81,7 +77,6 @@ export default function Invoice() {
       }
     } else {
       toast.error("فاکتور یافت نشد");
-      // router.push("/dashboard?tab=billing");
     }
 
     setLoading(false);
@@ -95,50 +90,13 @@ export default function Invoice() {
     );
   }
 
-  // اگر وضعیت پرداخت موفق نیست، فاکتور نمایش داده نمی‌شود
   const status = searchParams.get("status");
   if (status !== "success" || !invoiceData) {
     return null;
   }
 
-  const handleDownload = async () => {
-    try {
-      toast.info("در حال آماده‌سازی فایل PDF...");
-
-      const invoiceElement = document.querySelector(".invoice-content");
-      if (!invoiceElement) {
-        toast.error("محتوای فاکتور یافت نشد");
-        return;
-      }
-
-      // گرفتن snapshot از بخش فاکتور
-      const canvas = await html2canvas(invoiceElement as HTMLElement, {
-        scale: 2, // کیفیت بالاتر
-        useCORS: true,
-        logging: false,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-
-      // تنظیم ابعاد PDF
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-
-      // نام فایل با شماره فاکتور
-      const filename = `invoice-${invoiceData?.invoiceId || "payment"}.pdf`;
-      pdf.save(filename);
-
-      toast.success("فاکتور با موفقیت دانلود شد 🎉");
-    } catch (err) {
-      console.error(err);
-      toast.error("خطا در تولید فایل PDF");
-    }
-  };
+  
+   
   const handlePrint = () => window.print();
 
   const trackingCode = searchParams.get("tracking");
@@ -166,24 +124,12 @@ export default function Invoice() {
               >
                 🖨️ چاپ
               </Button>
-              {/* <Button
-                variant="primary"
-                size="md"
-                onClick={handleDownload}
-                title="دانلود فاکتور"
-              >
-                <div className="flex items-center gap-2">
-                  <Download className="w-4 h-4" />
-                  <span>دانلود PDF</span>
-                </div>
-              </Button> */}
+              
             </div>
           </div>
         </header>
 
-        {/* ✅ تمام استایل‌ها و ساختار اصلی حفظ شده */}
         <Card className="p-8 invoice-content">
-          {/* Invoice Header */}
           <div className="flex flex-col items-center justify-center gap-6 py-8 border-b-2 border-grey-200">
             <h1 className="text-grey-900 font-bold text-right">
               پرداخت با موفقیت انجام شد.
