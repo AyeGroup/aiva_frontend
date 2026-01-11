@@ -49,7 +49,7 @@ export function ChatbotList({
   const displayName = internalSelected ? internalSelected.name : placeholder;
 
   return (
-    <div className="chatbot-selector-container">
+    <div className="chatbot-selector-container border border-primary rounded-3xl">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="chatbot-selector-button"

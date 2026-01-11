@@ -27,9 +27,10 @@ export function ChatbotSelector() {
   //   return <PageLoader />;
   // }
   // if (!selectedChatbot) return null;
+              // className = "border-2 border-primary rounded-3xl w-full";
 
   return (
-    <div className="chatbot-selector-container">
+    <div className="chatbot-selector-container border border-primary rounded-2xl">
       {/* Current Selection */}
       <button
         onClick={() => setIsOpen(!isOpen)}

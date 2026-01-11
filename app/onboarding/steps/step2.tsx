@@ -84,6 +84,11 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
     fetchData();
   }, [user?.token, botConfig?.uuid]);
 
+  ;
+  const IsFileDuplicate = async (file: File) => {
+
+    return true
+  };
   const loadQa = async (botUuid: string) => {
     if (!botUuid) return;
     setIsLoading(true);
@@ -282,6 +287,13 @@ export function WizardStep2({ botConfig }: WizardStep2Props) {
           (selectedType === "file" || selectedType === "excel") &&
           selectedFile
         ) {
+
+         const isValid=await IsFileDuplicate(selectedFile);
+         if(!isValid)
+         {
+          toast.warning("فایل قبلا ثبت شده است")
+          return
+         }
           setUploading(true);
           setUploadProgress(0);
           formData.append("title", newItem.title || "");
