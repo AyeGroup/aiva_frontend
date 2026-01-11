@@ -41,7 +41,7 @@ export function GenericSelector({
       (item) => item[valueKey as keyof SelectorItem] === selectedValue
     );
   }, [items, selectedValue, valueKey]);
-  console.log("aaa", items);
+  // console.log("aaa", items);
   const currentItemColor =
     currentItemIndex !== -1
       ? COLORS[currentItemIndex % COLORS.length]

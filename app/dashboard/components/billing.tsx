@@ -233,7 +233,7 @@ export function Billing() {
   };
 
   const handleUpgaredePlan = (chatbotId: string) => {
-    console.log("aaaa", chatbotId);
+    // console.log("aaaa", chatbotId);
     if (!chatbotId) return;
     const matchedBot = bots.find(
       (b) => String(b.uuid).toLowerCase() === String(chatbotId).toLowerCase()

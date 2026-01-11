@@ -3,20 +3,22 @@ import React, { useEffect, useState } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "sonner";
+import { Delete } from "@/public/icons/AppIcons";
 import { useAuth } from "@/providers/AuthProvider";
+import { CodeModal } from "./CodeModal";
+import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { Check, Edit, Eye, Plus, X } from "lucide-react";
-import { Delete } from "@/public/icons/AppIcons";
-import { CodeModal } from "./CodeModal";
-import { useRouter } from "next/navigation";
 
 export function Discount() {
+  const router = useRouter();
   const { user, loading } = useAuth();
   const [codes, setCodes] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showCodeModal, setShowCodeModal] = useState(false);
-  const [codeId, setCodeId] = useState(0);
+  const [codeId, setCodeId] = useState("");
+  const [modalMode, setModalMode] = useState("new");
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     id: string | null;
@@ -24,15 +26,14 @@ export function Discount() {
     isOpen: false,
     id: null,
   });
-  const router=useRouter()
 
   useEffect(() => {
-    console.log("s",user)
     if (!user?.token) {
       localStorage.setItem("returnUrla", window.location.href);
-      router.push("/auth/login")
+      router.push("/auth/login");
       return;
-     } const fetchCodes = async () => {
+    }
+    const fetchCodes = async () => {
       await loadCodes();
     };
 
@@ -53,7 +54,7 @@ export function Discount() {
     }
   };
 
-  const handleCode = async (id: number) => {
+  const handleCode = async (id: string) => {
     setShowCodeModal(true);
     setCodeId(id);
   };
@@ -114,12 +115,13 @@ export function Discount() {
             <button
               className="flex bg-primary rounded-sm white px-2 lg:px-4 py-2 lg:py-3 cursor-pointer"
               onClick={() => {
+                setModalMode("new");
+                setCodeId("");
                 setShowCodeModal(true);
-                setCodeId(-1);
               }}
             >
               <span className="text-white text-sm lg:text-base">
-                 کد تخفیف جدید
+                کد تخفیف جدید
               </span>
               <div className="w-4 h-4 mr-2 text-white">
                 <Plus />
@@ -139,22 +141,22 @@ export function Discount() {
               <table className="w-full table-auto table-cell ">
                 <thead>
                   <tr className="border-b border-grey-200 bg-grey-50">
-                    <th className="px-6 py-4 text-right text-grey-600">کد</th>
-                    <th className="px-6 py-4 text-right text-grey-600">
+                    <th className="px-3 py-2 text-right text-grey-600">کد</th>
+                    <th className="px-3 py-2 text-right text-grey-600">
                       توضیحات
                     </th>
-                    <th className="px-6 py-4 text-right text-grey-600">نوع</th>
-                    <th className="px-6 py-4 text-right text-grey-600">
+                    <th className="px-3 py-2 text-right text-grey-600">نوع</th>
+                    <th className="px-3 py-2 text-right text-grey-600">
                       مقدار
                     </th>
-                    <th className="px-6 py-4 text-right text-grey-600">فعال</th>
-                    <th className="px-6 py-4 text-right text-grey-600">
+                    <th className="px-3 py-2 text-right text-grey-600">فعال</th>
+                    <th className="px-3 py-2 text-right text-grey-600">
                       تاریخ ایجاد
                     </th>
-                    <th className="px-6 py-4 text-right text-grey-600">
+                    <th className="px-3 py-2 text-right text-grey-600">
                       تاریخ اعتبار
                     </th>
-                    <th className="px-6 py-4 text-center text-grey-600">
+                    <th className="px-3 py-2 text-center text-grey-600">
                       عملیات
                     </th>
                   </tr>
@@ -165,17 +167,17 @@ export function Discount() {
                       key={index}
                       className="border border-grey-100 hover:bg-grey-100 transition-colors"
                     >
-                      <td className="px-6 py-4 ">
+                      <td className="px-3 py-2 ">
                         <span className="rounded-full bg-gray-100 py-1 px-3">
                           {code?.code}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm">{code?.description}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2 text-sm">{code?.description}</td>
+                      <td className="px-3 py-2">
                         {code?.discount_type == "percentage" ? "درصد" : "مقدار"}
                       </td>
-                      <td className="px-6 py-4">{code?.discount_value}</td>
-                      <td className="px-6 py-4 ">
+                      <td className="px-3 py-2">{code?.discount_value}</td>
+                      <td className="px-3 py-2 ">
                         {code?.is_active == true ? (
                           <Check size={20} className="text-primary" />
                         ) : (
@@ -184,7 +186,7 @@ export function Discount() {
                       </td>
 
                       {/* تاریخ */}
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2">
                         <time
                           dateTime={code.created_at}
                           className="text-grey-600"
@@ -194,7 +196,7 @@ export function Discount() {
                           )}
                         </time>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2">
                         <time
                           dateTime={code.valid_until}
                           className="text-grey-600"
@@ -205,11 +207,14 @@ export function Discount() {
                         </time>
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2">
                         {code.id && (
                           <div className="flex items-center justify-center gap-2">
                             <button
-                              onClick={() => handleCode(code.id)}
+                              onClick={() => {
+                                setModalMode(code?.is_active ? "edit" : "view");
+                                handleCode(code.code);
+                              }}
                               className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
                               type="button"
                             >
@@ -251,6 +256,7 @@ export function Discount() {
           codeId={codeId}
           onSaved={loadCodes}
           onClose={() => setShowCodeModal(false)}
+          mode={modalMode}
         />
         <ConfirmModal
           isOpen={confirmModal.isOpen}

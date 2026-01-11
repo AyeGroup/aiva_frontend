@@ -1,14 +1,14 @@
 "use client";
+import { Menu } from "lucide-react";
+import { Discount } from "./discount/page";
 import { AdminSidebar } from "./Adminsidebar";
 import { JSX, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Home from "./page";
 import AdminUsers from "./users/page";
-import AdminChatbots from "./chatbots/page";
 import AdminTickets from "./tickets/page";
 import AdminBilling from "./billing/page";
-import { Menu } from "lucide-react";
-import { Discount } from "./discount/page";
+import AdminChatbots from "./chatbots/page";
 
 export default function AdminLayout() {
   const router = useRouter();

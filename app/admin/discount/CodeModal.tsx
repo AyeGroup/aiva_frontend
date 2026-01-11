@@ -1,6 +1,9 @@
 "use client";
 
+import persian from "react-date-object/calendars/persian";
 import PageLoader from "@/components/pageLoader";
+import DatePicker from "react-multi-date-picker";
+import persian_fa from "react-date-object/locales/persian_fa";
 import axiosInstance from "@/lib/axiosInstance";
 import { Tick } from "@/public/icons/AppIcons";
 import { Input } from "@/components/input";
@@ -17,9 +20,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/dialog";
-import DatePicker from "react-multi-date-picker";
-import persian_fa from "react-date-object/locales/persian_fa";
-import persian from "react-date-object/calendars/persian";
 
 export interface CodeForm {
   id: string;
@@ -35,16 +35,21 @@ export interface CodeForm {
 
 interface CodeModalProps {
   open: boolean;
-  codeId: number;
+  codeId: string;
+  mode?: string;
   onClose: () => void;
   onSaved: () => void;
 }
 
-export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
+export function CodeModal({
+  open,
+  codeId,
+  mode = "new",
+  onClose,
+  onSaved,
+}: CodeModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [dateFromTemp, setDateFromTemp] = useState("");
-
   const [form, setForm] = useState<CodeForm>({
     id: "",
     code: "",
@@ -56,10 +61,22 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
     description: "",
     max_total_uses: "",
   });
+  const [valid, setValid] = useState<CodeForm>({
+    id: "",
+    code: "",
+    discount_type: "",
+    discount_value: "",
+    max_discount_amount: "",
+    valid_until: "",
+    usage_type: "",
+    description: "",
+    max_total_uses: "",
+  });
 
   useEffect(() => {
     console.log("codeid: ", codeId);
-    if (!codeId || codeId < 1) return;
+    console.log("mode: ", mode);
+    if (!codeId || codeId =="" || mode == "new") return;
     const fetchCode = async () => {
       await loadCode(codeId);
     };
@@ -67,7 +84,7 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
     fetchCode();
   }, [codeId]);
 
-  const loadCode = async (id: number) => {
+  const loadCode = async (id: string) => {
     setIsLoading(true);
 
     try {
@@ -84,46 +101,43 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
   };
 
   const validateForm = (): boolean => {
+    let isValid = true;
     if (!form.code || form.code.trim() === "") {
-      toast.error("کد تخفیف باید وارد شود.");
-      return false;
+      setValid((p) => ({ ...p, code: "این فیلد ضروری است" }));
+      isValid = false;
     }
     if (!form.description || form.description.trim() === "") {
-      toast.error("توضیحات باید وارد شود.");
-      return false;
+      setValid((p) => ({ ...p, description: "این فیلد ضروری است" }));
+      isValid = false;
     }
-    if (!form.discount_type || form.discount_type === "") {
-      toast.error("نوع تخفیف باید انتخاب شود.");
-      return false;
+    if (!form.usage_type) {
+      setValid((p) => ({ ...p, usage_type: "این فیلد ضروری است" }));
+      isValid = false;
     }
-    if (!form.discount_value || form.discount_value === "") {
-      toast.error("مقدار تخفیف باید وارد شود.");
-      return false;
+    if (!form.discount_type) {
+      setValid((p) => ({ ...p, discount_type: "این فیلد ضروری است" }));
+      isValid = false;
     }
-    if (
-      form.discount_type === "percentage" &&
-      !/^\d+$/.test(form.discount_value)
-    ) {
-      toast.error("مقدار تخفیف باید یک عدد باشد.");
-      return false;
+    if (!form.discount_value) {
+      setValid((p) => ({ ...p, discount_value: "این فیلد ضروری است" }));
+      isValid = false;
     }
-    if (
-      form.discount_type === "amount" &&
-      !/^\d+(\.\d+)?$/.test(form.discount_value)
-    ) {
-      toast.error("مقدار تخفیف باید یک عدد اعشاری باشد.");
-      return false;
+    if (form.max_discount_amount && isNaN(Number(form.max_discount_amount))) {
+      setValid((p) => ({
+        ...p,
+        max_discount_amount: "مقدار را صحیح وارد کنید",
+      }));
+      isValid = false;
     }
-    if (!form.valid_until) {
-      // if (!form.valid_until || form.valid_until.invalid) {
-      toast.error("تاریخ اعتبار باید انتخاب شود.");
-      return false;
+    if (form.max_total_uses && isNaN(Number(form.max_total_uses))) {
+      setValid((p) => ({ ...p, max_total_uses: "مقدار را صحیح وارد کنید" }));
+      isValid = false;
     }
-    if (form.max_total_uses && !/^\d+$/.test(form.max_total_uses)) {
-      toast.error("حداکثر تعداد استفاده باید یک عدد باشد.");
-      return false;
+    if (!form.valid_until && form.discount_type === "time_limited") {
+      setValid((p) => ({ ...p, valid_until: "مقدار را صحیح وارد کنید" }));
+      isValid = false;
     }
-    return true;
+    return isValid;
   };
 
   const handleSave = async () => {
@@ -132,9 +146,7 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
     }
     try {
       setIsSubmitting(true);
-      const formData = new FormData();
-
-      await axiosInstance.post(API_ROUTES.ADMIN.DISCOUNT_CREATE, formData);
+      await axiosInstance.post(API_ROUTES.ADMIN.DISCOUNT_CREATE, form);
       toast.success("اطلاعات با موفقیت ذخیره شد.");
       onSaved();
       onClose();
@@ -165,61 +177,97 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
 
         <div className="grid grid-cols-2 gap-4 space-y-2 ">
           <div>
-            <label className="block mb-1 text-sm">کد</label>
+            <label className="block mb-1 text-sm">
+              کد<span className="text-red-400 text-sm">*</span>
+            </label>
             <Input
               value={form.code || ""}
               maxLength={20}
+              disabled={mode == "view"}
               onChange={(e) => setForm((p) => ({ ...p, code: e.target.value }))}
             />
+            {valid.code && (
+              <span className="text-red-400 text-xs">{valid.code}</span>
+            )}
           </div>
+
           <div>
-            <label className="block mb-1 text-sm">توضیحات</label>
+            <label className="block mb-1 text-sm">
+              توضیحات<span className="text-red-400 text-sm">*</span>
+            </label>
             <Input
               value={form.description || ""}
+              disabled={mode == "view"}
               onChange={(e) =>
                 setForm((p) => ({ ...p, description: e.target.value }))
               }
               maxLength={128}
             />
+            {valid.description && (
+              <span className="text-red-400 text-xs">{valid.description}</span>
+            )}
           </div>
           <div>
-            <label className="block mb-1 text-sm">نوع استفاده</label>
+            <label className="block mb-1 text-sm">
+              نوع استفاده<span className="text-red-400 text-sm">*</span>
+            </label>
             <GenericSelector
               items={discountUsageType}
               selectedValue={form.usage_type}
+              disabled={mode == "view"}
               onSelect={(value) =>
                 setForm((p) => ({ ...p, usage_type: value }))
               }
               showIndicator
               className="border-2 border-primary rounded-3xl w-full"
             />
+            {valid.usage_type && (
+              <span className="text-red-400 text-xs">{valid.usage_type}</span>
+            )}
           </div>
           <div>
-            <label className="block mb-1 text-sm">نوع</label>
+            <label className="block mb-1 text-sm">
+              نوع<span className="text-red-400 text-sm">*</span>
+            </label>
             <GenericSelector
               items={discountType}
               selectedValue={form.discount_type}
+              disabled={mode == "view"}
               onSelect={(value) =>
                 setForm((p) => ({ ...p, discount_type: value }))
               }
               showIndicator
               className="border-2 border-primary rounded-3xl w-full"
             />
+            {valid.discount_type && (
+              <span className="text-red-400 text-xs">
+                {valid.discount_type}
+              </span>
+            )}
           </div>
           <div>
-            <label className="block mb-1 text-sm">مقدار</label>
+            <label className="block mb-1 text-sm">
+              مقدار<span className="text-red-400 text-sm">*</span>
+            </label>
             <Input
               value={form.discount_value || ""}
               onChange={(e) =>
                 setForm((p) => ({ ...p, discount_value: e.target.value }))
               }
+              disabled={mode == "view"}
               maxLength={10}
             />
+            {valid.discount_value && (
+              <span className="text-red-400 text-xs">
+                {valid.discount_value}
+              </span>
+            )}
           </div>
           <div>
             <label className="block mb-1 text-sm">حداکثر مبلغ تخفیف </label>
             <Input
               value={form.max_discount_amount || ""}
+              disabled={mode == "view"}
               onChange={(e) =>
                 setForm((p) => ({ ...p, max_discount_amount: e.target.value }))
               }
@@ -229,7 +277,7 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
           <div>
             <label className="block mb-1 text-sm">تاریخ اعتبار</label>
             <DatePicker
-              value={dateFromTemp ? new Date(dateFromTemp) : ""}
+              value={form.valid_until}
               onChange={(val) =>
                 setForm((p) => ({
                   ...p,
@@ -237,6 +285,7 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
                 }))
               }
               calendar={persian}
+              disabled={mode == "view"}
               locale={persian_fa}
               inputClass="flex-1 px-4 py-4 rounded-4xl border border-2 border-[#65bcb6] focus:outline-none transition-colors text-md w-full"
               placeholder="انتخاب "
@@ -247,6 +296,7 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
             <label className="block mb-1 text-sm">حداکثر تعداد استفاده</label>
             <Input
               value={form.max_total_uses || ""}
+              disabled={mode == "view"}
               onChange={(e) =>
                 setForm((p) => ({ ...p, max_total_uses: e.target.value }))
               }
@@ -254,15 +304,16 @@ export function CodeModal({ open, codeId, onClose, onSaved }: CodeModalProps) {
             />
           </div>
         </div>
-
-        <DialogFooter>
-          <Button variant="tertiary" onClick={onClose}>
-            لغو
-          </Button>
-          <Button onClick={handleSave} disabled={isSubmitting}>
-            {isSubmitting ? "ذخیره..." : "ذخیره تغییرات"}
-          </Button>
-        </DialogFooter>
+        {(mode == "edit" || mode == "new") && (
+          <DialogFooter>
+            <Button variant="tertiary" onClick={onClose}>
+              لغو
+            </Button>
+            <Button onClick={handleSave} disabled={isSubmitting}>
+              {isSubmitting ? "ذخیره..." : "ذخیره تغییرات"}
+            </Button>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -90,11 +90,11 @@ export function AdminSidebar({
           active={currentPage === "home"}
           onClick={() => router.push("/admin?tab=home")}
         />
-        {/* <SidebarItem
+        <SidebarItem
           label="کاربران"
           active={currentPage === "users"}
           onClick={() => router.push("/admin?tab=users")}
-        /> */}
+        />
         {/* <SidebarItem
           label="چت‌بات‌ها"
           active={currentPage === "tickets"}
