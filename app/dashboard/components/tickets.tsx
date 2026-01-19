@@ -467,7 +467,7 @@ export function Tickets() {
   );
 
   return (
-    <div className="h-screen overflow-y-auto w-full bg-bg-shell">
+    <div className="h-screen overflow-y-auto w-full bg-bgShell">
       {(isLoading || loading) && <PageLoader />}
 
       <main className="w-full">

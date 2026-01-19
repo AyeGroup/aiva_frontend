@@ -10,15 +10,18 @@ import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { Check, Edit, Eye, Plus, X } from "lucide-react";
+import TableSort from "@/components/tableSort";
+import { CodeItem } from "@/types/common";
 
 export default function Discount() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const [codes, setCodes] = useState<any>([]);
+  // const [codes, setCodes] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showCodeModal, setShowCodeModal] = useState(false);
   const [codeId, setCodeId] = useState("");
   const [modalMode, setModalMode] = useState("new");
+  const [codes, setCodes] = useState<CodeItem[]>([]); // Assume this state is managed here
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     id: string | null;
@@ -96,11 +99,25 @@ export default function Discount() {
     }
   };
 
+  const handleEditClick = (code: CodeItem) => {
+    // setModalMode("edit");
+    // handleCode(code.code);
+    console.log("Editing:", code.code);
+  };
+
+  const handleViewClick = (code: CodeItem) => {
+    // setModalMode("view");
+    // handleCode(code.code);
+    console.log("Viewing:", code.code);
+  };
+
+  const handleDeleteClick = (id: number) => {
+    // openConfirmModal(id);
+    console.log("Deleting ID:", id);
+  };
+
   return (
-    <div
-      className="lg:h-screen w-full overflow-hidden"
-      style={{ background: "#FFFFFF" }}
-    >
+    <div className="lg:h-screen w-full overflow-hidden">
       <main className="flex-1 p-6 overflow-y-auto h-screen">
         {(isLoading || loading) && <PageLoader />}
         <div className="max-w-7xl mx-auto pb-8">
@@ -137,23 +154,36 @@ export default function Discount() {
               </h2>
             </div>
 
-            <div className=" divide-grey-100 w-full ">
-              <table className="w-full table-auto table-cell ">
-                <thead>
+            <TableSort
+              codes={codes}
+              onEdit={handleEditClick}
+              onView={handleViewClick}
+              onDelete={handleDeleteClick}
+            />
+
+            {/* <div className=" w-full flex justify-center">
+              <table className="w-full table-auto">
+                <thead className="">
                   <tr className="border-b border-grey-200 bg-grey-50">
-                    <th className="px-3 py-2 text-right text-grey-600">کد</th>
-                    <th className="px-3 py-2 text-right text-grey-600">
+                    <th className="px-3 py-2 text-right text-grey-600  border-l border-gray-100 ">
+                      کد
+                    </th>
+                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
                       توضیحات
                     </th>
-                    <th className="px-3 py-2 text-right text-grey-600">نوع</th>
-                    <th className="px-3 py-2 text-right text-grey-600">
+                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
+                      نوع
+                    </th>
+                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
                       مقدار
                     </th>
-                    <th className="px-3 py-2 text-right text-grey-600">فعال</th>
-                    <th className="px-3 py-2 text-right text-grey-600">
+                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
+                      فعال
+                    </th>
+                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
                       تاریخ ایجاد
                     </th>
-                    <th className="px-3 py-2 text-right text-grey-600">
+                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
                       تاریخ اعتبار
                     </th>
                     <th className="px-3 py-2 text-center text-grey-600">
@@ -167,17 +197,21 @@ export default function Discount() {
                       key={index}
                       className="border border-grey-100 hover:bg-grey-100 transition-colors"
                     >
-                      <td className="px-3 py-2 ">
+                      <td className="px-3 py-2  border-l border-gray-100 ">
                         <span className="rounded-full bg-gray-100 py-1 px-3">
                           {code?.code}
                         </span>
                       </td>
-                      <td className="px-3 py-2 text-sm">{code?.description}</td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 text-sm border-l border-gray-100 ">
+                        {code?.description}
+                      </td>
+                      <td className="px-3 py-2 border-l border-gray-100 ">
                         {code?.discount_type == "percentage" ? "درصد" : "مقدار"}
                       </td>
-                      <td className="px-3 py-2">{code?.discount_value}</td>
-                      <td className="px-3 py-2 ">
+                      <td className="px-3 py-2 border-l border-gray-100 ">
+                        {code?.discount_value}
+                      </td>
+                      <td className="px-3 py-2 border-l border-gray-100  ">
                         {code?.is_active == true ? (
                           <Check size={20} className="text-primary" />
                         ) : (
@@ -185,8 +219,8 @@ export default function Discount() {
                         )}
                       </td>
 
-                      {/* تاریخ */}
-                      <td className="px-3 py-2">
+                     
+                      <td className="px-3 py-2 border-l border-gray-100 ">
                         <time
                           dateTime={code.created_at}
                           className="text-grey-600"
@@ -196,7 +230,7 @@ export default function Discount() {
                           )}
                         </time>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 border-l border-gray-100 ">
                         <time
                           dateTime={code.valid_until}
                           className="text-grey-600"
@@ -248,7 +282,7 @@ export default function Discount() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </div> */}
           </div>
         </div>
         <CodeModal

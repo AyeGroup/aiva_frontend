@@ -42,7 +42,7 @@ export default function AdminLayout() {
   }, []);
 
   return (
-    <div className="flex min-h-screen m-0 p-0 relative">
+    <div className="flex m-0 p-0 relative admin-panel">
       {!isSidebarOpen && (
         <button
           onClick={() => setIsSidebarOpen(true)}
@@ -60,7 +60,7 @@ export default function AdminLayout() {
         />
       )}
 
-      <main className="flex-1 bg-gray-50 p-5">{pages[currentPage]}</main>
+      <main className="flex-1 bg-[#e3f3f0]">{pages[currentPage]}</main>
     </div>
   );
 }

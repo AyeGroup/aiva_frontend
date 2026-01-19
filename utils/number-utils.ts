@@ -17,6 +17,9 @@ const persianToEnglishDigits: Record<string, string> = {
   '۹': '9'
 };
 
+//    09352445488
+//    ۰۹۳۵۲۴۴۵۴۸۸
+
 // Map English digits to Persian digits
 const englishToPersianDigits: Record<string, string> = {
   '0': '۰',

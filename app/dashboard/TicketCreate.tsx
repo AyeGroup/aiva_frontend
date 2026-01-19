@@ -88,7 +88,7 @@ export function CreateTicketView({ onSubmit }: Props) {
   };
 
   return (
-    <section className="flex-1  bg-bg-shell">
+    <section className="flex-1  bg-bgShell">
       {isLoading && <PageLoader />}
       <div className="max-w-4xl mx-auto p-8">
         <div

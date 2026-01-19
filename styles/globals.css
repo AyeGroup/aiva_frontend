@@ -1,4 +1,3 @@
- 
 @import "tailwindcss";
 @import "tailwindcss/preflight" @tailwind utilities;
 @custom-variant dark (&:is(.dark *));
@@ -554,7 +553,6 @@ body {
     }
   }
 }
- 
 
 /* Mobile Typography Adjustments */
 @media (max-width: 640px) {
@@ -574,11 +572,11 @@ html {
 
 /* App Shell Styles */
 .app-shell {
-  background: var(--bg-app);
   min-height: 100vh;
 }
 
 .app-content {
+  background: var(--bg-app);
   min-height: 100vh;
 }
 
@@ -590,9 +588,15 @@ html {
   border-radius: 0;
   box-shadow: none;
 }
-
+.app-content.admin-panel  {
+  background: var(--bg-surface);
+  /* border-radius: var(--radius-xl); */
+  /* box-shadow: var(--shadow-md); */
+  margin: 0;
+  /* min-height: calc(100vh - var(--space-12)); */
+}
 /* Other pages - with container */
-.app-content:not(:has(.landing-page)):not(:has(.onboarding-wizard)) {
+.app-content:not(:has(.landing-page)):not(:has(.admin-panel)):not(:has(.onboarding-wizard)) {
   background: var(--bg-surface);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
@@ -977,7 +981,7 @@ html {
 
 @media (max-width: 768px) {
   .app-content:not(:has(.landing-page)):not(:has(.onboarding-wizard)) {
-    margin:0;
+    margin: 0;
     border-radius: var(--radius-lg);
   }
 

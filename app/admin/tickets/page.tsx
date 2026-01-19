@@ -490,7 +490,7 @@ export default function AdminTickets() {
   );
 
   return (
-    <div className="h-screen overflow-y-auto w-full bg-bg-shell">
+    <div className="h-screen overflow-y-auto w-full ">
       {(isLoading || loading) && <PageLoader />}
 
       <main className="w-full">

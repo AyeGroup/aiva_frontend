@@ -280,3 +280,13 @@ export type TreeNodeType = {
   url?: string;
   children: TreeNodeType[];
 };
+export interface CodeItem {
+  id: number;
+  code: string;
+  description: string;
+  discount_type: "percentage" | "amount";
+  discount_value: number;
+  is_active: boolean;
+  created_at: string;
+  valid_until: string;
+}

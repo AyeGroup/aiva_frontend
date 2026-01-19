@@ -20,7 +20,7 @@ const config: Config = {
       boxShadow: {
         box1: "0px 4px 6px -4px #0000001A, 0px 10px 15px -3px #0000001A",
       },
-
+      //   bg-shell:"#f3f9f6",
       colors: {
         primary: "#65BCB6",
         secondary: "#FFA18E",
@@ -28,7 +28,7 @@ const config: Config = {
         accentGreen: "#52d4a0",
         accentOrange: "#f59e0b",
         text: "#4b5563",
-    
+        bgShell: "#f3f9f6",
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"], // فونت پیش‌فرض

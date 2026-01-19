@@ -144,7 +144,7 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
   };
 
   return (
-    <section className="flex-1 overflow-y-auto bg-bg-shell">
+    <section className="flex-1 overflow-y-auto bg-bgShell">
       <div className="max-w-5xl mx-auto p-8">
         {isLoading && <PageLoader />}
         <div className="space-y-6">
