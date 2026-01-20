@@ -1,3 +1,4 @@
+import { PlanCode } from "@/types/common";
 import { Rocket, Crown, Star, Gift, Users } from "lucide-react";
 
 export enum TRANSACTION_TYPE {
@@ -25,7 +26,7 @@ export const getTransactionTitle = (type: keyof typeof TRANSACTION_TITLE) => {
   return TRANSACTION_TITLE[type] || "";
 };
 
-export type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
+// export type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
 
 interface PlanInfo {
   code: PlanCode;

@@ -1,28 +1,24 @@
 "use client";
+
 import axios from "axios";
 import axiosInstance from "@/lib/axiosInstance";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { getPlanCodeById } from "@/constants/plans";
 import { useBot } from "./BotProvider";
 import { useAuth } from "./AuthProvider";
-import { API_ROUTES } from "@/constants/apiRoutes";
 import { usePathname } from "next/navigation";
-import { getPlanCodeById } from "@/constants/plans";
-import {
-  Plan,
-  PricingContextType as BasePricingContextType,
-} from "@/types/common";
 import {
   createContext,
-  ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useState,
+  ReactNode,
 } from "react";
+import { Plan, PricingContextType as BaseType, PlanCode } from "@/types/common";
 
-type PricingContextType = BasePricingContextType & {
-  isFeatureMapReady: boolean;
-};
+/* -------------------------------- CONSTANTS -------------------------------- */
 
-export const PricingContext = createContext<PricingContextType | null>(null);
 const PUBLIC_ROUTES = [
   "/",
   "/login",
@@ -32,105 +28,126 @@ const PUBLIC_ROUTES = [
   "/auth/forgot-pass",
 ];
 
+// export const PLAN_ORDER = [
+//   "FREE",
+//   "BASIC",
+//   "MEDIUM",
+//   "ADVANCE",
+//   "ENTERPRISE",
+// ] as const;
+export const PLAN_ORDER: readonly PlanCode[] = [
+  "FREE",
+  "BASIC",
+  "MEDIUM",
+  "ADVANCE",
+  "ENTERPRISE",
+];
+
+
+/* -------------------------------- TYPES -------------------------------- */
+
+export type PricingContextType = BaseType & {
+  plans: Plan[];
+  loading: boolean;
+  isFeatureMapReady: boolean;
+  featureMinPlan: Record<string, PlanCode>;
+};
+
+/* -------------------------------- CONTEXT -------------------------------- */
+
+export const PricingContext = createContext<PricingContextType | null>(null);
+
+/* -------------------------------- PROVIDER -------------------------------- */
+
 export const PricingProvider = ({ children }: { children: ReactNode }) => {
-  const { currentBot } = useBot();
   const { user, loading: authLoading } = useAuth();
-  const [plans, setPlans] = useState<Plan[] | null>(null);
-  const [isLoadingPlans, setIsLoadingPlans] = useState<boolean>(false);
-  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
-  const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
-    {}
-  );
-  const [isFeatureMapReady, setIsFeatureMapReady] = useState(false);
+  const { currentBot } = useBot();
   const pathname = usePathname();
+
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
 
-  // 1) Load pricing ONCE
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [currentPlan, setCurrentPlan] = useState<string>("FREE");
+  const [loading, setLoading] = useState<boolean>(true);
+
+  /* ------------------ FETCH PRICING (ONCE) ------------------ */
   useEffect(() => {
-    if (isPublicRoute) return;
-    if (authLoading) return;
-    if (!user) return;
+    if (isPublicRoute || authLoading || !user) return;
+
+    let mounted = true;
 
     const fetchPricing = async () => {
       try {
-        setIsLoadingPlans(true);
+        setLoading(true);
         const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
-        const allPlans = res.data?.data?.subscription_plans ?? [];
-        setPlans(allPlans);
-        console.log("allPlans 0", allPlans);
+        const list = res.data?.data?.subscription_plans ?? [];
+        if (mounted) setPlans(list);
       } catch (error) {
         console.error("Pricing fetch failed:", error);
       } finally {
-        setIsLoadingPlans(false);
+        if (mounted) setLoading(false);
       }
     };
 
     fetchPricing();
+
+    return () => {
+      mounted = false;
+    };
   }, [authLoading, user, isPublicRoute]);
 
-  // 2) Update user currentPlan WHEN bot changes
+  /* ------------------ FETCH USER PLAN (OPTIONAL / GLOBAL) ------------------ */
   useEffect(() => {
-    if (!user) return;
-    if (authLoading) return;
-    if (!currentBot) return;
-    if (isPublicRoute) return;
+    if (!user || !currentBot?.uuid || isPublicRoute) return;
 
     const fetchUserPlan = async () => {
-      if (!currentBot?.uuid) {
-        setCurrentPlan("FREE");
-        return;
-      }
-
       try {
         const res = await axiosInstance.get(
           API_ROUTES.FINANCIAL.SUBSCRIPTION(currentBot.uuid)
         );
-
-        const myPlan = getPlanCodeById(res.data?.data?.plan) ?? "FREE";
-        setCurrentPlan(myPlan);
-      } catch (error) {
-        console.error("Failed to fetch user plan:", error);
+        const planCode = getPlanCodeById(res.data?.data?.plan) ?? "FREE";
+        setCurrentPlan(planCode);
+      } catch {
         setCurrentPlan("FREE");
       }
     };
 
     fetchUserPlan();
-  }, [authLoading, currentBot, user, isPublicRoute]);
+  }, [user, currentBot, isPublicRoute]);
 
-  // 3) Build feature → minPlan map
-  useEffect(() => {
-    if (!plans) {
-      setIsFeatureMapReady(false);
-      return;
-    }
+  /* ------------------ FEATURE → MIN PLAN MAP ------------------ */
+  const featureMinPlan = useMemo(() => {
+    const map: Record<string, PlanCode> = {};
 
-    const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
-    const map: Record<string, string> = {};
+    if (plans.length === 0) return map;
 
-    for (const plan of planOrder) {
-      const p = plans.find((x) => x.plan === plan);
-      if (!p) continue;
+    for (const planName of PLAN_ORDER) {
+      const plan = plans.find((p) => p.plan === planName);
+      if (!plan) continue;
 
-      p.features.forEach((feature) => {
+      for (const feature of plan.features) {
         if (!map[feature]) {
-          map[feature] = plan;
+          map[feature] = planName;
         }
-      });
+      }
     }
-    setFeatureMinPlan(map);
-    setIsFeatureMapReady(true);
-    // console.log("FeatureMinPlan: ", map);
+
+    return map;
   }, [plans]);
+
+  const isFeatureMapReady = !loading && plans.length > 0;
+
+  /* -------------------------------- PROVIDE -------------------------------- */
 
   return (
     <PricingContext.Provider
       value={{
         plans,
-        isLoadingPlans,
         currentPlan,
         setCurrentPlan,
-        featureMinPlan,
+        loading,
         isFeatureMapReady,
+        featureMinPlan,
       }}
     >
       {children}
@@ -138,108 +155,12 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// HOOKS
+/* -------------------------------- HOOK -------------------------------- */
+
 export const usePricing = () => {
-  const context = useContext(PricingContext);
-  if (!context)
+  const ctx = useContext(PricingContext);
+  if (!ctx) {
     throw new Error("usePricing must be used inside PricingProvider");
-
-  return context;
-};
-
-export const useFeatureAccess = (
-  bot_uuid: string,
-  feature: string,
-  planId: number
-) => {
-  const { featureMinPlan, isFeatureMapReady } = usePricing();
-
-  const [state, setState] = useState<{
-    allowed: boolean;
-    loading: boolean;
-  }>({
-    allowed: false,
-    loading: true,
-  });
-
-  useEffect(() => {
-    if (!isFeatureMapReady) {
-      setState({ allowed: false, loading: true });
-      return;
-    }
-
-    if (!bot_uuid || !feature) {
-      setState({ allowed: false, loading: false });
-      return;
-    }
-
-    let cancelled = false;
-
-    const run = async () => {
-      try {
-        const minPlan = featureMinPlan[feature] ?? "FREE";
-        const minIndex = planOrder.indexOf(minPlan);
-        const result = (planId ?? 0) >= minIndex;
-
-        if (!cancelled) {
-          setState({ allowed: result, loading: false });
-        }
-      } catch {
-        if (!cancelled) {
-          setState({ allowed: false, loading: false });
-        }
-      }
-    };
-
-    run();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [bot_uuid, feature, featureMinPlan, isFeatureMapReady]);
-
-  return state;
-};
-const planOrder = ["FREE", "BASIC", "MEDIUM", "ADVANCE", "ENTERPRISE"];
-
-const checkFeatureAccess = async (
-  bot_uuid: string,
-  feature: string,
-  planId: number,
-  featureMinPlan: Record<string, string>
-): Promise<boolean> => {
-  if (!bot_uuid) return false;
-
-  try {
-    // const response = await axiosInstance.get(
-    //   API_ROUTES.FINANCIAL.SUBSCRIPTION(bot_uuid)
-    // );
-
-    // if (!response || response.status !== 200) return false;
-
-    // const currentPlan = response.data.data.plan;
-
-    // if (typeof currentPlan !== "number" || isNaN(currentPlan)) {
-    //   return false;
-    // }
-
-    const minPlan = featureMinPlan[feature] ?? "FREE";
-    const minIndex = planOrder.indexOf(minPlan);
-    const rslt = planId >= minIndex;
-
-    // console.log("minPlan: ", minPlan);
-    // console.log("minIndex: ", minIndex);
-    // console.log("currentPlan: ", currentPlan);
-    // console.log(feature, rslt);
-
-    return rslt;
-  } catch (error) {
-    console.error("Failed to check feature access:", error);
-    return false;
   }
-};
-
-export const useFeatureRequiredPlan = (feature: string) => {
-  const { featureMinPlan } = usePricing();
-  return featureMinPlan[feature] ?? "FREE";
+  return ctx;
 };

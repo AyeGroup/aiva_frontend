@@ -4,6 +4,7 @@ export type AdminPageType =
   | "tickets"
   | "billing"
   | "discount";
+
 export type PageType =
   | "landing"
   | "register"
@@ -24,6 +25,8 @@ export type PageType =
   | "payment-success"
   | "payment-failed"
   | "components";
+
+export type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
 
 export type TicketCategory = "technical" | "financial" | "general" | "others";
 
@@ -120,12 +123,12 @@ export interface PurchaseHistory {
   invoiceUrl?: string;
 }
 export interface PricingContextType {
-  plans: Plan[] | null;
-  isLoadingPlans: boolean;
-
+  plans: Plan[];
+  loading: boolean;
+  isFeatureMapReady: boolean;
   currentPlan: string | null;
   setCurrentPlan: (p: string) => void;
-  featureMinPlan: Record<string, string>;
+  featureMinPlan: Record<string, PlanCode>;
 }
 
 export interface Plan {

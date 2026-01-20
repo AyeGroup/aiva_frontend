@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useBot } from "@/providers/BotProvider";
 import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
+import { usePlans } from "@/hook/usePlans";
 import { PlanCard } from "../widgets/plan-card";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
@@ -25,12 +26,14 @@ import {
   PLAN_COLORS_BYID,
   translateFeature,
 } from "@/constants/plans";
-import { usePricing } from "@/providers/PricingContext";
+// import { usePricing } from "@/providers/PricingContext";
 
 export function Billing() {
   const { bots } = useBot();
   const { user, loading } = useAuth();
-  const { plans, isLoadingPlans } = usePricing();
+  // const { plans, isLoadingPlans } = usePricing();
+    const { paidPlans, loading: isLoadingPlans } = usePlans();
+
   const router = useRouter();
   const maxDays = 7;
   const maxCredit = 85;
@@ -91,49 +94,14 @@ export function Billing() {
   useEffect(() => {
     if (!user?.token) return;
     if (isLoadingPlans) return;
-    if (!plans) return;
-
-    const allPlans = plans;
-    const filteredPlans = allPlans.filter(
+ 
+    const filteredPlans = paidPlans.filter(
       (p: any) => p.plan?.toLowerCase() !== "free"
     );
 
     setPlansData(filteredPlans);
-  }, [user?.token, plans, isLoadingPlans]);
+  }, [user?.token, paidPlans, isLoadingPlans]);
 
-
-  // useEffect(() => {
-  //   if (!user?.token) return;
-  //   if (isLoadingPlans) return;
-
-  //   const fetchAllData = async () => {
-  //     setIsLoading(true);
-
-  //     try {
-  //       // const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
-
-  //       // setPlans(res.data?.data?.subscription_plans ?? []);
-  //       // const allPlans = res.data?.data?.subscription_plans ?? [];
-  //       console.log("-plans :", plans);
-  //       const allPlans = plans ?? [];
-
-  //       const filteredPlans = allPlans.filter(
-  //         (p: any) => p.plan?.toLowerCase() !== "free"
-  //       );
-  //       console.log("-filteredPlans :", filteredPlans);
-
-  //       setPlansData(filteredPlans);
-
-  //       // console.log("filteredPlans :", filteredPlans);
-  //     } catch (apiError: any) {
-  //       console.warn("API fetch failed:", apiError);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchAllData();
-  // }, [user?.token, isLoadingPlans]);
 
   useEffect(() => {
     const target = sessionStorage.getItem("scrollTo");

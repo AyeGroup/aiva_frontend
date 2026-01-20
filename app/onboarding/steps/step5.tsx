@@ -12,7 +12,8 @@ import { Install } from "@/public/icons/AppIcons";
 import { BotConfig } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { useFeatureAccess } from "@/providers/PricingContext";
+// import { useFeatureAccess } from "@/providers/PricingContext";
+import { useFeatureAccess } from "@/hook/useFeatureAccess";
 import { useEffect, useState } from "react";
 import { Copy, Globe, CheckCircle2, BarChart3, HelpCircle } from "lucide-react";
 

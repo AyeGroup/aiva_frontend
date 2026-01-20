@@ -10,7 +10,8 @@ import { toast } from "sonner";
 import { BotConfig } from "@/types/common";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { onboardingData } from "../onboarding.data";
-import { useFeatureAccess } from "@/providers/PricingContext";
+// import { useFeatureAccess } from "@/providers/PricingContext";
+import { useFeatureAccess } from "@/hook/useFeatureAccess";
 import { useState, useEffect, useRef } from "react";
 import {
   Appearance,

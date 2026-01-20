@@ -13,7 +13,7 @@ import { convertToPersian } from "@/utils/common";
 import { Info, Refresh, Tick } from "@/public/icons/AppIcons";
 import { BotConfig, KnowledgeItem } from "@/types/common";
 import { DragEvent, useEffect, useRef, useState } from "react";
-import { useFeatureAccess } from "@/providers/PricingContext";
+// import { useFeatureAccess } from "@/providers/PricingContext";
 import {
   FileText,
   Link,
@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import UploadProgressModal from "@/components/UploadProgressModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { useFeatureAccess } from "@/hook/useFeatureAccess";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
@@ -62,7 +63,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
     isOpen: false,
     item: null,
   });
-  console.log("step2 subsc: ", activeSubscription);
+  // console.log("step2 subsc: ", activeSubscription);
 
   const { allowed: canUploadDocs, loading: canUploadDocsLoading } =
     useFeatureAccess(botConfig?.uuid, "upload_docs",activeSubscription ??0);

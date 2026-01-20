@@ -25,12 +25,7 @@ import { convertToPersian } from "@/utils/common";
 import { englishToPersian } from "@/utils/number-utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  getPlanCodeById,
-  getPlanIcon,
-  getPlanIconById,
-  PlanCode,
-} from "@/constants/plans";
+import { getPlanCodeById, getPlanIconById } from "@/constants/plans";
 
 export default function OnboardingWizard() {
   const router = useRouter();

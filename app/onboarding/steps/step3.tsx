@@ -2,7 +2,8 @@
 import { Input } from "@/components/input";
 import { useEffect } from "react";
 import { BotConfig } from "@/types/common";
-import { useFeatureAccess } from "@/providers/PricingContext";
+// import { useFeatureAccess } from "@/providers/PricingContext";
+import { useFeatureAccess } from "@/hook/useFeatureAccess";
 import { Settings, MessageSquare, Shield } from "lucide-react";
 import PageLoader from "@/components/pageLoader";
 import LockFeature from "../LockFeature";

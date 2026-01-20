@@ -18,7 +18,8 @@ import {
   BarChart3,
   Info,
 } from "lucide-react";
-import { usePricing } from "@/providers/PricingContext";
+// import { usePricing } from "@/providers/PricingContext";
+import { usePlans } from "@/hook/usePlans";
 
 interface ChatbotDetailModalProps {
   show: boolean;
@@ -39,7 +40,8 @@ export default function ChatbotDetailModal({
   const [daysRemaining, setDaysRemaining] = useState<number>(0);
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const { setCurrentBot } = useBot();
-  const { plans } = usePricing();
+  // const { plans } = usePricing();
+  const { paidPlans: plans, loading: isLoadingPlans } = usePlans();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +49,7 @@ export default function ChatbotDetailModal({
       setLoading(true);
 
       try {
-        // 🟢 1. دریافت اطلاعات اشتراک
+        //  1. دریافت اطلاعات اشتراک
         const subRes = await axiosInstance.get(
           API_ROUTES.FINANCIAL.SUBSCRIPTION(chatbot.uuid)
         );
@@ -62,31 +64,28 @@ export default function ChatbotDetailModal({
         setIsExpired(false);
         setChatbotSubsc(subData);
 
-        // 🟢 2. محاسبه روزهای باقی‌مانده
+        //   2. محاسبه روزهای باقی‌مانده
         if (subData?.end_date) {
           const diffDays = getDaysRemaining(subData.end_date);
           setDaysRemaining(diffDays);
         } else {
           setDaysRemaining(0);
         }
-
-        // 🟢 3. گرفتن لیست pricing
-        // const pricingRes = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
-        // const pricingData = pricingRes.data.data.subscription_plans;
+        //   3. گرفتن لیست pricing
         const pricingData = plans ?? [];
-        // 🟢 4. پیدا کردن پلن فعلی
+        //   4. پیدا کردن پلن فعلی
         const currentPlan = pricingData.find(
           (plan: any) => plan.plan === getPlanCodeById(subData?.plan)
         );
 
-        // 🟢 5. تنظیم totalMessages
+        //   5. تنظیم totalMessages
         if (currentPlan) {
           setTotalMessages(currentPlan?.upload_char_limit || 0);
         } else {
           setTotalMessages(0);
         }
 
-        // 🟢 6. درصد مصرف
+        //   6. درصد مصرف
         if (
           subData?.remaining_upload_chars !== undefined &&
           currentPlan?.upload_char_limit
@@ -121,7 +120,7 @@ export default function ChatbotDetailModal({
     };
 
     fetchData();
-  }, [chatbot?.uuid, show]);
+  }, [chatbot?.uuid, show, isLoadingPlans]);
 
   const handleDashboard = () => {
     if (chatbot?.uuid) setCurrentBot(chatbot);
@@ -144,7 +143,7 @@ export default function ChatbotDetailModal({
       onClick={onClose}
       style={{ animation: "fadeIn 0.2s ease-out" }}
     >
-      {loading && <PageLoader />}
+      {(loading || isLoadingPlans) && <PageLoader />}
       <div
         className="bg-white max-h-[95vh]   rounded-3xl max-w-2xl w-full overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}

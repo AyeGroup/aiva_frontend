@@ -14,6 +14,7 @@ import {
   getPlanIcon,
   translateFeature,
 } from "@/constants/plans";
+import { usePlans } from "@/hook/usePlans";
 
 interface StatsDrawerProps {
   isOpen: boolean;
@@ -34,10 +35,11 @@ export function StatsDrawer({
   const planRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [plansData, setPlansData] = useState<any[]>([]);
   const [selectedBot, setSelectedBot] = useState<BotConfig | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { currentBot } = useBot();
-  const { plans } = usePricing();
+  // const { plans } = usePricing();
+  const { paidPlans: plans, loading: isLoadingPlans } = usePlans();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -86,28 +88,11 @@ export function StatsDrawer({
 
   //get pricing
   useEffect(() => {
-    const fetchAllData = async () => {
-      setIsLoading(true);
-
-      try {
-        // const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
-
-        // const allPlans = res.data?.data?.subscription_plans ?? [];
-
-        const allPlans = plans ?? [];
-        const filteredPlans = allPlans.filter(
-          (p: any) => p.plan?.toLowerCase() !== "free"
-        );
-        setPlansData(filteredPlans);
-      } catch (apiError: any) {
-        console.warn("API fetch failed:", apiError);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAllData();
-  }, []);
+    const filteredPlans = plans.filter(
+      (p: any) => p.plan?.toLowerCase() !== "free"
+    );
+    setPlansData(filteredPlans);
+  }, [isLoadingPlans]);
 
   const handlePlanPurchase = (planName: string) => {
     if (!selectedBot || !selectedBot?.uuid) {
@@ -238,7 +223,7 @@ export function StatsDrawer({
             className="stats-section mt-4 sm:mt-6"
             aria-labelledby="plans-heading"
           >
-            {isLoading && <PageLoader />}
+            {isLoadingPlans && <PageLoader />}
             <div className="flex flex-col gap-3 sm:gap-4">
               {plansData.map((plan, index) => (
                 <div
