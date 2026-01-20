@@ -36,6 +36,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
   const { currentBot } = useBot();
   const { user, loading: authLoading } = useAuth();
   const [plans, setPlans] = useState<Plan[] | null>(null);
+  const [isLoadingPlans, setIsLoadingPlans] = useState<boolean>(false);
   const [currentPlan, setCurrentPlan] = useState<string | null>(null);
   const [featureMinPlan, setFeatureMinPlan] = useState<Record<string, string>>(
     {}
@@ -52,12 +53,15 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchPricing = async () => {
       try {
+        setIsLoadingPlans(true);
         const res = await axios.get(API_ROUTES.PAYMENT.PRICING);
         const allPlans = res.data?.data?.subscription_plans ?? [];
         setPlans(allPlans);
-        // console.log("allPlans", allPlans);
+        console.log("allPlans 0", allPlans);
       } catch (error) {
         console.error("Pricing fetch failed:", error);
+      } finally {
+        setIsLoadingPlans(false);
       }
     };
 
@@ -122,6 +126,7 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     <PricingContext.Provider
       value={{
         plans,
+        isLoadingPlans,
         currentPlan,
         setCurrentPlan,
         featureMinPlan,
@@ -145,7 +150,7 @@ export const usePricing = () => {
 export const useFeatureAccess = (
   bot_uuid: string,
   feature: string,
-  planId: number,
+  planId: number
 ) => {
   const { featureMinPlan, isFeatureMapReady } = usePricing();
 

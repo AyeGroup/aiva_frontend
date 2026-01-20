@@ -1,19 +1,26 @@
-@import "tailwindcss"; 
- @import "tailwindcss/preflight" @tailwind utilities;
+@import "tailwindcss";
+/* @import "tailwindcss/animations"; */
 
-/* @import "tailwindcss/preflight";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities"; */
-
-/* Your custom styles start here */
-/* Example of using the custom dark variant (if you are using a framework like PostCSS/SCSS that supports it) */
-@custom-variant dark (&:is(.dark *)); 
-
-.my-element {
-  @apply bg-blue-500;
-}
+/* @import "tailwindcss/preflight"; */
+/* @import "tailwindcss/utilities"; */
 
 /* @custom-variant dark (&:is(.dark *)); */
+/* .my-element {
+  @apply bg-blue-500;
+} */
+/* @custom-variant dark (&:is(.dark *)); */
+
+@layer utilities {
+  .force-spin {
+    animation: force-spin 1s linear infinite;
+  }
+
+  @keyframes force-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
 
 @font-face {
   font-family: "Vazirmatn";
@@ -627,7 +634,7 @@ html {
 }
 
 /* DISABLE ALL ANIMATIONS GLOBALLY */
-* {
+/* * {
   animation: none !important;
   animation-duration: 0s !important;
   animation-delay: 0s !important;
@@ -635,10 +642,10 @@ html {
   transition: none !important;
   transition-duration: 0s !important;
   transition-delay: 0s !important;
-}
+} */
 
 /* Animation utilities - DISABLED */
-.animate-soft {
+/* .animate-soft {
   transition: none !important;
 }
 
@@ -648,7 +655,7 @@ html {
 
 .animate-fast {
   transition: none !important;
-}
+} */
 
 /* ANIMATIONS DISABLED - All keyframes removed */
 /* No animations will be played */
@@ -699,13 +706,13 @@ html {
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-.morphing-shape {
+/* .morphing-shape {
   animation: none !important;
 }
 
 .floating-element {
   animation: none !important;
-}
+} */
 
 .sharp-text {
   color: var(--sharp-primary);
@@ -752,7 +759,7 @@ html {
   overflow: hidden;
 }
 
-.particle-effect::after {
+/* .particle-effect::after {
   content: "";
   position: absolute;
   width: 4px;
@@ -763,7 +770,7 @@ html {
   left: 20%;
   animation: none !important;
   opacity: 0.6;
-}
+} */
 
 .sharp-background {
   background: var(--sharp-primary);

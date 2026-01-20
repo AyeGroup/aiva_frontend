@@ -67,7 +67,7 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
       setIsLoading(true);
       const invoicePayload = {
         purpose: PAYMENT_PURPOSE.BALANCE_INCREASE,
-        chatbot_uuid: selectedChatbot?.chatbot_uuid,
+        chatbot_uuid: selectedChatbot.uuid? selectedChatbot?.uuid : selectedChatbot?.chatbot_uuid,
         amount_irr: Math.floor(creditNumber * 10),
         // amount_irr: credit,
       };
@@ -105,7 +105,10 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
       setIsLoading(true);
       const res = await axiosInstance.post(API_ROUTES.PAYMENT.INITIATE, {
         purpose: PAYMENT_PURPOSE.BALANCE_INCREASE,
-        chatbot_uuid: selectedChatbot?.chatbot_uuid,
+        chatbot_uuid: selectedChatbot.uuid
+          ? selectedChatbot?.uuid
+          : selectedChatbot?.chatbot_uuid,
+        // chatbot_uuid: selectedChatbot?.chatbot_uuid,
         amount_irr: Math.floor(creditNumber * 10),
         use_wallet: paymentMethod === "wallet",
       });
@@ -143,12 +146,16 @@ export const CreditIncreaseModal: React.FC<CreditIncreaseModalProps> = ({
 
   const finalAmount = invoice?.total_amount_irr || 0;
   const canPayWithWallet = walletBalance >= finalAmount;
-
+if(!isOpen) return
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`افزایش اعتبار - ${selectedChatbot?.chatbot_name}`}
+      title={`افزایش اعتبار - ${
+        selectedChatbot?.name
+          ? selectedChatbot?.name
+          : selectedChatbot?.chatbot_name
+      }`}
       size="xs"
     >
       {isLoading && <PageLoader />}

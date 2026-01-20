@@ -416,14 +416,17 @@ export const Transactions: React.FC = () => {
                           className="w-10 h-10 rounded-full flex items-center justify-center"
                           style={{
                             backgroundColor:
-                              transaction.type === "buy_subscription"
+                              transaction.type ===
+                              TRANSACTION_TYPE.BUY_SUBSCRIPTION
                                 ? "rgba(101, 188, 182, 0.1)"
-                                : transaction.type === "increase_balance"
+                                : transaction.type ===
+                                  TRANSACTION_TYPE.INCREASE_BALANCE
                                 ? "rgba(82, 212, 160, 0.1)"
                                 : "rgba(255, 161, 142, 0.1)",
                           }}
                         >
-                          {transaction.type === "buy_subscription" ? (
+                          {transaction.type ===
+                          TRANSACTION_TYPE.BUY_SUBSCRIPTION ? (
                             <Bot
                               style={{
                                 width: "18px",
@@ -432,7 +435,8 @@ export const Transactions: React.FC = () => {
                                 strokeWidth: "2",
                               }}
                             />
-                          ) : transaction.type === "increase_balance" ? (
+                          ) : transaction.type ===
+                            TRANSACTION_TYPE.INCREASE_BALANCE ? (
                             <TrendingUp
                               style={{
                                 width: "18px",
@@ -543,8 +547,13 @@ export const Transactions: React.FC = () => {
 
                       {/* عملیات */}
                       <td className="px-6 py-4">
+                        {/* {transaction.subscription_id && ( */}
                         {/* {transaction.tracking_code && ( */}
-                        {transaction.subscription_id && (
+                        {/* {true && ( */}
+                        {(transaction.type ==
+                          TRANSACTION_TYPE.BUY_SUBSCRIPTION ||
+                          transaction.type ==
+                            TRANSACTION_TYPE.INCREASE_BALANCE) && (
                           <div className="flex items-center  justify-center gap-2">
                             <button
                               onClick={() => handlePdf(transaction.id)}
@@ -592,9 +601,11 @@ export const Transactions: React.FC = () => {
                                 : "rgba(255, 161, 142, 0.1)",
                           }}
                         >
-                          {transaction.type === "buy_subscription" ? (
+                          {transaction.type ===
+                          TRANSACTION_TYPE.BUY_SUBSCRIPTION ? (
                             <Bot className="w-5 h-5 text-teal-500" />
-                          ) : transaction.type === "increase_balance" ? (
+                          ) : transaction.type ===
+                            TRANSACTION_TYPE.INCREASE_BALANCE ? (
                             <TrendingUp className="w-5 h-5 text-green-500" />
                           ) : (
                             <TrendingDown className="w-5 h-5 text-orange-400" />
@@ -647,7 +658,12 @@ export const Transactions: React.FC = () => {
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          {transaction.subscription_id && (
+                          {/* {transaction.subscription_id && ( */}
+                          {/* {transaction.type == "buy_subscription" && ( */}
+                          {(transaction.type ==
+                            TRANSACTION_TYPE.BUY_SUBSCRIPTION ||
+                            transaction.type ==
+                              TRANSACTION_TYPE.INCREASE_BALANCE) && (
                             <button
                               className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
                               onClick={() => handlePdf(transaction.id)}

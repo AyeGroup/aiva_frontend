@@ -30,7 +30,7 @@ import { usePricing } from "@/providers/PricingContext";
 export function Billing() {
   const { bots } = useBot();
   const { user, loading } = useAuth();
-  const { plans } = usePricing();
+  const { plans, isLoadingPlans } = usePricing();
   const router = useRouter();
   const maxDays = 7;
   const maxCredit = 85;
@@ -78,7 +78,7 @@ export function Billing() {
 
         setExpiringPlan(expiring);
 
-        console.log("expiringPlan", expiring);
+        // console.log("expiringPlan", expiring);
       } catch (error) {
         console.error("خطا در دریافت داده کاربران:", error);
       } finally {
@@ -90,33 +90,50 @@ export function Billing() {
 
   useEffect(() => {
     if (!user?.token) return;
+    if (isLoadingPlans) return;
+    if (!plans) return;
 
-    const fetchAllData = async () => {
-      setIsLoading(true);
+    const allPlans = plans;
+    const filteredPlans = allPlans.filter(
+      (p: any) => p.plan?.toLowerCase() !== "free"
+    );
 
-      try {
-        // const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
+    setPlansData(filteredPlans);
+  }, [user?.token, plans, isLoadingPlans]);
 
-        // setPlans(res.data?.data?.subscription_plans ?? []);
-        // const allPlans = res.data?.data?.subscription_plans ?? [];
-        const allPlans = plans ?? [];
 
-        const filteredPlans = allPlans.filter(
-          (p: any) => p.plan?.toLowerCase() !== "free"
-        );
-        setPlansData(filteredPlans);
+  // useEffect(() => {
+  //   if (!user?.token) return;
+  //   if (isLoadingPlans) return;
 
-        // console.log("allPlans :", allPlans);
-        // console.log("filteredPlans :", filteredPlans);
-      } catch (apiError: any) {
-        console.warn("API fetch failed:", apiError);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //   const fetchAllData = async () => {
+  //     setIsLoading(true);
 
-    fetchAllData();
-  }, [user?.token]);
+  //     try {
+  //       // const res = await axiosInstance.get(API_ROUTES.PAYMENT.PRICING);
+
+  //       // setPlans(res.data?.data?.subscription_plans ?? []);
+  //       // const allPlans = res.data?.data?.subscription_plans ?? [];
+  //       console.log("-plans :", plans);
+  //       const allPlans = plans ?? [];
+
+  //       const filteredPlans = allPlans.filter(
+  //         (p: any) => p.plan?.toLowerCase() !== "free"
+  //       );
+  //       console.log("-filteredPlans :", filteredPlans);
+
+  //       setPlansData(filteredPlans);
+
+  //       // console.log("filteredPlans :", filteredPlans);
+  //     } catch (apiError: any) {
+  //       console.warn("API fetch failed:", apiError);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchAllData();
+  // }, [user?.token, isLoadingPlans]);
 
   useEffect(() => {
     const target = sessionStorage.getItem("scrollTo");
@@ -274,11 +291,24 @@ export function Billing() {
     });
   };
 
+  const handleExtendCreditById = (chatbotId: string) => {
+    console.log("chatbotId", chatbotId);
+    if (!chatbotId) return;
+    const matchedBot = bots.find(
+      (b) => String(b.uuid).toLowerCase() === String(chatbotId).toLowerCase()
+    );
+    console.log("matchedBot", matchedBot);
+
+    setSelectedChatbot(matchedBot);
+    setIsCreditIncreaseModalOpen(true);
+  };
+
   const handleExtendCredit = (chatbot: BotConfig) => {
     setSelectedChatbot(chatbot);
     setIsCreditIncreaseModalOpen(true);
   };
 
+  // if (!isLoadingPlans) return;
   return (
     <div className="h-screen w-full overflow-y-auto z-0!" style={{ zIndex: 0 }}>
       <div className="flex flex-col lg:flex-row w-ful">
@@ -636,7 +666,7 @@ export function Billing() {
                             ) : (
                               <button
                                 onClick={() =>
-                                  handleExtendCredit(plan?.chatbot_uuid)
+                                  handleExtendCreditById(plan?.chatbot_uuid)
                                 }
                                 className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
                                 type="button"
@@ -860,7 +890,7 @@ export function Billing() {
                                   >
                                     خرید پلن
                                   </button>
-                                ) : plan.subscription?.plan === "0" ? (
+                                ) : plan.subscription?.plan === 0 ? (
                                   <button
                                     onClick={() =>
                                       handleUpgaredePlan(plan?.chatbot_uuid)
@@ -881,7 +911,7 @@ export function Billing() {
                                 ) : (
                                   <button
                                     onClick={() =>
-                                      handleExtendCredit(plan?.chatbot_uuid)
+                                      handleExtendCreditById(plan?.chatbot_uuid)
                                     }
                                     className="px-2 sm:px-6 py-1.5 sm:py-2 rounded-lg billing-upgrade-btn text-xs sm:text-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed disabled:bg-primary/40 bg-primary text-white "
                                     type="button"

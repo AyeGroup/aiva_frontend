@@ -1,4 +1,9 @@
-export type AdminPageType = "home" | "users" | "tickets" | "billing" | "discount";
+export type AdminPageType =
+  | "home"
+  | "users"
+  | "tickets"
+  | "billing"
+  | "discount";
 export type PageType =
   | "landing"
   | "register"
@@ -116,6 +121,8 @@ export interface PurchaseHistory {
 }
 export interface PricingContextType {
   plans: Plan[] | null;
+  isLoadingPlans: boolean;
+
   currentPlan: string | null;
   setCurrentPlan: (p: string) => void;
   featureMinPlan: Record<string, string>;
@@ -132,7 +139,7 @@ export interface Plan {
   recommended?: boolean;
   color: string;
   current?: boolean;
-  upload_char_limit?:number;
+  upload_char_limit?: number;
 }
 
 export interface Ticket {
@@ -147,7 +154,7 @@ export interface Ticket {
   assignee?: string;
   tags?: string[];
   messages?: any[];
-  user?:any;
+  user?: any;
 }
 
 export interface ButtonProps extends BaseComponentProps {

@@ -2,9 +2,9 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}", // همه صفحات داخل app/
-    "./components/**/*.{js,ts,jsx,tsx}", // همه کامپوننت‌ها
-    "./lib/**/*.{js,ts,jsx,tsx}", // اگر توابعی داری که استایل دارند
+    "./app/**/*.{js,ts,jsx,tsx,mdx}", 
+    "./components/**/*.{js,ts,jsx,tsx}", 
+    "./lib/**/*.{js,ts,jsx,tsx}",  
   ],
   theme: {
     extend: {
