@@ -98,7 +98,7 @@ export default function AdminUsers() {
   return (
     <div
       className="lg:h-screen w-full overflow-hidden"
-      style={{ background: "#FFFFFF" }}
+     
     >
       <main className="flex-1 p-6 overflow-y-auto h-screen">
         {(isLoading || loading) && <PageLoader />}

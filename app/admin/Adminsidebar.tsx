@@ -7,6 +7,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { AdminPageType } from "@/types/common";
 import { User, LogOut, ArrowLeft } from "lucide-react";
+import { convertToPersian } from "@/utils/common";
 
 interface SidebarItemProps {
   label: string;
@@ -82,7 +83,7 @@ export function AdminSidebar({
         </button>
       </div>
       {loading && <PageLoader />}
-      
+
       {/* Navigation Menu */}
       <nav className="flex-1 py-1">
         <SidebarItem
@@ -154,7 +155,7 @@ export function AdminSidebar({
           </div>
         </div>
         <div className="text-xs text-gray-500 mt-1 mr-12">
-          نسخه {process.env.NEXT_PUBLIC_APP_VERSION}
+          نسخه {convertToPersian(process.env.APP_VERSION || "")}
         </div>
       </div>
     </aside>

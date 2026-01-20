@@ -45,9 +45,9 @@
 }
 
 /* Loading - no spin animation */
-.animate-spin {
-  animation: none !important;
-}
+/* .animate-spin { */
+  /* animation: none !important; */
+/* } */
 
 .login-page .absolute:nth-child(1) {
   animation: float 6s ease-in-out infinite;

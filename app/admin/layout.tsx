@@ -60,7 +60,7 @@ export default function AdminLayout() {
         />
       )}
 
-      <main className="flex-1 bg-[#e3f3f0]">{pages[currentPage]}</main>
+      <main className="flex-1 bg-[#f2f8f7]">{pages[currentPage]}</main>
     </div>
   );
 }

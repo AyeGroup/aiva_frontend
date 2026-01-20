@@ -174,7 +174,7 @@ const TicketCard: React.FC<{
   const [profileData, setProfileData] = useState<any>(null);
 
   return (
-    <Card className="p-3 lg:p-6 hover:shadow-hover border border-border-soft   group transition-all">
+    <Card className="p-3 lg:p-6 hover:shadow-hover border border-border-soft group transition-all">
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-6">
           <div className="">

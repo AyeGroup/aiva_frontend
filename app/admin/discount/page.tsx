@@ -1,22 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import PageLoader from "@/components/pageLoader";
-import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "sonner";
-import { Delete } from "@/public/icons/AppIcons";
+import { Plus } from "lucide-react";
 import { useAuth } from "@/providers/AuthProvider";
 import { CodeModal } from "./CodeModal";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ConfirmModal } from "@/components/ConfirmModal";
-import { Check, Edit, Eye, Plus, X } from "lucide-react";
-import TableSort from "@/components/tableSort";
 import { CodeItem } from "@/types/common";
+import PageLoader from "@/components/pageLoader";
+import TableSort from "@/components/tableSort";
+import axiosInstance from "@/lib/axiosInstance";
 
 export default function Discount() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  // const [codes, setCodes] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showCodeModal, setShowCodeModal] = useState(false);
   const [codeId, setCodeId] = useState("");

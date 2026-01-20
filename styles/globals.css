@@ -1,6 +1,19 @@
-@import "tailwindcss";
-@import "tailwindcss/preflight" @tailwind utilities;
-@custom-variant dark (&:is(.dark *));
+@import "tailwindcss"; 
+ @import "tailwindcss/preflight" @tailwind utilities;
+
+/* @import "tailwindcss/preflight";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities"; */
+
+/* Your custom styles start here */
+/* Example of using the custom dark variant (if you are using a framework like PostCSS/SCSS that supports it) */
+@custom-variant dark (&:is(.dark *)); 
+
+.my-element {
+  @apply bg-blue-500;
+}
+
+/* @custom-variant dark (&:is(.dark *)); */
 
 @font-face {
   font-family: "Vazirmatn";
@@ -588,7 +601,7 @@ html {
   border-radius: 0;
   box-shadow: none;
 }
-.app-content.admin-panel  {
+.app-content.admin-panel {
   background: var(--bg-surface);
   /* border-radius: var(--radius-xl); */
   /* box-shadow: var(--shadow-md); */
@@ -596,7 +609,9 @@ html {
   /* min-height: calc(100vh - var(--space-12)); */
 }
 /* Other pages - with container */
-.app-content:not(:has(.landing-page)):not(:has(.admin-panel)):not(:has(.onboarding-wizard)) {
+.app-content:not(:has(.landing-page)):not(:has(.admin-panel)):not(
+    :has(.onboarding-wizard)
+  ) {
   background: var(--bg-surface);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
@@ -1028,4 +1043,16 @@ html {
 /* تغییر رنگ افکت زیر */
 #nprogress .peg {
   box-shadow: 0 0 20px var(--lightGold), 0 0 5px var(--lightGold) !important;
+}
+.spinner {
+  animation: spin 1s linear infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
