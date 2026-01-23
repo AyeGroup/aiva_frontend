@@ -9,8 +9,8 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { CodeItem } from "@/types/common";
 import PageLoader from "@/components/pageLoader";
-import TableSort from "@/components/tableSort";
 import axiosInstance from "@/lib/axiosInstance";
+import TableSort from "./tableSort";
 
 export default function Discount() {
   const router = useRouter();
@@ -116,33 +116,30 @@ export default function Discount() {
 
   return (
     <div className="lg:h-screen w-full overflow-hidden">
+      <header className="flex items-center justify-between bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6">
+        <div className="text-right">
+          <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
+            مدیریت کد تخفیف
+          </h1>
+        </div>
+        <button
+          className="flex bg-primary rounded-sm white px-2 lg:px-4 py-2 lg:py-3 cursor-pointer"
+          onClick={() => {
+            setModalMode("new");
+            setCodeId("");
+            setShowCodeModal(true);
+          }}
+        >
+          <span className="text-white text-sm lg:text-base">کد تخفیف جدید</span>
+          <div className="w-4 h-4 mr-2 text-white">
+            <Plus />
+          </div>
+        </button>
+      </header>
       <main className="flex-1 p-6 overflow-y-auto h-screen">
         {(isLoading || loading) && <PageLoader />}
         <div className="max-w-7xl mx-auto pb-8">
           {/* Page Header */}
-          <header className="flex items-center justify-between mb-8">
-            <div className="text-right">
-              <h1 className="text-grey-900 mb-0 mr-2 lg:mr-10 text-2xl lg:text-3xl font-bold">
-                مدیریت کد تخفیف
-              </h1>
-            </div>
-
-            <button
-              className="flex bg-primary rounded-sm white px-2 lg:px-4 py-2 lg:py-3 cursor-pointer"
-              onClick={() => {
-                setModalMode("new");
-                setCodeId("");
-                setShowCodeModal(true);
-              }}
-            >
-              <span className="text-white text-sm lg:text-base">
-                کد تخفیف جدید
-              </span>
-              <div className="w-4 h-4 mr-2 text-white">
-                <Plus />
-              </div>
-            </button>
-          </header>
 
           {/* Chatbots List */}
           <div className="bg-white rounded-3xl border border-grey-100 shadow-card w-full ">
@@ -158,129 +155,6 @@ export default function Discount() {
               onView={handleViewClick}
               onDelete={handleDeleteClick}
             />
-
-            {/* <div className=" w-full flex justify-center">
-              <table className="w-full table-auto">
-                <thead className="">
-                  <tr className="border-b border-grey-200 bg-grey-50">
-                    <th className="px-3 py-2 text-right text-grey-600  border-l border-gray-100 ">
-                      کد
-                    </th>
-                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-                      توضیحات
-                    </th>
-                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-                      نوع
-                    </th>
-                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-                      مقدار
-                    </th>
-                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-                      فعال
-                    </th>
-                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-                      تاریخ ایجاد
-                    </th>
-                    <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-                      تاریخ اعتبار
-                    </th>
-                    <th className="px-3 py-2 text-center text-grey-600">
-                      عملیات
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {codes.map((code: any, index: number) => (
-                    <tr
-                      key={index}
-                      className="border border-grey-100 hover:bg-grey-100 transition-colors"
-                    >
-                      <td className="px-3 py-2  border-l border-gray-100 ">
-                        <span className="rounded-full bg-gray-100 py-1 px-3">
-                          {code?.code}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2 text-sm border-l border-gray-100 ">
-                        {code?.description}
-                      </td>
-                      <td className="px-3 py-2 border-l border-gray-100 ">
-                        {code?.discount_type == "percentage" ? "درصد" : "مقدار"}
-                      </td>
-                      <td className="px-3 py-2 border-l border-gray-100 ">
-                        {code?.discount_value}
-                      </td>
-                      <td className="px-3 py-2 border-l border-gray-100  ">
-                        {code?.is_active == true ? (
-                          <Check size={20} className="text-primary" />
-                        ) : (
-                          <X size={20} className="text-red-400" />
-                        )}
-                      </td>
-
-                     
-                      <td className="px-3 py-2 border-l border-gray-100 ">
-                        <time
-                          dateTime={code.created_at}
-                          className="text-grey-600"
-                        >
-                          {new Date(code.created_at).toLocaleDateString(
-                            "fa-IR"
-                          )}
-                        </time>
-                      </td>
-                      <td className="px-3 py-2 border-l border-gray-100 ">
-                        <time
-                          dateTime={code.valid_until}
-                          className="text-grey-600"
-                        >
-                          {new Date(code.valid_until).toLocaleDateString(
-                            "fa-IR"
-                          )}
-                        </time>
-                      </td>
-
-                      <td className="px-3 py-2">
-                        {code.id && (
-                          <div className="flex items-center justify-center gap-2">
-                            <button
-                              onClick={() => {
-                                setModalMode(code?.is_active ? "edit" : "view");
-                                handleCode(code.code);
-                              }}
-                              className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                              type="button"
-                            >
-                              {code?.is_active == true ? (
-                                <Edit
-                                  size={20}
-                                  className="text-primary cursor-pointer"
-                                />
-                              ) : (
-                                <Eye
-                                  size={20}
-                                  className="text-primary cursor-pointer"
-                                />
-                              )}
-                            </button>
-                            {code?.is_active == true && (
-                              <button
-                                onClick={() => openConfirmModal(code.id)}
-                                className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                                type="button"
-                              >
-                                <div className="w-5 text-red-400 cursor-pointer">
-                                  <Delete />
-                                </div>
-                              </button>
-                            )}
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div> */}
           </div>
         </div>
         <CodeModal

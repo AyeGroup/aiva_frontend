@@ -3,6 +3,7 @@ import { Rocket, Crown, Star, Gift, Users } from "lucide-react";
 
 export enum TRANSACTION_TYPE {
   INCREASE_WALLET = "increase_wallet",
+  DECREASE_WALLET = "decrease_wallet",
   INCREASE_BALANCE = "increase_balance",
   BUY_SUBSCRIPTION = "buy_subscription",
   MESSAGE_COST = "message_cost",
@@ -26,7 +27,6 @@ export const getTransactionTitle = (type: keyof typeof TRANSACTION_TITLE) => {
   return TRANSACTION_TITLE[type] || "";
 };
 
-// export type PlanCode = "FREE" | "BASIC" | "MEDIUM" | "ADVANCE" | "ENTERPRISE";
 
 interface PlanInfo {
   code: PlanCode;

@@ -137,5 +137,9 @@ export const API_ROUTES = {
       `${API_BASE_URL}/financial/discount-codes/${discount_id}`,
     // ---------------------------------------
     USERS: `${API_BASE_URL}/admin/users`,
+    // ---------------------------------------
+
+    USER_CHATBOTS: (user_id: string) =>
+      `${API_BASE_URL}/financial/discount-codes/${user_id}`,
   },
 };

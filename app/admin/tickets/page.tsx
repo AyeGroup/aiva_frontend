@@ -376,25 +376,20 @@ export default function AdminTickets() {
       <div className="flex items-center lg:items-start justify-between">
         <div className="text-right">
           <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
-            تیکت‌های پشتیبانی
+            مدیریت تیکت‌ها
           </h1>
-          <p className="text-grey-600 mr-1 lg:mr-10 ">
-            مدیریت و پیگیری درخواست‌های پشتیبانی
-          </p>
         </div>
 
         <div className="flex items-center gap-4">
           {view === "list" ? (
             <button
-              type="button"
-              className="bg-brand-primary text-white px-3 py-2 lg:px-6 lg:py-3 rounded-xl hover:bg-brand-primary/90 font-medium flex items-center gap-2"
-              title="ایجاد تیکت جدید"
+              className="flex bg-primary rounded-sm white px-2 lg:px-4 py-2 lg:py-3 cursor-pointer"
               onClick={handleCreateTicket}
             >
-              <div className="text-white w-4 h-4">
+              <span className="text-white text-sm lg:text-base">تیکت جدید</span>
+              <div className="w-4 h-4 mr-2 text-white">
                 <Plus />
               </div>
-              تیکت جدید
             </button>
           ) : (
             <button
@@ -415,7 +410,7 @@ export default function AdminTickets() {
   );
 
   const renderStatsCards = () => (
-    <section className=" bg-white border-b border-grey-300">
+    <section className="  border-grey-300">
       <div className="px-8 py-9">
         <div className="gap-6 grid  grid-cols-2 lg:grid-cols-4 w-full">
           <StatCard

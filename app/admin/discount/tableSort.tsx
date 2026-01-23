@@ -1,19 +1,11 @@
 import React, { useMemo, useState } from "react";
-import {
-  Check,
-  X,
-  Edit,
-  Eye,
-  Delete,
-  ArrowUp10,
-  ArrowDown10,
-  ArrowUp01Icon,
-} from "lucide-react";
+import { Delete } from "@/public/icons/AppIcons";
 import { CodeItem } from "@/types/common";
+import { Check, X, Edit, Eye, ChevronUp, ChevronDown } from "lucide-react";
+import { convertToPersian } from "@/utils/common";
 
 interface CodesTableProps {
   codes: CodeItem[];
-  // Define handlers passed from parent
   onEdit: (codeData: any) => void;
   onView: (codeData: any) => void;
   onDelete: (id: number) => void;
@@ -43,7 +35,6 @@ const TableSort: React.FC<CodesTableProps> = ({
         const aValue = a[sortConfig.key as keyof CodeItem];
         const bValue = b[sortConfig.key as keyof CodeItem];
 
-        // Basic comparison: Handle strings/numbers. Dates need parsing if sorting strings.
         if (aValue < bValue)
           return sortConfig.direction === "ascending" ? -1 : 1;
         if (aValue > bValue)
@@ -65,59 +56,84 @@ const TableSort: React.FC<CodesTableProps> = ({
   const getSortIndicator = (key: keyof CodeItem) => {
     if (sortConfig.key !== key) return null;
     return sortConfig.direction === "ascending" ? (
-      <ArrowUp01Icon size={16} className="text-primary mr-1" />
+      <ChevronUp size={16} className="text-primary mr-1" />
     ) : (
-      <ArrowDown10 size={16} className="text-secondary mr-1" />
+      <ChevronDown size={16} className="text-secondary mr-1" />
     );
-    // " ▲" : " ▼";
   };
 
-  // Helper for operations buttons (adapt logic based on your original functions)
   const handleAction = (code: CodeItem) => {
     if (code.is_active) {
-      onEdit(code); // Assuming edit logic for active items
+      onEdit(code);
     } else {
-      onView(code); // Assuming view logic for inactive items
+      onView(code);
     }
   };
 
   return (
     <div className="w-full flex justify-center">
       <table className="w-full table-auto">
-        <thead className="">
+        <thead>
           <tr className="border-b border-grey-200 bg-grey-50">
             <th
-              className="flex items-center px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className="px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("code")}
             >
-              کد {getSortIndicator("code")}
+              <div className="flex items-center">
+                کد {getSortIndicator("code")}
+              </div>
             </th>
             <th
-              className="px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("description")}
             >
-              توضیحات {getSortIndicator("description")}
-            </th>
-            <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-              نوع
-            </th>
-            <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-              مقدار
-            </th>
-            <th className="px-3 py-2 text-right text-grey-600 border-l border-gray-100 ">
-              فعال
+              <div className="flex items-center">
+                توضیحات {getSortIndicator("description")}
+              </div>
             </th>
             <th
               className="px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              onClick={() => requestSort("discount_type")}
+            >
+              <div className="flex items-center">
+                نوع
+                {getSortIndicator("discount_type")}
+              </div>
+            </th>
+            <th
+              className="px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              onClick={() => requestSort("discount_value")}
+            >
+              <div className="flex items-center">
+                مقدار
+                {getSortIndicator("discount_value")}
+              </div>
+            </th>
+            <th
+              className=" px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              onClick={() => requestSort("is_active")}
+            >
+              <div className="flex items-center">
+                فعال
+                {getSortIndicator("is_active")}
+              </div>
+            </th>
+            <th
+              className=" px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("created_at")}
             >
-              تاریخ ایجاد {getSortIndicator("created_at")}
+              <div className="flex items-center">
+                <span>تاریخ ایجاد</span>
+                {getSortIndicator("created_at")}
+              </div>
             </th>
             <th
-              className="px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("valid_until")}
             >
-              تاریخ اعتبار {getSortIndicator("valid_until")}
+              <div className="flex items-center">
+                تاریخ اعتبار {getSortIndicator("valid_until")}
+              </div>
             </th>
             <th className="px-3 py-2 text-center text-grey-600">عملیات</th>
           </tr>
@@ -130,7 +146,7 @@ const TableSort: React.FC<CodesTableProps> = ({
             >
               <td className="px-3 py-2  border-l border-gray-100 ">
                 <span className="rounded-full bg-gray-100 py-1 px-3">
-                  {code?.code}
+                  {convertToPersian(code?.code)}
                 </span>
               </td>
               <td className="px-3 py-2 text-sm border-l border-gray-100 ">
@@ -140,7 +156,7 @@ const TableSort: React.FC<CodesTableProps> = ({
                 {code?.discount_type === "percentage" ? "درصد" : "مقدار"}
               </td>
               <td className="px-3 py-2 border-l border-gray-100 ">
-                {code?.discount_value}
+                {code?.discount_value.toLocaleString("fa-IR")}
               </td>
               <td className="px-3 py-2 border-l border-gray-100  ">
                 {code?.is_active ? (

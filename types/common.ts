@@ -1,6 +1,7 @@
 export type AdminPageType =
   | "home"
   | "users"
+  | "userinfo"
   | "tickets"
   | "billing"
   | "discount";

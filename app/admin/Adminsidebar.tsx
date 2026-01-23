@@ -2,160 +2,154 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import PageLoader from "@/components/pageLoader";
 import { useAuth } from "@/providers/AuthProvider";
-import { useRouter } from "next/navigation";
-import { AdminPageType } from "@/types/common";
 import { User, LogOut, ArrowLeft } from "lucide-react";
 import { convertToPersian } from "@/utils/common";
 
 interface SidebarItemProps {
   label: string;
-  active?: boolean;
-  onClick?: () => void;
+  href: string;
+  active: boolean;
 }
 
-function SidebarItem({ label, active = false, onClick }: SidebarItemProps) {
+function SidebarItem({ label, href, active }: SidebarItemProps) {
   return (
-    <button
-      onClick={onClick}
-      className="w-full cursor-pointer text-center px-4 py-3 text-grey-900 hover:bg-white/30 transition-colors duration-200 relative"
+    <Link
+      href={href}
+      className="relative block w-full px-4 py-3 text-center text-grey-900 hover:bg-white/30 transition-colors"
     >
       {active && (
-        <div className="absolute left-6 top-1/2 transform -translate-y-1/2 w-3 h-3 rounded-full bg-brand-secondary"></div>
+        <span className="absolute left-6 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-brand-secondary" />
       )}
-      <span className={`text-lg   ${active ? "font-bold" : "font-normal"}`}>
+      <span className={`text-lg ${active ? "font-bold" : "font-normal"}`}>
         {label}
       </span>
-    </button>
+    </Link>
   );
 }
 
-interface SidebarProps {
-  currentPage?: AdminPageType;
-  router: ReturnType<typeof useRouter>;
+interface AdminSidebarProps {
   onClose?: () => void;
 }
 
-export function AdminSidebar({
-  currentPage = "home",
-  router,
-  onClose,
-}: SidebarProps) {
+export function AdminSidebar({ onClose }: AdminSidebarProps) {
+  const pathname = usePathname();
   const { user, loading, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
+  /* ---------------- Active Helpers ---------------- */
+
+  const isExactActive = (path: string) => pathname === path;
+
+  const isSectionActive = (path: string) =>
+    pathname === path || pathname.startsWith(path + "/");
+
+  /* ---------------- Actions ---------------- */
+
   const handleLogout = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       logout();
-    } catch (err) {
-      console.log(err);
     } finally {
       setIsLoading(false);
     }
   };
 
+  /* ---------------- Render ---------------- */
+
   return (
     <aside
-      className="w-64 flex flex-col  top-0 h-screen relative"
+      className="w-64 flex flex-col h-screen relative"
       style={{ backgroundColor: "#F5E6D3" }}
     >
+      {/* Close button (mobile) */}
       <button
         onClick={onClose}
-        className=" absolute cursor-pointer top-4 left-4 text-gray-700 hover:text-black p-1"
+        className="absolute top-4 left-4 text-gray-700 hover:text-black"
       >
         ✕
       </button>
+
+      {/* User Info */}
       <div className="px-6 py-6 text-center">
-        <button className="w-full flex flex-col items-center gap-3 group">
+        <div className="flex flex-col items-center gap-3">
           <div
-            className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
+            className="w-12 h-12 rounded-full flex items-center justify-center text-white"
             style={{ backgroundColor: "#FFA18E" }}
           >
             <User />
           </div>
-          <div className="text-center">
-            <p className="text-grey-900 font-semibold">
-              {user?.name || user?.phone || "کاربر"}
-            </p>
-          </div>
-        </button>
+          <p className="text-grey-900 font-semibold">
+            {user?.name || user?.phone || "کاربر"}
+          </p>
+        </div>
       </div>
+
       {loading && <PageLoader />}
 
-      {/* Navigation Menu */}
+      {/* Navigation */}
       <nav className="flex-1 py-1">
+        {/* ✅ Parent route → exact match */}
         <SidebarItem
           label="میزکار"
-          active={currentPage === "home"}
-          onClick={() => router.push("/admin?tab=home")}
+          href="/admin"
+          active={isExactActive("/admin")}
         />
+
+        {/* ✅ Section routes → prefix match */}
         <SidebarItem
           label="کاربران"
-          active={currentPage === "users"}
-          onClick={() => router.push("/admin?tab=users")}
+          href="/admin/users"
+          active={isSectionActive("/admin/users")}
         />
-        {/* <SidebarItem
-          label="چت‌بات‌ها"
-          active={currentPage === "tickets"}
-          onClick={() => router.push("/admin?tab=chatbots")}
-        /> */}
-        {/* <SidebarItem
-          label="مالی"
-          active={currentPage === "billing"}
-          onClick={() => router.push("/admin?tab=billing")}
-        /> */}
+
         <SidebarItem
           label="تیکت‌ها"
-          active={currentPage === "tickets"}
-          onClick={() => router.push("/admin?tab=tickets")}
+          href="/admin/tickets"
+          active={isSectionActive("/admin/tickets")}
         />
+
         <SidebarItem
           label="کد تخفیف"
-          active={currentPage === "discount"}
-          onClick={() => router.push("/admin?tab=discount")}
+          href="/admin/discount"
+          active={isSectionActive("/admin/discount")}
         />
       </nav>
-      {/* Bottom Actions */}
+
+      {/* Bottom actions */}
       <div className="px-6 py-4 border-t border-white/30 space-y-2">
-        <button
-          onClick={() => router.push("/")}
-          className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 cursor-pointer transition-colors text-sm"
+        <Link
+          href="/"
+          className="flex items-center gap-3 text-grey-600 hover:text-grey-900 text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>بازگشت به سایت</span>
-        </button>
+          بازگشت به سایت
+        </Link>
 
         <button
-          className="w-full flex items-center gap-3 px-0 py-2 text-grey-600 hover:text-grey-900 transition-colors text-sm cursor-pointer"
           onClick={handleLogout}
           disabled={isLoading}
+          className="flex items-center gap-3 text-grey-600 hover:text-grey-900 text-sm"
         >
           <LogOut className="w-4 h-4" />
-          <span>خروج</span>
+          خروج
         </button>
       </div>
+
       {/* Footer */}
       <div className="px-6 py-2 border-t border-white/30">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
-            <Image
-              width={32}
-              height={32}
-              src="logo.webp"
-              alt="آیوا - دستیار هوشمند"
-              className="w-8 h-8 object-cover"
-              priority
-            />
-          </div>
-          <div className="text-right">
+          <Image src="/logo.webp" width={32} height={32} alt="آیوا" priority />
+          <div>
             <h2 className="text-grey-900 font-semibold text-sm">آیوا</h2>
             <p className="text-grey-500 text-xs">دستیار هوشمند</p>
           </div>
         </div>
-        <div className="text-xs text-gray-500 mt-1 mr-12">
-          نسخه {convertToPersian(process.env.APP_VERSION || "")}
+        <div className="text-xs text-gray-500 mt-1">
+          نسخه {convertToPersian(process.env.NEXT_PUBLIC_APP_VERSION || "")}
         </div>
       </div>
     </aside>

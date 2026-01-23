@@ -1,6 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import persian from "react-date-object/calendars/persian";
+import DatePicker from "react-multi-date-picker";
+import PageLoader from "@/components/pageLoader";
+import persian_fa from "react-date-object/locales/persian_fa";
+import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
@@ -11,11 +16,6 @@ import { ChatbotList } from "./widgets/chatbot-list";
 import { convertToPersian } from "@/utils/common";
 import { ArrowUp, ArrowDown } from "@/public/icons/dashboard";
 import { getTransactionTitle, TRANSACTION_TYPE } from "@/constants/plans";
-import persian from "react-date-object/calendars/persian";
-import DatePicker from "react-multi-date-picker";
-import PageLoader from "@/components/pageLoader";
-import persian_fa from "react-date-object/locales/persian_fa";
-import axiosInstance from "@/lib/axiosInstance";
 import {
   Download,
   FileText,
@@ -25,6 +25,8 @@ import {
   Filter,
   ChevronDown,
   TrendingDown,
+  Wallet,
+  CreditCard,
 } from "lucide-react";
 
 export const Transactions: React.FC = () => {
@@ -90,7 +92,11 @@ export const Transactions: React.FC = () => {
       if (transactionTypeFilter === TRANSACTION_TYPE.BUY_SUBSCRIPTION) {
         data = data.filter((t) => t.type === TRANSACTION_TYPE.BUY_SUBSCRIPTION);
       } else if (transactionTypeFilter === TRANSACTION_TYPE.INCREASE_WALLET) {
-        data = data.filter((t) => t.type === TRANSACTION_TYPE.INCREASE_WALLET);
+        data = data.filter(
+          (t) =>
+            t.type === TRANSACTION_TYPE.INCREASE_WALLET ||
+            t.type === TRANSACTION_TYPE.DECREASE_WALLET
+        );
       }
     }
 
@@ -110,9 +116,6 @@ export const Transactions: React.FC = () => {
     if (filterBot) {
       data = data.filter((t) => t.chatbot_uuid === filterBot.uuid);
     }
-
-    // console.log("date:", dateFrom, dateTo);
-    // console.log("transaction", data); // Log 'data' instead of 'filteredTransactions'
 
     setFilteredTransactions(data);
     setCurrentPage(1);
@@ -420,7 +423,9 @@ export const Transactions: React.FC = () => {
                               TRANSACTION_TYPE.BUY_SUBSCRIPTION
                                 ? "rgba(101, 188, 182, 0.1)"
                                 : transaction.type ===
-                                  TRANSACTION_TYPE.INCREASE_BALANCE
+                                    TRANSACTION_TYPE.INCREASE_BALANCE ||
+                                  transaction.type ===
+                                    TRANSACTION_TYPE.INCREASE_WALLET
                                 ? "rgba(82, 212, 160, 0.1)"
                                 : "rgba(255, 161, 142, 0.1)",
                           }}
@@ -442,6 +447,26 @@ export const Transactions: React.FC = () => {
                                 width: "18px",
                                 height: "18px",
                                 color: "#52d4a0",
+                                strokeWidth: "2",
+                              }}
+                            />
+                          ) : transaction.type ===
+                            TRANSACTION_TYPE.INCREASE_WALLET ? (
+                            <Wallet
+                              style={{
+                                width: "18px",
+                                height: "18px",
+                                color: "#52d4a0",
+                                strokeWidth: "2",
+                              }}
+                            />
+                          ) : transaction.type ===
+                            TRANSACTION_TYPE.DECREASE_WALLET ? (
+                            <CreditCard
+                              style={{
+                                width: "18px",
+                                height: "18px",
+                                color: "#FFA18E",
                                 strokeWidth: "2",
                               }}
                             />
@@ -594,10 +619,13 @@ export const Transactions: React.FC = () => {
                           className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
                           style={{
                             backgroundColor:
-                              transaction.type === "plan"
+                              transaction.type ===
+                                TRANSACTION_TYPE.BUY_SUBSCRIPTION ||
+                              transaction.type ===
+                                TRANSACTION_TYPE.INCREASE_BALANCE ||
+                              transaction.type ===
+                                TRANSACTION_TYPE.INCREASE_WALLET
                                 ? "rgba(101, 188, 182, 0.1)"
-                                : transaction.walletType === "deposit"
-                                ? "rgba(82, 212, 160, 0.1)"
                                 : "rgba(255, 161, 142, 0.1)",
                           }}
                         >
@@ -607,6 +635,12 @@ export const Transactions: React.FC = () => {
                           ) : transaction.type ===
                             TRANSACTION_TYPE.INCREASE_BALANCE ? (
                             <TrendingUp className="w-5 h-5 text-green-500" />
+                          ) : transaction.type ===
+                            TRANSACTION_TYPE.INCREASE_WALLET ? (
+                            <Wallet className="w-5 h-5 text-primary" />
+                          ) : transaction.type ===
+                            TRANSACTION_TYPE.DECREASE_WALLET ? (
+                            <CreditCard className="w-5 h-5 text-orange-400" />
                           ) : (
                             <TrendingDown className="w-5 h-5 text-orange-400" />
                           )}

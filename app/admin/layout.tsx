@@ -1,39 +1,19 @@
 "use client";
+
 import { Menu } from "lucide-react";
 import { AdminSidebar } from "./Adminsidebar";
-import { JSX, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Home from "./page";
-import AdminUsers from "./users/page";
-import AdminTickets from "./tickets/page";
-import AdminBilling from "./billing/page";
-import AdminChatbots from "./chatbots/page";
-import Discount from "./discount/page";
+import { useEffect, useState } from "react";
 
-export default function AdminLayout() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const currentPage = (searchParams.get("tab") ?? "home") as
-    | "home"
-    | "users"
-    | "discount"
-    | "tickets"
-    | "billing";
-  const pages: Record<string, JSX.Element> = {
-    users: <AdminUsers />,
-    chatbots: <AdminChatbots />,
-    tickets: <AdminTickets />,
-    billing: <AdminBilling />,
-    discount: <Discount />,
-    home: <Home />,
-  };
 
   useEffect(() => {
     const checkScreenSize = () => {
-      const desktop = window.innerWidth >= 1024;
-      // setIsDesktop(desktop);
-      setIsSidebarOpen(desktop);
+      setIsSidebarOpen(window.innerWidth >= 1024);
     };
 
     checkScreenSize();
@@ -42,25 +22,21 @@ export default function AdminLayout() {
   }, []);
 
   return (
-    <div className="flex m-0 p-0 relative admin-panel">
+    <div className="flex relative admin-panel">
       {!isSidebarOpen && (
         <button
           onClick={() => setIsSidebarOpen(true)}
-          className="absolute top-2 right-2 bg-secondary/10 shadow p-2 ml-4 rounded-md hover:bg-secondary/20 transition-colors z-999"
-          aria-label="باز کردن منو"
+          className="absolute top-2 right-2 z-50"
         >
-          <Menu className="w-6 h-6 text-secondary" />
+          <Menu />
         </button>
       )}
+
       {isSidebarOpen && (
-        <AdminSidebar
-          currentPage={currentPage}
-          router={router}
-          onClose={() => setIsSidebarOpen(false)}
-        />
+        <AdminSidebar onClose={() => setIsSidebarOpen(false)} />
       )}
 
-      <main className="flex-1 bg-[#f2f8f7]">{pages[currentPage]}</main>
+      <main className="flex-1 bg-[#f2f8f7]">{children}</main>
     </div>
   );
 }

@@ -9,14 +9,19 @@ import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ProfileModal } from "./ProfileModal";
-import { Check, Edit, Eye, Plus, X } from "lucide-react";
+import { Eye } from "lucide-react";
+import Link from "next/link";
+import { Input } from "@/components/input";
+import { Button } from "@/components/button";
 
 export default function AdminUsers() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [users, setUsers] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [showCodeModal, setShowCodeModal] = useState(false);
+  const [searchName, setSearchName] = useState("");
+  const [searchPhone, setSearchPhone] = useState("");
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileData, setProfileData] = useState<any>(null);
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
@@ -27,17 +32,20 @@ export default function AdminUsers() {
   });
 
   useEffect(() => {
-    if (!user?.token) {
-      localStorage.setItem("returnUrla", window.location.href);
-      router.push("/auth/login");
-      return;
-    }
+    // if (!user?.token) {
+    //   localStorage.setItem("returnUrla", window.location.href);
+    //   router.push("/auth/login");
+    //   return;
+    // }
+    if (loading) return; // ✅ صبر کن auth آماده شود
+
     const fetchUsers = async () => {
       await loadUsers();
     };
 
     fetchUsers();
-  }, [user?.token]);
+  }, [loading, user?.token]);
+
 
   const loadUsers = async () => {
     setIsLoading(true);
@@ -52,33 +60,10 @@ export default function AdminUsers() {
       setIsLoading(false);
     }
   };
-
-  const handleCode = async (id: string) => {
-    setShowCodeModal(true);
+  const handleSearch = async () => {};
+  const handleProfileModal = async (id: string) => {
+    setShowProfileModal(true);
     setProfileData(id);
-  };
-
-  const handleDelete = async (id: string) => {
-    setIsLoading(true);
-    try {
-      const res = await axiosInstance.delete(
-        API_ROUTES.ADMIN.DISCOUNT_DELETE(id)
-      );
-
-      if (res.data.success) {
-        await loadUsers();
-        toast.success("کد تخفیف با موفقیت غیرفعال شد");
-      } else {
-        toast.error("خطا در حذف کد تخفیف");
-        console.warn("⚠️ Unexpected response while removing item:", res.data);
-      }
-    } catch (error: any) {
-      toast.error("خطا در حذف کد تخفیف");
-      console.error("Failed to remove item:", error);
-    } finally {
-      setIsLoading(false);
-      setConfirmModal({ isOpen: false, id: null });
-    }
   };
 
   const openConfirmModal = (id: string) => {
@@ -89,63 +74,61 @@ export default function AdminUsers() {
     setConfirmModal({ isOpen: false, id: null });
   };
 
-  const handleConfirmDelete = () => {
-    if (confirmModal.id) {
-      handleDelete(confirmModal.id);
-    }
-  };
+  const handleConfirmDelete = () => {};
+if (loading) return;
 
   return (
-    <div
-      className="lg:h-screen w-full overflow-hidden"
-     
-    >
+    <div className="lg:h-screen w-full overflow-hidden">
+      <header className="bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6">
+        <div className="text-right">
+          <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
+            مدیریت کاربران
+          </h1>
+        </div>
+      </header>
       <main className="flex-1 p-6 overflow-y-auto h-screen">
         {(isLoading || loading) && <PageLoader />}
         <div className="max-w-7xl mx-auto pb-8">
-          {/* Page Header */}
-          <header className="flex items-center justify-between mb-8">
-            <div className="text-right">
-              <h1 className="text-grey-900 mb-0 mr-2 lg:mr-10 text-2xl lg:text-3xl font-bold">
-                مدیریت کاربران
-              </h1>
-            </div>
-
-            {/* <button
-              className="flex bg-primary rounded-sm white px-2 lg:px-4 py-2 lg:py-3 cursor-pointer"
-              onClick={() => {
-                setProfileData("");
-                setShowCodeModal(true);
-              }}
-            >
-              <span className="text-white text-sm lg:text-base">
-                کاربر جدید
-              </span>
-              <div className="w-4 h-4 mr-2 text-white">
-                <Plus />
-              </div>
-            </button> */}
-          </header>
-
           {/* Chatbots List */}
-          <div className="bg-white rounded-3xl border border-grey-100 shadow-card w-full ">
-            <div className="p-6 border-b border-grey-100">
-              <h2 className="font-bold text-grey-900 text-xl">کاربران</h2>
+          <div className="bg-white rounded-3xl border border-grey-100 shadow-card w-full p-3">
+            <div className="flex items-center justify-between m-6 pb-4 border-b border-primary/50">
+              <div className="flex items-center gap-3">
+                <label className="block mb-1 text-sm">نام</label>
+                <Input
+                  value={searchName || ""}
+                  onChange={(e) => setSearchName(e.target.value)}
+                  maxLength={5}
+                />
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="block mb-1 text-sm">موبایل</label>
+                <Input
+                  value={searchPhone || ""}
+                  onChange={(e) => setSearchPhone(e.target.value)}
+                  maxLength={5}
+                />
+              </div>
+              <Button onClick={handleSearch} disabled={isLoading}>
+                {isLoading ? "جستجو..." : "جستجو "}
+              </Button>
             </div>
+            {/* <div className="p-6 border-b border-grey-100">
+              <h2 className="font-bold text-grey-900 text-xl">کاربران</h2>
+            </div> */}
 
             <div className=" divide-grey-100 w-full ">
-              <table className="w-full table-auto table-cell ">
+              <table className="w-full table-auto  ">
                 <thead>
-                  <tr className="border-b border-grey-200 bg-grey-50">
+                  <tr className="border-b border-grey-200 text-sm   font-normal bg-grey-50">
                     <th className="px-3 py-2 text-right text-grey-600">
                       موبایل
                     </th>
-                    <th className="px-3 py-2 text-right text-grey-600">
-                      ایمیل
-                    </th>
+
                     <th className="px-3 py-2 text-right text-grey-600">نام</th>
                     <th className="px-3 py-2 text-right text-grey-600">شرکت</th>
-                    <th className="px-3 py-2 text-right text-grey-600">سمت</th>
+                    <th className="px-3 py-2 text-right text-grey-600">
+                      مجموع کاربران
+                    </th>
                     <th className="px-3 py-2 text-right text-grey-600">
                       تاریخ ثبت نام
                     </th>
@@ -163,7 +146,6 @@ export default function AdminUsers() {
                     >
                       <td className="px-3 py-2 text-sm">{user?.id}</td>
                       <td className="px-3 py-2 text-sm">{user?.phone}</td>
-                      <td className="px-3 py-2 text-sm">{user?.email}</td>
                       <td className="px-3 py-2">{user?.full_name}</td>
                       <td className="px-3 py-2">{user?.company_name}</td>
                       <td className="px-3 py-2">{user?.company_role}</td>
@@ -181,33 +163,23 @@ export default function AdminUsers() {
                       </td>
 
                       <td className="px-3 py-2">
-                        {user.id && (
-                          <div className="flex items-center justify-center gap-2">
-                            <button
-                              onClick={() => {
-                                handleCode(user.code);
-                              }}
-                              className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                              type="button"
-                            >
-                              <Eye
-                                size={20}
-                                className="text-primary cursor-pointer"
-                              />
-                            </button>
-                          </div>
-                        )}
-                        {user?.is_active == true && (
+                        <div className="flex items-center justify-center gap-2">
                           <button
-                            onClick={() => openConfirmModal(user.id)}
+                            onClick={() => {
+                              handleProfileModal(user.code);
+                            }}
                             className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
                             type="button"
                           >
-                            <div className="w-5 text-red-400 cursor-pointer">
-                              <Delete />
-                            </div>
+                            پروفایل
                           </button>
-                        )}
+                          <Link
+                            className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
+                            href={`/admin/users/${user.id}`}
+                          >
+                            چت‌بات‌ها
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -217,10 +189,10 @@ export default function AdminUsers() {
           </div>
         </div>
         <ProfileModal
-          open={showCodeModal}
+          open={showProfileModal}
           data={profileData}
           onClose={() => {
-            setShowCodeModal(false);
+            setShowProfileModal(false);
             setProfileData(null);
           }}
         />
