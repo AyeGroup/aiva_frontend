@@ -1,21 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
-import { toast } from "sonner";
-import { Delete } from "@/public/icons/AppIcons";
 import { useAuth } from "@/providers/AuthProvider";
-import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ProfileModal } from "./ProfileModal";
-import { Eye } from "lucide-react";
-import Link from "next/link";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 
 export default function AdminUsers() {
-  const router = useRouter();
   const { user, loading } = useAuth();
   const [users, setUsers] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,12 +27,7 @@ export default function AdminUsers() {
   });
 
   useEffect(() => {
-    // if (!user?.token) {
-    //   localStorage.setItem("returnUrla", window.location.href);
-    //   router.push("/auth/login");
-    //   return;
-    // }
-    if (loading) return; // ✅ صبر کن auth آماده شود
+    if (loading) return;
 
     const fetchUsers = async () => {
       await loadUsers();
@@ -45,7 +35,6 @@ export default function AdminUsers() {
 
     fetchUsers();
   }, [loading, user?.token]);
-
 
   const loadUsers = async () => {
     setIsLoading(true);
@@ -60,7 +49,11 @@ export default function AdminUsers() {
       setIsLoading(false);
     }
   };
+
   const handleSearch = async () => {};
+
+  const handleConfirmDelete = () => {};
+
   const handleProfileModal = async (id: string) => {
     setShowProfileModal(true);
     setProfileData(id);
@@ -74,8 +67,8 @@ export default function AdminUsers() {
     setConfirmModal({ isOpen: false, id: null });
   };
 
-  const handleConfirmDelete = () => {};
-if (loading) return;
+  
+  if (loading) return;
 
   return (
     <div className="lg:h-screen w-full overflow-hidden">
@@ -112,9 +105,7 @@ if (loading) return;
                 {isLoading ? "جستجو..." : "جستجو "}
               </Button>
             </div>
-            {/* <div className="p-6 border-b border-grey-100">
-              <h2 className="font-bold text-grey-900 text-xl">کاربران</h2>
-            </div> */}
+          
 
             <div className=" divide-grey-100 w-full ">
               <table className="w-full table-auto  ">

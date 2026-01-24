@@ -167,7 +167,7 @@ const TicketCard: React.FC<{
   ticket: Ticket;
   onClick: () => void;
 }> = ({ ticket, onClick }) => {
-  const badgeStatus = getBadgeStatus(ticket.status);
+  // const badgeStatus = getBadgeStatus(ticket.status);
 
   return (
     <Card
@@ -207,8 +207,9 @@ const TicketCard: React.FC<{
         <div className="grid grid-cols-2 lg:grid-cols-3 items-center gap-1 lg:gap-3 lg:pr-2">
           <div className="flex items-center gap-2">
             <span className="text-xs text-grey-500">وضعیت:</span>
-            <StatusBadge status={badgeStatus} />
+            <StatusBadge status={ticket.status} />
           </div>
+          
 
           <div className="flex items-center gap-2">
             <span className="text-xs text-grey-500">اولویت:</span>

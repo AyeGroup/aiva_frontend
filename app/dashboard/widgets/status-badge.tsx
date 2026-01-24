@@ -1,5 +1,6 @@
  
-export type StatusType = 'active' | 'inactive' | 'pending' | 'success' | 'error' | 'info';
+export type StatusType = "open" | "closed" | "in_progress" | "resolved";
+ 
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -8,42 +9,31 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
   const statusConfig = {
-    active: {
-      bg: 'bg-brand-primary/10',
-      text: 'text-brand-primary',
-      border: 'border-brand-primary/20',
-      label: 'انجام شده'
+    resolved: {
+      bg: "bg-brand-primary/10",
+      text: "text-brand-primary",
+      border: "border-brand-primary/20",
+      label: "حل شده",
     },
-    inactive: {
-      bg: 'bg-grey-100',
-      text: 'text-grey-600',
-      border: 'border-grey-300',
-      label: 'غیرفعال'
+
+    in_progress: {
+      bg: "bg-warning/10",
+      text: "text-warning",
+      border: "border-warning/20",
+      label: "در حال بررسی",
     },
-    pending: {
-      bg: 'bg-warning/10',
-      text: 'text-warning',
-      border: 'border-warning/20',
-      label: 'در حال بررسی'
+    closed: {
+      bg: "bg-success/10",
+      text: "text-success",
+      border: "border-success/20",
+      label: "بسته شده",
     },
-    success: {
-      bg: 'bg-success/10',
-      text: 'text-success',
-      border: 'border-success/20',
-      label: 'بسته شده'
+    open: {
+      bg: "bg-danger/10",
+      text: "text-danger",
+      border: "border-danger/20",
+      label: "باز",
     },
-    error: {
-      bg: 'bg-danger/10',
-      text: 'text-danger',
-      border: 'border-danger/20',
-      label: 'باز'
-    },
-    info: {
-      bg: 'bg-[#4A90E2]/10',
-      text: 'text-[#4A90E2]',
-      border: 'border-[#4A90E2]/20',
-      label: 'باز'
-    }
   };
 
   const config = statusConfig[status];

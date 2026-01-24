@@ -22,6 +22,7 @@ import {
 import { ViewTicketDetail } from "./TicketView";
 import { ArrowLeft, Eye, View, ViewIcon } from "lucide-react";
 import { ProfileModal } from "../users/ProfileModal";
+import { useRouter } from "next/navigation";
 
 interface TicketStats {
   total: number;
@@ -141,9 +142,7 @@ const ProgressStatCard: React.FC<StatCardConfig & { percentage: number }> = ({
           </div>
           <div className="flex-1 flex flex-col gap-2 items-start justify-center">
             <p className="text-grey-600">{title}</p>
-            <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
-              {convertToPersian(count)}
-            </p>
+            <p className={textColor}>{convertToPersian(count)}</p>
           </div>
         </div>
         <div className="bg-grey-100 h-1 relative rounded-full w-full">
@@ -158,10 +157,7 @@ const ProgressStatCard: React.FC<StatCardConfig & { percentage: number }> = ({
         </div>
       </div>
     </div>
-    <div
-      aria-hidden="true"
-      className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
-    />
+    <div className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]" />
   </div>
 );
 
@@ -169,7 +165,7 @@ const TicketCard: React.FC<{
   ticket: Ticket;
   onClick: () => void;
 }> = ({ ticket, onClick }) => {
-  const badgeStatus = getBadgeStatus(ticket.status);
+  // const badgeStatus = getBadgeStatus(ticket.status);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileData, setProfileData] = useState<any>(null);
 
@@ -211,7 +207,7 @@ const TicketCard: React.FC<{
         <div className="grid grid-cols-2 lg:grid-cols-4 items-center gap-1 lg:gap-3 lg:pr-2">
           <div className="flex items-center gap-2">
             <span className="text-xs text-grey-500">وضعیت:</span>
-            <StatusBadge status={badgeStatus} />
+            <StatusBadge status={ticket.status} />
           </div>
 
           <div className="flex items-center gap-2">
@@ -305,14 +301,21 @@ export default function AdminTickets() {
   const [isLoading, setIsLoading] = useState(false);
   const [filterStatus, setFilterStatus] = useState<TicketStatusFilter>("all");
   const { user, loading } = useAuth();
+  const router = useRouter();
 
   const filteredTickets = tickets?.filter((ticket) => {
     if (filterStatus !== "all" && ticket.status !== filterStatus) return false;
-    if (filterPriority !== "all" && ticket.priority !== filterPriority)
-      return false;
+    // if (filterPriority !== "all" && ticket.priority !== filterPriority)
+    //   return false;
     return true;
   });
+  const handleTicketClick = (ticketId: string) => {
+    router.push(`/admin/tickets/${ticketId}`);
+  };
 
+  const handleCreateTicket = () => {
+    router.push("/admin/tickets/create");
+  };
   const stats: TicketStats = {
     total: tickets.length,
     open: tickets.filter((t) => t.status === "open").length,
@@ -344,7 +347,7 @@ export default function AdminTickets() {
     }
   };
 
-  const handleCreateTicket = () => setView("create");
+  // const handleCreateTicket = () => setView("create");
 
   const handleBackToList = async () => {
     setView("list");
@@ -352,11 +355,11 @@ export default function AdminTickets() {
     await loadTickets();
   };
 
-  const handleTicketClick = (ticketId: string) => {
-    // console.log("wwww");
-    setSelectedTicketId(ticketId);
-    setView("view");
-  };
+  // const handleTicketClick = (ticketId: string) => {
+  //   // console.log("wwww");
+  //   setSelectedTicketId(ticketId);
+  //   setView("view");
+  // };
 
   const handleTicketCreated = (newTicket: Ticket) => {
     setTickets([...tickets, newTicket]);
