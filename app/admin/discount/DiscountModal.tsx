@@ -12,7 +12,7 @@ import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { GenericSelector } from "@/components/selector";
 import { useEffect, useState } from "react";
-import { discountType, discountUsageType } from "@/constants/common";
+import { discountType, DiscountUsageType, discountUsageType } from "@/constants/common";
 import {
   Dialog,
   DialogContent,
@@ -31,17 +31,20 @@ export interface CodeForm {
   valid_until: string;
   max_discount_amount: string | null;
   max_total_uses: string | null;
+
+  user_id?: string;
+  user_phone?: string;
 }
 
 interface CodeModalProps {
   open: boolean;
   codeId: string;
-  mode?: string;
+  mode?: "new" | "edit" | "view";
   onClose: () => void;
   onSaved: () => void;
 }
 
-export function CodeModal({
+export function DiscountModal({
   open,
   codeId,
   mode = "new",
@@ -50,119 +53,115 @@ export function CodeModal({
 }: CodeModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [form, setForm] = useState<CodeForm>({
     id: "",
     code: "",
     discount_type: "percentage",
     discount_value: "",
-    max_discount_amount: "",
-    valid_until: "",
+    description: "",
     usage_type: "time_limited",
-    description: "",
-    max_total_uses: "",
-  });
-  const [valid, setValid] = useState<CodeForm>({
-    id: "",
-    code: "",
-    discount_type: "",
-    discount_value: "",
-    max_discount_amount: "",
     valid_until: "",
-    usage_type: "",
-    description: "",
+    max_discount_amount: "",
     max_total_uses: "",
+    user_id: "",
+    user_phone: "",
   });
+
+  const [valid, setValid] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    console.log("codeid: ", codeId);
-    console.log("mode: ", mode);
-    if (!codeId || codeId =="" || mode == "new") return;
-    const fetchCode = async () => {
-      await loadCode(codeId);
-    };
-
-    fetchCode();
+    if (!codeId || mode === "new") return;
+    loadCode(codeId);
   }, [codeId]);
 
   const loadCode = async (id: string) => {
     setIsLoading(true);
-
     try {
-      const response = await axiosInstance.get(
+      const res = await axiosInstance.get(
         API_ROUTES.ADMIN.DISCOUNT(String(id))
       );
-      setForm(response.data.data);
-      console.log("codes: ", response.data.data);
-    } catch (apiError: any) {
-      console.warn("API fetch failed, using local data:", apiError);
+      setForm(res.data.data);
+    } catch (e) {
+      toast.error("خطا در دریافت اطلاعات");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const validateForm = (): boolean => {
-    let isValid = true;
-    if (!form.code || form.code.trim() === "") {
-      setValid((p) => ({ ...p, code: "این فیلد ضروری است" }));
-      isValid = false;
-    }
-    if (!form.description || form.description.trim() === "") {
-      setValid((p) => ({ ...p, description: "این فیلد ضروری است" }));
-      isValid = false;
-    }
-    if (!form.usage_type) {
-      setValid((p) => ({ ...p, usage_type: "این فیلد ضروری است" }));
-      isValid = false;
-    }
-    if (!form.discount_type) {
-      setValid((p) => ({ ...p, discount_type: "این فیلد ضروری است" }));
-      isValid = false;
-    }
-    if (!form.discount_value) {
-      setValid((p) => ({ ...p, discount_value: "این فیلد ضروری است" }));
-      isValid = false;
-    }
-    if (form.max_discount_amount && isNaN(Number(form.max_discount_amount))) {
-      setValid((p) => ({
+  const fetchUserByPhone = async () => {
+    if (!form.user_phone) return;
+
+    try {
+      const res = await axiosInstance.get(
+        API_ROUTES.ADMIN.USER_BY_PHONE(form.user_phone)
+      );
+
+      setForm((p) => ({
         ...p,
-        max_discount_amount: "مقدار را صحیح وارد کنید",
+        user_id: res.data.data.id,
       }));
-      isValid = false;
+
+      toast.success("کاربر یافت شد");
+    } catch {
+      toast.error("کاربری با این شماره یافت نشد");
+      setForm((p) => ({ ...p, user_id: "" }));
     }
-    if (form.max_total_uses && isNaN(Number(form.max_total_uses))) {
-      setValid((p) => ({ ...p, max_total_uses: "مقدار را صحیح وارد کنید" }));
-      isValid = false;
+  };
+
+  const validateForm = (): boolean => {
+    let ok = true;
+    const errors: Record<string, string> = {};
+
+    if (!form.code) {
+      errors.code = "این فیلد ضروری است";
+      ok = false;
     }
-    if (!form.valid_until && form.discount_type === "time_limited") {
-      setValid((p) => ({ ...p, valid_until: "مقدار را صحیح وارد کنید" }));
-      isValid = false;
+
+    if (!form.description) {
+      errors.description = "این فیلد ضروری است";
+      ok = false;
     }
-    return isValid;
+
+    if (!form.discount_value) {
+      errors.discount_value = "این فیلد ضروری است";
+      ok = false;
+    }
+
+    if (
+      form.usage_type === "specific_user" &&
+      (!form.user_id || !form.user_phone)
+    ) {
+      toast.error("لطفاً کاربر معتبر انتخاب کنید");
+      ok = false;
+    }
+
+    setValid(errors);
+    return ok;
   };
 
   const handleSave = async () => {
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
+
     try {
       setIsSubmitting(true);
       await axiosInstance.post(API_ROUTES.ADMIN.DISCOUNT_CREATE, form);
-      toast.success("اطلاعات با موفقیت ذخیره شد.");
+      toast.success("اطلاعات با موفقیت ذخیره شد");
       onSaved();
       onClose();
-    } catch (err) {
-      toast.error("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
-      console.error("Error saving profile:", err);
+    } catch {
+      toast.error("خطا در ذخیره اطلاعات");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!open) return;
+  if (!open) return null;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       {isLoading && <PageLoader />}
+
       <DialogContent className="max-w-md z-999 max-h-screen overflow-auto">
         <DialogHeader>
           <DialogTitle>
@@ -175,38 +174,30 @@ export function CodeModal({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-4 space-y-2 ">
+        <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block mb-1 text-sm">
-              کد<span className="text-red-400 text-sm">*</span>
-            </label>
+            <label className="text-sm">کد *</label>
             <Input
-              value={form.code || ""}
-              maxLength={20}
-              disabled={mode == "view"}
+              value={form.code}
+              disabled={mode === "view"}
               onChange={(e) => setForm((p) => ({ ...p, code: e.target.value }))}
             />
             {valid.code && (
-              <span className="text-red-400 text-xs">{valid.code}</span>
+              <span className="text-xs text-red-400">{valid.code}</span>
             )}
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">
-              توضیحات<span className="text-red-400 text-sm">*</span>
-            </label>
+            <label className="text-sm">توضیحات *</label>
             <Input
-              value={form.description || ""}
-              disabled={mode == "view"}
+              value={form.description}
+              disabled={mode === "view"}
               onChange={(e) =>
                 setForm((p) => ({ ...p, description: e.target.value }))
               }
-              maxLength={128}
             />
-            {valid.description && (
-              <span className="text-red-400 text-xs">{valid.description}</span>
-            )}
           </div>
+
           <div>
             <label className="block mb-1 text-sm">
               نوع استفاده<span className="text-red-400 text-sm">*</span>
@@ -245,72 +236,90 @@ export function CodeModal({
               </span>
             )}
           </div>
+
+          {form.usage_type === DiscountUsageType.USER_SPECIFIC && (
+            <>
+              <div>
+                <label className="text-sm">شماره تلفن کاربر *</label>
+                <Input
+                  value={form.user_phone}
+                  disabled={mode === "view"}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, user_phone: e.target.value }))
+                  }
+                  onBlur={fetchUserByPhone}
+                  placeholder="09xxxxxxxxx"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm">شناسه کاربر</label>
+                <Input value={form.user_id} disabled />
+              </div>
+            </>
+          )}
+
           <div>
-            <label className="block mb-1 text-sm">
-              مقدار<span className="text-red-400 text-sm">*</span>
-            </label>
+            <label className="text-sm">مقدار *</label>
             <Input
-              value={form.discount_value || ""}
+              value={form.discount_value}
+              disabled={mode === "view"}
               onChange={(e) =>
                 setForm((p) => ({ ...p, discount_value: e.target.value }))
               }
-              disabled={mode == "view"}
-              maxLength={10}
             />
-            {valid.discount_value && (
-              <span className="text-red-400 text-xs">
-                {valid.discount_value}
-              </span>
-            )}
           </div>
+
           <div>
-            <label className="block mb-1 text-sm">حداکثر مبلغ تخفیف </label>
+            <label className="text-sm">حداکثر مبلغ تخفیف</label>
             <Input
               value={form.max_discount_amount || ""}
-              disabled={mode == "view"}
+              disabled={mode === "view"}
               onChange={(e) =>
-                setForm((p) => ({ ...p, max_discount_amount: e.target.value }))
+                setForm((p) => ({
+                  ...p,
+                  max_discount_amount: e.target.value,
+                }))
               }
-              maxLength={12}
             />
           </div>
+
           <div>
-            <label className="block mb-1 text-sm">تاریخ اعتبار</label>
+            <label className="text-sm">تاریخ اعتبار</label>
             <DatePicker
               value={form.valid_until}
+              disabled={mode === "view"}
+              calendar={persian}
+              locale={persian_fa}
               onChange={(val) =>
                 setForm((p) => ({
                   ...p,
-                  valid_until: val?.toDate?.()?.toISOString?.() || "",
+                  valid_until: val?.toDate?.()?.toISOString() || "",
                 }))
               }
-              calendar={persian}
-              disabled={mode == "view"}
-              locale={persian_fa}
-              inputClass="flex-1 px-4 py-4 rounded-4xl border border-2 border-[#65bcb6] focus:outline-none transition-colors text-md w-full"
-              placeholder="انتخاب "
-              calendarPosition="top-right"
+              inputClass="w-full px-4 py-3 rounded-xl border"
             />
           </div>
+
           <div>
-            <label className="block mb-1 text-sm">حداکثر تعداد استفاده</label>
+            <label className="text-sm">حداکثر تعداد استفاده</label>
             <Input
               value={form.max_total_uses || ""}
-              disabled={mode == "view"}
+              disabled={mode === "view"}
               onChange={(e) =>
                 setForm((p) => ({ ...p, max_total_uses: e.target.value }))
               }
-              maxLength={5}
             />
           </div>
         </div>
-        {(mode == "edit" || mode == "new") && (
+
+        {(mode === "new" || mode === "edit") && (
           <DialogFooter>
             <Button variant="tertiary" onClick={onClose}>
               لغو
             </Button>
             <Button onClick={handleSave} disabled={isSubmitting}>
-              {isSubmitting ? "ذخیره..." : "ذخیره تغییرات"}
+              {isSubmitting ? "ذخیره..." : "ذخیره"}
             </Button>
           </DialogFooter>
         )}

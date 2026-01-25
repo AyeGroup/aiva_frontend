@@ -16,8 +16,6 @@ export default function AdminUserChatbots() {
   const { loading } = useAuth();
   const params = useParams();
 
-  // اگر صفحه از مسیر /admin/users/[id]/chatbots باز شود، مقدار دارد
-  // اگر از /admin/chatbots باز شود، undefined خواهد بود
   const userId = params?.id as string | undefined;
 
   // ========================

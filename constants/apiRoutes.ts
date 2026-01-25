@@ -128,7 +128,10 @@ export const API_ROUTES = {
       `${API_BASE_URL}/tickets/admin/${ticket_id}`,
 
     // ---------------------------------------
-    USERS: `${API_BASE_URL}/admin/users`,
+    USERS: `${API_BASE_URL.replace("/api", "")}/admin/users`,
+    USER_BY_PHONE: (user_phone: string) =>
+      `${API_BASE_URL}/admin/users/${user_phone}`,
+
     CHATBOTS: `${API_BASE_URL}/admin/chatbots`,
     TRANSACTIONS: `${API_BASE_URL}/admin/transactions`,
 

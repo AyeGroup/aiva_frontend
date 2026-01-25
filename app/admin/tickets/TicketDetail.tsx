@@ -17,7 +17,7 @@ interface Props {
   onClose: () => void;
 }
 
-export function ViewTicketDetail({ ticket, onClose }: Props) {
+export function TicketDetail({ ticket, onClose }: Props) {
   const [replyText, setReplyText] = useState("");
   const [thisTicket, setThisTicket] = useState<Ticket>(ticket);
 
@@ -160,7 +160,9 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                       </span>
                     </div>
                     <h2 className="text-grey-900">{thisTicket.title}</h2>
-                    <StatusBadge
+                               <StatusBadge status={ticket.status} />
+                   
+                    {/* <StatusBadge
                       status={
                         thisTicket.status === "open"
                           ? "error"
@@ -169,7 +171,7 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                           : "success"
                       }
                       className="mr-auto"
-                    />
+                    /> */}
                   </div>
                   <div className="flex gap-3 justify-between items-start">
                     <p className="grow  text-grey-600 text-right  leading-relaxed">

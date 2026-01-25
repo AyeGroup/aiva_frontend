@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { useAuth } from "@/providers/AuthProvider";
-import { CodeModal } from "./CodeModal";
+import { DiscountModal } from "./DiscountModal";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { CodeItem } from "@/types/common";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
-import TableSort from "./tableSort";
+import TableDiscount from "./tableDiscount";
 
 export default function Discount() {
   const router = useRouter();
@@ -18,8 +18,11 @@ export default function Discount() {
   const [isLoading, setIsLoading] = useState(false);
   const [showCodeModal, setShowCodeModal] = useState(false);
   const [codeId, setCodeId] = useState("");
-  const [modalMode, setModalMode] = useState("new");
-  const [codes, setCodes] = useState<CodeItem[]>([]); // Assume this state is managed here
+  const [modalMode, setModalMode] = useState<
+    "new" | "edit" | "view" | undefined
+  >("new");
+
+  const [codes, setCodes] = useState<CodeItem[]>([]);
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     id: string | null;
@@ -64,7 +67,7 @@ export default function Discount() {
     setIsLoading(true);
     try {
       const res = await axiosInstance.delete(
-        API_ROUTES.ADMIN.DISCOUNT_DELETE(id)
+        API_ROUTES.ADMIN.DISCOUNT_DELETE(id),
       );
 
       if (res.data.success) {
@@ -98,19 +101,19 @@ export default function Discount() {
   };
 
   const handleEditClick = (code: CodeItem) => {
-    // setModalMode("edit");
-    // handleCode(code.code);
+    setModalMode("edit");
+    handleCode(code.code);
     console.log("Editing:", code.code);
   };
 
   const handleViewClick = (code: CodeItem) => {
-    // setModalMode("view");
-    // handleCode(code.code);
+    setModalMode("view");
+    handleCode(code.code);
     console.log("Viewing:", code.code);
   };
 
   const handleDeleteClick = (id: number) => {
-    // openConfirmModal(id);
+    openConfirmModal(String(id));
     console.log("Deleting ID:", id);
   };
 
@@ -138,18 +141,9 @@ export default function Discount() {
       </header>
       <main className="flex-1 p-6 overflow-y-auto h-screen">
         {(isLoading || loading) && <PageLoader />}
-        <div className="max-w-7xl mx-auto pb-8">
-          {/* Page Header */}
-
-          {/* Chatbots List */}
-          <div className="bg-white rounded-3xl border border-grey-100 shadow-card w-full ">
-            <div className="p-6 border-b border-grey-100">
-              <h2 className="font-bold text-grey-900 text-xl">
-                کدهای تعریف شده
-              </h2>
-            </div>
-
-            <TableSort
+        <div className=" mx-auto pb-8">
+          <div className="bg-white rounded-xl border border-grey-100 shadow-card w-full ">
+            <TableDiscount
               codes={codes}
               onEdit={handleEditClick}
               onView={handleViewClick}
@@ -157,7 +151,7 @@ export default function Discount() {
             />
           </div>
         </div>
-        <CodeModal
+        <DiscountModal
           open={showCodeModal}
           codeId={codeId}
           onSaved={loadCodes}

@@ -6,7 +6,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { Ticket } from "@/types/common";
 import PageLoader from "@/components/pageLoader";
-import { ViewTicketDetail } from "../TicketView";
+import { TicketDetail } from "../TicketDetail";
 import { Back } from "@/public/icons/AppIcons";
 
 export default function TicketDetailPage() {
@@ -47,17 +47,19 @@ export default function TicketDetailPage() {
 
   return (
     <div className="w-full">
-      <header className="px-6 py-6 border-b flex items-center gap-4">
+      <header className="px-6 py-6 border-b flex items-center justify-end gap-2 bg-white">
         <button
           onClick={() => router.push("/admin/tickets")}
-          className="flex items-center gap-2 text-grey-700"
+          className="flex text-primary items-center gap-2 cursor-pointer"
         >
-          <Back />
           بازگشت
+          <div className="text-primary w-6">
+            <Back />
+          </div>
         </button>
       </header>
 
-      <ViewTicketDetail
+      <TicketDetail
         ticket={ticket}
         onClose={() => router.push("/admin/tickets")}
       />

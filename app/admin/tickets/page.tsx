@@ -8,8 +8,8 @@ import { useAuth } from "@/providers/AuthProvider";
 import { StatusBadge } from "@/app/dashboard/widgets/status-badge";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { Ticket, TicketStatus } from "@/types/common";
-import { convertToPersian } from "@/utils/common";
-import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
+import { convertToPersian, formatDateTime } from "@/utils/common";
+import { getCategoryLabel, getPriorityLabel, getPriorityStyles } from "@/constants/common";
 import {
   Back,
   Plus,
@@ -22,28 +22,12 @@ import { Eye } from "lucide-react";
 import { ProfileModal } from "../users/ProfileModal";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/button";
-// import { StatCard } from "@/components/stat-card";
 import ProgressStatCard from "@/components/ProgressStatCard";
 import StatCard from "@/components/stat-card";
+import TableTicket from "./tableTicket";
 
-const formatDateTime = (dateString: string): string => {
-  const date = new Date(dateString);
-  return `${date.toLocaleDateString("fa-IR")} - ${date.toLocaleTimeString(
-    "fa-IR",
-    { hour: "2-digit", minute: "2-digit" }
-  )}`;
-};
 
-const getPriorityStyles = (priority: string): string => {
-  const styles: Record<string, string> = {
-    urgent: "bg-red-100 text-red-700",
-    high: "bg-orange-100 text-orange-700",
-    medium: "bg-yellow-100 text-yellow-700",
-    low: "bg-blue-100 text-blue-700",
-  };
-  return styles[priority] || "";
-};
-
+ 
 /* ================================
   Ticket Card
 ================================ */
@@ -274,7 +258,7 @@ export default function AdminTickets() {
         </div>
 
         {/* List */}
-        <div className="space-y-4">
+        <div className="space-y-4 lg:hidden">
           {filteredTickets.map((ticket) => (
             <TicketCard
               key={ticket.id}
@@ -282,6 +266,14 @@ export default function AdminTickets() {
               onClick={() => router.push(`/admin/tickets/${ticket.id}`)}
             />
           ))}
+        </div>
+        <div className="hidden lg:block">
+          <TableTicket
+            data={filteredTickets}
+           
+            // onView={handleViewClick}
+           
+          />
         </div>
 
         {/* Pagination */}

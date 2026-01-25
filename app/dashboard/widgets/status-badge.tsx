@@ -40,10 +40,10 @@ export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
 
   return (
     <span
-      className={`status-badge ${config.bg} ${config.text} ${config.border} ${className}`}
+      className={`status-badge ${config?.bg} ${config?.text} ${config?.border} ${className}`}
       style={{ fontSize: 'var(--text-body-small)', lineHeight: 'var(--text-body-small-lh)' }}
     >
-      {config.label}
+      {config?.label}
     </span>
   );
 }

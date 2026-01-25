@@ -187,7 +187,7 @@ export default function AdminUsers() {
                             </button>
                             <Link
                               className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                              href={`/admin/chatbots/${user.id}`}
+                              href={`/admin/users/${user.id}/chatbots`}
                             >
                               چت‌بات‌ها
                             </Link>

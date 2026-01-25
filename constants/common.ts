@@ -35,6 +35,15 @@ export const getCategoryLabel = (category: string): string => {
   return labels[category] || category;
 };
 
+export const getPriorityStyles = (priority: string): string => {
+  const styles: Record<string, string> = {
+    urgent: "bg-red-100 text-red-700",
+    high: "bg-orange-100 text-orange-700",
+    medium: "bg-yellow-100 text-yellow-700",
+    low: "bg-blue-100 text-blue-700",
+  };
+  return styles[priority] || "";
+};
 export const getPriorityLabel = (priority: string): string => {
   const labels: Record<string, string> = {
     urgent: "اورژانسی",

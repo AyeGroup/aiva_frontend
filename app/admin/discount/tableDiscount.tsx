@@ -16,7 +16,7 @@ type SortConfig = {
   direction: "ascending" | "descending";
 };
 
-const TableSort: React.FC<CodesTableProps> = ({
+const TableDiscount: React.FC<CodesTableProps> = ({
   codes,
   onEdit,
   onView,
@@ -76,7 +76,7 @@ const TableSort: React.FC<CodesTableProps> = ({
         <thead>
           <tr className="border-b border-grey-200 bg-grey-50">
             <th
-              className="px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className="px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("code")}
             >
               <div className="flex items-center">
@@ -84,7 +84,7 @@ const TableSort: React.FC<CodesTableProps> = ({
               </div>
             </th>
             <th
-              className=" px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("description")}
             >
               <div className="flex items-center">
@@ -92,7 +92,7 @@ const TableSort: React.FC<CodesTableProps> = ({
               </div>
             </th>
             <th
-              className="px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className="px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("discount_type")}
             >
               <div className="flex items-center">
@@ -101,7 +101,7 @@ const TableSort: React.FC<CodesTableProps> = ({
               </div>
             </th>
             <th
-              className="px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className="px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("discount_value")}
             >
               <div className="flex items-center">
@@ -110,7 +110,7 @@ const TableSort: React.FC<CodesTableProps> = ({
               </div>
             </th>
             <th
-              className=" px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("is_active")}
             >
               <div className="flex items-center">
@@ -119,7 +119,7 @@ const TableSort: React.FC<CodesTableProps> = ({
               </div>
             </th>
             <th
-              className=" px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("created_at")}
             >
               <div className="flex items-center">
@@ -128,7 +128,7 @@ const TableSort: React.FC<CodesTableProps> = ({
               </div>
             </th>
             <th
-              className=" px-3 py-2 text-right text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
               onClick={() => requestSort("valid_until")}
             >
               <div className="flex items-center">
@@ -219,4 +219,4 @@ const TableSort: React.FC<CodesTableProps> = ({
   );
 };
 
-export default TableSort;
+export default TableDiscount;

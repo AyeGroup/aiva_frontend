@@ -187,3 +187,11 @@ export const jalaliToGregorian = (jy: number, jm: number, jd: number) => {
 
   return new Date(gy2, gm - 1, d);
 };
+
+export const formatDateTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  return `${date.toLocaleDateString("fa-IR")} - ${date.toLocaleTimeString(
+    "fa-IR",
+    { hour: "2-digit", minute: "2-digit" }
+  )}`;
+};
