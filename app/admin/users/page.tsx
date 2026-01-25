@@ -8,6 +8,9 @@ import { Button } from "@/components/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { ProfileModal } from "./ProfileModal";
+import { convertNumbersToPersian } from "@/utils/common";
+import { Refresh } from "@/public/icons/AppIcons";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function AdminUsers() {
   const { user, loading } = useAuth();
@@ -19,19 +22,12 @@ export default function AdminUsers() {
 
   // Pagination state
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(20);
+  const [pageSize] = useState(5);
   const [total, setTotal] = useState(0);
 
   // Modal states
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [profileData, setProfileData] = useState<any>(null);
-  const [confirmModal, setConfirmModal] = useState<{
-    isOpen: boolean;
-    id: string | null;
-  }>({
-    isOpen: false,
-    id: null,
-  });
+  const [profileId, setProfileId] = useState<any>(null);
 
   // محاسبه تعداد صفحات
   const totalPages = Math.ceil(total / pageSize);
@@ -61,13 +57,18 @@ export default function AdminUsers() {
         setIsLoading(false);
       }
     },
-    [pageSize]
+    [pageSize],
   );
 
   // هندلر جستجو
   const handleSearch = async () => {
     setPage(1);
     await loadUsers(1, search);
+  };
+
+  const handleRefresh = async () => {
+    setPage(1);
+    await loadUsers(1, "");
   };
 
   // هندلرهای صفحه‌بندی
@@ -82,11 +83,14 @@ export default function AdminUsers() {
       loadUsers(page - 1);
     }
   };
-
+  const handleSetPage = (page: number) => {
+    setPage(page);
+    loadUsers(page);
+  };
   // هندلرهای مودال
   const handleProfileModal = async (id: string) => {
     setShowProfileModal(true);
-    setProfileData(id);
+    setProfileId(id);
   };
 
   // بارگذاری اولیه
@@ -101,7 +105,7 @@ export default function AdminUsers() {
   }
 
   return (
-    <div className="lg:h-screen w-full overflow-hidden">
+    <div className="lg:h-screen w-full overflow-y-auto">
       <header className="bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6">
         <div className="text-right">
           <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
@@ -110,7 +114,7 @@ export default function AdminUsers() {
         </div>
       </header>
 
-      <main className="flex-1 p-6 overflow-y-auto h-screen">
+      <main className="flex-1 p-6 ">
         {(isLoading || loading) && <PageLoader />}
 
         <div className="max-w-7xl mx-auto pb-8">
@@ -122,15 +126,29 @@ export default function AdminUsers() {
                 <label className="block mb-1 text-sm">جستجو</label>
                 <Input
                   value={search}
+                  inputSize="small"
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="نام، موبایل یا ایمیل"
-                  className="flex-1"
+                  className="flex-1 "
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 />
               </div>
-              <Button onClick={handleSearch} disabled={isLoading}>
+              <Button
+                onClick={handleSearch}
+                disabled={isLoading}
+                className="py-2!"
+              >
                 {isLoading ? "در حال جستجو..." : "جستجو"}
               </Button>
+              <button
+                onClick={handleRefresh}
+                disabled={isLoading}
+                className="mr-3"
+              >
+                <div className="w-6 text-primary">
+                  <Refresh />
+                </div>
+              </button>
             </div>
 
             {/* جدول کاربران */}
@@ -161,18 +179,22 @@ export default function AdminUsers() {
                         key={user.id}
                         className="border border-grey-100 hover:bg-grey-100 transition-colors"
                       >
-                        <td className="px-3 py-2 text-sm">{user.phone}</td>
+                        <td className="px-3 py-2 text-sm">
+                          {convertNumbersToPersian(user.phone)}
+                        </td>
                         <td className="px-3 py-2 text-sm">
                           {user.full_name || "-"}
                         </td>
                         <td className="px-3 py-2">
                           {user.company_name || "-"}
                         </td>
-                        <td className="px-3 py-2">{user.total_chatbots}</td>
+                        <td className="px-3 py-2">
+                          {convertNumbersToPersian(user.total_chatbots)}
+                        </td>
                         <td className="px-3 py-2">
                           <time className="text-grey-600">
                             {new Date(user.created_at).toLocaleDateString(
-                              "fa-IR"
+                              "fa-IR",
                             )}
                           </time>
                         </td>
@@ -180,22 +202,28 @@ export default function AdminUsers() {
                           <div className="flex items-center justify-center gap-2">
                             <button
                               onClick={() => handleProfileModal(user.id)}
-                              className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
+                              className=" cursor-pointer border-2 border-primary text-sm  py-1 px-3 text-primary hover:text-secondary hover:border-secondary rounded-md transition-colors"
                               type="button"
                             >
                               پروفایل
                             </button>
                             <Link
-                              className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                              href={`/admin/users/${user.id}/chatbots`}
+                              className=" cursor-pointer border-2 border-primary text-sm  py-1 px-3 text-primary hover:text-secondary hover:border-secondary rounded-md transition-colors"
+                              href={`/admin/chatbots/${user.id}`}
                             >
                               چت‌بات‌ها
                             </Link>
                             <Link
-                              className="inline-flex cursor-pointer items-center justify-center p-2 hover:bg-grey-100 rounded-lg transition-colors"
-                              href={`/admin/tickets/${user.id}`}
+                              className=" cursor-pointer border-2 border-primary text-sm  py-1 px-3 text-primary hover:text-secondary hover:border-secondary rounded-md transition-colors"
+                              href={`/admin/tickets?id=${user.id}`}
                             >
                               تیکت‌ها
+                            </Link>
+                            <Link
+                              className=" cursor-pointer border-2 border-primary text-sm  py-1 px-3 text-primary hover:text-secondary hover:border-secondary rounded-md transition-colors"
+                              href={`/admin/transactions?id=${user.id}`}
+                            >
+                              مالی
                             </Link>
                           </div>
                         </td>
@@ -218,26 +246,39 @@ export default function AdminUsers() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-6 px-3 py-4 border-t border-grey-200">
-                <span className="text-sm text-grey-600">
-                  صفحه {page} از {totalPages} | مجموع {total} کاربر
-                </span>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handlePrevPage}
-                    disabled={page === 1 || isLoading}
-                    // variant="outline"
-                  >
-                    قبلی
-                  </Button>
-                  <Button
-                    onClick={handleNextPage}
-                    disabled={page === totalPages || isLoading}
-                    // variant="outline"
-                  >
-                    بعدی
-                  </Button>
+              <div className="flex items-center justify-center mt-6 px-3 py-4 gap-6">
+                {/* Previous Page */}
+                <button
+                  onClick={handlePrevPage}
+                  disabled={page === 1 || isLoading}
+                  className={`text-secondary text-sm flex items-center cursor-pointer ${page === 1 ? "opacity-50" : ""}`}
+                >
+                  <ChevronRight />
+                  قبلی
+                </button>
+
+                {/* Numeric Pagination */}
+                <div className="flex items-center gap-3">
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleSetPage(index + 1)}
+                      className={`px-3 py-1 text-sm border-secondary rounded-full ${page === index + 1 ? "border " : "border-none"}`}
+                    >
+                      {convertNumbersToPersian(index + 1)}
+                    </button>
+                  ))}
                 </div>
+
+                {/* Next Page */}
+                <button
+                  onClick={handleNextPage}
+                  disabled={page === totalPages || isLoading}
+                  className={`text-secondary text-sm flex items-center cursor-pointer ${page === totalPages ? "opacity-50" : ""}`}
+                >
+                  بعدی
+                  <ChevronLeft />
+                </button>
               </div>
             )}
           </div>
@@ -246,10 +287,11 @@ export default function AdminUsers() {
         {/* Modals */}
         <ProfileModal
           open={showProfileModal}
-          data={profileData}
+          data={null}
+          id={profileId}
           onClose={() => {
             setShowProfileModal(false);
-            setProfileData(null);
+            setProfileId(null);
           }}
         />
       </main>

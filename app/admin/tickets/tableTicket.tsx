@@ -60,7 +60,7 @@ const TableTicket: React.FC<CodesTableProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-grey-100 shadow-card w-full ">
+    <div className="">
       <table className="w-full table-auto">
         <thead>
           <tr className="border-b border-grey-200 bg-grey-50">

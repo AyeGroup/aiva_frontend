@@ -9,6 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/dialog";
+import axiosInstance from "@/lib/axiosInstance";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 export interface ProfileForm {
   id: string | null;
@@ -23,21 +25,54 @@ export interface ProfileForm {
 
 interface EditProfileModalProps {
   open: boolean;
-  data: any;
+  data?: ProfileForm | null;
+  id?: number;
   onClose: () => void;
 }
 
-export function ProfileModal({ open, data, onClose }: EditProfileModalProps) {
+export function ProfileModal({
+  open,
+  data,
+  id,
+  onClose,
+}: EditProfileModalProps) {
+  const [profileData, setProfileData] = useState<ProfileForm | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!open || !data) return;
-    // const imageUrl = URL.createObjectURL(data?.user_logo);
-    // setPreview(imageUrl ?? null);
-    setPreview(null);
-  }, [open, data]);
+    if (!open) return;
 
-  if (!open || !data) return;
+    // 1️⃣ اگر data وجود داشت
+    if (data) {
+      setProfileData(data);
+      setPreview(data.user_logo_url ?? null);
+      return;
+    }
+
+    // 2️⃣ اگر data نبود ولی id وجود داشت → گرفتن از بک
+    if (id) {
+      fetchProfileById(id);
+    }
+  }, [open, data, id]);
+
+  const fetchProfileById = async (id: number) => {
+    try {
+      setLoading(true);
+
+      const response = await axiosInstance.get(API_ROUTES.ADMIN.USER_PROFILE(String(id)) )    ;
+        const data = response.data.data.profile;
+      setProfileData(data);
+      setPreview(data?.user_logo_url ?? null);
+    } catch (error) {
+      console.error("Error loading profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!open) return null;
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md z-999 max-h-screen overflow-auto">
@@ -52,8 +87,14 @@ export function ProfileModal({ open, data, onClose }: EditProfileModalProps) {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="gap-4 space-y-2">
-          <div className="flex items-end justify-start gap-4 ">
+        {loading && (
+          <div className="text-center text-sm text-muted-foreground">
+            در حال دریافت اطلاعات...
+          </div>
+        )}
+
+        {!loading && profileData && (
+          <div className="gap-4 space-y-2">
             {preview && (
               <Image
                 src={preview}
@@ -63,36 +104,27 @@ export function ProfileModal({ open, data, onClose }: EditProfileModalProps) {
                 className="rounded-3xl object-cover border"
               />
             )}
-          </div>
 
-          <div className="flex items-center gap-2">
-            <label className="block mb-1 text-sm">ایمیل</label>
-            <label className="block mb-1 text-primary"> {data?.email}</label>
+            <Field label="ایمیل" value={profileData.email} />
+            <Field label="موبایل" value={profileData.phone} />
+            <Field label="نام و نام خانوادگی" value={profileData.full_name} />
+            <Field label="نام شرکت" value={profileData.company_name} />
+            <Field label="سمت" value={profileData.company_role} />
           </div>
-          <div className="flex items-center gap-2">
-            <label className="block mb-1 text-sm">موبایل</label>
-            <label className="block mb-1 text-primary"> {data?.phone}</label>
-          </div>
-          <div className="flex items-center gap-2">
-            <label className="block mb-1 text-sm">نام و نام خانوادگی</label>
-            <label className="block mb-1 text-primary">{data?.full_name}</label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label className="block mb-1 text-sm">نام شرکت</label>
-            <label className="block mb-1 text-primary">
-              {data?.company_name}
-            </label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label className="block mb-1 text-sm">سمت</label>
-            <label className="block mb-1 text-primary">
-              {data?.company_role}
-            </label>
-          </div>
-        </div>
+        )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+/* کامپوننت کوچک برای تمیزتر شدن JSX */
+function Field({ label, value }: { label: string; value?: string | null }) {
+  if (!value) return null;
+
+  return (
+    <div className="flex items-center gap-2">
+      <label className="text-sm">{label}</label>
+      <span className="text-primary">{value}</span>
+    </div>
   );
 }

@@ -1,27 +1,26 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 
 import axiosInstance from "@/lib/axiosInstance";
-import PageLoader from "@/components/pageLoader";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { useAuth } from "@/providers/AuthProvider";
-import { Input } from "@/components/input";
-import { Button } from "@/components/button";
-import { Refresh } from "@/public/icons/AppIcons";
-import { ToggleSmall } from "@/components/toggleSmall";
-import { convertNumbersToPersian } from "@/utils/common";
-import { getPlanNameById } from "@/constants/plans";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function AdminChatbots() {
+import PageLoader from "@/components/pageLoader";
+import { Back } from "@/public/icons/AppIcons";
+import { convertNumbersToPersian, convertToPersian } from "@/utils/common";
+import { getPlanNameById } from "@/constants/plans";
+import { ChevronLeft, ChevronRight, Edit3, Eye } from "lucide-react";
+
+export default function AdminUserChatbots() {
   const { loading } = useAuth();
+  const { id } = useParams<{ id: string }>();
 
   const [chatbots, setChatbots] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
-
-  const [search, setSearch] = useState("");
-  const [activeOnly, setActiveOnly] = useState(true);
 
   // Pagination
   const [page, setPage] = useState(1);
@@ -32,24 +31,29 @@ export default function AdminChatbots() {
 
   // Load Chatbots
   const loadChatbots = useCallback(
-    async (pageNumber: number = 1, searchQuery: string = search) => {
+    async (pageNumber: number = 1) => {
       setIsLoading(true);
       try {
-        const response = await axiosInstance.get(API_ROUTES.ADMIN.CHATBOTS, {
-          params: {
-            page: pageNumber,
-            page_size: pageSize,
-            //  search: searchQuery || undefined,
-            ...(search && { search: searchQuery }),
-            ...(activeOnly === true && { active_only: true }),
+        const response = await axiosInstance.get(
+          API_ROUTES.ADMIN.USER_PROFILE(id),
+          {
+            params: {
+              page: pageNumber,
+              page_size: pageSize,
+            },
           },
-        });
+        );
 
         const data = response.data.data;
+        console.log("data ", data);
 
-        setChatbots(data.items);
-        setPage(data.pagination.page);
-        setTotal(data.pagination.total);
+        // Use optional chaining to avoid errors if pagination is missing
+        setChatbots(data?.chatbots?.items);
+        setProfile(data?.profile);
+
+        //   // Ensure pagination is present and has 'page' and 'total' properties
+        setPage(data?.chatbots?.pagination?.page || 1); // Default to 1 if page is missing
+        setTotal(data?.chatbots?.pagination?.total || 0); // Default to 0 if total is missing
       } catch (error) {
         console.error("Error loading chatbots:", error);
         setChatbots([]);
@@ -57,34 +61,22 @@ export default function AdminChatbots() {
         setIsLoading(false);
       }
     },
-    [pageSize, activeOnly, search],
+    [pageSize],
   );
 
-  // Handlers
-  const handleSearch = () => {
-    setPage(1);
-    loadChatbots(1, search);
-  };
-
-  const handleRefresh = () => {
-    setPage(1);
-    setSearch("");
-    loadChatbots(1, "");
-  };
-  const handleSetPage = (page: number) => {
-    setPage(page);
-    loadChatbots(page);
-  };
   const handleNextPage = () => {
     if (page < totalPages) {
       loadChatbots(page + 1);
     }
   };
-
   const handlePrevPage = () => {
     if (page > 1) {
       loadChatbots(page - 1);
     }
+  };
+  const handleSetPage = (page: number) => {
+    setPage(page);
+    loadChatbots(page);
   };
 
   // Initial Load
@@ -100,10 +92,34 @@ export default function AdminChatbots() {
   return (
     <div className="w-full overflow-y-auto h-screen">
       {/* Header */}
-      <header className="bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6 flex justify-between items-center">
-        <h1 className="text-grey-900 text-2xl lg:text-3xl font-bold">
-          مدیریت چت‌بات‌ها
-        </h1>
+      <header className="bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6 flex justify-between items-start">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2">
+            <span>نام:</span>
+            <span className="font-medium">{profile?.full_name}</span>
+          </div>
+          <div className="flex items-center gap-2 ">
+            <span>شرکت:</span>
+            <span className="font-medium">{profile?.company_name}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span>شماره تماس:</span>
+            <span className="font-medium">
+              {convertToPersian(profile?.phone)}
+            </span>
+          </div>
+        </div>
+
+        <Link
+          href="/admin/users"
+          className="flex text-primary items-center gap-2 cursor-pointer"
+        >
+          بازگشت
+          <div className="text-primary w-6">
+            <Back />
+          </div>
+        </Link>
       </header>
 
       {/* Content */}
@@ -112,43 +128,6 @@ export default function AdminChatbots() {
 
         <div className="max-w-7xl mx-auto pb-8">
           <div className="bg-white rounded-3xl border border-grey-100 shadow-card w-full p-3">
-            {/* Filters */}
-            <div className="flex   items-center justify-between m-6 pb-4 border-b border-primary/50 gap-4">
-              <div className="flex items-center gap-4">
-                <label className="text-sm">جستجو</label>
-                <Input
-                  value={search}
-                  inputSize="small"
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="نام چت‌بات "
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                />
-
-                <ToggleSmall
-                  label="فقط فعال‌ها"
-                  checked={activeOnly}
-                  onChange={(e) => {
-                    setActiveOnly(!activeOnly);
-                    loadChatbots(1, search);
-                  }}
-                />
-              </div>
-              <div className="flex items-center">
-                <Button onClick={handleSearch} disabled={isLoading}>
-                  {isLoading ? "در حال جستجو..." : "جستجو"}
-                </Button>
-                <button
-                  onClick={handleRefresh}
-                  disabled={isLoading}
-                  className="mr-3"
-                >
-                  <div className="w-6 text-primary">
-                    <Refresh />
-                  </div>
-                </button>
-              </div>
-            </div>
-
             {/* Table */}
             <div className="overflow-x-auto">
               <table className="w-full table-auto">
@@ -156,12 +135,10 @@ export default function AdminChatbots() {
                   <tr className="border-b border-grey-200 text-sm bg-grey-50">
                     <th className="px-3 py-2 text-right">نام</th>
                     <th className="px-3 py-2 text-right">وضعیت</th>
-                    <th className="px-3 py-2 text-right">کاربر</th>
-                    <th className="px-3 py-2 text-right">شرکت</th>
                     <th className="px-3 py-2 text-right">پلن</th>
                     <th className="px-3 py-2 text-right">انقضا</th>
                     <th className="px-3 py-2 text-right">تعداد کاربران</th>
-                    <th className="px-3 py-2 text-right">تاریخ ایجاد</th>
+                    <th className="px-3 py-2 text-right"> مشاهده </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -179,8 +156,6 @@ export default function AdminChatbots() {
                             <span className="text-red-500">غیرفعال</span>
                           )}
                         </td>
-                        <td className="px-3 py-2">{bot.owner_company}</td>
-                        <td className="px-3 py-2">{bot.owner_name}</td>
                         <td className="px-3 py-2">
                           {getPlanNameById(bot.plan)}
                         </td>
@@ -195,7 +170,14 @@ export default function AdminChatbots() {
                           {convertNumbersToPersian(bot.total_users)}
                         </td>
                         <td className="px-3 py-2">
-                          {new Date(bot.created_at).toLocaleDateString("fa-IR")}
+                          <Link
+                            href={`/onboarding&id=${bot.uuid}`}
+                            className="chatbot-menu-item"
+                          >
+                            
+                          <Eye size={20} className="text-primary" />
+                         
+                          </Link>
                         </td>
                       </tr>
                     ))

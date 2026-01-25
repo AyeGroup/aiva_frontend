@@ -1,9 +1,17 @@
 "use client";
 import PageLoader from "@/components/pageLoader";
+import ProgressStatCard from "@/components/ProgressStatCard";
+import StatCard from "@/components/stat-card";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import axiosInstance from "@/lib/axiosInstance";
 import { useAuth } from "@/providers/AuthProvider";
-import { DashChats } from "@/public/icons/AppIcons";
+import {
+  DashChats,
+  TicketAll,
+  TicketClose,
+  TicketOpen,
+  TicketPend,
+} from "@/public/icons/AppIcons";
 import { User, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,6 +20,7 @@ export default function AdminPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any>(null);
+  const [stats, setsStats] = useState<any>(null);
   const { user, loading } = useAuth(); // یا هر منبع اطلاعات
 
   useEffect(() => {
@@ -43,6 +52,10 @@ export default function AdminPage() {
       }
     }
   }, [user, loading, router]);
+
+  const calculatePercentage = (part: number, total: number): number => {
+    return total > 0 ? (part / total) * 100 : 0;
+  };
 
   if (loading) return <PageLoader />;
 
@@ -131,6 +144,49 @@ export default function AdminPage() {
                 {data?.all_chatbots_count || ""}
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="px-8 py-9">
+          <div className="gap-6 grid  grid-cols-2 lg:grid-cols-4 w-full">
+            <StatCard
+              title="کل تیکت‌ها"
+              count={stats?.total}
+              icon={<TicketAll />}
+              bgColor="bg-brand-primary/10"
+              textColor="text-primary"
+              progressColor="bg-brand-primary"
+            />
+
+            <ProgressStatCard
+              title="تیکت‌های باز"
+              count={stats?.open}
+              icon={<TicketOpen />}
+              bgColor="bg-danger/10"
+              textColor="text-danger"
+              progressColor="bg-danger"
+              percentage={calculatePercentage(stats?.open, stats?.total)}
+            />
+
+            <ProgressStatCard
+              title="در حال بررسی"
+              count={stats?.pending}
+              icon={<TicketPend />}
+              bgColor="bg-warning/10"
+              textColor="text-warning"
+              progressColor="bg-warning"
+              percentage={calculatePercentage(stats?.pending, stats?.total)}
+            />
+
+            <ProgressStatCard
+              title="بسته شده"
+              count={stats?.closed}
+              icon={<TicketClose />}
+              bgColor="bg-secondary/10"
+              textColor="text-secondary"
+              progressColor="bg-secondary"
+              percentage={calculatePercentage(stats?.closed, stats?.total)}
+            />
           </div>
         </div>
       </main>

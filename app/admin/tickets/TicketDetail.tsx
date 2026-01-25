@@ -59,36 +59,7 @@ export function TicketDetail({ ticket, onClose }: Props) {
     };
     return configs[status as keyof typeof configs];
   };
-
-  const getPriorityConfig = (priority: string) => {
-    const configs = {
-      low: {
-        bg: "bg-grey-100",
-        text: "text-grey-600",
-        border: "border-grey-200",
-        label: "پایین",
-        icon: "⬇️",
-      },
-      medium: {
-        bg: "bg-warning/10",
-        text: "text-warning",
-        border: "border-warning/20",
-        label: "متوسط",
-        icon: "➡️",
-      },
-      high: {
-        bg: "bg-danger/10",
-        text: "text-danger",
-        border: "border-danger/20",
-        label: "بالا",
-        icon: "⬆️",
-      },
-    };
-    return configs[priority as keyof typeof configs];
-  };
-
-  // const statusConfig = getStatusConfig(thisTicket.status);
-  // const priorityConfig = getPriorityConfig(thisTicket.priority);
+ 
   const [isLoading, setIsLoading] = useState(false);
 
   const loadTicket = async () => {

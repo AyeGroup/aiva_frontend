@@ -79,3 +79,25 @@ export const discountUsageType: SelectorItem[] = [
   { id: "time_limited", value: "time_limited", label: "محدودیت زمان" },
   { id: "user_specific", value: "user_specific", label: "کاربر مشخص" },
 ];
+export const STATUS_OPTIONS = [
+  { label: "همه", value: "all" },
+  { label: "باز", value: "open" },
+  { label: "در حال بررسی", value: "in_progress" },
+  { label: "بسته شده", value: "closed" },
+];
+
+export const PRIORITY_OPTIONS = [
+  { label: "همه", value: "all" },
+  { label: "کم", value: "low" },
+  { label: "متوسط", value: "medium" },
+  { label: "زیاد", value: "high" },
+  { label: "اورژانسی", value: "urgent" },
+];
+
+export const CATEGORY_OPTIONS = [
+  { label: "همه", value: "all" },
+  { label: "عمومی", value: "general" },
+  { label: "فنی", value: "technical" },
+  { label: "مالی", value: "financial" },
+];
+

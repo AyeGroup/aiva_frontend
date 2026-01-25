@@ -3,188 +3,111 @@
 import React, { useEffect, useState, useCallback } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
-import { Card } from "@/components/card";
-import { useAuth } from "@/providers/AuthProvider";
-import { StatusBadge } from "@/app/dashboard/widgets/status-badge";
-import { API_ROUTES } from "@/constants/apiRoutes";
-import { Ticket, TicketStatus } from "@/types/common";
-import { convertToPersian, formatDateTime } from "@/utils/common";
-import { getCategoryLabel, getPriorityLabel, getPriorityStyles } from "@/constants/common";
-import {
-  Back,
-  Plus,
-  TicketAll,
-  TicketClose,
-  TicketOpen,
-  TicketPend,
-} from "@/public/icons/AppIcons";
-import { Eye } from "lucide-react";
-import { ProfileModal } from "../users/ProfileModal";
-import { useRouter, useParams } from "next/navigation";
-import { Button } from "@/components/button";
-import ProgressStatCard from "@/components/ProgressStatCard";
-import StatCard from "@/components/stat-card";
 import TableTicket from "./tableTicket";
+import TicketCard from "./TicketCard";
+import { useAuth } from "@/providers/AuthProvider";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { Ticket } from "@/types/common";
+import { convertNumbersToPersian } from "@/utils/common";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Refresh } from "@/public/icons/AppIcons";
+import { GenericSelector } from "@/components/selector";
+import {
+  CATEGORY_OPTIONS,
+  PRIORITY_OPTIONS,
+  STATUS_OPTIONS,
+} from "@/constants/common";
 
-
- 
-/* ================================
-  Ticket Card
-================================ */
-const TicketCard: React.FC<{
-  ticket: Ticket;
-  onClick: () => void;
-}> = ({ ticket, onClick }) => {
-  const [openProfile, setOpenProfile] = useState(false);
-
-  return (
-    <Card className="p-4 hover:shadow-hover border border-border-soft transition">
-      <div className="space-y-3">
-        <div className="flex justify-between items-center gap-4">
-          <div className="px-3 py-1 bg-brand-primary/10 rounded-lg">
-            <span className="text-brand-primary font-mono text-xs">
-              {ticket.id}
-            </span>
-          </div>
-
-          <h3 className="flex-1 text-grey-900">{ticket.title}</h3>
-
-          <span className="text-sm text-grey-500">
-            {formatDateTime(ticket.updated_at)}
-          </span>
-
-          <div className="cursor-pointer" onClick={onClick}>
-            <Back />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="flex items-center gap-2 text-xs">
-            وضعیت:
-            <StatusBadge status={ticket.status} />
-          </div>
-
-          <div className="flex items-center gap-2 text-xs">
-            اولویت:
-            <span
-              className={`px-2 py-1 rounded ${getPriorityStyles(
-                ticket.priority
-              )}`}
-            >
-              {getPriorityLabel(ticket.priority)}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs">
-            دسته:
-            <span className="bg-grey-100 px-2 py-1 rounded">
-              {getCategoryLabel(ticket.category)}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs">
-            کاربر:
-            <span className="bg-grey-100 px-2 py-1 rounded">
-              {ticket.user?.phone}
-            </span>
-            <Eye
-              size={14}
-              className="cursor-pointer text-primary"
-              onClick={() => setOpenProfile(true)}
-            />
-          </div>
-        </div>
-
-        <ProfileModal
-          open={openProfile}
-          data={ticket.user}
-          onClose={() => setOpenProfile(false)}
-        />
-      </div>
-    </Card>
-  );
-};
-
-/* ================================
-  Main Component
-================================ */
 export default function AdminTickets() {
   const { loading } = useAuth();
   const router = useRouter();
-  const params = useParams();
+  // const params = useParams();
 
-  // ✅ userId اختیاری
-  const userId = params?.id as string | undefined;
+  // const userId = params?.id as string | undefined;
+const searchParams = useSearchParams();
+const userId = searchParams.get("id") ?? undefined;
 
-  type TicketStatusFilter = TicketStatus | "all";
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [filterStatus, setFilterStatus] = useState<TicketStatusFilter>("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<string>("all");
+  const [priority, setPriority] = useState<string>("all");
+  const [category, setCategory] = useState<string>("all");
 
-  // Pagination
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(20);
-  const [total, setTotal] = useState(0);
+  const [limit] = useState(5);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
+  const [hasPrev, setHasPrev] = useState(false);
 
-  const totalPages = Math.ceil(total / pageSize);
-
-  /* ================================
-    Load Tickets (Backend Pagination)
-  ================================ */
   const loadTickets = useCallback(
     async (pageNumber: number = 1) => {
       setIsLoading(true);
       try {
+        console.log("userid",userId)
         const response = await axiosInstance.get(API_ROUTES.ADMIN.TICKETS, {
           params: {
             page: pageNumber,
-            page_size: pageSize,
-            ...(userId && { user_id: userId }),  
+            limit,
+            ...(userId && { user_id: userId }),
+            ...(status !== "all" && { status }),
+            ...(priority !== "all" && { priority }),
+            ...(category !== "all" && { category }),
           },
         });
 
         const data = response.data.data;
+
         setTickets(data.items);
-        setPage(data.pagination?.page ?? 1);
-        setTotal(data.pagination?.total ??1);
+
+        setPage(data.page);
+        setTotalItems(data.total_items);
+        setTotalPages(data.total_pages);
+        setHasNext(data.has_next);
+        setHasPrev(data.has_prev);
       } catch (error) {
         console.error("Load tickets failed:", error);
       } finally {
         setIsLoading(false);
       }
     },
-    [pageSize, userId]
+    [userId, limit, status, priority, category],
   );
 
   useEffect(() => {
     if (!loading) {
       loadTickets(1);
     }
-  }, [loading]);
+  }, [loading, status, priority, category]);
 
-  /* ================================
-    Derived data
-  ================================ */
-  const filteredTickets =
-    filterStatus === "all"
-      ? tickets
-      : tickets.filter((t) => t.status === filterStatus);
-
-  const stats = {
-    total: tickets.length,
-    open: tickets.filter((t) => t.status === "open").length,
-    pending: tickets.filter((t) => t.status === "in_progress").length,
-    closed: tickets.filter((t) => t.status === "closed").length,
+  const handleNextPage = () => {
+    if (hasNext) {
+      loadTickets(page + 1);
+    }
   };
 
-  const calculatePercentage = (part: number, total: number): number => {
-    return total > 0 ? (part / total) * 100 : 0;
+  const handlePrevPage = () => {
+    if (hasPrev) {
+      loadTickets(page - 1);
+    }
   };
 
-  /* ================================
-    Render
-  ================================ */
+  const handleSetPage = (p: number) => {
+    if (p !== page) {
+      loadTickets(p);
+    }
+  };
+
+    const handleRefresh = () => {
+      setPage(1);
+      loadTickets(1);
+      setPriority("all");
+      setStatus("all");
+      setCategory("all");
+    };
+
   return (
     <div className="h-screen overflow-y-auto w-full">
       {(isLoading || loading) && <PageLoader />}
@@ -207,99 +130,122 @@ export default function AdminTickets() {
         </button>
       </header>
 
-      <main className="p-6 space-y-6">
-        {/* Stats */}
+      <main className="p-6 ">
+        <div className="bg-white rounded-xl border border-grey-100 shadow-card w-full p-4">
+          <div className="flex justify-between gap-4 items-center border-b border-primary/50 p-2  pb-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
+                وضعیت
+                <GenericSelector
+                  items={STATUS_OPTIONS}
+                  selectedValue={status}
+                  onSelect={(value) => {
+                    setPage(1);
+                    setStatus(value);
+                  }}
+                  showIndicator
+                  className="border border-primary rounded-xl "
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                اولویت
+                <GenericSelector
+                  items={PRIORITY_OPTIONS}
+                  selectedValue={priority}
+                  onSelect={(value) => {
+                    setPage(1);
+                    setPriority(value);
+                  }}
+                  showIndicator
+                  className="border border-primary rounded-xl bg-white"
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                دسته
+                <GenericSelector
+                  items={CATEGORY_OPTIONS}
+                  selectedValue={category}
+                  onSelect={(value) => {
+                    setPage(1);
+                    setCategory(value);
+                  }}
+                  showIndicator
+                  className="border border-primary rounded-xl bg-white"
+                />
+              </div>
+            </div>
 
-        <div className="px-8 py-9">
-          <div className="gap-6 grid  grid-cols-2 lg:grid-cols-4 w-full">
-            <StatCard
-              title="کل تیکت‌ها"
-              count={stats.total}
-              icon={<TicketAll />}
-              bgColor="bg-brand-primary/10"
-              textColor="text-primary"
-              progressColor="bg-brand-primary"
-              onClick={() => setFilterStatus("all")}
-            />
-
-            <ProgressStatCard
-              title="تیکت‌های باز"
-              count={stats.open}
-              icon={<TicketOpen />}
-              bgColor="bg-danger/10"
-              textColor="text-danger"
-              progressColor="bg-danger"
-              percentage={calculatePercentage(stats.open, stats.total)}
-              onClick={() => setFilterStatus("open")}
-            />
-
-            <ProgressStatCard
-              title="در حال بررسی"
-              count={stats.pending}
-              icon={<TicketPend />}
-              bgColor="bg-warning/10"
-              textColor="text-warning"
-              progressColor="bg-warning"
-              percentage={calculatePercentage(stats.pending, stats.total)}
-              onClick={() => setFilterStatus("in_progress")}
-            />
-
-            <ProgressStatCard
-              title="بسته شده"
-              count={stats.closed}
-              icon={<TicketClose />}
-              bgColor="bg-secondary/10"
-              textColor="text-secondary"
-              progressColor="bg-secondary"
-              percentage={calculatePercentage(stats.closed, stats.total)}
-              onClick={() => setFilterStatus("closed")}
-            />
+            <button
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className="mr-3"
+            >
+              <div className="w-6 text-primary">
+                <Refresh />
+              </div>
+            </button>
           </div>
-        </div>
 
-        {/* List */}
-        <div className="space-y-4 lg:hidden">
-          {filteredTickets.map((ticket) => (
-            <TicketCard
-              key={ticket.id}
-              ticket={ticket}
-              onClick={() => router.push(`/admin/tickets/${ticket.id}`)}
-            />
-          ))}
-        </div>
-        <div className="hidden lg:block">
-          <TableTicket
-            data={filteredTickets}
-           
-            // onView={handleViewClick}
-           
-          />
-        </div>
+          <div className="space-y-4 lg:hidden  mt-4">
+            {tickets.map((ticket) => (
+              <TicketCard
+                key={ticket.id}
+                ticket={ticket}
+                onBackClick={() => router.push(`/admin/tickets/${ticket.id}`)}
+              />
+            ))}
+          </div>
+          <div className="hidden lg:block mt-4">
+            <TableTicket data={tickets} />
+          </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-between items-center pt-6 border-t">
-            <span className="text-sm text-grey-600">
-              صفحه {page} از {totalPages} | مجموع {convertToPersian(total)}
-            </span>
-            <div className="flex gap-2">
-              <Button
-                // variant="outline"
-                disabled={page === 1}
-                onClick={() => loadTickets(page - 1)}
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center mt-6 px-3 py-4 gap-6">
+              {/* Prev */}
+              <button
+                onClick={handlePrevPage}
+                disabled={!hasPrev || isLoading}
+                className={`text-secondary text-sm flex items-center ${
+                  !hasPrev ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
               >
+                <ChevronRight />
                 قبلی
-              </Button>
-              <Button
-                // variant="outline"
-                disabled={page === totalPages}
-                onClick={() => loadTickets(page + 1)}
+              </button>
+
+              {/* Pages */}
+              <div className="flex items-center gap-3">
+                {Array.from({ length: totalPages }, (_, index) => {
+                  const p = index + 1;
+                  return (
+                    <button
+                      key={p}
+                      onClick={() => handleSetPage(p)}
+                      className={`px-3 py-1 text-sm rounded-full border ${
+                        page === p ? "border-primary" : "border-transparent"
+                      }`}
+                    >
+                      {convertNumbersToPersian(p)}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Next */}
+              <button
+                onClick={handleNextPage}
+                disabled={!hasNext || isLoading}
+                className={`text-secondary text-sm flex items-center ${
+                  !hasNext ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
               >
                 بعدی
-              </Button>
+                <ChevronLeft />
+              </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   );

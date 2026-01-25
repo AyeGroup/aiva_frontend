@@ -1,13 +1,13 @@
 "use client";
 
+import axiosInstance from "@/lib/axiosInstance";
+import PageLoader from "@/components/pageLoader";
+import { Back } from "@/public/icons/AppIcons";
+import { Ticket } from "@/types/common";
+import { API_ROUTES } from "@/constants/apiRoutes";
+import { TicketDetail } from "../TicketDetail";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import axiosInstance from "@/lib/axiosInstance";
-import { API_ROUTES } from "@/constants/apiRoutes";
-import { Ticket } from "@/types/common";
-import PageLoader from "@/components/pageLoader";
-import { TicketDetail } from "../TicketDetail";
-import { Back } from "@/public/icons/AppIcons";
 
 export default function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,15 +21,13 @@ export default function TicketDetailPage() {
 
     const loadTicket = async () => {
       try {
-        // const res = await axiosInstance.patch(API_ROUTES.ADMIN.TICKET(id));
-        
         const payload = {
           ticket_id: id,
         };
 
         const res = await axiosInstance.patch(
           API_ROUTES.ADMIN.TICKET(id),
-          payload
+          payload,
         );
 
         setTicket(res.data.data);

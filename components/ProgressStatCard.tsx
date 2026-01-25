@@ -1,3 +1,4 @@
+import { convertToPersian } from "@/utils/common";
 import React from "react";
 
 export interface ProgressStatCardProps {
@@ -5,7 +6,7 @@ export interface ProgressStatCardProps {
   count: number | string;
   icon: React.ReactNode;
 
-  percentage: number;  
+  percentage: number;
 
   bgColor?: string;
   textColor?: string;
@@ -47,9 +48,7 @@ const ProgressStatCard: React.FC<ProgressStatCardProps> = ({
 
             <div className="flex-1 flex flex-col gap-2">
               <p className="text-grey-600">{title}</p>
-              <p className={textColor} >
-                {count.toLocaleString("fa-IR")}
-              </p>
+              <p className={textColor}>{convertToPersian(count)}</p>
             </div>
           </div>
 

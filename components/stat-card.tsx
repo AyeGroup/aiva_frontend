@@ -1,3 +1,4 @@
+import { convertNumbersToPersian, convertToPersian } from "@/utils/common";
 import React from "react";
 
 export interface StatCardProps {
@@ -42,8 +43,8 @@ const StatCard: React.FC<StatCardProps> = ({
 
             <div className="flex-1 flex flex-col gap-2">
               <p className="text-grey-600">{title}</p>
-              <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
-                {count.toLocaleString("fa-IR")}
+              <p className={textColor} >
+                {convertToPersian(count)}
               </p>
             </div>
           </div>

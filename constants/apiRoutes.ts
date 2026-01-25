@@ -124,15 +124,18 @@ export const API_ROUTES = {
 
     TICKETS: `${API_BASE_URL}/tickets/admin/all`,
     TICKET: (ticket_id: string) => `${API_BASE_URL}/tickets/admin/${ticket_id}`,
+    USER_TICKET: (user_id: string) => `${API_BASE_URL}/tickets/admin/${user_id}`,
     TICKET_UPDATE: (ticket_id: string) =>
       `${API_BASE_URL}/tickets/admin/${ticket_id}`,
 
     // ---------------------------------------
     USERS: `${API_BASE_URL.replace("/api", "")}/admin/users`,
+    USER_PROFILE: (user_id: string) =>
+      `${API_BASE_URL.replace("/api", "")}/admin/users/${user_id}`,
     USER_BY_PHONE: (user_phone: string) =>
       `${API_BASE_URL}/admin/users/${user_phone}`,
 
-    CHATBOTS: `${API_BASE_URL}/admin/chatbots`,
+    CHATBOTS: `${API_BASE_URL.replace("/api", "")}/admin/chatbots`,
     TRANSACTIONS: `${API_BASE_URL}/admin/transactions`,
 
     // ---------------------------------------
