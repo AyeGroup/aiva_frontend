@@ -301,3 +301,13 @@ export interface CodeItem {
   created_at: string;
   valid_until: string;
 }
+
+export interface StatCardConfig {
+  title: string;
+  count: number;
+  icon: React.ReactNode;
+  bgColor: string;
+  textColor: string;
+  progressColor: string;
+  onClick: () => void;
+}

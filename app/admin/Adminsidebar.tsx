@@ -107,6 +107,16 @@ export function AdminSidebar({ onClose }: AdminSidebarProps) {
         />
 
         <SidebarItem
+          label="چت‌بات‌ها"
+          href="/admin/chatbots"
+          active={isSectionActive("/admin/transactchatbotsions")}
+        />
+        <SidebarItem
+          label="مالی"
+          href="/admin/transactions"
+          active={isSectionActive("/admin/transactions")}
+        />
+        <SidebarItem
           label="تیکت‌ها"
           href="/admin/tickets"
           active={isSectionActive("/admin/tickets")}
@@ -121,13 +131,13 @@ export function AdminSidebar({ onClose }: AdminSidebarProps) {
 
       {/* Bottom actions */}
       <div className="px-6 py-4 border-t border-white/30 space-y-2">
-        <Link
+        {/* <Link
           href="/"
           className="flex items-center gap-3 text-grey-600 hover:text-grey-900 text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           بازگشت به سایت
-        </Link>
+        </Link> */}
 
         <button
           onClick={handleLogout}
@@ -149,7 +159,9 @@ export function AdminSidebar({ onClose }: AdminSidebarProps) {
           </div>
         </div>
         <div className="text-xs text-gray-500 mt-1">
-          نسخه {convertToPersian(process.env.NEXT_PUBLIC_APP_VERSION || "")}
+                 نسخه {convertToPersian(process.env.APP_VERSION || "")}
+       
+          {/* نسخه {convertToPersian(process.env.NEXT_PUBLIC_APP_VERSION || "")} */}
         </div>
       </div>
     </aside>

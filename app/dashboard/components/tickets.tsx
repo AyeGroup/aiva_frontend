@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { StatusBadge } from "../widgets/status-badge";
-import { Ticket, TicketStatus, ViewType } from "@/types/common";
+import { StatCardConfig, Ticket, TicketStatus, ViewType } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
 import { ViewTicketDetail } from "../TicketView";
 import { CreateTicketView } from "../TicketCreate";
@@ -20,6 +20,8 @@ import {
   TicketOpen,
   TicketPend,
 } from "@/public/icons/AppIcons";
+import ProgressStatCard from "../../../components/ProgressStatCard";
+import StatCard from "@/components/stat-card";
 
 interface TicketStats {
   total: number;
@@ -27,16 +29,6 @@ interface TicketStats {
   pending: number;
   closed: number;
   high: number;
-}
-
-interface StatCardConfig {
-  title: string;
-  count: number;
-  icon: React.ReactNode;
-  bgColor: string;
-  textColor: string;
-  progressColor: string;
-  onClick: () => void;
 }
 
 // Helper functions
@@ -75,93 +67,93 @@ const getBadgeStatus = (status: string): "error" | "pending" | "success" => {
 };
 
 // Sub-components
-const StatCard: React.FC<StatCardConfig> = ({
-  title,
-  count,
-  icon,
-  bgColor,
-  textColor,
-  progressColor,
-  onClick,
-}) => (
-  <div className="bg-white relative rounded-[20px]">
-    <div
-      className="overflow-clip rounded-[inherit] size-full cursor-pointer"
-      onClick={onClick}
-    >
-      <div className="p-6 flex flex-col gap-8 w-full">
-        <div className="flex gap-4 items-center justify-start w-full">
-          <div
-            className={`${bgColor} rounded-2xl size-14 flex items-center justify-center`}
-          >
-            <div className={`w-7 h-7 ${textColor}`}>{icon}</div>
-          </div>
-          <div className="flex-1 flex flex-col gap-2 items-start justify-center">
-            <p className="text-grey-600">{title}</p>
-            <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
-              {convertToPersian(count)}
-            </p>
-          </div>
-        </div>
-        <div className="bg-grey-100 h-1 flex items-end justify-center overflow-clip rounded-full w-full">
-          <div className={`${progressColor} h-1 rounded-full w-full`}></div>
-        </div>
-      </div>
-    </div>
-    <div
-      aria-hidden="true"
-      className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
-    />
-  </div>
-);
+// const StatCard: React.FC<StatCardConfig> = ({
+//   title,
+//   count,
+//   icon,
+//   bgColor,
+//   textColor,
+//   progressColor,
+//   onClick,
+// }) => (
+//   <div className="bg-white relative rounded-[20px]">
+//     <div
+//       className="overflow-clip rounded-[inherit] size-full cursor-pointer"
+//       onClick={onClick}
+//     >
+//       <div className="p-6 flex flex-col gap-8 w-full">
+//         <div className="flex gap-4 items-center justify-start w-full">
+//           <div
+//             className={`${bgColor} rounded-2xl size-14 flex items-center justify-center`}
+//           >
+//             <div className={`w-7 h-7 ${textColor}`}>{icon}</div>
+//           </div>
+//           <div className="flex-1 flex flex-col gap-2 items-start justify-center">
+//             <p className="text-grey-600">{title}</p>
+//             <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
+//               {convertToPersian(count)}
+//             </p>
+//           </div>
+//         </div>
+//         <div className="bg-grey-100 h-1 flex items-end justify-center overflow-clip rounded-full w-full">
+//           <div className={`${progressColor} h-1 rounded-full w-full`}></div>
+//         </div>
+//       </div>
+//     </div>
+//     <div
+//       aria-hidden="true"
+//       className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
+//     />
+//   </div>
+// );
 
-const ProgressStatCard: React.FC<StatCardConfig & { percentage: number }> = ({
-  title,
-  count,
-  icon,
-  bgColor,
-  textColor,
-  progressColor,
-  onClick,
-  percentage,
-}) => (
-  <div className="bg-white relative rounded-[20px]">
-    <div
-      className="overflow-clip rounded-[inherit] size-full cursor-pointer"
-      onClick={onClick}
-    >
-      <div className="p-6 flex flex-col gap-8 w-full">
-        <div className="flex gap-4 items-center justify-start w-full">
-          <div
-            className={`${bgColor} rounded-2xl size-14 flex items-center justify-center`}
-          >
-            <div className={`w-7 h-7 ${textColor}`}>{icon}</div>
-          </div>
-          <div className="flex-1 flex flex-col gap-2 items-start justify-center">
-            <p className="text-grey-600">{title}</p>
-            <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
-              {convertToPersian(count)}
-            </p>
-          </div>
-        </div>
-        <div className="bg-grey-100 h-1 relative rounded-full w-full">
-          <div className="overflow-clip rounded-[inherit] size-full">
-            <div
-              className="flex flex-col h-1 items-start w-full"
-              style={{ paddingLeft: `${100 - percentage}%` }}
-            >
-              <div className={`${progressColor} h-1 rounded-full w-full`}></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      aria-hidden="true"
-      className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
-    />
-  </div>
-);
+// const ProgressStatCard: React.FC<StatCardConfig & { percentage: number }> = ({
+//   title,
+//   count,
+//   icon,
+//   bgColor,
+//   textColor,
+//   progressColor,
+//   onClick,
+//   percentage,
+// }) => (
+//   <div className="bg-white relative rounded-[20px]">
+//     <div
+//       className="overflow-clip rounded-[inherit] size-full cursor-pointer"
+//       onClick={onClick}
+//     >
+//       <div className="p-6 flex flex-col gap-8 w-full">
+//         <div className="flex gap-4 items-center justify-start w-full">
+//           <div
+//             className={`${bgColor} rounded-2xl size-14 flex items-center justify-center`}
+//           >
+//             <div className={`w-7 h-7 ${textColor}`}>{icon}</div>
+//           </div>
+//           <div className="flex-1 flex flex-col gap-2 items-start justify-center">
+//             <p className="text-grey-600">{title}</p>
+//             <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
+//               {convertToPersian(count)}
+//             </p>
+//           </div>
+//         </div>
+//         <div className="bg-grey-100 h-1 relative rounded-full w-full">
+//           <div className="overflow-clip rounded-[inherit] size-full">
+//             <div
+//               className="flex flex-col h-1 items-start w-full"
+//               style={{ paddingLeft: `${100 - percentage}%` }}
+//             >
+//               <div className={`${progressColor} h-1 rounded-full w-full`}></div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//     <div
+//       aria-hidden="true"
+//       className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
+//     />
+//   </div>
+// );
 
 const TicketCard: React.FC<{
   ticket: Ticket;
@@ -209,7 +201,6 @@ const TicketCard: React.FC<{
             <span className="text-xs text-grey-500">وضعیت:</span>
             <StatusBadge status={ticket.status} />
           </div>
-          
 
           <div className="flex items-center gap-2">
             <span className="text-xs text-grey-500">اولویت:</span>
@@ -432,9 +423,9 @@ export function Tickets() {
             title="بسته شده"
             count={stats.closed}
             icon={<TicketClose />}
-            bgColor="bg-accentGreen/10"
-            textColor="text-accentGreen"
-            progressColor="bg-accentGreen"
+            bgColor="bg-secondary/10"
+            textColor="text-secondary"
+            progressColor="bg-secondary"
             percentage={calculatePercentage(stats.closed, stats.total)}
             onClick={() => setFilterStatus("closed")}
           />

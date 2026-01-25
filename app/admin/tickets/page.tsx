@@ -1,15 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useState, useCallback } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/card";
-import { toast } from "sonner";
 import { useAuth } from "@/providers/AuthProvider";
 import { StatusBadge } from "@/app/dashboard/widgets/status-badge";
 import { API_ROUTES } from "@/constants/apiRoutes";
-import { Ticket, TicketStatus, ViewType } from "@/types/common";
+import { Ticket, TicketStatus } from "@/types/common";
 import { convertToPersian } from "@/utils/common";
-import { CreateTicketView } from "@/app/dashboard/TicketCreate";
 import { getCategoryLabel, getPriorityLabel } from "@/constants/common";
 import {
   Back,
@@ -19,46 +18,20 @@ import {
   TicketOpen,
   TicketPend,
 } from "@/public/icons/AppIcons";
-import { ViewTicketDetail } from "./TicketView";
-import { ArrowLeft, Eye, View, ViewIcon } from "lucide-react";
+import { Eye } from "lucide-react";
 import { ProfileModal } from "../users/ProfileModal";
-import { useRouter } from "next/navigation";
-
-interface TicketStats {
-  total: number;
-  open: number;
-  pending: number;
-  closed: number;
-  high: number;
-}
-
-interface StatCardConfig {
-  title: string;
-  count: number;
-  icon: React.ReactNode;
-  bgColor: string;
-  textColor: string;
-  progressColor: string;
-  onClick: () => void;
-}
-
-// Helper functions
-const calculatePercentage = (part: number, total: number): number => {
-  return total > 0 ? (part / total) * 100 : 0;
-};
+import { useRouter, useParams } from "next/navigation";
+import { Button } from "@/components/button";
+// import { StatCard } from "@/components/stat-card";
+import ProgressStatCard from "@/components/ProgressStatCard";
+import StatCard from "@/components/stat-card";
 
 const formatDateTime = (dateString: string): string => {
   const date = new Date(dateString);
-  const faDate = date.toLocaleDateString("fa-IR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-  const faTime = date.toLocaleTimeString("fa-IR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  return `${faDate} - ${faTime}`;
+  return `${date.toLocaleDateString("fa-IR")} - ${date.toLocaleTimeString(
+    "fa-IR",
+    { hour: "2-digit", minute: "2-digit" }
+  )}`;
 };
 
 const getPriorityStyles = (priority: string): string => {
@@ -71,149 +44,46 @@ const getPriorityStyles = (priority: string): string => {
   return styles[priority] || "";
 };
 
-const getBadgeStatus = (status: string): "error" | "pending" | "success" => {
-  if (status === "open") return "error";
-  if (status === "in_progress") return "pending";
-  return "success";
-};
-
-// Sub-components
-const StatCard: React.FC<StatCardConfig> = ({
-  title,
-  count,
-  icon,
-  bgColor,
-  textColor,
-  progressColor,
-  onClick,
-}) => (
-  <div className="bg-white relative rounded-[20px]">
-    <div
-      className="overflow-clip rounded-[inherit] size-full cursor-pointer"
-      onClick={onClick}
-    >
-      <div className="p-6 flex flex-col gap-8 w-full">
-        <div className="flex gap-4 items-center justify-start w-full">
-          <div
-            className={`${bgColor} rounded-2xl size-14 flex items-center justify-center`}
-          >
-            <div className={`w-7 h-7 ${textColor}`}>{icon}</div>
-          </div>
-          <div className="flex-1 flex flex-col gap-2 items-start justify-center">
-            <p className="text-grey-600">{title}</p>
-            <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
-              {convertToPersian(count)}
-            </p>
-          </div>
-        </div>
-        <div className="bg-grey-100 h-1 flex items-end justify-center overflow-clip rounded-full w-full">
-          <div className={`${progressColor} h-1 rounded-full w-full`}></div>
-        </div>
-      </div>
-    </div>
-    <div
-      aria-hidden="true"
-      className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]"
-    />
-  </div>
-);
-
-const ProgressStatCard: React.FC<StatCardConfig & { percentage: number }> = ({
-  title,
-  count,
-  icon,
-  bgColor,
-  textColor,
-  progressColor,
-  onClick,
-  percentage,
-}) => (
-  <div className="bg-white relative rounded-[20px]">
-    <div
-      className="overflow-clip rounded-[inherit] size-full cursor-pointer"
-      onClick={onClick}
-    >
-      <div className="p-6 flex flex-col gap-8 w-full">
-        <div className="flex gap-4 items-center justify-start w-full">
-          <div
-            className={`${bgColor} rounded-2xl size-14 flex items-center justify-center`}
-          >
-            <div className={`w-7 h-7 ${textColor}`}>{icon}</div>
-          </div>
-          <div className="flex-1 flex flex-col gap-2 items-start justify-center">
-            <p className="text-grey-600">{title}</p>
-            <p className={textColor}>{convertToPersian(count)}</p>
-          </div>
-        </div>
-        <div className="bg-grey-100 h-1 relative rounded-full w-full">
-          <div className="overflow-clip rounded-[inherit] size-full">
-            <div
-              className="flex flex-col h-1 items-start w-full"
-              style={{ paddingLeft: `${100 - percentage}%` }}
-            >
-              <div className={`${progressColor} h-1 rounded-full w-full`}></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="absolute border-2 border-grey-300 border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)]" />
-  </div>
-);
-
+/* ================================
+  Ticket Card
+================================ */
 const TicketCard: React.FC<{
   ticket: Ticket;
   onClick: () => void;
 }> = ({ ticket, onClick }) => {
-  // const badgeStatus = getBadgeStatus(ticket.status);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [profileData, setProfileData] = useState<any>(null);
+  const [openProfile, setOpenProfile] = useState(false);
 
   return (
-    <Card className="p-3 lg:p-6 hover:shadow-hover border border-border-soft group transition-all">
+    <Card className="p-4 hover:shadow-hover border border-border-soft transition">
       <div className="space-y-3">
-        <div className="flex items-center justify-between gap-6">
-          <div className="">
-            <div className="px-4 py-2 bg-brand-primary/10 rounded-lg">
-              <span className="text-brand-primary font-mono text-xs">
-                {ticket.id}
-              </span>
-            </div>
+        <div className="flex justify-between items-center gap-4">
+          <div className="px-3 py-1 bg-brand-primary/10 rounded-lg">
+            <span className="text-brand-primary font-mono text-xs">
+              {ticket.id}
+            </span>
           </div>
 
-          <div className="flex-1  ">
-            <h3 className="text-grey-900 group-hover:text-brand-primary transition-colors text-right">
-              {ticket.title}
-            </h3>
-          </div>
+          <h3 className="flex-1 text-grey-900">{ticket.title}</h3>
 
-          <div className="flex items-center gap-1 lg:gap-2 text-grey-500">
-            <div className="w-4 h-4">
-              <TicketPend />
-            </div>
-            <span className="text-sm">{formatDateTime(ticket.updated_at)}</span>
-          </div>
+          <span className="text-sm text-grey-500">
+            {formatDateTime(ticket.updated_at)}
+          </span>
 
-          <div className="flex items-center ">
-            <div
-              className="w-5 h-5 text-gray-500 cursor-pointer"
-              onClick={onClick}
-            >
-              <Back />
-            </div>
+          <div className="cursor-pointer" onClick={onClick}>
+            <Back />
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 items-center gap-1 lg:gap-3 lg:pr-2">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-grey-500">وضعیت:</span>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="flex items-center gap-2 text-xs">
+            وضعیت:
             <StatusBadge status={ticket.status} />
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-grey-500">اولویت:</span>
+          <div className="flex items-center gap-2 text-xs">
+            اولویت:
             <span
-              className={`px-3 py-1 rounded-lg text-xs ${getPriorityStyles(
+              className={`px-2 py-1 rounded ${getPriorityStyles(
                 ticket.priority
               )}`}
             >
@@ -221,301 +91,223 @@ const TicketCard: React.FC<{
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-grey-500">دسته‌بندی:</span>
-            <span className="px-3 py-1 rounded-lg text-xs bg-grey-100 text-grey-700">
+          <div className="flex items-center gap-2 text-xs">
+            دسته:
+            <span className="bg-grey-100 px-2 py-1 rounded">
               {getCategoryLabel(ticket.category)}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-grey-500">کاربر:</span>
-            <span className=" px-3 py-1 font-medium rounded-lg text-xs bg-grey-100 text-grey-700">
-              {ticket?.user?.phone}
+
+          <div className="flex items-center gap-2 text-xs">
+            کاربر:
+            <span className="bg-grey-100 px-2 py-1 rounded">
+              {ticket.user?.phone}
             </span>
             <Eye
-              size={16}
-              className="text-primary cursor-pointer"
-              onClick={() => {
-                setProfileData(ticket?.user);
-                setIsModalOpen(true);
-              }}
+              size={14}
+              className="cursor-pointer text-primary"
+              onClick={() => setOpenProfile(true)}
             />
           </div>
         </div>
+
         <ProfileModal
-          open={isModalOpen}
-          data={profileData}
-          onClose={() => {
-            setIsModalOpen(false);
-            setProfileData(null);
-          }}
+          open={openProfile}
+          data={ticket.user}
+          onClose={() => setOpenProfile(false)}
         />
       </div>
     </Card>
   );
 };
 
-const EmptyState: React.FC<{
-  hasFilters: boolean;
-  onClearFilters: () => void;
-  onCreateTicket: () => void;
-}> = ({ hasFilters, onClearFilters, onCreateTicket }) => (
-  <div className="text-center py-16">
-    <div className="w-24 h-24 bg-grey-100 rounded-full flex items-center justify-center mx-auto mb-6">
-      <div className="w-12 h-12 text-grey-400">
-        <TicketAll />
-      </div>
-    </div>
-    <h3 className="text-grey-900 mb-2">هیچ تیکتی یافت نشد</h3>
-    <p className="text-grey-600 mb-6 max-w-md mx-auto">
-      {hasFilters
-        ? "برای این فیلتر تیکتی وجود ندارد. فیلترها را تغییر دهید."
-        : "هنوز تیکت پشتیبانی‌ای ایجاد نکرده‌اید."}
-    </p>
-
-    {hasFilters ? (
-      <button
-        onClick={onClearFilters}
-        className="px-6 py-3 bg-grey-100 text-grey-700 rounded-xl hover:bg-grey-200 font-medium"
-      >
-        نمایش همه تیکت‌ها
-      </button>
-    ) : (
-      <button
-        className="px-6 py-3 bg-brand-primary text-white rounded-xl hover:bg-brand-primary/90 font-medium"
-        onClick={onCreateTicket}
-      >
-        + ایجاد اولین تیکت
-      </button>
-    )}
-  </div>
-);
-
-// Main component
+/* ================================
+  Main Component
+================================ */
 export default function AdminTickets() {
-  type TicketStatusFilter = TicketStatus | "all";
-  const [view, setView] = useState<ViewType>("list");
-  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [filterPriority, setFilterPriority] = useState<string>("all");
-  const [isLoading, setIsLoading] = useState(false);
-  const [filterStatus, setFilterStatus] = useState<TicketStatusFilter>("all");
-  const { user, loading } = useAuth();
+  const { loading } = useAuth();
   const router = useRouter();
+  const params = useParams();
 
-  const filteredTickets = tickets?.filter((ticket) => {
-    if (filterStatus !== "all" && ticket.status !== filterStatus) return false;
-    // if (filterPriority !== "all" && ticket.priority !== filterPriority)
-    //   return false;
-    return true;
-  });
-  const handleTicketClick = (ticketId: string) => {
-    router.push(`/admin/tickets/${ticketId}`);
-  };
+  // ✅ userId اختیاری
+  const userId = params?.id as string | undefined;
 
-  const handleCreateTicket = () => {
-    router.push("/admin/tickets/create");
-  };
-  const stats: TicketStats = {
+  type TicketStatusFilter = TicketStatus | "all";
+
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [filterStatus, setFilterStatus] = useState<TicketStatusFilter>("all");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
+  const [total, setTotal] = useState(0);
+
+  const totalPages = Math.ceil(total / pageSize);
+
+  /* ================================
+    Load Tickets (Backend Pagination)
+  ================================ */
+  const loadTickets = useCallback(
+    async (pageNumber: number = 1) => {
+      setIsLoading(true);
+      try {
+        const response = await axiosInstance.get(API_ROUTES.ADMIN.TICKETS, {
+          params: {
+            page: pageNumber,
+            page_size: pageSize,
+            ...(userId && { user_id: userId }),  
+          },
+        });
+
+        const data = response.data.data;
+        setTickets(data.items);
+        setPage(data.pagination?.page ?? 1);
+        setTotal(data.pagination?.total ??1);
+      } catch (error) {
+        console.error("Load tickets failed:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [pageSize, userId]
+  );
+
+  useEffect(() => {
+    if (!loading) {
+      loadTickets(1);
+    }
+  }, [loading]);
+
+  /* ================================
+    Derived data
+  ================================ */
+  const filteredTickets =
+    filterStatus === "all"
+      ? tickets
+      : tickets.filter((t) => t.status === filterStatus);
+
+  const stats = {
     total: tickets.length,
     open: tickets.filter((t) => t.status === "open").length,
     pending: tickets.filter((t) => t.status === "in_progress").length,
     closed: tickets.filter((t) => t.status === "closed").length,
-    high: tickets.filter((t) => t.priority === "high").length,
   };
 
-  const hasActiveFilters = filterStatus !== "all" || filterPriority !== "all";
-
-  // Effects
-  useEffect(() => {
-    if (!user?.token) return;
-    loadTickets();
-  }, [user?.token]);
-
-  // Handlers
-  const loadTickets = async () => {
-    setIsLoading(true);
-    setTickets([]);
-    try {
-      const response = await axiosInstance.get(API_ROUTES.ADMIN.TICKETS);
-      setTickets(response?.data?.data.items);
-      // console.log("ticket list ", response.data.data);
-    } catch (apiError: any) {
-      console.warn("API fetch failed, using local data:", apiError);
-    } finally {
-      setIsLoading(false);
-    }
+  const calculatePercentage = (part: number, total: number): number => {
+    return total > 0 ? (part / total) * 100 : 0;
   };
 
-  // const handleCreateTicket = () => setView("create");
-
-  const handleBackToList = async () => {
-    setView("list");
-    setSelectedTicketId(null);
-    await loadTickets();
-  };
-
-  // const handleTicketClick = (ticketId: string) => {
-  //   // console.log("wwww");
-  //   setSelectedTicketId(ticketId);
-  //   setView("view");
-  // };
-
-  const handleTicketCreated = (newTicket: Ticket) => {
-    setTickets([...tickets, newTicket]);
-    setSelectedTicketId(newTicket.id);
-    setView("view");
-    toast.success("تیکت جدید با موفقیت ایجاد شد");
-  };
-
-  const handleClearFilters = () => {
-    setFilterStatus("all");
-    setFilterPriority("all");
-  };
-
-  // Render helpers
-  const renderHeader = () => (
-    <header className="bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6">
-      <div className="flex items-center lg:items-start justify-between">
-        <div className="text-right">
-          <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
-            مدیریت تیکت‌ها
-          </h1>
-        </div>
-
-        <div className="flex items-center gap-4">
-          {view === "list" ? (
-            <button
-              className="flex bg-primary rounded-sm white px-2 lg:px-4 py-2 lg:py-3 cursor-pointer"
-              onClick={handleCreateTicket}
-            >
-              <span className="text-white text-sm lg:text-base">تیکت جدید</span>
-              <div className="w-4 h-4 mr-2 text-white">
-                <Plus />
-              </div>
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="bg-grey-200 text-grey-700 px-6 py-3 rounded-xl hover:bg-grey-300 font-medium flex items-center gap-2"
-              title="بازگشت به لیست تیکت‌ها"
-              onClick={handleBackToList}
-            >
-              <div className="w-4 h-4">
-                <Back />
-              </div>
-              بازگشت
-            </button>
-          )}
-        </div>
-      </div>
-    </header>
-  );
-
-  const renderStatsCards = () => (
-    <section className="  border-grey-300">
-      <div className="px-8 py-9">
-        <div className="gap-6 grid  grid-cols-2 lg:grid-cols-4 w-full">
-          <StatCard
-            title="کل تیکت‌ها"
-            count={stats.total}
-            icon={<TicketAll />}
-            bgColor="bg-brand-primary/10"
-            textColor="text-primary"
-            progressColor="bg-brand-primary"
-            onClick={() => setFilterStatus("all")}
-          />
-
-          <ProgressStatCard
-            title="تیکت‌های باز"
-            count={stats.open}
-            icon={<TicketOpen />}
-            bgColor="bg-danger/10"
-            textColor="text-danger"
-            progressColor="bg-danger"
-            percentage={calculatePercentage(stats.open, stats.total)}
-            onClick={() => setFilterStatus("open")}
-          />
-
-          <ProgressStatCard
-            title="درحال بررسی"
-            count={stats.pending}
-            icon={<TicketPend />}
-            bgColor="bg-warning/10"
-            textColor="text-warning"
-            progressColor="bg-warning"
-            percentage={calculatePercentage(stats.pending, stats.total)}
-            onClick={() => setFilterStatus("in_progress")}
-          />
-
-          <ProgressStatCard
-            title="بسته شده"
-            count={stats.closed}
-            icon={<TicketClose />}
-            bgColor="bg-accentGreen/10"
-            textColor="text-accentGreen"
-            progressColor="bg-accentGreen"
-            percentage={calculatePercentage(stats.closed, stats.total)}
-            onClick={() => setFilterStatus("closed")}
-          />
-        </div>
-      </div>
-    </section>
-  );
-
-  const renderTicketsList = () => (
-    <section className="flex-col w-full">
-      <div className="p-3 lg:p-8">
-        {filteredTickets.length > 0 ? (
-          <div className="space-y-4">
-            {filteredTickets.map((ticket) => (
-              <TicketCard
-                key={ticket.id}
-                ticket={ticket}
-                onClick={() => handleTicketClick(ticket.id)}
-              />
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            hasFilters={hasActiveFilters}
-            onClearFilters={handleClearFilters}
-            onCreateTicket={handleCreateTicket}
-          />
-        )}
-      </div>
-    </section>
-  );
-
+  /* ================================
+    Render
+  ================================ */
   return (
-    <div className="h-screen overflow-y-auto w-full ">
+    <div className="h-screen overflow-y-auto w-full">
       {(isLoading || loading) && <PageLoader />}
 
-      <main className="w-full">
-        {renderHeader()}
+      <header className="bg-bg-surface border-b px-6 py-6 flex justify-between">
+        <h1 className="text-2xl font-bold">
+          {userId ? "تیکت‌های کاربر" : "مدیریت تیکت‌ها"}
+        </h1>
 
-        <div className="w-full">
-          {view === "list" ? (
-            <>
-              {renderStatsCards()}
-              {renderTicketsList()}
-            </>
-          ) : view === "create" ? (
-            <CreateTicketView onSubmit={handleTicketCreated} />
-          ) : view === "view" && selectedTicketId ? (
-            (() => {
-              const selectedTicket = tickets.find(
-                (t) => t.id === selectedTicketId
-              );
-              return selectedTicket ? (
-                <ViewTicketDetail
-                  ticket={selectedTicket}
-                  onClose={handleBackToList}
-                />
-              ) : null;
-            })()
-          ) : null}
+        <button
+          type="button"
+          className="bg-brand-primary text-white px-3 py-2 lg:px-6 lg:py-3 rounded-xl hover:bg-brand-primary/90 font-medium flex items-center gap-2"
+          title="ایجاد تیکت جدید"
+          onClick={() => router.push("/admin/tickets/create")}
+        >
+          <div className="text-white w-4 h-4">
+            <Plus />
+          </div>
+          تیکت جدید
+        </button>
+      </header>
+
+      <main className="p-6 space-y-6">
+        {/* Stats */}
+
+        <div className="px-8 py-9">
+          <div className="gap-6 grid  grid-cols-2 lg:grid-cols-4 w-full">
+            <StatCard
+              title="کل تیکت‌ها"
+              count={stats.total}
+              icon={<TicketAll />}
+              bgColor="bg-brand-primary/10"
+              textColor="text-primary"
+              progressColor="bg-brand-primary"
+              onClick={() => setFilterStatus("all")}
+            />
+
+            <ProgressStatCard
+              title="تیکت‌های باز"
+              count={stats.open}
+              icon={<TicketOpen />}
+              bgColor="bg-danger/10"
+              textColor="text-danger"
+              progressColor="bg-danger"
+              percentage={calculatePercentage(stats.open, stats.total)}
+              onClick={() => setFilterStatus("open")}
+            />
+
+            <ProgressStatCard
+              title="در حال بررسی"
+              count={stats.pending}
+              icon={<TicketPend />}
+              bgColor="bg-warning/10"
+              textColor="text-warning"
+              progressColor="bg-warning"
+              percentage={calculatePercentage(stats.pending, stats.total)}
+              onClick={() => setFilterStatus("in_progress")}
+            />
+
+            <ProgressStatCard
+              title="بسته شده"
+              count={stats.closed}
+              icon={<TicketClose />}
+              bgColor="bg-secondary/10"
+              textColor="text-secondary"
+              progressColor="bg-secondary"
+              percentage={calculatePercentage(stats.closed, stats.total)}
+              onClick={() => setFilterStatus("closed")}
+            />
+          </div>
         </div>
+
+        {/* List */}
+        <div className="space-y-4">
+          {filteredTickets.map((ticket) => (
+            <TicketCard
+              key={ticket.id}
+              ticket={ticket}
+              onClick={() => router.push(`/admin/tickets/${ticket.id}`)}
+            />
+          ))}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-between items-center pt-6 border-t">
+            <span className="text-sm text-grey-600">
+              صفحه {page} از {totalPages} | مجموع {convertToPersian(total)}
+            </span>
+            <div className="flex gap-2">
+              <Button
+                // variant="outline"
+                disabled={page === 1}
+                onClick={() => loadTickets(page - 1)}
+              >
+                قبلی
+              </Button>
+              <Button
+                // variant="outline"
+                disabled={page === totalPages}
+                onClick={() => loadTickets(page + 1)}
+              >
+                بعدی
+              </Button>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

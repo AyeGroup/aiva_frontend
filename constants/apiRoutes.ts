@@ -121,10 +121,16 @@ export const API_ROUTES = {
 
   ADMIN: {
     STATISTICS: `${API_BASE_URL.replace("/api", "")}/admin/statistics`,
+
     TICKETS: `${API_BASE_URL}/tickets/admin/all`,
     TICKET: (ticket_id: string) => `${API_BASE_URL}/tickets/admin/${ticket_id}`,
     TICKET_UPDATE: (ticket_id: string) =>
       `${API_BASE_URL}/tickets/admin/${ticket_id}`,
+
+    // ---------------------------------------
+    USERS: `${API_BASE_URL}/admin/users`,
+    CHATBOTS: `${API_BASE_URL}/admin/chatbots`,
+    TRANSACTIONS: `${API_BASE_URL}/admin/transactions`,
 
     // ---------------------------------------
     DISCOUNTS: `${API_BASE_URL}/financial/discount-codes`,
@@ -136,10 +142,5 @@ export const API_ROUTES = {
     DISCOUNT_DELETE: (discount_id: string) =>
       `${API_BASE_URL}/financial/discount-codes/${discount_id}`,
     // ---------------------------------------
-    USERS: `${API_BASE_URL}/admin/users`,
-    // ---------------------------------------
-
-    USER_CHATBOTS: (user_id: string) =>
-      `${API_BASE_URL}/financial/discount-codes/${user_id}`,
   },
 };

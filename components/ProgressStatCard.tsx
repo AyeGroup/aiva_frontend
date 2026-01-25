@@ -1,9 +1,11 @@
 import React from "react";
 
-export interface StatCardProps {
+export interface ProgressStatCardProps {
   title: string;
   count: number | string;
   icon: React.ReactNode;
+
+  percentage: number;  
 
   bgColor?: string;
   textColor?: string;
@@ -13,10 +15,11 @@ export interface StatCardProps {
   className?: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({
+const ProgressStatCard: React.FC<ProgressStatCardProps> = ({
   title,
   count,
   icon,
+  percentage,
 
   bgColor = "bg-grey-100",
   textColor = "text-grey-900",
@@ -25,6 +28,8 @@ const StatCard: React.FC<StatCardProps> = ({
   onClick,
   className = "",
 }) => {
+  const safePercentage = Math.max(0, Math.min(100, percentage));
+
   return (
     <div className={`bg-white relative rounded-[20px] ${className}`}>
       <div
@@ -42,15 +47,18 @@ const StatCard: React.FC<StatCardProps> = ({
 
             <div className="flex-1 flex flex-col gap-2">
               <p className="text-grey-600">{title}</p>
-              <p className={textColor} style={{ fontFamily: "Vazirmatn" }}>
+              <p className={textColor} >
                 {count.toLocaleString("fa-IR")}
               </p>
             </div>
           </div>
 
-          {/* Progress (Full) */}
-          <div className="bg-grey-100 h-1 overflow-hidden rounded-full w-full">
-            <div className={`${progressColor} h-full w-full rounded-full`} />
+          {/* Progress */}
+          <div className="bg-grey-100 h-1 rounded-full w-full overflow-hidden">
+            <div
+              className={`${progressColor} h-full rounded-full transition-all duration-300`}
+              style={{ width: `${safePercentage}%` }}
+            />
           </div>
         </div>
       </div>
@@ -65,4 +73,4 @@ const StatCard: React.FC<StatCardProps> = ({
   );
 };
 
-export default StatCard;
+export default ProgressStatCard;
