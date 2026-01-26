@@ -27,7 +27,13 @@ export default function Header() {
     localStorage.setItem("alogUrl", "/onboarding");
     router.push("/onboarding");
   };
-  
+   const handleDashboard = () => {
+    //  console.log("handleOnboarding");
+    //  localStorage.setItem("alogUrl", "/onboarding");
+    if (user?.role === "admin") router.push("/admin");
+    else
+      router.push("/dashboard");
+   };
   const handleOnboardingMobile = () => {
     console.log("handleOnboarding");
     localStorage.setItem("alogUrl", "/onboarding");
@@ -72,8 +78,9 @@ export default function Header() {
         {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center gap-3">
           {!loading && user ? (
-            <a
-              href="/dashboard"
+            <button
+              // href="/dashboard"
+             onClick={handleDashboard}
               className="flex items-center gap-2 bg-[#65bcb6] text-white px-3 sm:px-4 py-2 rounded-sm shadow hover:bg-[#58aaa5] transition text-sm sm:text-base whitespace-nowrap"
             >
               حساب کاربری
@@ -86,7 +93,7 @@ export default function Header() {
                   strokeWidth="1.5"
                 />
               </svg>
-            </a>
+            </button>
           ) : (
             <>
               <a

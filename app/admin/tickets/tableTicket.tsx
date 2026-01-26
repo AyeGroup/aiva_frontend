@@ -8,6 +8,7 @@ import { ProfileModal } from "../users/ProfileModal";
 
 interface CodesTableProps {
   data: any[];
+  showUserCol?:boolean;
 }
 
 type SortConfig = {
@@ -15,7 +16,7 @@ type SortConfig = {
   direction: "ascending" | "descending";
 };
 
-const TableTicket: React.FC<CodesTableProps> = ({ data }) => {
+const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
   const router = useRouter();
   const [openProfile, setOpenProfile] = useState(false);
   const [user, setUser] = useState(null);
@@ -116,14 +117,16 @@ const TableTicket: React.FC<CodesTableProps> = ({ data }) => {
                 {getSortIndicator("created_at")}
               </div>
             </th>
+            {showUserCol&&
             <th
-              className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
-              onClick={() => requestSort("user.phone")}
+            className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
+            onClick={() => requestSort("user.phone")}
             >
               <div className="flex items-center">
                 کاربر {getSortIndicator("user.phone")}
               </div>
             </th>
+            }
             <th className="px-3 py-2 text-center text-grey-600">مشاهده</th>
           </tr>
         </thead>
@@ -153,14 +156,15 @@ const TableTicket: React.FC<CodesTableProps> = ({ data }) => {
               <td className="px-3 py-2 border-l border-gray-100 ">
                 {formatDateTime(code.updated_at)}
               </td>
+            {showUserCol&&
 
               <td className="px-3 py-2 border-l border-gray-100 ">
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="bg-grey-100 px-2 py-1 rounded">
-                    {code.user?.phone}
+                <div className="flex items-center gap-2">
+                  <span className=" px-2 py-1 rounded">
+                    {convertToPersian(code.user?.phone)}
                   </span>
                   <Eye
-                    size={14}
+                    size={20}
                     className="cursor-pointer text-primary"
                     onClick={() => {
                       setOpenProfile(true);
@@ -169,6 +173,7 @@ const TableTicket: React.FC<CodesTableProps> = ({ data }) => {
                   />
                 </div>
               </td>
+}
 
               <td className="px-3 py-2">
                 <div className="flex items-center justify-center gap-2">

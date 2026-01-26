@@ -12,6 +12,7 @@ import {
   TicketOpen,
   TicketPend,
 } from "@/public/icons/AppIcons";
+import { convertToPersian } from "@/utils/common";
 import { User, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -73,7 +74,7 @@ export default function AdminPage() {
       <main className="flex-1 p-6 lg:px-12 overflow-y-auto h-screen ">
         {isLoading && <PageLoader />}
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div
             className={`group bg-white backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105  overflow-hidden relative`}
           >
@@ -94,11 +95,8 @@ export default function AdminPage() {
               >
                 کاربران
               </div>
-              <div
-                className="font-medium text-center leading-tight"
-                style={{ color: "#A6A6A6" }}
-              >
-                {data?.all_users_count || ""}
+              <div className="font-medium text-center leading-tight">
+                {convertToPersian(data?.all_users_count || 0)}
               </div>
             </div>
           </div>
@@ -120,7 +118,9 @@ export default function AdminPage() {
               >
                 چت‌بات‌ها
               </div>
-              <div className="font-medium text-center leading-tight "></div>
+              <div className="font-medium text-center leading-tight ">
+                {convertToPersian(data?.all_chatbots_count || 0)}
+              </div>
             </div>
           </div>
 
@@ -141,13 +141,34 @@ export default function AdminPage() {
                 کاربران چت‌بات‌ها
               </div>
               <div className="font-medium text-center leading-tight">
-                {data?.all_chatbots_count || ""}
+                {convertToPersian(data?.chatbot_users_count || 0)}
+              </div>
+            </div>
+          </div>
+          <div className="group bg-white backdrop-blur-lg rounded-2xl p-4 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105  overflow-hidden relative">
+            <div
+              className={`absolute top-0 right-0 w-20 h-20 bg-brand-purple/10 rounded-full -translate-y-2 translate-x-2`}
+            ></div>
+
+            <div className="relative text-center">
+              <div className="flex justify-center item-center mb-3">
+                <div className="w-10 h-10  rounded-xl flex items-center justify-center shadow-lg bg-brand-purple transition-all duration-300">
+                  <Users className="w-4 h-4 text-white" />
+                </div>
+              </div>
+              <div
+                className={`text-lg font-black text-grey-900 mb-1 transition-colors text-center`}
+              >
+                درآمد کل
+              </div>
+              <div className="font-medium text-center leading-tight">
+                {convertToPersian(data?.total_revenue || 0)}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="px-8 py-9">
+        {/* <div className="px-8 py-9">
           <div className="gap-6 grid  grid-cols-2 lg:grid-cols-4 w-full">
             <StatCard
               title="کل تیکت‌ها"
@@ -188,7 +209,7 @@ export default function AdminPage() {
               percentage={calculatePercentage(stats?.closed, stats?.total)}
             />
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );

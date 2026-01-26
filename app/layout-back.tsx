@@ -1,6 +1,7 @@
 import { Toaster } from "sonner";
+import { BotProvider } from "@/providers/BotProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
-import ProvidersWrapper from "@/providers/ProvidersWrapper";
+import { PricingProvider } from "@/providers/PricingContext";
 import type { Metadata } from "next";
 import "@/styles/login.css";
 import "@/styles/globals.css";
@@ -23,9 +24,10 @@ export default function RootLayout({
       <body>
         <div className="app-content">
           <AuthProvider>
-            <ProvidersWrapper>{children}</ProvidersWrapper>
+            <BotProvider>
+              <PricingProvider>{children}</PricingProvider>
+            </BotProvider>
           </AuthProvider>
-
           <Toaster
             position="top-center"
             richColors

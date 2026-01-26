@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useId } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
 import TableTicket from "./tableTicket";
@@ -10,7 +10,7 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { Ticket } from "@/types/common";
 import { convertNumbersToPersian } from "@/utils/common";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { Plus, Refresh } from "@/public/icons/AppIcons";
 import { GenericSelector } from "@/components/selector";
 import {
@@ -18,6 +18,7 @@ import {
   PRIORITY_OPTIONS,
   STATUS_OPTIONS,
 } from "@/constants/common";
+import { ProfileModal } from "../users/ProfileModal";
 
 export default function AdminTickets() {
   const { loading } = useAuth();
@@ -25,9 +26,8 @@ export default function AdminTickets() {
   // const params = useParams();
 
   // const userId = params?.id as string | undefined;
-const searchParams = useSearchParams();
-const userId = searchParams.get("id") ?? undefined;
-
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("id") ?? undefined;
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,12 +41,14 @@ const userId = searchParams.get("id") ?? undefined;
   const [totalPages, setTotalPages] = useState(1);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
+  const [profileId, setProfileId] = useState<number>();
 
   const loadTickets = useCallback(
     async (pageNumber: number = 1) => {
       setIsLoading(true);
       try {
-        console.log("userid",userId)
+        console.log("userid", userId);
         const response = await axiosInstance.get(API_ROUTES.ADMIN.TICKETS, {
           params: {
             page: pageNumber,
@@ -100,24 +102,45 @@ const userId = searchParams.get("id") ?? undefined;
     }
   };
 
-    const handleRefresh = () => {
-      setPage(1);
-      loadTickets(1);
-      setPriority("all");
-      setStatus("all");
-      setCategory("all");
-    };
+  const handleRefresh = () => {
+    setPage(1);
+    loadTickets(1);
+    setPriority("all");
+    setStatus("all");
+    setCategory("all");
+  };
 
   return (
     <div className="h-screen overflow-y-auto w-full">
       {(isLoading || loading) && <PageLoader />}
 
       <header className="bg-bg-surface border-b px-6 py-6 flex justify-between">
-        <h1 className="text-2xl font-bold">
-          {userId ? "تیکت‌های کاربر" : "مدیریت تیکت‌ها"}
-        </h1>
+        {userId ? (
+          <div className="flex flex-col">
+            <div className="font-medium ">تیکت‌های کاربر</div>
+            <div className="flex items-center gap-2 mt-2 text-sm">
+              <div className="font-medium ">کد:</div>
 
-        <button
+              {userId}
+              <button
+                className="flex items-center cursor-pointer text-primary font-medium gap-2 border border-primary rounded-2xl px-4 py-1"
+                onClick={() => {
+                  setOpenProfile(true);
+                  setProfileId(userId ? Number(userId) : undefined);
+                }}
+              >
+                مشاهده پروفایل
+                <Eye size={14} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <h1 className="text-grey-900 mb-0 mr-1 lg:mr-10 text-2xl lg:text-3xl font-bold">
+            مدیریت تیکت‌ها
+          </h1>
+        )}
+
+        {/* <button
           type="button"
           className="bg-brand-primary text-white px-3 py-2 lg:px-6 lg:py-3 rounded-xl hover:bg-brand-primary/90 font-medium flex items-center gap-2"
           title="ایجاد تیکت جدید"
@@ -127,7 +150,7 @@ const userId = searchParams.get("id") ?? undefined;
             <Plus />
           </div>
           تیکت جدید
-        </button>
+        </button> */}
       </header>
 
       <main className="p-6 ">
@@ -196,7 +219,7 @@ const userId = searchParams.get("id") ?? undefined;
             ))}
           </div>
           <div className="hidden lg:block mt-4">
-            <TableTicket data={tickets} />
+            <TableTicket data={tickets} showUserCol={userId ? false : true} />
           </div>
 
           {/* Pagination */}
@@ -247,6 +270,14 @@ const userId = searchParams.get("id") ?? undefined;
           )}
         </div>
       </main>
+      {profileId && (
+        <ProfileModal
+          open={openProfile}
+          id={profileId}
+          data={null}
+          onClose={() => setOpenProfile(false)}
+        />
+      )}
     </div>
   );
 }
