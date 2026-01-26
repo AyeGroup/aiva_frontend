@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useId } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import PageLoader from "@/components/pageLoader";
 import axiosInstance from "@/lib/axiosInstance";
 import TableTicket from "./tableTicket";
-import TicketCard from "./TicketCard";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { Ticket } from "@/types/common";
 import { convertNumbersToPersian } from "@/utils/common";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
-import { Plus, Refresh } from "@/public/icons/AppIcons";
+import { Refresh } from "@/public/icons/AppIcons";
 import { GenericSelector } from "@/components/selector";
 import {
   CATEGORY_OPTIONS,
@@ -19,28 +18,30 @@ import {
   STATUS_OPTIONS,
 } from "@/constants/common";
 import { ProfileModal } from "../users/ProfileModal";
+import { Button } from "@/components/button";
 
 export default function AdminTickets() {
   const { loading } = useAuth();
-  const router = useRouter();
-  // const params = useParams();
 
-  // const userId = params?.id as string | undefined;
   const searchParams = useSearchParams();
   const userId = searchParams.get("id") ?? undefined;
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // filters
   const [status, setStatus] = useState<string>("all");
   const [priority, setPriority] = useState<string>("all");
   const [category, setCategory] = useState<string>("all");
 
+  // pagination
   const [page, setPage] = useState(1);
-  const [limit] = useState(5);
+  const [limit] = useState(3);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
+
   const [openProfile, setOpenProfile] = useState(false);
   const [profileId, setProfileId] = useState<number>();
 
@@ -48,7 +49,6 @@ export default function AdminTickets() {
     async (pageNumber: number = 1) => {
       setIsLoading(true);
       try {
-        console.log("userid", userId);
         const response = await axiosInstance.get(API_ROUTES.ADMIN.TICKETS, {
           params: {
             page: pageNumber,
@@ -63,7 +63,6 @@ export default function AdminTickets() {
         const data = response.data.data;
 
         setTickets(data.items);
-
         setPage(data.page);
         setTotalItems(data.total_items);
         setTotalPages(data.total_pages);
@@ -82,32 +81,33 @@ export default function AdminTickets() {
     if (!loading) {
       loadTickets(1);
     }
-  }, [loading, status, priority, category]);
+  }, [loading]);
 
+  // pagination handlers
   const handleNextPage = () => {
-    if (hasNext) {
-      loadTickets(page + 1);
-    }
+    if (hasNext) loadTickets(page + 1);
   };
 
   const handlePrevPage = () => {
-    if (hasPrev) {
-      loadTickets(page - 1);
-    }
+    if (hasPrev) loadTickets(page - 1);
   };
 
   const handleSetPage = (p: number) => {
-    if (p !== page) {
-      loadTickets(p);
-    }
+    if (p !== page) loadTickets(p);
+  };
+
+  // ✅ فقط با دکمه جستجو
+  const handleSearch = () => {
+    setPage(1);
+    loadTickets(1);
   };
 
   const handleRefresh = () => {
+    setStatus("all");
+    setPriority("all");
+    setCategory("all");
     setPage(1);
     loadTickets(1);
-    setPriority("all");
-    setStatus("all");
-    setCategory("all");
   };
 
   return (
@@ -154,50 +154,53 @@ export default function AdminTickets() {
       </header>
 
       <main className="p-6 ">
-        <div className="bg-white rounded-xl border border-grey-100 shadow-card w-full p-4">
-          <div className="flex justify-between gap-4 items-center border-b border-primary/50 p-2  pb-4">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1">
-                وضعیت
-                <GenericSelector
-                  items={STATUS_OPTIONS}
-                  selectedValue={status}
-                  onSelect={(value) => {
-                    setPage(1);
-                    setStatus(value);
-                  }}
-                  showIndicator
-                  className="border border-primary rounded-xl "
-                />
-              </div>
-              <div className="flex items-center gap-1">
-                اولویت
-                <GenericSelector
-                  items={PRIORITY_OPTIONS}
-                  selectedValue={priority}
-                  onSelect={(value) => {
-                    setPage(1);
-                    setPriority(value);
-                  }}
-                  showIndicator
-                  className="border border-primary rounded-xl bg-white"
-                />
-              </div>
-              <div className="flex items-center gap-1">
-                دسته
-                <GenericSelector
-                  items={CATEGORY_OPTIONS}
-                  selectedValue={category}
-                  onSelect={(value) => {
-                    setPage(1);
-                    setCategory(value);
-                  }}
-                  showIndicator
-                  className="border border-primary rounded-xl bg-white"
-                />
-              </div>
+        <div className="flex justify-between gap-4 items-center p-2  pb-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1">
+              وضعیت
+              <GenericSelector
+                items={STATUS_OPTIONS}
+                selectedValue={status}
+                onSelect={(value) => {
+                  setPage(1);
+                  setStatus(value);
+                }}
+                showIndicator
+                className="border border-primary rounded-xl bg-white "
+              />
             </div>
+            <div className="flex items-center gap-1">
+              اولویت
+              <GenericSelector
+                items={PRIORITY_OPTIONS}
+                selectedValue={priority}
+                onSelect={(value) => {
+                  setPage(1);
+                  setPriority(value);
+                }}
+                showIndicator
+                className="border border-primary rounded-xl bg-white"
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              دسته
+              <GenericSelector
+                items={CATEGORY_OPTIONS}
+                selectedValue={category}
+                onSelect={(value) => {
+                  setPage(1);
+                  setCategory(value);
+                }}
+                showIndicator
+                className="border border-primary rounded-xl bg-white"
+              />
+            </div>
+          </div>
 
+          <div className="flex items-center">
+            <Button onClick={handleSearch} disabled={isLoading}>
+              {isLoading ? "در حال جستجو..." : "جستجو"}
+            </Button>
             <button
               onClick={handleRefresh}
               disabled={isLoading}
@@ -208,8 +211,14 @@ export default function AdminTickets() {
               </div>
             </button>
           </div>
-
-          <div className="space-y-4 lg:hidden  mt-4">
+          {/* <button onClick={handleRefresh} disabled={isLoading} className="mr-3">
+            <div className="w-6 text-primary">
+              <Refresh />
+            </div>
+          </button> */}
+        </div>
+        <div className="bg-white rounded-xl border border-grey-100 shadow-card w-full p-4">
+          {/* <div className="space-y-4 lg:hidden  mt-4">
             {tickets.map((ticket) => (
               <TicketCard
                 key={ticket.id}
@@ -217,8 +226,8 @@ export default function AdminTickets() {
                 onBackClick={() => router.push(`/admin/tickets/${ticket.id}`)}
               />
             ))}
-          </div>
-          <div className="hidden lg:block mt-4">
+          </div> */}
+          <div className=" mt-4">
             <TableTicket data={tickets} showUserCol={userId ? false : true} />
           </div>
 

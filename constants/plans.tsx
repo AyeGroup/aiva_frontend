@@ -1,6 +1,22 @@
 import { PlanCode } from "@/types/common";
 import { Rocket, Crown, Star, Gift, Users } from "lucide-react";
 
+export const TRANSACTION_OPTION = [
+  { label: "همه", value: "all" },
+  { label: "افزایش موجودی کیف پول", value: "increase_wallet" },
+  { label: "خرید از کیف پول", value: "decrease_wallet" },
+  { label: "افزایش اعتبار", value: "increase_balance" },
+  { label: "خرید پلن", value: "buy_subscription" },
+  { label:"هزینه پیام", value: "message_cost" },
+];
+ export const TRANSACTION_STATUS = [
+   { label: "همه", value: "all" },
+   { label: "موفق", value: "success" },
+   { label:"لغو شده" , value: "cancelled" },
+   { label: "ناموفق", value: "failed" },
+ ];
+ 
+
 export enum TRANSACTION_TYPE {
   INCREASE_WALLET = "increase_wallet",
   DECREASE_WALLET = "decrease_wallet",

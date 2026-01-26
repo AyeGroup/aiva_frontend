@@ -110,16 +110,25 @@ export default function AdminUserChatbots() {
             </span>
           </div>
         </div>
+        <div className="flex flex-col justify-between items-end">
+          <Link
+            href="/admin/users"
+            className="flex text-primary items-center gap-2 cursor-pointer"
+          >
+            بازگشت
+            <div className="text-primary w-6">
+              <Back />
+            </div>
+          </Link>
 
-        <Link
-          href="/admin/users"
-          className="flex text-primary items-center gap-2 cursor-pointer"
-        >
-          بازگشت
-          <div className="text-primary w-6">
-            <Back />
+          <div className="flex items-center gap-2 mt-4">
+            <div className="text-sm">
+
+            موجودی کیف پول
+            </div>
+            <div className="text-white bg-primary px-3 py-1 rounded-md">{Number(profile?.wallet_balance).toLocaleString("fa-IR")}</div>
           </div>
-        </Link>
+        </div>
       </header>
 
       {/* Content */}
@@ -138,7 +147,6 @@ export default function AdminUserChatbots() {
                     <th className="px-3 py-2 text-right">پلن</th>
                     <th className="px-3 py-2 text-right">انقضا</th>
                     <th className="px-3 py-2 text-right">تعداد کاربران</th>
-                    <th className="px-3 py-2 text-right"> مشاهده </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -146,7 +154,7 @@ export default function AdminUserChatbots() {
                     chatbots.map((bot, index) => (
                       <tr
                         key={index}
-                        className="border-b border-grey-100 hover:bg-grey-100 transition"
+                        className="border-b last:border-b-0 border-grey-100 hover:bg-grey-100 transition"
                       >
                         <td className="px-3 py-2">{bot.name}</td>
                         <td className="px-3 py-2">
@@ -169,16 +177,14 @@ export default function AdminUserChatbots() {
                         <td className="px-3 py-2">
                           {convertNumbersToPersian(bot.total_users)}
                         </td>
-                        <td className="px-3 py-2">
+                        {/* <td className="px-3 py-2">
                           <Link
                             href={`/onboarding&id=${bot.uuid}`}
                             className="chatbot-menu-item"
                           >
-                            
-                          <Eye size={20} className="text-primary" />
-                         
+                            <Eye size={20} className="text-primary" />
                           </Link>
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   ) : (

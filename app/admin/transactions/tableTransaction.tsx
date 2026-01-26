@@ -1,35 +1,11 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import {
-  Eye,
-  ChevronUp,
-  ChevronDown,
-  ArrowDownUp,
-  ArrowDown,
-  ArrowUp,
-  ArrowUp01,
-  ArrowUp10,
-} from "lucide-react";
-import { convertToPersian, formatDateTime } from "@/utils/common";
-import { StatusBadge } from "@/app/dashboard/widgets/status-badge";
-import { useRouter } from "next/navigation";
+import { Transaction } from "@/types/common";
 import { ProfileModal } from "../users/ProfileModal";
+import { convertToPersian, formatDateTime } from "@/utils/common";
 import { getTransactionTitle, TRANSACTION_TYPE } from "@/constants/plans";
-
-interface Transaction {
-  id: number;
-  user_id: number;
-  user_name: string;
-  user_email: string;
-  chatbot_name: string | null;
-  type: string;
-  direction: "income" | "outcome";
-  status: string;
-  amount: number;
-  tracking_code: string | null;
-  created_at: string;
-}
+import { Eye, ChevronUp, ChevronDown, ArrowDown, ArrowUp } from "lucide-react";
 
 interface Props {
   data: Transaction[];
@@ -42,7 +18,6 @@ type SortConfig = {
 };
 
 const TableTransaction: React.FC<Props> = ({ data, showUserCol = true }) => {
-  const router = useRouter();
   const [openProfile, setOpenProfile] = useState(false);
   const [user, setUser] = useState<any>(null);
 
@@ -98,16 +73,28 @@ const TableTransaction: React.FC<Props> = ({ data, showUserCol = true }) => {
               کد {sortIcon("id")}
             </th>
             <th
+              onClick={() => requestSort("id")}
+              className="px-3 py-2 text-right text-grey-600"
+            >
+              کد پیگیری {sortIcon("tracking_code")}
+            </th>
+            <th
               onClick={() => requestSort("type")}
               className="px-3 py-2 text-right text-grey-600"
             >
-              نوع
+              عنوان تراکنش
             </th>
             <th
               onClick={() => requestSort("direction")}
               className="px-3 py-2 text-right text-grey-600"
             >
-              جهت
+              نوع تراکنش
+            </th>
+            <th
+              onClick={() => requestSort("description")}
+              className="px-3 py-2 text-right text-grey-600"
+            >
+              توضیحات
             </th>
             <th
               onClick={() => requestSort("amount")}
@@ -116,7 +103,7 @@ const TableTransaction: React.FC<Props> = ({ data, showUserCol = true }) => {
               مبلغ
               <span className="text-xs text-gray-500">تومان</span>
             </th>
-            <th className="th">وضعیت</th>
+            <th className="px-3 py-2 text-right text-grey-600">وضعیت</th>
             <th
               onClick={() => requestSort("created_at")}
               className="px-3 py-2 text-right text-grey-600"
@@ -130,14 +117,21 @@ const TableTransaction: React.FC<Props> = ({ data, showUserCol = true }) => {
         </thead>
 
         <tbody>
-          {sortedItems.map((tx) => (
-            <tr key={tx.id} className="border-b hover:bg-grey-100 transition">
-              <td className="px-3 py-2 text-sm">{convertToPersian(tx.id)}</td>
-
+          {sortedItems.map((tx, index) => (
+            <tr
+              key={index}
+              className="border-b last:border-b-0 border-gray-100 hover:bg-grey-100 transition"
+            >
+              <td className="px-3 py-2 text-sm">
+                <span className="rounded-full bg-gray-100 py-1 px-3">
+                {convertToPersian(tx.id)
+                }
+                </span>
+                </td>
+              <td className="px-3 py-2 text-sm">{tx.tracking_code}</td>
               <td className="px-3 py-2 text-sm">
                 {getTransactionTitle(tx.type as TRANSACTION_TYPE)}
               </td>
-
               <td className="px-3 py-2 text-sm">
                 {tx.direction === "income" ? (
                   <div className="flex items-center gap-1">
@@ -151,11 +145,11 @@ const TableTransaction: React.FC<Props> = ({ data, showUserCol = true }) => {
                   </div>
                 )}
               </td>
+              <td className="px-3 py-2 text-sm">{tx.description}</td>
 
               <td className="px-3 py-2 text-sm font-medium">
                 {convertToPersian(tx.amount.toLocaleString("fa-IR"))}
               </td>
-
               <td className="px-3 py-2 text-sm">
                 <div
                   style={{
@@ -176,11 +170,9 @@ const TableTransaction: React.FC<Props> = ({ data, showUserCol = true }) => {
                         : "نا مشخص"}
                 </div>
               </td>
-
               <td className="px-3 py-2 text-sm">
                 {formatDateTime(tx.created_at)}
               </td>
-
               {showUserCol && (
                 <td className="px-3 py-2 text-sm">
                   <div className="flex items-center gap-2">

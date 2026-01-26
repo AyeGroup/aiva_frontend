@@ -49,6 +49,21 @@ export interface BaseComponentProps {
   id?: string;
 }
 
+export type Transaction = {
+  id: number;
+  user_id: number;
+  user_name: string;
+  user_email: string;
+  chatbot_id: number | null;
+  chatbot_name: string | null;
+  type: string;
+  direction: "income" | "outcome";
+  status: "success" | "cancelled" | "pending" | "failed" | string;
+  amount: number;
+  description: string | null;
+  tracking_code: string | null;
+  created_at: string;
+};
 export const colorPalette = [
   { name: "صورتی", value: "#ec4899" },
   { name: "بنفش", value: "#8b5cf6" },

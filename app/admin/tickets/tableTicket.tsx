@@ -16,6 +16,7 @@ type SortConfig = {
   direction: "ascending" | "descending";
 };
 
+
 const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
   const router = useRouter();
   const [openProfile, setOpenProfile] = useState(false);
@@ -66,7 +67,7 @@ const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
         <thead>
           <tr className="border-b border-grey-200 bg-grey-50">
             <th
-              className="px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
+              className="px-3 py-2 text-center text-grey-600 cursor-pointer  "
               onClick={() => requestSort("id")}
             >
               <div className="flex items-center">
@@ -74,7 +75,7 @@ const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
               </div>
             </th>
             <th
-              className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-center text-grey-600 cursor-pointer  "
               onClick={() => requestSort("title")}
             >
               <div className="flex items-center">
@@ -82,7 +83,7 @@ const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
               </div>
             </th>
             <th
-              className="px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
+              className="px-3 py-2 text-center text-grey-600 cursor-pointer  "
               onClick={() => requestSort("status")}
             >
               <div className="flex items-center">
@@ -91,7 +92,7 @@ const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
               </div>
             </th>
             <th
-              className="px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
+              className="px-3 py-2 text-center text-grey-600 cursor-pointer  "
               onClick={() => requestSort("priority")}
             >
               <div className="flex items-center">
@@ -100,7 +101,7 @@ const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
               </div>
             </th>
             <th
-              className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-center text-grey-600 cursor-pointer  "
               onClick={() => requestSort("category")}
             >
               <div className="flex items-center">
@@ -109,7 +110,7 @@ const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
               </div>
             </th>
             <th
-              className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
+              className=" px-3 py-2 text-center text-grey-600 cursor-pointer  "
               onClick={() => requestSort("created_at")}
             >
               <div className="flex items-center">
@@ -117,16 +118,16 @@ const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
                 {getSortIndicator("created_at")}
               </div>
             </th>
-            {showUserCol&&
-            <th
-            className=" px-3 py-2 text-center text-grey-600 cursor-pointer border-l border-gray-100 "
-            onClick={() => requestSort("user.phone")}
-            >
-              <div className="flex items-center">
-                کاربر {getSortIndicator("user.phone")}
-              </div>
-            </th>
-            }
+            {showUserCol && (
+              <th
+                className=" px-3 py-2 text-center text-grey-600 cursor-pointer  "
+                onClick={() => requestSort("user.phone")}
+              >
+                <div className="flex items-center">
+                  کاربر {getSortIndicator("user.phone")}
+                </div>
+              </th>
+            )}
             <th className="px-3 py-2 text-center text-grey-600">مشاهده</th>
           </tr>
         </thead>
@@ -134,46 +135,43 @@ const TableTicket: React.FC<CodesTableProps> = ({ data,showUserCol=true }) => {
           {sortedCodes.map((code) => (
             <tr
               key={code.id}
-              className="border border-grey-100 hover:bg-grey-100 transition-colors"
+              className="border-b  last:border-b-0 border-grey-100 hover:bg-grey-100 transition-colors"
             >
-              <td className="px-3 py-2  border-l border-gray-100 ">
+              <td className="px-3 py-2  ">
                 <span className="rounded-full bg-gray-100 py-1 px-3">
                   {convertToPersian(code?.id)}
                 </span>
               </td>
-              <td className="px-3 py-2 text-sm border-l border-gray-100 ">
-                {code?.title}
-              </td>
-              <td className="px-3 py-2 text-sm border-l border-gray-100 ">
+              <td className="px-3 py-2 text-sm ">{code?.title}</td>
+              <td className="px-3 py-2 text-sm ">
                 <StatusBadge status={code.status} />
               </td>
-              <td className="px-3 py-2 text-sm border-l border-gray-100 ">
+              <td className="px-3 py-2 text-sm ">
                 {getPriorityLabel(code.priority)}
               </td>
-              <td className="px-3 py-2 border-l border-gray-100 ">
+              <td className="px-3 text-sm py-2 ">
                 {getCategoryLabel(code.category)}
               </td>
-              <td className="px-3 py-2 border-l border-gray-100 ">
+              <td className="px-3 text-sm py-2  ">
                 {formatDateTime(code.updated_at)}
               </td>
-            {showUserCol&&
-
-              <td className="px-3 py-2 border-l border-gray-100 ">
-                <div className="flex items-center gap-2">
-                  <span className=" px-2 py-1 rounded">
-                    {convertToPersian(code.user?.phone)}
-                  </span>
-                  <Eye
-                    size={20}
-                    className="cursor-pointer text-primary"
-                    onClick={() => {
-                      setOpenProfile(true);
-                      setUser(code.user);
-                    }}
-                  />
-                </div>
-              </td>
-}
+              {showUserCol && (
+                <td className="px-3 text-sm py-2  ">
+                  <div className="flex items-center gap-2">
+                    <span className=" px-2 py-1 rounded">
+                      {convertToPersian(code.user?.phone)}
+                    </span>
+                    <Eye
+                      size={20}
+                      className="cursor-pointer text-primary"
+                      onClick={() => {
+                        setOpenProfile(true);
+                        setUser(code.user);
+                      }}
+                    />
+                  </div>
+                </td>
+              )}
 
               <td className="px-3 py-2">
                 <div className="flex items-center justify-center gap-2">

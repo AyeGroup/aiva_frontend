@@ -65,7 +65,11 @@ export default function AdminUsers() {
     setPage(1);
     await loadUsers(1, search);
   };
+ 
+  const handleLoginAsUser = async () => {
 
+  }
+  
   const handleRefresh = async () => {
     setPage(1);
     await loadUsers(1, "");
@@ -118,44 +122,42 @@ export default function AdminUsers() {
         {(isLoading || loading) && <PageLoader />}
 
         <div className="max-w-7xl mx-auto pb-8">
+          <div className="flex items-center justify-between mb-2 pb-4">
+            <div className="flex items-center gap-3 flex-1">
+              <label className="block mb-1 text-sm">جستجو</label>
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="نام، موبایل یا ایمیل"
+                className="flex-1 "
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              />
+            </div>
+            <Button
+              onClick={handleSearch}
+              disabled={isLoading}
+              className="py-2!"
+            >
+              {isLoading ? "در حال جستجو..." : "جستجو"}
+            </Button>
+            <button
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className="mr-3"
+            >
+              <div className="w-6 text-primary">
+                <Refresh />
+              </div>
+            </button>
+          </div>
           {/* کارت اصلی */}
           <div className="bg-white rounded-3xl border border-grey-100 shadow-card w-full p-3">
-            {/* بخش جستجو */}
-            <div className="flex items-center justify-between m-6 pb-4 border-b border-primary/50">
-              <div className="flex items-center gap-3 flex-1">
-                <label className="block mb-1 text-sm">جستجو</label>
-                <Input
-                  value={search}
-                  inputSize="small"
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="نام، موبایل یا ایمیل"
-                  className="flex-1 "
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                />
-              </div>
-              <Button
-                onClick={handleSearch}
-                disabled={isLoading}
-                className="py-2!"
-              >
-                {isLoading ? "در حال جستجو..." : "جستجو"}
-              </Button>
-              <button
-                onClick={handleRefresh}
-                disabled={isLoading}
-                className="mr-3"
-              >
-                <div className="w-6 text-primary">
-                  <Refresh />
-                </div>
-              </button>
-            </div>
-
             {/* جدول کاربران */}
             <div className="divide-grey-100 w-full">
               <table className="w-full table-auto">
                 <thead>
                   <tr className="border-b border-grey-200 text-sm font-normal bg-grey-50">
+                    <th className="px-3 py-2 text-right text-grey-600">کد</th>
                     <th className="px-3 py-2 text-right text-grey-600">
                       موبایل
                     </th>
@@ -174,11 +176,16 @@ export default function AdminUsers() {
                 </thead>
                 <tbody>
                   {users.length > 0 ? (
-                    users.map((user) => (
+                    users.map((user, index) => (
                       <tr
-                        key={user.id}
-                        className="border border-grey-100 hover:bg-grey-100 transition-colors"
+                        key={index}
+                        className="border-b last:border-b-0 border-grey-100 hover:bg-grey-100 transition-colors"
                       >
+                        <td className="px-3 py-2 text-sm">
+                          <span className="rounded-full bg-gray-100 py-1 px-3">
+                            {convertNumbersToPersian(user.id)}
+                          </span>
+                        </td>
                         <td className="px-3 py-2 text-sm">
                           {convertNumbersToPersian(user.phone)}
                         </td>
@@ -199,7 +206,7 @@ export default function AdminUsers() {
                           </time>
                         </td>
                         <td className="px-3 py-2">
-                          <div className="flex items-center justify-center gap-2">
+                          <div className="flex items-center justify-center gap-4">
                             <button
                               onClick={() => handleProfileModal(user.id)}
                               className=" cursor-pointer border-2 border-primary text-sm  py-1 px-3 text-primary hover:text-secondary hover:border-secondary rounded-md transition-colors"
@@ -225,6 +232,13 @@ export default function AdminUsers() {
                             >
                               مالی
                             </Link>
+                            <button
+                              className=" cursor-pointer border-2 border-primary text-sm  py-1 px-3 text-primary hover:text-secondary hover:border-secondary rounded-md transition-colors"
+title="ورود به عنوان کاربر "
+onClick={handleLoginAsUser}
+>
+                              ورود 
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -246,7 +260,7 @@ export default function AdminUsers() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center mt-6 px-3 py-4 gap-6">
+              <div className="flex items-center justify-center px-3 py-4 gap-6">
                 {/* Previous Page */}
                 <button
                   onClick={handlePrevPage}

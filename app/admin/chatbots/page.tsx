@@ -10,7 +10,7 @@ import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { Refresh } from "@/public/icons/AppIcons";
 import { ToggleSmall } from "@/components/toggleSmall";
-import { convertNumbersToPersian } from "@/utils/common";
+import { convertNumbersToPersian, convertToPersian } from "@/utils/common";
 import { getPlanNameById } from "@/constants/plans";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -109,51 +109,49 @@ export default function AdminChatbots() {
       {/* Content */}
       <main className="flex-1 p-6 ">
         {(isLoading || loading) && <PageLoader />}
-
+        <div className="flex items-center justify-between m-2 pb-4 gap-4">
+          <div className="flex items-center gap-4">
+            جستجو
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="نام چت‌بات ، کاربر یا شرکت "
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            />
+            <ToggleSmall
+              label="فقط فعال‌ها"
+              checked={activeOnly}
+              onChange={(e) => {
+                setActiveOnly(!activeOnly);
+                loadChatbots(1, search);
+              }}
+            />
+          </div>
+          <div className="flex items-center">
+            <Button onClick={handleSearch} disabled={isLoading}>
+              {isLoading ? "در حال جستجو..." : "جستجو"}
+            </Button>
+            <button
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className="mr-3"
+            >
+              <div className="w-6 text-primary">
+                <Refresh />
+              </div>
+            </button>
+          </div>
+        </div>
         <div className="max-w-7xl mx-auto pb-8">
           <div className="bg-white rounded-3xl border border-grey-100 shadow-card w-full p-3">
             {/* Filters */}
-            <div className="flex   items-center justify-between m-6 pb-4 border-b border-primary/50 gap-4">
-              <div className="flex items-center gap-4">
-                <label className="text-sm">جستجو</label>
-                <Input
-                  value={search}
-                  inputSize="small"
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="نام چت‌بات "
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                />
-
-                <ToggleSmall
-                  label="فقط فعال‌ها"
-                  checked={activeOnly}
-                  onChange={(e) => {
-                    setActiveOnly(!activeOnly);
-                    loadChatbots(1, search);
-                  }}
-                />
-              </div>
-              <div className="flex items-center">
-                <Button onClick={handleSearch} disabled={isLoading}>
-                  {isLoading ? "در حال جستجو..." : "جستجو"}
-                </Button>
-                <button
-                  onClick={handleRefresh}
-                  disabled={isLoading}
-                  className="mr-3"
-                >
-                  <div className="w-6 text-primary">
-                    <Refresh />
-                  </div>
-                </button>
-              </div>
-            </div>
 
             {/* Table */}
             <div className="overflow-x-auto">
               <table className="w-full table-auto">
                 <thead>
                   <tr className="border-b border-grey-200 text-sm bg-grey-50">
+                    <th className="px-3 py-2 text-right">کد</th>
                     <th className="px-3 py-2 text-right">نام</th>
                     <th className="px-3 py-2 text-right">وضعیت</th>
                     <th className="px-3 py-2 text-right">کاربر</th>
@@ -169,8 +167,13 @@ export default function AdminChatbots() {
                     chatbots.map((bot, index) => (
                       <tr
                         key={index}
-                        className="border-b border-grey-100 hover:bg-grey-100 transition"
+                        className="border-b  last:border-b-0 border-grey-100 hover:bg-grey-100 transition"
                       >
+                        <td className="px-3 py-2 text-sm">
+                          <span className="rounded-full bg-gray-100 py-1 px-3">
+                            {convertToPersian(bot.id)}
+                          </span>
+                        </td>
                         <td className="px-3 py-2">{bot.name}</td>
                         <td className="px-3 py-2">
                           {bot.active ? (
