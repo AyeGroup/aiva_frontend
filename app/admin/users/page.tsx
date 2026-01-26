@@ -11,9 +11,12 @@ import { ProfileModal } from "./ProfileModal";
 import { convertNumbersToPersian } from "@/utils/common";
 import { Refresh } from "@/public/icons/AppIcons";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ConfirmModal } from "@/components/ConfirmModal";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function AdminUsers() {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
 
   // State اصلی
   const [users, setUsers] = useState<any[]>([]);
@@ -27,8 +30,9 @@ export default function AdminUsers() {
 
   // Modal states
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [profileId, setProfileId] = useState<any>(null);
-
+  const router = useRouter();
   // محاسبه تعداد صفحات
   const totalPages = Math.ceil(total / pageSize);
 
@@ -60,22 +64,34 @@ export default function AdminUsers() {
     [pageSize],
   );
 
-  // هندلر جستجو
   const handleSearch = async () => {
     setPage(1);
     await loadUsers(1, search);
   };
- 
-  const handleLoginAsUser = async () => {
 
-  }
-  
+  const handleLoginAsUser = async () => {
+    try {
+      if (!profileId) return;
+      const res = await axiosInstance.post(API_ROUTES.ADMIN.USER_LOGIN(profileId));
+      const data = res.data;
+      if (!data.success) {
+        toast.error(data.message || "اشکال در  ورود به حساب کاربر");
+        return;
+      }
+
+      console.log("data login:", res.data);
+      // logout();
+      // router.push("/dashboard");
+    } catch (err: any) {
+      toast.error(err.message || "اشکال در  ورود به حساب کاربر");
+    }
+  };
+
   const handleRefresh = async () => {
     setPage(1);
     await loadUsers(1, "");
   };
 
-  // هندلرهای صفحه‌بندی
   const handleNextPage = () => {
     if (page < totalPages) {
       loadUsers(page + 1);
@@ -87,17 +103,17 @@ export default function AdminUsers() {
       loadUsers(page - 1);
     }
   };
+
   const handleSetPage = (page: number) => {
     setPage(page);
     loadUsers(page);
   };
-  // هندلرهای مودال
+
   const handleProfileModal = async (id: string) => {
     setShowProfileModal(true);
     setProfileId(id);
   };
 
-  // بارگذاری اولیه
   useEffect(() => {
     if (!loading) {
       loadUsers(1);
@@ -234,10 +250,14 @@ export default function AdminUsers() {
                             </Link>
                             <button
                               className=" cursor-pointer border-2 border-primary text-sm  py-1 px-3 text-primary hover:text-secondary hover:border-secondary rounded-md transition-colors"
-title="ورود به عنوان کاربر "
-onClick={handleLoginAsUser}
->
-                              ورود 
+                              title="ورود به عنوان کاربر "
+                              onClick={() =>{
+                                setProfileId(user.id);
+
+                                setShowConfirmModal(true);
+                              }}
+                            >
+                              ورود
                             </button>
                           </div>
                         </td>
@@ -307,6 +327,16 @@ onClick={handleLoginAsUser}
             setShowProfileModal(false);
             setProfileId(null);
           }}
+        />
+        <ConfirmModal
+          isOpen={showConfirmModal}
+          onClose={() => setShowConfirmModal(false)}
+          onConfirm={handleLoginAsUser}
+          title=" ورود به حساب کاربری"
+          message="با ورود به حساب کاربر، از پنل مدیریت خارج می شود. آیا ادامه می‌دهید؟"
+          confirmText="بله"
+          cancelText="خیر"
+          type="warning"
         />
       </main>
     </div>

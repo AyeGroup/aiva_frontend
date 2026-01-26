@@ -158,6 +158,7 @@ export default function Discount() {
           onClose={() => setShowCodeModal(false)}
           mode={modalMode}
         />
+        
         <ConfirmModal
           isOpen={confirmModal.isOpen}
           onClose={closeConfirmModal}
