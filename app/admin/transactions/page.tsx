@@ -4,14 +4,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
-import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { useAuth } from "@/providers/AuthProvider";
+import TableTransaction from "./tableTransaction";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { convertNumbersToPersian } from "@/utils/common";
 
-/* =======================
-   Types
-======================= */
 type Transaction = {
   id: number;
   user_id: number;
@@ -28,74 +27,6 @@ type Transaction = {
   created_at: string;
 };
 
-/* =======================
-   Utils
-======================= */
-const formatDateTime = (date: string) => new Date(date).toLocaleString("fa-IR");
-
-const formatAmount = (amount: number) =>
-  amount.toLocaleString("fa-IR") + " تومان";
-
-const statusStyle: Record<string, string> = {
-  success: "bg-green-100 text-green-700",
-  cancelled: "bg-red-100 text-red-700",
-  pending: "bg-yellow-100 text-yellow-700",
-  failed: "bg-gray-200 text-gray-700",
-};
-
-/* =======================
-   Transaction Card
-======================= */
-const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
-  return (
-    <Card className="p-4 space-y-2 border border-border-soft">
-      <div className="flex justify-between text-sm text-gray-500">
-        <span>#{transaction.id}</span>
-        <span>{formatDateTime(transaction.created_at)}</span>
-      </div>
-
-      <div className="font-semibold">
-        {transaction.user_name} ({transaction.user_email})
-      </div>
-
-      <div className="text-sm">
-        <span className="font-medium">نوع:</span> {transaction.type}
-      </div>
-
-      <div className="flex gap-3 text-sm">
-        <span>
-          <span className="font-medium">جهت:</span>{" "}
-          {transaction.direction === "income" ? "ورودی" : "خروجی"}
-        </span>
-
-        <span
-          className={`px-2 py-0.5 rounded text-xs font-medium ${
-            statusStyle[transaction.status] ?? "bg-gray-100"
-          }`}
-        >
-          {transaction.status}
-        </span>
-      </div>
-
-      <div className="text-sm">
-        <span className="font-medium">مبلغ:</span>{" "}
-        {formatAmount(transaction.amount)}
-      </div>
-
-      {transaction.description && (
-        <div className="text-xs text-gray-600">{transaction.description}</div>
-      )}
-
-      <div className="text-xs text-gray-400">
-        کد پیگیری: {transaction.tracking_code ?? "-"}
-      </div>
-    </Card>
-  );
-};
-
-/* =======================
-   Main Component
-======================= */
 export default function AdminTransactions() {
   const { loading } = useAuth();
   const params = useParams();
@@ -108,7 +39,7 @@ export default function AdminTransactions() {
 
   // Pagination (Backend)
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(50);
+  const [pageSize] = useState(5);
   const [total, setTotal] = useState(0);
 
   const totalPages = Math.ceil(total / pageSize);
@@ -139,16 +70,30 @@ export default function AdminTransactions() {
         setIsLoading(false);
       }
     },
-    [pageSize, userId]
+    [pageSize, userId],
   );
 
   useEffect(() => {
     if (!loading) loadTransactions(1);
   }, [loading, loadTransactions]);
 
-  /* =======================
-     Render
-  ======================= */
+  // هندلرهای صفحه‌بندی
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      loadTransactions(page + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) {
+      loadTransactions(page - 1);
+    }
+  };
+  const handleSetPage = (page: number) => {
+    setPage(page);
+    loadTransactions(page);
+  };
+ 
   return (
     <div className="h-screen overflow-y-auto w-full">
       {(isLoading || loading) && <PageLoader />}
@@ -158,43 +103,54 @@ export default function AdminTransactions() {
         </h1>
       </header>
 
-      <main className="space-y-4">
-        {transactions.length === 0 && !isLoading ? (
-          <div className="text-center text-gray-500 py-12">
-            تراکنشی یافت نشد
-          </div>
-        ) : (
-          transactions.map((tx) => (
-            <TransactionCard key={tx.id} transaction={tx} />
-          ))
-        )}
+      <main className="flex-1 p-6 ">
+        <div className="bg-white rounded-3xl border border-grey-100 shadow-card w-full p-3">
+          {transactions.length === 0 && !isLoading ? (
+            <div className="text-center text-gray-500 py-12">
+              تراکنشی یافت نشد
+            </div>
+          ) : (
+            <TableTransaction data={transactions} />
+          )}
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-between items-center pt-6 border-t mt-6">
-            <span className="text-sm text-gray-600">
-              صفحه {page} از {totalPages} | مجموع{" "}
-              {total.toLocaleString("fa-IR")}
-            </span>
-
-            <div className="flex gap-2">
-              <Button
-                // variant="outline"
-                disabled={page === 1}
-                onClick={() => loadTransactions(page - 1)}
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center mt-6 px-3 py-4 gap-6">
+              {/* Previous Page */}
+              <button
+                onClick={handlePrevPage}
+                disabled={page === 1 || isLoading}
+                className={`text-secondary text-sm flex items-center cursor-pointer ${page === 1 ? "opacity-50" : ""}`}
               >
+                <ChevronRight />
                 قبلی
-              </Button>
-              <Button
-                // variant="outline"
-                disabled={page === totalPages}
-                onClick={() => loadTransactions(page + 1)}
+              </button>
+
+              {/* Numeric Pagination */}
+              <div className="flex items-center gap-3">
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSetPage(index + 1)}
+                    className={`px-3 py-1 text-sm border-secondary rounded-full ${page === index + 1 ? "border " : "border-none"}`}
+                  >
+                    {convertNumbersToPersian(index + 1)}
+                  </button>
+                ))}
+              </div>
+
+              {/* Next Page */}
+              <button
+                onClick={handleNextPage}
+                disabled={page === totalPages || isLoading}
+                className={`text-secondary text-sm flex items-center cursor-pointer ${page === totalPages ? "opacity-50" : ""}`}
               >
                 بعدی
-              </Button>
+                <ChevronLeft />
+              </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   );
