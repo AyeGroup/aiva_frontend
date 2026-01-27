@@ -118,7 +118,8 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
                 htmlFor="message-count"
                 className="block text-grey-900 mb-2"
               >
-                مبلغ:
+                مبلغ
+                <span className="input-required">*</span>
               </label>
               <input
                 id="message-count"
@@ -133,7 +134,7 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
                   let val = e.target.value;
                   // تبدیل فارسی به انگلیسی
                   val = val.replace(/[۰-۹]/g, (d) =>
-                    String("۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+                    String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
                   );
                   // فقط عدد
                   val = val.replace(/\D/g, "");
@@ -179,7 +180,7 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
                 <span className="text-grey-600">مبلغ پایه</span>
                 <span>
                   {((invoice?.base_amount_irr || 0) / 10).toLocaleString(
-                    "fa-IR"
+                    "fa-IR",
                   )}{" "}
                   تومان
                 </span>
@@ -198,7 +199,7 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
                 </span>
                 <span>
                   {Math.round(
-                    (invoice?.tax_amount_irr || 0) / 10
+                    (invoice?.tax_amount_irr || 0) / 10,
                   ).toLocaleString("fa-IR")}{" "}
                   تومان
                 </span>
@@ -208,7 +209,7 @@ export const WalletIncreaseModal: React.FC<WalletIncreaseModalProps> = ({
                 <span className="font-semibold">قابل پرداخت</span>
                 <span className="text-[#65bcb6] font-bold">
                   {Math.round(
-                    (invoice?.total_amount_irr || 0) / 10
+                    (invoice?.total_amount_irr || 0) / 10,
                   ).toLocaleString("fa-IR")}{" "}
                   تومان
                 </span>

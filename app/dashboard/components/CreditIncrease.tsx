@@ -169,7 +169,8 @@ if(!isOpen) return
                 htmlFor="message-count"
                 className="block text-grey-900 mb-2"
               >
-                مبلغ:
+                مبلغ
+                <span className="input-required">*</span>
               </label>
               <input
                 id="message-count"
@@ -184,7 +185,7 @@ if(!isOpen) return
                   let val = e.target.value;
                   // تبدیل فارسی به انگلیسی
                   val = val.replace(/[۰-۹]/g, (d) =>
-                    String("۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+                    String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
                   );
                   // فقط عدد
                   val = val.replace(/\D/g, "");
@@ -234,7 +235,7 @@ if(!isOpen) return
                     {/* {(invoice?.base_amount_irr || 0).toLocaleString("fa-IR")}{" "}
                   ريال */}
                     {((invoice?.base_amount_irr || 0) / 10).toLocaleString(
-                      "fa-IR"
+                      "fa-IR",
                     )}{" "}
                     تومان
                   </span>
@@ -254,7 +255,7 @@ if(!isOpen) return
                   <span>
                     {/* {(invoice?.tax_amount_irr || 0).toLocaleString("fa-IR")} ريال */}
                     {((invoice?.tax_amount_irr || 0) / 10).toLocaleString(
-                      "fa-IR"
+                      "fa-IR",
                     )}{" "}
                     تومان
                   </span>
@@ -265,7 +266,7 @@ if(!isOpen) return
                   <span className="text-[#65bcb6] font-bold">
                     {/* {invoice?.total_amount_irr.toLocaleString("fa-IR")} ريال */}
                     {((invoice?.total_amount_irr || 0) / 10).toLocaleString(
-                      "fa-IR"
+                      "fa-IR",
                     )}{" "}
                     تومان
                   </span>
@@ -312,7 +313,7 @@ if(!isOpen) return
                             {isLoadingWallet
                               ? "..."
                               : (walletBalance / 10).toLocaleString(
-                                  "fa-IR"
+                                  "fa-IR",
                                 )}{" "}
                             تومان
                           </p>

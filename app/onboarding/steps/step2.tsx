@@ -34,10 +34,13 @@ import { useFeatureAccess } from "@/hook/useFeatureAccess";
 
 interface WizardStep2Props {
   botConfig: BotConfig;
-  activeSubscription:number;
+  activeSubscription: number;
 }
 
-export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) {
+export function WizardStep2({
+  botConfig,
+  activeSubscription,
+}: WizardStep2Props) {
   const { user, loading } = useAuth();
   const [selectedType, setSelectedType] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
@@ -49,7 +52,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
   const [crawlType, setCrawlType] = useState<number>(1);
   const [showCrawl2Modal, setShowCrawl2Modal] = useState(false);
   const [selectedChatbot, setSelectedChatbot] = useState<BotConfig | null>(
-    null
+    null,
   );
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -66,17 +69,17 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
   // console.log("step2 subsc: ", activeSubscription);
 
   const { allowed: canUploadDocs, loading: canUploadDocsLoading } =
-    useFeatureAccess(botConfig?.uuid, "upload_docs",activeSubscription ??0);
+    useFeatureAccess(botConfig?.uuid, "upload_docs", activeSubscription ?? 0);
   const { allowed: canQaFile, loading: canQaFileLoading } = useFeatureAccess(
     botConfig?.uuid,
     "qa_as_file",
-    activeSubscription ?? 0
+    activeSubscription ?? 0,
   );
   const { allowed: canWebsiteCrawling, loading: canWebsiteCrawlingLoading } =
     useFeatureAccess(
       botConfig?.uuid,
       "website_crawling",
-      activeSubscription ?? 0
+      activeSubscription ?? 0,
     );
   const {
     allowed: canWebsiteCrawlingLevel2,
@@ -84,7 +87,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
   } = useFeatureAccess(
     botConfig?.uuid,
     "website_crawling_level_2",
-    activeSubscription ?? 0
+    activeSubscription ?? 0,
   );
 
   useEffect(() => {
@@ -97,10 +100,8 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
     fetchData();
   }, [user?.token, botConfig?.uuid]);
 
-  ;
   const IsFileDuplicate = async (file: File) => {
-
-    return true
+    return true;
   };
   const loadQa = async (botUuid: string) => {
     if (!botUuid) return;
@@ -108,7 +109,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
     try {
       try {
         const response = await axiosInstance.get(
-          API_ROUTES.KNOWLEDGE.DOCUMENT(botUuid)
+          API_ROUTES.KNOWLEDGE.DOCUMENT(botUuid),
         );
 
         botConfig.knowledge = response.data.data;
@@ -163,7 +164,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
   };
 
   const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (!file) {
@@ -252,7 +253,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
 
         const res = await axiosInstance.put(
           API_ROUTES.KNOWLEDGE.QA_EDIT(botConfig.uuid, editingItem.qa_id),
-          formData
+          formData,
         );
         if (!res.data?.success) {
           toast.error("خطا در ویرایش اطلاعات!");
@@ -268,7 +269,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
         console.log("formData", formData);
         const res = await axiosInstance.put(
           API_ROUTES.KNOWLEDGE.DOCUMENT_EDIT(botConfig.uuid, editingItem.id),
-          formData
+          formData,
         );
 
         if (!res.data?.success) {
@@ -292,21 +293,19 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
           selectedType === "file" || selectedType === "excel"
             ? API_ROUTES.KNOWLEDGE.DOCUMENT(botConfig.uuid)
             : selectedType === "website"
-            ? API_ROUTES.KNOWLEDGE.URL(botConfig.uuid)
-            : API_ROUTES.KNOWLEDGE.QA_SAVE(botConfig.uuid);
+              ? API_ROUTES.KNOWLEDGE.URL(botConfig.uuid)
+              : API_ROUTES.KNOWLEDGE.QA_SAVE(botConfig.uuid);
 
         //  افزودن آیتم جدید
         if (
           (selectedType === "file" || selectedType === "excel") &&
           selectedFile
         ) {
-
-         const isValid=await IsFileDuplicate(selectedFile);
-         if(!isValid)
-         {
-          toast.warning("فایل قبلا ثبت شده است")
-          return
-         }
+          const isValid = await IsFileDuplicate(selectedFile);
+          if (!isValid) {
+            toast.warning("فایل قبلا ثبت شده است");
+            return;
+          }
           setUploading(true);
           setUploadProgress(0);
           formData.append("title", newItem.title || "");
@@ -324,7 +323,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
           onUploadProgress: (progressEvent) => {
             if (progressEvent.total) {
               const percent = Math.round(
-                (progressEvent.loaded * 100) / progressEvent.total
+                (progressEvent.loaded * 100) / progressEvent.total,
               );
               setUploadProgress(percent);
             }
@@ -480,7 +479,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
       let res;
       if (item.type === "qa_pair" && item.qa_id) {
         res = await axiosInstance.delete(
-          API_ROUTES.KNOWLEDGE.QA_EDIT(botConfig.uuid, item.qa_id)
+          API_ROUTES.KNOWLEDGE.QA_EDIT(botConfig.uuid, item.qa_id),
         );
       } else if (
         item.type === "file" ||
@@ -488,7 +487,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
         item.type === "website"
       ) {
         res = await axiosInstance.delete(
-          API_ROUTES.KNOWLEDGE.DOCUMENT_DELETE(botConfig.uuid, item.id)
+          API_ROUTES.KNOWLEDGE.DOCUMENT_DELETE(botConfig.uuid, item.id),
         );
       } else {
         return;
@@ -643,7 +642,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                 {isEditing
                   ? "ویرایش "
                   : onboardingData.knowledgeTypes.find(
-                      (t) => t.id === selectedType
+                      (t) => t.id === selectedType,
                     )?.title}
               </h3>
               {selectedType === "website" && !canWebsiteCrawling && (
@@ -760,14 +759,11 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                   : ""
               }`}
             >
-              <label className="block text-grey-900 mb-2 text-right">
-                {selectedType === "qa_pair" ? (
-                  <div>
-                    سؤال <span className="text-brand-primary mr-1">*</span>
-                  </div>
-                ) : (
-                  "عنوان"
-                )}
+              <label className="block input-label mb-2 text-right">
+                <div>
+                  {selectedType === "qa_pair" ? "سؤال" : "عنوان"}
+                  <span className="input-required">*</span>
+                </div>
               </label>
               <Input
                 id="titleText"
@@ -788,9 +784,9 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                   !canQaFile ? "pointer-events-none opacity-50" : ""
                 }`}
               >
-                <label className="block text-grey-900 mb-2 text-right">
+                <label className="block input-label mb-2 text-right">
                   پاسخ
-                  <span className="text-brand-primary mr-1">*</span>
+                  <span className="input-required">*</span>
                 </label>
                 <textarea
                   value={newItem.content || ""}
@@ -847,9 +843,9 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                   !canWebsiteCrawling ? "pointer-events-none opacity-50" : ""
                 }`}
               >
-                <label className="block text-grey-900 mb-2">
+                <label className="block input-label mb-2">
                   آدرس وب
-                  <span className="text-brand-primary mr-1">*</span>
+                  <span className="input-required">*</span>
                 </label>
                 <Input
                   type="url"
@@ -875,7 +871,10 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                     !canUploadDocs ? "pointer-events-none opacity-50" : ""
                   }`}
                 >
-                  <label className="block text-grey-900 mb-2">آپلود فایل</label>
+                  <label className="  input-label mb-2">
+                    آپلود فایل
+                    <span className="input-required">*</span>
+                  </label>
                   <div
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
@@ -962,8 +961,8 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                   <span className="text-xs text-grey-600">
                     {convertToPersian(
                       botConfig.knowledge.filter(
-                        (k) => k.status === "processing"
-                      ).length
+                        (k) => k.status === "processing",
+                      ).length,
                     )}{" "}
                     در حال پردازش
                   </span>
@@ -976,7 +975,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                   <span className="text-xs text-grey-600">
                     {convertToPersian(
                       botConfig.knowledge.filter((k) => k.status === "done")
-                        .length
+                        .length,
                     )}{" "}
                     اعمال شده
                   </span>
@@ -990,7 +989,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                   <span className="text-xs text-grey-600">
                     {convertToPersian(
                       botConfig.knowledge.filter((k) => k.status === "queued")
-                        .length
+                        .length,
                     )}{" "}
                     در صف بررسی
                   </span>
@@ -1004,7 +1003,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                   <span className="text-xs text-grey-600">
                     {convertToPersian(
                       botConfig.knowledge.filter((k) => k.status === "failed")
-                        .length
+                        .length,
                     )}{" "}
                     خطا
                   </span>
@@ -1048,7 +1047,7 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
 
                         <p className="hidden lg:block text-grey-400 text-xs  lg:mt-1">
                           {new Date(item?.created_at ?? "").toLocaleDateString(
-                            "fa-IR"
+                            "fa-IR",
                           )}
                         </p>
                       </div>
@@ -1057,12 +1056,12 @@ export function WizardStep2({ botConfig ,activeSubscription}: WizardStep2Props) 
                     <div className="flex items-center justify-end w-full lg:w-fit">
                       <div className="lg:hidden block text-grey-400 text-xs ml-2">
                         {new Date(item?.created_at ?? "").toLocaleDateString(
-                          "fa-IR"
+                          "fa-IR",
                         )}
                       </div>
                       <div
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                          item.status || ""
+                          item.status || "",
                         )}`}
                       >
                         {(() => {

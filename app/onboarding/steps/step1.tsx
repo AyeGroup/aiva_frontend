@@ -1,6 +1,6 @@
 "use client";
 import { Input } from "@/components/input";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormInput } from "lucide-react";
 import { StepBigStar } from "@/public/icons/AppIcons";
 import { ToggleSmall } from "@/components/toggleSmall";
@@ -17,11 +17,15 @@ const TEMPLATE_PLACEHOLDER = "__placeholder__";
 export function WizardStep1({
   botConfig,
   updateConfig,
- 
+  errors,
+  shouldFocus = false,
+  onFocusDone,
 }: {
   botConfig: BotConfig;
   updateConfig: (updates: Partial<BotConfig>) => void;
- 
+  errors?: { [key: string]: string };
+  shouldFocus?: boolean;
+  onFocusDone?: () => void;
 }) {
   const [selectedTemplate, setSelectedTemplate] =
     useState<string>(TEMPLATE_PLACEHOLDER);
@@ -30,6 +34,24 @@ export function WizardStep1({
   const [editableText, setEditableText] = useState("");
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const { bots } = useBot();
+  const nameRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const guidelinesRef = useRef<HTMLTextAreaElement>(null);
+
+ useEffect(() => {
+   if (!shouldFocus || !errors) return;
+
+   if (errors.name) {
+     nameRef.current?.focus();
+   } else if (errors.description) {
+     descriptionRef.current?.focus();
+   } else if (errors.guidelines) {
+     guidelinesRef.current?.focus();
+   }
+
+   onFocusDone?.();
+ }, [shouldFocus]);
+
 
   const TEMPLATE_OPTIONS = templates.map((t, i) => ({
     label: t.label,
@@ -80,7 +102,7 @@ export function WizardStep1({
   };
   const handleSelectPromptTemplate = (
     value: string,
-    target: TemplateTarget
+    target: TemplateTarget,
   ) => {
     if (value === TEMPLATE_PLACEHOLDER) return;
 
@@ -124,7 +146,7 @@ export function WizardStep1({
       disabled: lang.disabled,
       label: lang.name,
       id: lang.code,
-    })
+    }),
   );
 
   return (
@@ -147,8 +169,12 @@ export function WizardStep1({
       {/* Base Info */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <label className="block mb-3">نام دستیار</label>
+          <label className="block mb-3">
+            نام دستیار
+            <span className="input-required">*</span>
+          </label>
           <Input
+            ref={nameRef}
             value={botConfig.name}
             onChange={(e) => {
               checkName(e.target.value);
@@ -160,11 +186,18 @@ export function WizardStep1({
               {nameMessage}
             </div>
           )}
+
+          {errors?.name && (
+            <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+          )}
           <div></div>
         </div>
 
         <div>
-          <label className="block mb-3">زبان پیش‌فرض</label>
+          <label className="block mb-3">
+            زبان پیش‌فرض
+            <span className="input-required">*</span>
+          </label>
           <GenericSelector
             items={languageOptions}
             selectedValue={botConfig.language}
@@ -178,7 +211,10 @@ export function WizardStep1({
       {/* Description */}
       <div>
         <div className="flex justify-between items-center mb-2">
-          <label>توضیحات کلی دستیار</label>
+          <label>
+            توضیحات کلی دستیار
+            <span className="input-required">*</span>
+          </label>
           <GenericSelector
             items={TEMPLATE_OPTIONS_PLACEHOLDER}
             selectedValue={selectedTemplate}
@@ -189,17 +225,24 @@ export function WizardStep1({
         </div>
 
         <textarea
+          ref={descriptionRef}
           value={botConfig.description}
           onChange={(e) => updateConfig({ description: e.target.value })}
           rows={6}
           className="w-full border rounded-lg p-3"
         />
+        {errors?.description && (
+          <p className="mt-1 text-xs text-red-500">{errors.description}</p>
+        )}
       </div>
 
       {/* Guidelines */}
       <div>
         <div className="flex justify-between items-center mb-2">
-          <label>دستورالعمل‌ها</label>
+          <label>
+            دستورالعمل‌ها
+            <span className="input-required">*</span>
+          </label>
           <GenericSelector
             items={PROMPT_TEMPLATE_OPTIONS_PLACEHOLDER}
             selectedValue={selectedTemplate}
@@ -212,11 +255,15 @@ export function WizardStep1({
         </div>
 
         <textarea
+          ref={guidelinesRef}
           value={botConfig.guidelines}
           onChange={(e) => updateConfig({ guidelines: e.target.value })}
           rows={6}
           className="w-full border rounded-lg p-3"
         />
+        {errors?.guidelines && (
+          <p className="mt-1 text-xs text-red-500">{errors.guidelines}</p>
+        )}
       </div>
 
       {/* Required Fields */}

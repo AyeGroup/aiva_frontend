@@ -45,6 +45,8 @@ export default function OnboardingWizard() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeSubscrp, setActiveSubscrp] = useState<number>(-1);
   const totalSteps = steps.length;
+  const [shouldFocus, setShouldFocus] = useState(false);
+
   const [botConfig, setBotConfig] = useState<BotConfig>({
     uuid: "",
     name: "",
@@ -71,7 +73,7 @@ export default function OnboardingWizard() {
     support_phone: "",
     bale_enabled: false,
     bale_token: "",
-    require_user_phone: false,
+    require_user_phone: true,
     require_user_name: false,
     require_user_email: false,
   });
@@ -97,7 +99,7 @@ export default function OnboardingWizard() {
       try {
         if (id && id !== "new" && id.length > 3) {
           const response = await axiosInstance.get(
-            `${API_ROUTES.BOTS.GET}/${id}`
+            `${API_ROUTES.BOTS.GET}/${id}`,
           );
           const hasApiData = response.data?.success && response.data?.data;
 
@@ -121,7 +123,7 @@ export default function OnboardingWizard() {
                 botConfig: updatedBotConfig,
                 currentStep: apiCurrent,
                 timestamp: new Date().toISOString(),
-              })
+              }),
             );
             return;
           }
@@ -182,7 +184,7 @@ export default function OnboardingWizard() {
         let subsc = 0;
         if (id && id.length > 3) {
           const response = await axiosInstance.get(
-            API_ROUTES.FINANCIAL.SUBSCRIPTION(id)
+            API_ROUTES.FINANCIAL.SUBSCRIPTION(id),
           );
           if (response && response.status === 200)
             subsc = response.data.data.plan ?? 0;
@@ -217,6 +219,7 @@ export default function OnboardingWizard() {
     canChatbotSupportPhone: false,
     canChoosing_llm: false,
   });
+
 
   const validateFields = (step: number) => {
     const newErrors: { [key: string]: string } = {};
@@ -267,7 +270,7 @@ export default function OnboardingWizard() {
       if (permissions.canChoosing_llm) {
         formData.append(
           "llm_model",
-          String(botConfig?.llm_model) || "gpt-4o-mini"
+          String(botConfig?.llm_model) || "gpt-4o-mini",
         );
       }
       if (permissions.canChatbotK) {
@@ -276,7 +279,7 @@ export default function OnboardingWizard() {
       if (permissions.canChatbotanswerLength) {
         formData.append(
           "answer_length",
-          String(botConfig?.answer_length) || "short"
+          String(botConfig?.answer_length) || "short",
         );
       }
 
@@ -294,7 +297,7 @@ export default function OnboardingWizard() {
 
       const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
-        formData
+        formData,
       );
 
       if (res.data.success) return true;
@@ -345,7 +348,7 @@ export default function OnboardingWizard() {
 
       const res = await axiosInstance.put(
         `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
-        formData
+        formData,
       );
       if (res.data.success) {
         //"http://localhost:8000/api/public/69887282-c486-4302-ab96-7995ad0f0cc5/logo"
@@ -368,21 +371,25 @@ export default function OnboardingWizard() {
       setIsSaving(false);
     }
   };
-
+const handleFocusDone = () => {
+  setShouldFocus(false);
+};
   //ذخیره استپ 1
   const saveBotConfig = async () => {
     const fieldErrors = validateFields(1);
     setErrors(fieldErrors);
 
     if (Object.keys(fieldErrors).length > 0) {
-      const errorMessages = Object.values(fieldErrors).join("\r\n");
+        setShouldFocus(true);
+  return;
 
-      toast.error(errorMessages, {
-        duration: 5000,
-        style: { whiteSpace: "pre-line", direction: "rtl", textAlign: "right" },
-      });
-      return;
+      // const errorMessages = Object.values(fieldErrors).join("\r\n");
+      // toast.error(errorMessages, {
+      //   duration: 5000,
+      //   style: { whiteSpace: "pre-line", direction: "rtl", textAlign: "right" },
+      // });
     }
+    setShouldFocus(false);
 
     setIsSaving(true);
 
@@ -400,18 +407,16 @@ export default function OnboardingWizard() {
       let res;
 
       if (botConfig.uuid) {
-        // 🔹 تلاش برای آپدیت چت‌بات
         try {
           res = await axiosInstance.put(
             `${API_ROUTES.BOTS.SAVE}/${botConfig.uuid}`,
-            formData
+            formData,
           );
 
           if (res.data.success) {
             await refreshBots();
             return true;
           } else {
-            //here:
             toast.error(res.data?.message || "خطا در ثبت اطلاعات");
             return false;
           }
@@ -421,7 +426,6 @@ export default function OnboardingWizard() {
 
           console.log("PUT error:", status, msg);
 
-          // 🔸 اگر خطای 404 یا پیام مشابه داشت، بریم روی insert
           if (status === 404 || msg.toLowerCase().includes("not found")) {
             console.warn("Bot not found on backend. Trying insert...");
             try {
@@ -432,7 +436,7 @@ export default function OnboardingWizard() {
                 setBotConfig(updated);
                 localStorage.setItem(
                   "aiva-onboarding-data",
-                  JSON.stringify(updated)
+                  JSON.stringify(updated),
                 );
                 await refreshBots();
                 setCurrentBot(updated);
@@ -444,13 +448,12 @@ export default function OnboardingWizard() {
             } catch (insertErr: any) {
               toast.error(
                 "خطا در ثبت مجدد اطلاعات: " +
-                  (insertErr.response?.data?.message || insertErr.message)
+                  (insertErr.response?.data?.message || insertErr.message),
               );
               console.error("Insert error:", insertErr);
               return false;
             }
           } else {
-            // خطای دیگر غیر از 404
             toast.error("خطا در ثبت اطلاعات: " + msg);
             console.error(err);
             return false;
@@ -466,7 +469,7 @@ export default function OnboardingWizard() {
             setBotConfig(updated);
             localStorage.setItem(
               "aiva-onboarding-data",
-              JSON.stringify(updated)
+              JSON.stringify(updated),
             );
             await refreshBots();
             setCurrentBot(updated);
@@ -478,7 +481,7 @@ export default function OnboardingWizard() {
         } catch (err: any) {
           toast.error(
             "خطا در ثبت اطلاعات: " +
-              (err.response?.data?.message || err.message)
+              (err.response?.data?.message || err.message),
           );
           console.error(err);
           return false;
@@ -486,7 +489,7 @@ export default function OnboardingWizard() {
       }
     } catch (err: any) {
       toast.error(
-        "خطا در ثبت اطلاعات: " + (err.response?.data?.message || err.message)
+        "خطا در ثبت اطلاعات: " + (err.response?.data?.message || err.message),
       );
       console.error(err);
       return false;
@@ -500,6 +503,13 @@ export default function OnboardingWizard() {
       ...prev,
       ...updates,
     }));
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      Object.keys(updates).forEach((key) => {
+        delete newErrors[key];
+      });
+      return newErrors;
+    });
   };
 
   const nextStep = async () => {
@@ -545,7 +555,13 @@ export default function OnboardingWizard() {
     switch (currentStep) {
       case 1:
         return (
-          <WizardStep1 botConfig={botConfig} updateConfig={updateBotConfig} />
+          <WizardStep1
+            botConfig={botConfig}
+            updateConfig={updateBotConfig}
+            errors={errors}
+            shouldFocus={shouldFocus}
+            onFocusDone={handleFocusDone}
+          />
         );
       case 2:
         return (
@@ -719,17 +735,13 @@ export default function OnboardingWizard() {
                   >
                     <button
                       onClick={() => goToStep(stepNumber)}
-                      className={`
-        flex items-center justify-center
-        w-10 h-10 sm:w-12 sm:h-12
-        rounded-full text-sm font-medium shadow-sm
-        transition-all duration-200
-        ${
+                      className={`flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full text-sm font-medium shadow-sm
+        transition-all duration-200 ${
           isActive
             ? "text-white shadow-lg border-2"
             : isReached
-            ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
-            : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
+              ? "bg-secondary text-secondary cursor-pointer hover:scale-105 shadow-md"
+              : "bg-white border-grey-400 text-grey-600 hover:text-brand-primary"
         }
       `}
                       style={
@@ -765,8 +777,8 @@ export default function OnboardingWizard() {
           isActive
             ? "text-brand-primary"
             : isReached
-            ? "text-secondary"
-            : "text-grey-600"
+              ? "text-secondary"
+              : "text-grey-600"
         }
       `}
                     >

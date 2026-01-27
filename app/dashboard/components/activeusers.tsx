@@ -1,7 +1,7 @@
 "use client";
 import axiosInstance from "@/lib/axiosInstance";
 import PageLoader from "@/components/pageLoader";
-import { User } from "@/public/icons/AppIcons";
+import { Back, User } from "@/public/icons/AppIcons";
 import { useBot } from "@/providers/BotProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { API_ROUTES } from "@/constants/apiRoutes";
@@ -62,113 +62,116 @@ export default function ActiveUsers() {
   if (loading || isLoading) return <PageLoader />;
 
   return (
-    <div className="w-full mx-auto p-4 sm:p-6">
-      <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
-        <header className="mb-2 sm:mb-0 w-full">
-          <h1 className="text-grey-900 font-medium text-center lg:text-right text-lg sm:text-xl">
-            فعال‌ترین کاربران
-          </h1>
-        </header>
-        <div className="flex items-center justify-between lg:justify-end w-full mt-2 sm:mt-0 gap-4">
-          <div className="mr-14">
+    <div className="w-full mx-auto p-0 ">
+      <header className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 bg-bg-surface border-b border-border-soft px-6 lg:px-8 py-6">
+        <h1 className="text-grey-900 font-medium text-center lg:text-right text-lg sm:text-xl">
+          فعال‌ترین کاربران
+        </h1>
 
-          <ChatbotSelector />
+        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-4">
+          <div >
+            چت‌بات
           </div>
+            <ChatbotSelector />
+
           <button
+            type="button"
+            className="bg-grey-200 text-grey-700 px-6 py-3 rounded-xl hover:bg-grey-300 font-medium flex items-center gap-2"
+            title="بازگشت به لیست تیکت‌ها"
             onClick={() => router.push("/dashboard")}
-            className="cursor-pointer ml-4"
           >
-            <ChevronLeft
-              className="text-secondary"
-              size={28}
-              strokeWidth={2.5}
-            />
+            <div className="w-4 h-4">
+              <Back />
+            </div>
+            بازگشت
           </button>
         </div>
-      </div>
+      </header>
 
-      {users.length === 0 ? (
-        <p className="text-gray-600">هیچ کاربر فعالی یافت نشد.</p>
-      ) : (
-        <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-8">
-          {/* لیست کاربران */}
-          <div className="w-full lg:w-1/2 flex flex-col mt-4 gap-4">
-            {users.map((user, index) => {
-              const color = colors[index % colors.length];
-              return (
-                <button
-                  key={index}
-                  onClick={() => {
-                    console.log("name:", user.user_id);
-                    setUsername(user.user_id);
-                  }}
-                  className="relative bg-white cursor-pointer rounded-lg pb-3 p-6 text-right shadow-sm hover-lift"
-                >
-                  <div
-                    className="absolute -top-4 right-1 w-10 h-10 rounded-full flex items-center justify-center shadow-md text-white font-bold"
-                    style={{ background: color }}
+      <main className="p-4">
+        {users.length === 0 ? (
+          <p className="text-gray-600">هیچ کاربر فعالی یافت نشد.</p>
+        ) : (
+          <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-8">
+            {/* لیست کاربران */}
+            <div className="w-full lg:w-1/2 flex flex-col mt-4 gap-4">
+              {users.map((user, index) => {
+                const color = colors[index % colors.length];
+                return (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      console.log("name:", user.user_id);
+                      setUsername(user.user_id);
+                    }}
+                    className="relative bg-white cursor-pointer rounded-lg pb-3 p-6 text-right shadow-sm hover-lift"
                   >
-                    <div className="w-4 h-4">
-                      <User />
+                    <div
+                      className="absolute -top-4 right-1 w-10 h-10 rounded-full flex items-center justify-center shadow-md text-white font-bold"
+                      style={{ background: color }}
+                    >
+                      <div className="w-4 h-4">
+                        <User />
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex justify-between items-center gap-3 flex-wrap">
-                    <ul className="flex-col font-bold text-grey-900 my-2 truncate">
-                      <li>{user.email ? `ایمیل: ${user.email}` : ""}</li>
-                      <li> {user.name ? `نام: ${user.name}` : ""}</li>
-                      <li> {user.phone ? `تلفن: ${user.phone}` : ""}</li>
-                    </ul>
+                    <div className="flex justify-between items-center gap-3 flex-wrap">
+                      <ul className="flex-col font-bold text-grey-900 my-2 truncate">
+                        <li>{user.email ? `ایمیل: ${user.email}` : ""}</li>
+                        <li> {user.name ? `نام: ${user.name}` : ""}</li>
+                        <li> {user.phone ? `تلفن: ${user.phone}` : ""}</li>
+                      </ul>
 
-                    <p className="flex text-sm text-grey-500 gap-1">
-                      {convertToPersian(user.session_count)}
-                      <span>گفتگو</span>
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
+                      <p className="flex text-sm text-grey-500 gap-1">
+                        {convertToPersian(user.session_count)}
+                        <span>گفتگو</span>
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
 
-            {/* صفحه‌بندی */}
-            {totalPages && totalPages > 1 && (
-              <div className="flex justify-center items-center gap-4 mt-6 flex-wrap">
-                <button
-                  onClick={handlePrevPage}
-                  disabled={!hasPrev}
-                  className={`px-4 py-2 rounded-md ${
-                    hasPrev
-                      ? "bg-gray-200 hover:bg-gray-300"
-                      : "bg-gray-100 text-gray-400"
-                  }`}
-                >
-                  <ChevronRight />
-                </button>
-                <span className="text-gray-500">
-                  <span className="text-primary font-semibold ml-1">
-                    {convertToPersian(page)}
+              {/* صفحه‌بندی */}
+              {totalPages && totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-6 flex-wrap">
+                  <button
+                    onClick={handlePrevPage}
+                    disabled={!hasPrev}
+                    className={`px-4 py-2 rounded-md ${
+                      hasPrev
+                        ? "bg-gray-200 hover:bg-gray-300"
+                        : "bg-gray-100 text-gray-400"
+                    }`}
+                  >
+                    <ChevronRight />
+                  </button>
+                  <span className="text-gray-500">
+                    <span className="text-primary font-semibold ml-1">
+                      {convertToPersian(page)}
+                    </span>
+                    از {convertToPersian(totalPages)}
                   </span>
-                  از {convertToPersian(totalPages)}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  disabled={!hasNext}
-                  className={`px-4 py-2 rounded-md ${
-                    hasNext
-                      ? "bg-gray-200 hover:bg-gray-300"
-                      : "bg-gray-100 text-gray-400"
-                  }`}
-                >
-                  <ChevronLeft />
-                </button>
-              </div>
-            )}
-          </div>
+                  <button
+                    onClick={handleNextPage}
+                    disabled={!hasNext}
+                    className={`px-4 py-2 rounded-md ${
+                      hasNext
+                        ? "bg-gray-200 hover:bg-gray-300"
+                        : "bg-gray-100 text-gray-400"
+                    }`}
+                  >
+                    <ChevronLeft />
+                  </button>
+                </div>
+              )}
+            </div>
 
-          {/* تاریخچه چت */}
-          <div className="w-full lg:w-1/2 rounded-lg p-4 mt-6 lg:mt-0">
-            <ChatHistory username={username} />
+            {/* تاریخچه چت */}
+            <div className="w-full lg:w-1/2 rounded-lg p-4 mt-6 lg:mt-0">
+              <ChatHistory username={username} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </main>
     </div>
   );
 }

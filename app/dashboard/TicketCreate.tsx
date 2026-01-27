@@ -109,6 +109,7 @@ export function CreateTicketView({ onSubmit }: Props) {
                 placeholder="عنوان کوتاه و واضح از مشکل یا درخواست شما"
                 value={formData.title}
                 maxLength={64}
+                required
                 onChange={(e) => {
                   setFormData({ ...formData, title: e.target.value });
                   if (errors.title) {
@@ -170,7 +171,10 @@ export function CreateTicketView({ onSubmit }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* <div className="input-container overflow-visible"> */}
                 <div className=" flex items-center gap-2">
-                  <label className="input-label">دسته‌بندی</label>
+                  <label className="input-label">
+                    دسته‌بندی
+                    <span className="input-required">*</span>
+                  </label>
 
                   <GenericSelector
                     items={CATEGORY_ITEMS}
@@ -188,7 +192,10 @@ export function CreateTicketView({ onSubmit }: Props) {
                 </div>
 
                 <div className=" flex items-center gap-2">
-                  <label className="input-label">اولویت</label>
+                  <label className="input-label">
+                    اولویت
+                    <span className="input-required">*</span>
+                  </label>
                   <GenericSelector
                     items={PRIORITY_ITEMS}
                     selectedValue={formData.priority}

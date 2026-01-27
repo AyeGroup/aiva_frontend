@@ -18,78 +18,10 @@ interface Props {
 }
 
 export function ViewTicketDetail({ ticket, onClose }: Props) {
+  const [error, setError] = useState("");
   const [replyText, setReplyText] = useState("");
   const [thisTicket, setThisTicket] = useState<Ticket>(ticket);
   const isTicketClosed = thisTicket.status === "closed";
-
-  const getStatusConfig = (status: string) => {
-    const configs = {
-      open: {
-        bg: "bg-danger/10",
-        text: "text-danger",
-        border: "border-danger/20",
-        label: "باز",
-        icon: (
-          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-          </svg>
-        ),
-      },
-      pending: {
-        bg: "bg-warning/10",
-        text: "text-warning",
-        border: "border-warning/20",
-        label: "در انتظار",
-        icon: (
-          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z" />
-          </svg>
-        ),
-      },
-      closed: {
-        bg: "bg-success/10",
-        text: "text-success",
-        border: "border-success/20",
-        label: "بسته شده",
-        icon: (
-          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-          </svg>
-        ),
-      },
-    };
-    return configs[status as keyof typeof configs];
-  };
-
-  const getPriorityConfig = (priority: string) => {
-    const configs = {
-      low: {
-        bg: "bg-grey-100",
-        text: "text-grey-600",
-        border: "border-grey-200",
-        label: "پایین",
-        icon: "⬇️",
-      },
-      medium: {
-        bg: "bg-warning/10",
-        text: "text-warning",
-        border: "border-warning/20",
-        label: "متوسط",
-        icon: "➡️",
-      },
-      high: {
-        bg: "bg-danger/10",
-        text: "text-danger",
-        border: "border-danger/20",
-        label: "بالا",
-        icon: "⬆️",
-      },
-    };
-    return configs[priority as keyof typeof configs];
-  };
-
-  const statusConfig = getStatusConfig(thisTicket.status);
-  const priorityConfig = getPriorityConfig(thisTicket.priority);
   const [isLoading, setIsLoading] = useState(false);
 
   const loadTicket = async () => {
@@ -97,7 +29,7 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
 
     try {
       const response = await axiosInstance.get(
-        API_ROUTES.TICKETS.GET(thisTicket.id)
+        API_ROUTES.TICKETS.GET(thisTicket.id),
       );
       setThisTicket(response.data.data);
       // console.log("ticket list: ", response.data.data);
@@ -114,7 +46,10 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
       return;
     }
 
-    if (!replyText.trim()) return;
+    if (!replyText.trim()) {
+      setError("متن را وارد کنید ");
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -149,8 +84,8 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                       </span>
                     </div>
                     <h2 className="text-grey-900">{thisTicket.title}</h2>
-                            <StatusBadge status={ticket.status} />
-                
+                    <StatusBadge status={ticket.status} />
+
                     {/* <StatusBadge
                       status={
                         thisTicket.status === "open"
@@ -204,19 +139,19 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                         thisTicket.priority === "urgent"
                           ? "bg-red-100 text-red-700"
                           : thisTicket.priority === "high"
-                          ? "bg-orange-100 text-orange-700"
-                          : thisTicket.priority === "medium"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-blue-100 text-blue-700"
+                            ? "bg-orange-100 text-orange-700"
+                            : thisTicket.priority === "medium"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-blue-100 text-blue-700"
                       }`}
                     >
                       {thisTicket.priority === "urgent"
                         ? "اورژانسی"
                         : thisTicket.priority === "high"
-                        ? "بالا"
-                        : thisTicket.priority === "medium"
-                        ? "متوسط"
-                        : "پایین"}
+                          ? "بالا"
+                          : thisTicket.priority === "medium"
+                            ? "متوسط"
+                            : "پایین"}
                     </span>
                   </div>
 
@@ -315,8 +250,11 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
             </div>
           ) : (
             <Card className="p-6">
-              <h3 className="text-grey-900 mb-4 text-right">پاسخ جدید</h3>
-              <div className="space-y-4">
+              <label className="input-label">
+                پاسخ جدید
+                <span className="input-required">*</span>
+              </label>
+              <div className="space-y-1">
                 <textarea
                   className="input-base input-default input-medium min-h-[120px] resize-none w-full disabled:bg-grey-100 disabled:cursor-not-allowed"
                   placeholder={
@@ -326,10 +264,11 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                   }
                   value={replyText}
                   maxLength={1000}
-                  onChange={(e) => setReplyText(e.target.value)}
+                  onChange={(e) => {setReplyText(e.target.value); setError("")}}
                   disabled={isTicketClosed}
                 />
-                <div className="mt-1 flex justify-between text-xs">
+
+                <div className=" flex justify-between text-xs">
                   <span
                     className={`${
                       replyText.length === 1000
@@ -339,6 +278,9 @@ export function ViewTicketDetail({ ticket, onClose }: Props) {
                   >
                     {replyText.length === 1000 &&
                       "حداکثر تعداد کاراکتر مجاز ۱۰۰۰ کاراکتر است"}
+                    {error && (
+                      <p className="text-xs text-red-500 mr-2">{error}</p>
+                    )}
                   </span>
 
                   <span className="text-gray-400">

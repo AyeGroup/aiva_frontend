@@ -228,7 +228,7 @@ export default function CrawlLevel2({
           <div className="flex flex-col items-center justify-start border-b border-gray-200 ">
             <div className="w-full flex items-center">
               <label className="text-gray-900 m-2 whitespace-nowrap">
-                آدرس وب <span className="text-red-500">*</span>
+                آدرس وب <span className="input-required">*</span>
               </label>
               <div className="flex-1">
                 <Input

@@ -1926,7 +1926,7 @@
 }
 
 .input-required {
-  color: var(--brand-primary);
+  color: var(--brand-secondary);
   font-weight: var(--font-weight-medium);
 }
 

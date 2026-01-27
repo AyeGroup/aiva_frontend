@@ -22,7 +22,7 @@ export default function AdminChatbots() {
 
   const [search, setSearch] = useState("");
   const [activeOnly, setActiveOnly] = useState(true);
-
+ 
   // Pagination
   const [page, setPage] = useState(1);
   const [pageSize] = useState(5);

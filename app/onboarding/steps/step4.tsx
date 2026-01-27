@@ -104,7 +104,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   //   شروع ویرایش
   const startEdit = (id: string) => {
     setFaqs((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, isEditing: true } : f))
+      prev.map((f) => (f.id === id ? { ...f, isEditing: true } : f)),
     );
   };
 
@@ -136,7 +136,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
     setIsSubmitting(true);
     try {
       await axiosInstance.delete(
-        `${API_ROUTES.BOTS.FAQ(botId)}/${confirmModal.id}`
+        `${API_ROUTES.BOTS.FAQ(botId)}/${confirmModal.id}`,
       );
       await fetchFaqs();
     } catch (err) {
@@ -149,7 +149,7 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   //   لغو ویرایش
   const cancelEdit = (id: string) => {
     setFaqs((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, isEditing: false } : f))
+      prev.map((f) => (f.id === id ? { ...f, isEditing: false } : f)),
     );
   };
   const openConfirmModal = (id: any) => {
@@ -177,14 +177,14 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
   return (
     <div className="space-y-4 bg-bg-surface p-6 border-2 border-brand-primary/20 rounded-xl shadow-lg">
       {isloading && <PageLoader />}
-           {issubmitting && (
-             <LoadingModal
-               show={issubmitting}
-               message="در حال ثبت اطلاعات... لطفاً منتظر بمانید. ."
-             />
-           )}
-           
-            <div className="flex items-start gap-4">
+      {issubmitting && (
+        <LoadingModal
+          show={issubmitting}
+          message="در حال ثبت اطلاعات... لطفاً منتظر بمانید. ."
+        />
+      )}
+
+      <div className="flex items-start gap-4">
         <div className="w-16 h-16 bg-primary/10  rounded-xl flex items-center justify-center shrink-0">
           <HelpCircle className="w-8 h-8 text-primary" />
         </div>
@@ -205,6 +205,10 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
       {/* فرم افزودن سؤال */}
       <div className="bg-bg-soft-mint rounded-xl border-2 border-dashed border-brand-primary/30 p-6">
         <div className="space-y-4">
+          <label className="input-label">
+            سؤال
+            <span className="input-required">*</span>
+          </label>
           <textarea
             placeholder="سؤال خود را بنویسید..."
             value={newFaq.question}
@@ -212,6 +216,10 @@ export function WizardStep4({ botConfig, updateConfig }: WizardStep4Props) {
             rows={3}
             className="w-full p-3 border border-border-soft rounded-lg bg-bg-surface resize-none"
           />
+          <label className="input-label">
+            پاسخ
+            <span className="input-required">*</span>
+          </label>
           <textarea
             placeholder="پاسخ کامل سؤال..."
             value={newFaq.answer}
