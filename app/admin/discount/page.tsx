@@ -31,7 +31,7 @@ export default function Discount() {
 
   // ===== Pagination =====
   const [page, setPage] = useState(1);
-  const [limit] = useState(100);
+  const [limit] = useState(2);
   const [total, setTotal] = useState(0);
 
   const skip = (page - 1) * limit;
@@ -70,8 +70,8 @@ export default function Discount() {
         },
       });
 
-      setCodes(response?.data?.data || []);
-      setTotal(response?.data?.total || 0);
+      setCodes(response?.data?.data.items || []);
+      setTotal(response?.data?.data.total || 0);
     } catch (error: any) {
       toast.error("خطا در دریافت لیست کدهای تخفیف");
       console.error(error);

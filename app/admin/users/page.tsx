@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function AdminUsers() {
-  const { user, loading, logout } = useAuth();
+  const { loading, loginAdminAsUser } = useAuth();
 
   // State اصلی
   const [users, setUsers] = useState<any[]>([]);
@@ -70,20 +70,23 @@ export default function AdminUsers() {
   };
 
   const handleLoginAsUser = async () => {
+    if (!profileId) return;
     try {
-      if (!profileId) return;
-      const res = await axiosInstance.post(API_ROUTES.ADMIN.USER_LOGIN(profileId));
-      const data = res.data;
-      if (!data.success) {
-        toast.error(data.message || "اشکال در  ورود به حساب کاربر");
+      setIsLoading(true);
+      const res = await loginAdminAsUser(profileId);
+
+      if (!res.success) {
+        toast.error(res.message);
         return;
       }
 
-      console.log("data login:", res.data);
-      // logout();
-      // router.push("/dashboard");
-    } catch (err: any) {
-      toast.error(err.message || "اشکال در  ورود به حساب کاربر");
+      router.push("/dashboard");
+      // console.log("user");
+    } catch (err) {
+      console.log(err);
+      toast.error("خطا در ورود");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -251,7 +254,7 @@ export default function AdminUsers() {
                             <button
                               className=" cursor-pointer border-2 border-primary text-sm  py-1 px-3 text-primary hover:text-secondary hover:border-secondary rounded-md transition-colors"
                               title="ورود به عنوان کاربر "
-                              onClick={() =>{
+                              onClick={() => {
                                 setProfileId(user.id);
 
                                 setShowConfirmModal(true);

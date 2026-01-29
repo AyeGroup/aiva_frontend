@@ -7,6 +7,7 @@ import PageLoader from "@/components/pageLoader";
 import { useRouter, usePathname } from "next/navigation";
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { jwtDecode } from "jwt-decode";
+import axiosInstance from "@/lib/axiosInstance";
 
 interface User {
   id: number;
@@ -25,6 +26,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (identity: string, password: string) => Promise<LoginResponse>;
+  loginAdminAsUser: (userId: string) => Promise<LoginResponse>;
   logout: () => void;
 }
 
@@ -48,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // چک کردن اینکه مسیر فعلی عمومی است یا خیر
   const isPublicRoute = PUBLIC_ROUTES.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   useEffect(() => {
@@ -113,7 +115,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (
     identity: string,
-    password: string
+    password: string,
   ): Promise<LoginResponse> => {
     try {
       const res = await axios.post(API_ROUTES.AUTH.LOGIN, {
@@ -156,6 +158,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const loginAdminAsUser = async (userId: string): Promise<LoginResponse> => {
+    try {
+      const res = await axiosInstance.post(API_ROUTES.ADMIN.USER_LOGIN(userId));
+
+     
+      const data = res.data.data;
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
+
+      const payload: any = jwtDecode(data.access_token);
+      const user: User = {
+        id: data.id,
+        name: data.name || "",
+        role: payload.role || "user",
+        email: data.email,
+        phone: data.phone ,
+        token: data.access_token,
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+
+      Cookies.set("role", payload.role, { expires: 7 });
+      Cookies.set("accessToken", data.access_token, { expires: 7 });
+
+      return { success: true, user };
+    } catch (err: any) {
+      console.error("Login error:", err);
+
+      const status = err.response?.status ?? null;
+      let message = "خطای ناشناخته از سرور";
+
+      if (status === 401) message = "اطلاعات ورود نادرست است";
+      else if (status === 403) message = "لطفاً شماره موبایل خود را تایید کنید";
+      else if (err.message) message = err.message;
+
+      return { success: false, status, message };
+    }
+  };
+
   const logout = async () => {
     try {
       // localStorage.removeItem("accessToken");
@@ -173,7 +215,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const value: AuthContextType = { user, loading, login, logout };
+  const value: AuthContextType = {
+    user,
+    loading,
+    login,
+    logout,
+    loginAdminAsUser,
+  };
 
   return (
     <AuthContext.Provider value={value}>
