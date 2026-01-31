@@ -14,6 +14,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { EditProfileModal } from "./EditProfileModal";
 
 export default function AdminUsers() {
   const { loading, loginAdminAsUser } = useAuth();
@@ -322,9 +323,18 @@ export default function AdminUsers() {
         </div>
 
         {/* Modals */}
-        <ProfileModal
+        {/* <ProfileModal
           open={showProfileModal}
           data={null}
+          id={profileId}
+          onClose={() => {
+            setShowProfileModal(false);
+            setProfileId(null);
+          }}
+        /> */}
+        <EditProfileModal
+          open={showProfileModal}
+          
           id={profileId}
           onClose={() => {
             setShowProfileModal(false);

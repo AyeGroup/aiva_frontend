@@ -128,7 +128,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-4 sm:mt-6 md:mt-8 w-full p-4 border-t border-gray-800 flex items-center justify-center">
+        <div className="m-4 sm:m-6 md:m-8 w-full p-4 border-t border-gray-800 flex items-center justify-center">
           <div className="flex  items-center justify-center text-gray-500 text-xs sm:text-sm gap-1">
             <span>© {persianYear} تمام حقوق سایت متعلق به</span>
             <Link

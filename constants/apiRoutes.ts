@@ -131,6 +131,8 @@ export const API_ROUTES = {
 
     // ---------------------------------------
     USERS: `${API_BASE_URL.replace("/api", "")}/admin/users`,
+    USER_SAVE: (user_id: string) =>
+      `${API_BASE_URL.replace("/api", "")}/admin/users/${user_id}`,
     USER_LOGIN: (user_id: string) =>
       `${API_BASE_URL.replace("/api", "")}/admin/users/${user_id}/login`,
 

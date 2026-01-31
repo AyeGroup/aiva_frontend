@@ -5,6 +5,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
+  className?: string;
   children: React.ReactNode;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "full";
   footer?: React.ReactNode;
@@ -15,7 +16,7 @@ export function Modal({
   onClose,
   title,
   children,
-  size = "lg",
+  className,
   footer,
 }: ModalProps) {
   // جلوگیری از اسکرول body وقتی مودال باز است
@@ -56,14 +57,14 @@ export function Modal({
 
   return (
     <div
-      className="modal-overlay w-full "
+      className={`modal-overlay w-full`}
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
       <div
-        className={`modal-content w-11/12 md:w-9/12 lg:w-2/3  `}
+        className={`modal-content w-11/12 md:w-9/12 lg:w-2/3  ${className} `}
         onClick={(e) => e.stopPropagation()}
       >
         <header className="modal-header">

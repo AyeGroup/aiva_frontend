@@ -9,18 +9,20 @@ import { API_ROUTES } from "@/constants/apiRoutes";
 import { useAuth } from "@/providers/AuthProvider";
 
 import PageLoader from "@/components/pageLoader";
-import { Back } from "@/public/icons/AppIcons";
+import { Back, Plus } from "@/public/icons/AppIcons";
 import { convertNumbersToPersian, convertToPersian } from "@/utils/common";
 import { getPlanNameById } from "@/constants/plans";
-import { ChevronLeft, ChevronRight, Edit3, Eye } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { WalletIncreaseAdmin } from "./WalletIncrease";
 
 export default function AdminUserChatbots() {
   const { loading } = useAuth();
   const { id } = useParams<{ id: string }>();
-
+  const [refreshKey, setRefreshKey] = useState(0);
   const [chatbots, setChatbots] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
+  const [showAddWallet, setShowAddWallet] = useState(false);
 
   // Pagination
   const [page, setPage] = useState(1);
@@ -28,6 +30,9 @@ export default function AdminUserChatbots() {
   const [total, setTotal] = useState(0);
 
   const totalPages = Math.ceil(total / pageSize);
+useEffect(() => {
+  loadChatbots();
+}, [refreshKey]);
 
   // Load Chatbots
   const loadChatbots = useCallback(
@@ -122,11 +127,16 @@ export default function AdminUserChatbots() {
           </Link>
 
           <div className="flex items-center gap-2 mt-4">
-            <div className="text-sm">
-
-            موجودی کیف پول
+            <div
+              className="text-secondary w-6 border border-secondary/50 rounded-full cursor-pointer p-1 "
+              onClick={() => setShowAddWallet(true)}
+            >
+              <Plus />
             </div>
-            <div className="text-white bg-primary px-3 py-1 rounded-md">{Number(profile?.wallet_balance).toLocaleString("fa-IR")}</div>
+            <div className="text-sm">موجودی کیف پول</div>
+            <div className="text-white bg-primary px-4 py-1 rounded-md">
+              {Number(profile?.wallet_balance).toLocaleString("fa-IR")}
+            </div>
           </div>
         </div>
       </header>
@@ -177,14 +187,6 @@ export default function AdminUserChatbots() {
                         <td className="px-3 py-2">
                           {convertNumbersToPersian(bot.total_users)}
                         </td>
-                        {/* <td className="px-3 py-2">
-                          <Link
-                            href={`/onboarding&id=${bot.uuid}`}
-                            className="chatbot-menu-item"
-                          >
-                            <Eye size={20} className="text-primary" />
-                          </Link>
-                        </td> */}
                       </tr>
                     ))
                   ) : (
@@ -240,6 +242,12 @@ export default function AdminUserChatbots() {
             )}
           </div>
         </div>
+        <WalletIncreaseAdmin
+          id={id}
+          isOpen={showAddWallet}
+          onClose={() => setShowAddWallet(false)}
+          onSuccess={() => setRefreshKey((prev) => prev + 1)}
+        />
       </main>
     </div>
   );
